@@ -14,7 +14,7 @@ repositories {
 
     maven { url = uri("https://repo.panda-lang.org/releases") }
     maven { url = uri("https://hub.spigotmc.org/nexus/content/repositories/snapshots/") }
-
+    maven { url = uri("https://storehouse.okaeri.eu/repository/maven-public/") }
 }
 
 java {
@@ -29,7 +29,9 @@ dependencies {
     implementation("net.kyori:adventure-text-minimessage:4.11.0")
 
     implementation("dev.rollczi.litecommands:bukkit-adventure:2.5.0")
-    implementation("net.dzikoysk:cdn:1.14.0")
+
+    implementation("eu.okaeri:okaeri-configs-yaml-bukkit:4.0.6")
+    implementation("eu.okaeri:okaeri-configs-serdes-bukkit:4.0.6")
 
     testImplementation("org.junit.jupiter:junit-jupiter-api:5.9.0")
     testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:5.9.0")
@@ -68,6 +70,7 @@ tasks.withType<com.github.jengelman.gradle.plugins.shadow.tasks.ShadowJar> {
             "org.panda_lang",
             "net.dzikoysk",
             "net.kyori",
+            "eu.okaeri",
             "dev.rollczi.litecommands",
     ).forEach { pack ->
         relocate(pack, "$prefix.$pack")
