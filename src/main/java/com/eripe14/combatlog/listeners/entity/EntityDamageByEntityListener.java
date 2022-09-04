@@ -32,8 +32,8 @@ public class EntityDamageByEntityListener implements Listener {
         this.combatLogManager.tag(player.getUniqueId(), enemy.getUniqueId(), Duration.ofSeconds(this.pluginConfig.combatLogTime));
         this.combatLogManager.tag(enemy.getUniqueId(), player.getUniqueId(), Duration.ofSeconds(this.pluginConfig.combatLogTime));
 
-        player.sendMessage(ChatUtil.fixColor(this.messageConfig.tagPlayer));
-        enemy.sendMessage(ChatUtil.fixColor(this.messageConfig.tagPlayer));
+        player.sendMessage(ChatUtil.color(this.messageConfig.tagPlayer));
+        enemy.sendMessage(ChatUtil.color(this.messageConfig.tagPlayer));
     }
 
 }

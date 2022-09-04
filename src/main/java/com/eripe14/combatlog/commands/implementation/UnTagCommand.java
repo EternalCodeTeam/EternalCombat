@@ -38,13 +38,13 @@ public class UnTagCommand {
             return;
         }
 
-        target.sendMessage(ChatUtil.fixColor(this.messageConfig.unTagPlayer));
-        enemy.sendMessage(ChatUtil.fixColor(this.messageConfig.unTagPlayer));
+        target.sendMessage(ChatUtil.color(this.messageConfig.unTagPlayer));
+        enemy.sendMessage(ChatUtil.color(this.messageConfig.unTagPlayer));
 
         this.combatLogManager.remove(target.getUniqueId());
         this.combatLogManager.remove(enemy.getUniqueId());
 
-        commandSender.sendMessage(ChatUtil.fixColor(this.messageConfig.adminUnTagPlayer
+        commandSender.sendMessage(ChatUtil.color(this.messageConfig.adminUnTagPlayer
                 .replaceAll("%PLAYER%", target.getName())));
     }
 }

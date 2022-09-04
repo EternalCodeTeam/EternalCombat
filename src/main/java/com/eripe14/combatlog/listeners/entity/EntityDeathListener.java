@@ -3,7 +3,6 @@ package com.eripe14.combatlog.listeners.entity;
 import com.eripe14.combatlog.bukkit.util.ChatUtil;
 import com.eripe14.combatlog.combatlog.CombatLogManager;
 import com.eripe14.combatlog.config.MessageConfig;
-import org.bukkit.Bukkit;
 import org.bukkit.Server;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -38,7 +37,7 @@ public class EntityDeathListener implements Listener {
             return;
         }
 
-        enemy.sendMessage(ChatUtil.fixColor(this.messageConfig.unTagPlayer));
+        enemy.sendMessage(ChatUtil.color(this.messageConfig.unTagPlayer));
 
         this.combatLogManager.remove(player.getUniqueId());
         this.combatLogManager.remove(enemy.getUniqueId());

@@ -6,7 +6,6 @@ import com.eripe14.combatlog.combatlog.CombatLogManager;
 import com.eripe14.combatlog.config.MessageConfig;
 import net.md_5.bungee.api.ChatMessageType;
 import net.md_5.bungee.api.chat.TextComponent;
-import org.bukkit.Bukkit;
 import org.bukkit.Server;
 import org.bukkit.entity.Player;
 
@@ -46,12 +45,12 @@ public class CombatLogManageTask implements Runnable {
             if (leftTime.isZero() || leftTime.isNegative()) {
                 this.combatLogManager.remove(uuid);
 
-                player.sendMessage(ChatUtil.fixColor(this.messageConfig.unTagPlayer));
+                player.sendMessage(ChatUtil.color(this.messageConfig.unTagPlayer));
 
                 continue;
             }
 
-            player.spigot().sendMessage(ChatMessageType.ACTION_BAR, new TextComponent(ChatUtil.fixColor(this.messageConfig.combatLogDuration)
+            player.spigot().sendMessage(ChatMessageType.ACTION_BAR, new TextComponent(ChatUtil.color(this.messageConfig.combatLogDuration)
                     .replaceAll("%TIME%", DurationUtil.format(leftTime))));
         }
     }

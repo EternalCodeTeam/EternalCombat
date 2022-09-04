@@ -38,7 +38,7 @@ public class PlayerCommandPreprocessListener implements Listener {
 
             event.setCancelled(true);
 
-            player.sendMessage(ChatUtil.fixColor(this.messageConfig.cantUseCommand));
+            player.sendMessage(ChatUtil.color(this.messageConfig.cantUseCommand));
         }
     }
 }

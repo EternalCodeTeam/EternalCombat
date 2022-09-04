@@ -11,13 +11,13 @@ public final class ChatUtil {
         throw new UnsupportedOperationException("This is a utility class and cannot be instantiated");
     }
 
-    public static String fixColor(String text) {
+    public static String color(String text) {
         return text == null ? "" : ChatColor.translateAlternateColorCodes('&', text);
     }
 
-    public static List<String> fixLore(List<String> lore) {
+    public static List<String> color(List<String> lore) {
         return lore.stream()
-                .map(ChatUtil::fixColor)
+                .map(ChatUtil::color)
                 .collect(Collectors.toList());
     }
 

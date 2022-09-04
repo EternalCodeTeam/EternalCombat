@@ -33,12 +33,12 @@ public class TagCommand {
         this.combatLogManager.tag(firstTarget.getUniqueId(), secondTarget.getUniqueId(), Duration.ofSeconds(this.pluginConfig.combatLogTime));
         this.combatLogManager.tag(secondTarget.getUniqueId(), firstTarget.getUniqueId(), Duration.ofSeconds(this.pluginConfig.combatLogTime));
 
-        commandSender.sendMessage(ChatUtil.fixColor(this.messageConfig.adminTagPlayer
+        commandSender.sendMessage(ChatUtil.color(this.messageConfig.adminTagPlayer
                 .replaceAll("%FIRST_PLAYER%", firstTarget.getName())
                 .replaceAll("%SECOND_PLAYER%", secondTarget.getName())));
 
-        firstTarget.sendMessage(ChatUtil.fixColor(this.messageConfig.tagPlayer));
-        secondTarget.sendMessage(ChatUtil.fixColor(this.messageConfig.tagPlayer));
+        firstTarget.sendMessage(ChatUtil.color(this.messageConfig.tagPlayer));
+        secondTarget.sendMessage(ChatUtil.color(this.messageConfig.tagPlayer));
     }
 
 }

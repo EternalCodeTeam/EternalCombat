@@ -3,7 +3,6 @@ package com.eripe14.combatlog.listeners.player;
 import com.eripe14.combatlog.bukkit.util.ChatUtil;
 import com.eripe14.combatlog.combatlog.CombatLogManager;
 import com.eripe14.combatlog.config.MessageConfig;
-import org.bukkit.Bukkit;
 import org.bukkit.Server;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -36,7 +35,7 @@ public class PlayerQuitListener implements Listener {
             return;
         }
 
-        enemy.sendMessage(ChatUtil.fixColor(this.messageConfig.unTagPlayer));
+        enemy.sendMessage(ChatUtil.color(this.messageConfig.unTagPlayer));
 
         combatLogManager.remove(enemy.getUniqueId());
         combatLogManager.remove(player.getUniqueId());

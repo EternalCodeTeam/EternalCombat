@@ -15,13 +15,13 @@ public class InvalidUsage implements InvalidUsageHandler<CommandSender> {
         List<String> schematics = schematic.getSchematics();
 
         if (schematics.size() == 1) {
-            sender.sendMessage(ChatUtil.fixColor("&4Nie poprawne użycie komendy &8>> &7" + schematics.get(0)));
+            sender.sendMessage(ChatUtil.color("&4Nie poprawne użycie komendy &8>> &7" + schematics.get(0)));
             return;
         }
 
-        sender.sendMessage(ChatUtil.fixColor("&cNie poprawne użycie komendy!"));
-        for (String sch : schematics) {
-            sender.sendMessage(ChatUtil.fixColor("&8 >> &7" + sch));
+        sender.sendMessage(ChatUtil.color("&cNie poprawne użycie komendy!"));
+        for (String schema : schematics) {
+            sender.sendMessage(ChatUtil.color("&8 >> &7" + schema));
         }
     }
 
