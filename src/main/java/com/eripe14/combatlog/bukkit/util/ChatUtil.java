@@ -15,7 +15,7 @@ public final class ChatUtil {
         return text == null ? "" : ChatColor.translateAlternateColorCodes('&', text);
     }
 
-    public static List<String> fixLore(List<String> lore) {
+    public static List<String> color(List<String> lore) {
         return lore.stream()
                 .map(ChatUtil::fixColor)
                 .collect(Collectors.toList());
