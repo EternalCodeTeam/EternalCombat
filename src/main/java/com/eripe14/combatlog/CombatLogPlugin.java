@@ -57,7 +57,7 @@ public class CombatLogPlugin extends JavaPlugin {
 
                 .register();
 
-        Bukkit.getScheduler().runTaskTimer(this,
+        this.getServer().getScheduler().runTaskTimer(this,
                 new CombatLogManageTask(this.combatLogManager,
                         this.messageConfig, this.getServer()), 20L, 20L);
 
