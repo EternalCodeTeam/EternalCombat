@@ -4,6 +4,7 @@ import com.eripe14.combatlog.bukkit.util.ChatUtil;
 import com.eripe14.combatlog.combatlog.CombatLogManager;
 import com.eripe14.combatlog.config.MessageConfig;
 import org.bukkit.Bukkit;
+import org.bukkit.Server;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -13,20 +14,29 @@ public class EntityDeathListener implements Listener {
 
     private final CombatLogManager combatLogManager;
     private final MessageConfig messageConfig;
+    private final Server server;
 
-    public EntityDeathListener(CombatLogManager combatLogManager, MessageConfig messageConfig) {
+    public EntityDeathListener(CombatLogManager combatLogManager, MessageConfig messageConfig, Server server) {
         this.combatLogManager = combatLogManager;
         this.messageConfig = messageConfig;
+        this.server = server;
     }
 
     @EventHandler
     public void onEntityDeath(EntityDeathEvent event) {
-        if (!(event.getEntity( ) instanceof Player player)) return;
-        if (!this.combatLogManager.isInCombat(player.getUniqueId())) return;
+        if (!(event.getEntity() instanceof Player player)) {
+            return;
+        }
 
-        Player enemy = Bukkit.getPlayer(this.combatLogManager.getEnemy(player.getUniqueId()));
+        if (!this.combatLogManager.isInCombat(player.getUniqueId())) {
+            return;
+        }
 
-        if (enemy == null) return;
+        Player enemy = this.server.getPlayer(this.combatLogManager.getEnemy(player.getUniqueId()));
+
+        if (enemy == null) {
+            return;
+        }
 
         enemy.sendMessage(ChatUtil.fixColor(this.messageConfig.unTagPlayer));
 

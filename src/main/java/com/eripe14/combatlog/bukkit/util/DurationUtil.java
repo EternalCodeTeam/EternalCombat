@@ -3,13 +3,12 @@ package com.eripe14.combatlog.bukkit.util;
 import java.time.Duration;
 import java.util.concurrent.TimeUnit;
 
-public class DurationUtil {
+public final class DurationUtil {
 
     private DurationUtil() {
         throw new UnsupportedOperationException("This is a utility class and cannot be instantiated");
     }
 
-    @Deprecated
     public static String durationToString(long time) {
         if (time <= 0L) {
             return "0s";

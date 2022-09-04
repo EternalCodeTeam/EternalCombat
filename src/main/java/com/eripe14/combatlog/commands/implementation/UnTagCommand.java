@@ -8,7 +8,7 @@ import dev.rollczi.litecommands.argument.Name;
 import dev.rollczi.litecommands.command.execute.Execute;
 import dev.rollczi.litecommands.command.permission.Permission;
 import dev.rollczi.litecommands.command.section.Section;
-import org.bukkit.Bukkit;
+import org.bukkit.Server;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
@@ -20,19 +20,23 @@ public class UnTagCommand {
 
     private final CombatLogManager combatLogManager;
     private final MessageConfig messageConfig;
+    private final Server server;
 
-    public UnTagCommand(CombatLogManager combatLogManager, MessageConfig messageConfig) {
+    public UnTagCommand(CombatLogManager combatLogManager, MessageConfig messageConfig, Server server) {
         this.combatLogManager = combatLogManager;
         this.messageConfig = messageConfig;
+        this.server = server;
     }
 
     @Execute(min = 1)
     public void execute(CommandSender commandSender, @Arg @Name("target") Player target) {
         UUID enemyUuid = this.combatLogManager.getEnemy(target.getUniqueId());
 
-        Player enemy = Bukkit.getPlayer(enemyUuid);
+        Player enemy = server.getPlayer(enemyUuid);
 
-        if (enemy == null) return;
+        if (enemy == null) {
+            return;
+        }
 
         target.sendMessage(ChatUtil.fixColor(this.messageConfig.unTagPlayer));
         enemy.sendMessage(ChatUtil.fixColor(this.messageConfig.unTagPlayer));

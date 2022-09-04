@@ -5,7 +5,7 @@ import com.eripe14.combatlog.commands.handler.InvalidUsage;
 import com.eripe14.combatlog.commands.handler.PermissionMessage;
 import com.eripe14.combatlog.commands.implementation.TagCommand;
 import com.eripe14.combatlog.commands.implementation.UnTagCommand;
-import com.eripe14.combatlog.config.ConfigLoader;
+import com.eripe14.combatlog.config.ConfigFactory;
 import com.eripe14.combatlog.config.MessageConfig;
 import com.eripe14.combatlog.config.PluginConfig;
 import com.eripe14.combatlog.listeners.entity.EntityDamageByEntityListener;
@@ -26,56 +26,62 @@ import java.util.stream.Stream;
 
 public class CombatLogPlugin extends JavaPlugin {
 
-    private final File messagePath = new File(this.getDataFolder( ), "messages.yml");
-    private final File configPath = new File(this.getDataFolder( ), "config.yml");
+    private final File messagePath = new File(this.getDataFolder(), "messages.yml");
+    private final File configPath = new File(this.getDataFolder(), "config.yml");
+
     private MessageConfig messageConfig;
     private PluginConfig pluginConfig;
+
     private CombatLogManager combatLogManager;
+
     private LiteCommands<CommandSender> liteCommands;
 
     @Override
     public void onLoad() {
-        this.messageConfig = new ConfigLoader(messagePath).loadMessageConfig( );
-        this.pluginConfig = new ConfigLoader(configPath).loadPluginConfig( );
+        this.messageConfig = new ConfigFactory(messagePath).loadMessageConfig();
+        this.pluginConfig = new ConfigFactory(configPath).loadPluginConfig();
     }
 
     @Override
     public void onEnable() {
-        this.combatLogManager = new CombatLogManager( );
+        this.combatLogManager = new CombatLogManager();
 
         this.liteCommands = LiteBukkitFactory.builder(this.getServer(), "eternal-combatlog")
-                .argument(Player.class, new BukkitPlayerArgument<>(this.getServer( ), this.messageConfig.cantFindPlayer))
+                .argument(Player.class, new BukkitPlayerArgument<>(this.getServer(), this.messageConfig.cantFindPlayer))
 
                 .commandInstance(new TagCommand(this.combatLogManager, this.messageConfig, this.pluginConfig))
-                .commandInstance(new UnTagCommand(this.combatLogManager, this.messageConfig))
+                .commandInstance(new UnTagCommand(this.combatLogManager, this.messageConfig, this.getServer()))
 
-                .invalidUsageHandler(new InvalidUsage( ))
+                .invalidUsageHandler(new InvalidUsage())
                 .permissionHandler(new PermissionMessage(this.messageConfig))
 
-                .register( );
+                .register();
 
         Bukkit.getScheduler().runTaskTimer(this,
                 new CombatLogManageTask(this.combatLogManager,
-                this.messageConfig), 20L, 20L);
-
+                        this.messageConfig, this.getServer()), 20L, 20L);
 
         Stream.of(
                 new EntityDamageByEntityListener(this.combatLogManager, this.messageConfig, this.pluginConfig),
-                new EntityDeathListener(this.combatLogManager, this.messageConfig),
+                new EntityDeathListener(this.combatLogManager, this.messageConfig, this.getServer()),
                 new PlayerCommandPreprocessListener(this.combatLogManager, this.pluginConfig, this.messageConfig),
-                new PlayerQuitListener(this.combatLogManager, this.messageConfig)
-        ).forEach(listener -> this.getServer( ).getPluginManager( ).registerEvents(listener, this));
+                new PlayerQuitListener(this.combatLogManager, this.messageConfig, this.getServer())
+        ).forEach(listener -> this.getServer().getPluginManager().registerEvents(listener, this));
+    }
+
+    public CombatLogManager getCombatLogManager() {
+        return this.combatLogManager;
     }
 
     public PluginConfig getPluginConfig() {
-        return pluginConfig;
+        return this.pluginConfig;
     }
 
     public MessageConfig getMessageConfig() {
-        return messageConfig;
+        return this.messageConfig;
     }
 
     public LiteCommands<CommandSender> getLiteCommands() {
-        return liteCommands;
+        return this.liteCommands;
     }
 }

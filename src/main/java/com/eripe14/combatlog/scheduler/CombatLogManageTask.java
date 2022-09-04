@@ -7,6 +7,7 @@ import com.eripe14.combatlog.config.MessageConfig;
 import net.md_5.bungee.api.ChatMessageType;
 import net.md_5.bungee.api.chat.TextComponent;
 import org.bukkit.Bukkit;
+import org.bukkit.Server;
 import org.bukkit.entity.Player;
 
 import java.time.Duration;
@@ -17,10 +18,12 @@ public class CombatLogManageTask implements Runnable {
 
     private final CombatLogManager combatLogManager;
     private final MessageConfig messageConfig;
+    private final Server server;
 
-    public CombatLogManageTask(CombatLogManager combatLogManager, MessageConfig messageConfig) {
+    public CombatLogManageTask(CombatLogManager combatLogManager, MessageConfig messageConfig, Server server) {
         this.combatLogManager = combatLogManager;
         this.messageConfig = messageConfig;
+        this.server = server;
     }
 
     @Override
@@ -28,13 +31,17 @@ public class CombatLogManageTask implements Runnable {
         for (UUID uuid : this.combatLogManager.getPlayersInCombat()) {
             Optional<Duration> leftTimeOptional = this.combatLogManager.getLeftTime(uuid);
 
-            if (leftTimeOptional.isEmpty()) continue;
+            if (leftTimeOptional.isEmpty()) {
+                continue;
+            }
 
             Duration leftTime = leftTimeOptional.get();
 
-            Player player = Bukkit.getPlayer(uuid);
+            Player player = this.server.getPlayer(uuid);
 
-            if (player == null) continue;
+            if (player == null) {
+                continue;
+            }
 
             if (leftTime.isZero() || leftTime.isNegative()) {
                 this.combatLogManager.remove(uuid);

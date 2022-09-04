@@ -25,7 +25,9 @@ public class EntityDamageByEntityListener implements Listener {
 
     @EventHandler
     public void onEntityDamageByEntity(EntityDamageByEntityEvent event) {
-        if (!(event.getEntity( ) instanceof Player player) || !(event.getDamager( ) instanceof Player enemy)) return;
+        if (!(event.getEntity() instanceof Player player) || !(event.getDamager() instanceof Player enemy)) {
+            return;
+        }
 
         this.combatLogManager.tag(player.getUniqueId(), enemy.getUniqueId(), Duration.ofSeconds(this.pluginConfig.combatLogTime));
         this.combatLogManager.tag(enemy.getUniqueId(), player.getUniqueId(), Duration.ofSeconds(this.pluginConfig.combatLogTime));

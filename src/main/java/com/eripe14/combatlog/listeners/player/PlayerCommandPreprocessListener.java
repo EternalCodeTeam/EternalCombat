@@ -25,12 +25,16 @@ public class PlayerCommandPreprocessListener implements Listener {
     public void onPlayerCommandPreprocess(PlayerCommandPreprocessEvent event) {
         Player player = event.getPlayer();
 
-        if (!this.combatLogManager.isInCombat(player.getUniqueId())) return;
+        if (!this.combatLogManager.isInCombat(player.getUniqueId())) {
+            return;
+        }
 
-        final String command = event.getMessage();
+        String command = event.getMessage();
 
         for (String blockedCommand : this.pluginConfig.blockedCommands) {
-            if (!command.contains(blockedCommand)) return;
+            if (!command.contains(blockedCommand)) {
+                return;
+            }
 
             event.setCancelled(true);
 

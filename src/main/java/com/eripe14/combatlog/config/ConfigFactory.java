@@ -7,11 +7,11 @@ import eu.okaeri.configs.yaml.bukkit.serdes.SerdesBukkit;
 
 import java.io.File;
 
-public class ConfigLoader {
+public class ConfigFactory {
 
     private final File dataFile;
 
-    public ConfigLoader(File dataFile) {
+    public ConfigFactory(File dataFile) {
         this.dataFile = dataFile;
     }
 

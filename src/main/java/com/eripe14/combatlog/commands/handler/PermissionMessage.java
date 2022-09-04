@@ -17,7 +17,7 @@ public class PermissionMessage implements PermissionHandler<CommandSender> {
 
     @Override
     public void handle(CommandSender sender, LiteInvocation invocation, RequiredPermissions requiredPermissions) {
-        sender.sendMessage(ChatUtil.fixColor( messageConfig.noPermission));
+        sender.sendMessage(ChatUtil.fixColor(messageConfig.noPermission));
     }
 
 }
