@@ -15,6 +15,15 @@ public class ConfigLoader {
         this.dataFile = dataFile;
     }
 
+    public PluginConfig loadPluginConfig() {
+        return ConfigManager.create(PluginConfig.class, (it) -> {
+            it.withConfigurer(new YamlBukkitConfigurer(), new SerdesBukkit());
+            it.withBindFile(this.dataFile);
+            it.saveDefaults();
+            it.load(true);
+        });
+    }
+
     public MessageConfig loadMessageConfig() {
         return ConfigManager.create(MessageConfig.class, (it) -> {
             it.withConfigurer(new YamlBukkitConfigurer(), new SerdesBukkit());
