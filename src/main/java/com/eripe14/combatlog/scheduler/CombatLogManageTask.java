@@ -1,13 +1,12 @@
 package com.eripe14.combatlog.scheduler;
 
-import com.eripe14.combatlog.bukkit.util.ChatUtil;
 import com.eripe14.combatlog.bukkit.util.DurationUtil;
 import com.eripe14.combatlog.combatlog.CombatLogManager;
 import com.eripe14.combatlog.config.MessageConfig;
-import net.md_5.bungee.api.ChatMessageType;
-import net.md_5.bungee.api.chat.TextComponent;
+import com.eripe14.combatlog.message.MessageAnnouncer;
 import org.bukkit.Server;
 import org.bukkit.entity.Player;
+import panda.utilities.text.Formatter;
 
 import java.time.Duration;
 import java.util.Optional;
@@ -18,11 +17,13 @@ public class CombatLogManageTask implements Runnable {
     private final CombatLogManager combatLogManager;
     private final MessageConfig messageConfig;
     private final Server server;
+    private final MessageAnnouncer messageAnnouncer;
 
-    public CombatLogManageTask(CombatLogManager combatLogManager, MessageConfig messageConfig, Server server) {
+    public CombatLogManageTask(CombatLogManager combatLogManager, MessageConfig messageConfig, Server server, MessageAnnouncer messageAnnouncer) {
         this.combatLogManager = combatLogManager;
         this.messageConfig = messageConfig;
         this.server = server;
+        this.messageAnnouncer = messageAnnouncer;
     }
 
     @Override
@@ -45,13 +46,16 @@ public class CombatLogManageTask implements Runnable {
             if (leftTime.isZero() || leftTime.isNegative()) {
                 this.combatLogManager.remove(uuid);
 
-                player.sendMessage(ChatUtil.color(this.messageConfig.unTagPlayer));
+                this.messageAnnouncer.sendMessage(player.getUniqueId(), this.messageConfig.unTagPlayer);
 
                 continue;
             }
 
-            player.spigot().sendMessage(ChatMessageType.ACTION_BAR, new TextComponent(ChatUtil.color(this.messageConfig.combatLogDuration)
-                    .replaceAll("%TIME%", DurationUtil.format(leftTime))));
+            Formatter formatter = new Formatter();
+
+            formatter.register("%TIME%", DurationUtil.format(leftTime));
+
+            this.messageAnnouncer.sendActionBar(uuid, formatter.format(this.messageConfig.combatLogDuration));
         }
     }
 

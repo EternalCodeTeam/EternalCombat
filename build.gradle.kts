@@ -30,6 +30,8 @@ dependencies {
 
     implementation("dev.rollczi.litecommands:bukkit-adventure:2.5.0")
 
+    implementation("org.panda-lang:panda-utilities:0.5.2-alpha")
+
     implementation("eu.okaeri:okaeri-configs-yaml-bukkit:4.0.6")
     implementation("eu.okaeri:okaeri-configs-serdes-bukkit:4.0.6")
 
@@ -67,7 +69,7 @@ tasks.withType<com.github.jengelman.gradle.plugins.shadow.tasks.ShadowJar> {
     listOf(
             "panda.std",
             "panda.utilities",
-            "org.panda_lang",
+            "org.panda-lang",
             "net.dzikoysk",
             "net.kyori",
             "eu.okaeri",

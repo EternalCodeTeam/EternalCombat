@@ -1,9 +1,9 @@
 package com.eripe14.combatlog.listeners.player;
 
-import com.eripe14.combatlog.bukkit.util.ChatUtil;
 import com.eripe14.combatlog.combatlog.CombatLogManager;
 import com.eripe14.combatlog.config.MessageConfig;
 import com.eripe14.combatlog.config.PluginConfig;
+import com.eripe14.combatlog.message.MessageAnnouncer;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -14,11 +14,13 @@ public class PlayerCommandPreprocessListener implements Listener {
     private final CombatLogManager combatLogManager;
     private final PluginConfig pluginConfig;
     private final MessageConfig messageConfig;
+    private final MessageAnnouncer messageAnnouncer;
 
-    public PlayerCommandPreprocessListener(CombatLogManager combatLogManager, PluginConfig pluginConfig, MessageConfig messageConfig) {
+    public PlayerCommandPreprocessListener(CombatLogManager combatLogManager, PluginConfig pluginConfig, MessageConfig messageConfig, MessageAnnouncer messageAnnouncer) {
         this.combatLogManager = combatLogManager;
         this.pluginConfig = pluginConfig;
         this.messageConfig = messageConfig;
+        this.messageAnnouncer = messageAnnouncer;
     }
 
     @EventHandler
@@ -38,7 +40,7 @@ public class PlayerCommandPreprocessListener implements Listener {
 
             event.setCancelled(true);
 
-            player.sendMessage(ChatUtil.color(this.messageConfig.cantUseCommand));
+            this.messageAnnouncer.sendMessage(player.getUniqueId(), this.messageConfig.cantUseCommand);
         }
     }
 }

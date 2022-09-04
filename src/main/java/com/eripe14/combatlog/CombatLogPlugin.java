@@ -12,10 +12,15 @@ import com.eripe14.combatlog.listeners.entity.EntityDamageByEntityListener;
 import com.eripe14.combatlog.listeners.entity.EntityDeathListener;
 import com.eripe14.combatlog.listeners.player.PlayerCommandPreprocessListener;
 import com.eripe14.combatlog.listeners.player.PlayerQuitListener;
+import com.eripe14.combatlog.message.MessageAnnouncer;
 import com.eripe14.combatlog.scheduler.CombatLogManageTask;
+import com.eripe14.combatlog.shared.legacy.LegacyColorProcessor;
 import dev.rollczi.litecommands.LiteCommands;
 import dev.rollczi.litecommands.bukkit.LiteBukkitFactory;
 import dev.rollczi.litecommands.bukkit.tools.BukkitPlayerArgument;
+import net.kyori.adventure.platform.AudienceProvider;
+import net.kyori.adventure.platform.bukkit.BukkitAudiences;
+import net.kyori.adventure.text.minimessage.MiniMessage;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -31,6 +36,11 @@ public class CombatLogPlugin extends JavaPlugin {
     private MessageConfig messageConfig;
     private PluginConfig pluginConfig;
 
+    private AudienceProvider audienceProvider;
+    private MiniMessage miniMessage;
+
+    private MessageAnnouncer messageAnnouncer;
+
     private CombatLogManager combatLogManager;
 
     private LiteCommands<CommandSender> liteCommands;
@@ -45,27 +55,50 @@ public class CombatLogPlugin extends JavaPlugin {
     public void onEnable() {
         this.combatLogManager = new CombatLogManager();
 
+        this.audienceProvider = BukkitAudiences.create(this);
+        this.miniMessage = MiniMessage.builder()
+                .postProcessor(new LegacyColorProcessor())
+                .build();
+
+        this.messageAnnouncer = new MessageAnnouncer(this.audienceProvider, this.miniMessage);
+
         this.liteCommands = LiteBukkitFactory.builder(this.getServer(), "eternal-combatlog")
                 .argument(Player.class, new BukkitPlayerArgument<>(this.getServer(), this.messageConfig.cantFindPlayer))
 
-                .commandInstance(new TagCommand(this.combatLogManager, this.messageConfig, this.pluginConfig))
-                .commandInstance(new UnTagCommand(this.combatLogManager, this.messageConfig, this.getServer()))
+                .commandInstance(new TagCommand(this.combatLogManager, this.messageConfig, this.pluginConfig, this.messageAnnouncer))
+                .commandInstance(new UnTagCommand(this.combatLogManager, this.messageConfig, this.getServer(), this.messageAnnouncer))
 
-                .invalidUsageHandler(new InvalidUsage())
-                .permissionHandler(new PermissionMessage(this.messageConfig))
+                .invalidUsageHandler(new InvalidUsage(this.messageAnnouncer))
+                .permissionHandler(new PermissionMessage(this.messageConfig, this.messageAnnouncer))
 
                 .register();
 
         this.getServer().getScheduler().runTaskTimer(this,
-                new CombatLogManageTask(this.combatLogManager,
-                        this.messageConfig, this.getServer()), 20L, 20L);
+                new CombatLogManageTask(
+                        this.combatLogManager,
+                        this.messageConfig,
+                        this.getServer(),
+                        this.messageAnnouncer),
+                        20L, 20L);
 
         Stream.of(
-                new EntityDamageByEntityListener(this.combatLogManager, this.messageConfig, this.pluginConfig),
-                new EntityDeathListener(this.combatLogManager, this.messageConfig, this.getServer()),
-                new PlayerCommandPreprocessListener(this.combatLogManager, this.pluginConfig, this.messageConfig),
-                new PlayerQuitListener(this.combatLogManager, this.messageConfig, this.getServer())
+                new EntityDamageByEntityListener(this.combatLogManager, this.messageConfig, this.pluginConfig, this.messageAnnouncer),
+                new EntityDeathListener(this.combatLogManager, this.messageConfig, this.getServer(), this.messageAnnouncer),
+                new PlayerCommandPreprocessListener(this.combatLogManager, this.pluginConfig, this.messageConfig, this.messageAnnouncer),
+                new PlayerQuitListener(this.combatLogManager, this.messageConfig, this.getServer(), this.messageAnnouncer)
         ).forEach(listener -> this.getServer().getPluginManager().registerEvents(listener, this));
+    }
+
+    public MiniMessage getMiniMessage() {
+        return this.miniMessage;
+    }
+
+    public AudienceProvider getAudienceProvider() {
+        return this.audienceProvider;
+    }
+
+    public MessageAnnouncer getMessageAnnouncer() {
+        return this.messageAnnouncer;
     }
 
     public CombatLogManager getCombatLogManager() {

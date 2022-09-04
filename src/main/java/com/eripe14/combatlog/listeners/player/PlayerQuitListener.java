@@ -1,8 +1,8 @@
 package com.eripe14.combatlog.listeners.player;
 
-import com.eripe14.combatlog.bukkit.util.ChatUtil;
 import com.eripe14.combatlog.combatlog.CombatLogManager;
 import com.eripe14.combatlog.config.MessageConfig;
+import com.eripe14.combatlog.message.MessageAnnouncer;
 import org.bukkit.Server;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -14,11 +14,13 @@ public class PlayerQuitListener implements Listener {
     private final CombatLogManager combatLogManager;
     private final MessageConfig messageConfig;
     private final Server server;
+    private final MessageAnnouncer messageAnnouncer;
 
-    public PlayerQuitListener(CombatLogManager combatLogManager, MessageConfig messageConfig, Server server) {
+    public PlayerQuitListener(CombatLogManager combatLogManager, MessageConfig messageConfig, Server server, MessageAnnouncer messageAnnouncer) {
         this.combatLogManager = combatLogManager;
         this.messageConfig = messageConfig;
         this.server = server;
+        this.messageAnnouncer = messageAnnouncer;
     }
 
     @EventHandler
@@ -35,7 +37,7 @@ public class PlayerQuitListener implements Listener {
             return;
         }
 
-        enemy.sendMessage(ChatUtil.color(this.messageConfig.unTagPlayer));
+        this.messageAnnouncer.sendMessage(enemy.getUniqueId(), this.messageConfig.unTagPlayer);
 
         combatLogManager.remove(enemy.getUniqueId());
         combatLogManager.remove(player.getUniqueId());

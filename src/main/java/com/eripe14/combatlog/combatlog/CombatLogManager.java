@@ -12,24 +12,24 @@ import java.util.UUID;
 
 public class CombatLogManager {
 
-    private final Map<UUID, Instant> combatLogLeftTimeMap = new HashMap<>();
-    private final Map<UUID, UUID> combatLogMap = new HashMap<>();
+    private final Map<UUID, Combat> combatLogMap = new HashMap<>();
 
     public boolean isInCombat(UUID player) {
-        return this.combatLogLeftTimeMap.containsKey(player);
+        return this.combatLogMap.containsKey(player);
     }
 
     public UUID getEnemy(UUID player) {
-        return combatLogMap.get(player);
+        Combat combat = this.combatLogMap.get(player);
+
+        return combat.getEnemy();
     }
 
     public void remove(UUID player) {
-        combatLogLeftTimeMap.remove(player);
         combatLogMap.remove(player);
     }
 
     public List<UUID> getPlayersInCombat() {
-        return new ArrayList<>(this.combatLogLeftTimeMap.keySet());
+        return new ArrayList<>(this.combatLogMap.keySet());
     }
 
     public void tag(UUID player, UUID enemy, Duration time) {
@@ -37,23 +37,24 @@ public class CombatLogManager {
             this.remove(player);
         }
 
-        combatLogLeftTimeMap.put(player, Instant.now().plus(time));
-        combatLogMap.put(player, enemy);
+        Combat combat = new Combat(enemy, Instant.now().plus(time));
+
+        combatLogMap.put(player, combat);
     }
 
     public Optional<Duration> getLeftTime(UUID player) {
+        Combat combat = this.getCombatLogMap().get(player);
+
         Instant now = Instant.now();
-        Instant endOfCombatLog = this.getCombatLogLeftTimeMap().get(player);
+        Instant endOfCombatLog = combat.getEndOfCombatLog();
+
         Duration between = Duration.between(now, endOfCombatLog);
 
         return Optional.ofNullable(between);
     }
 
-    public Map<UUID, Instant> getCombatLogLeftTimeMap() {
-        return Collections.unmodifiableMap(this.combatLogLeftTimeMap);
-    }
-
-    public Map<UUID, UUID> getCombatLogMap() {
+    public Map<UUID, Combat> getCombatLogMap() {
         return Collections.unmodifiableMap(this.combatLogMap);
     }
+
 }
