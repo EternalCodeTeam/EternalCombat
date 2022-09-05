@@ -37,7 +37,7 @@ public class CombatLogManager {
             this.remove(player);
         }
 
-        Combat combat = new Combat(enemy, Instant.now().plus(time));
+        Combat combat = new Combat(player, enemy, Instant.now().plus(time));
 
         combatLogMap.put(player, combat);
     }

@@ -29,4 +29,12 @@ public class MessageConfig extends OkaeriConfig {
 
     public String adminUnTagPlayer = "&7Odebrałeś &dCombatLoga&7, graczu &d%PLAYER%&7 oraz jego przeciwnikowi.";
 
+    @Comment("Sekcja z wiadomościami do komend.")
+
+    public String invalidUsage = "&4Nie poprawne użycie komendy &8>> &7%COMMAND%";
+
+    public String invalidUsageHeader = "&cNie poprawne użycie komendy!";
+
+    public String invalidUsageEntry = "&8 >> &7";
+
 }

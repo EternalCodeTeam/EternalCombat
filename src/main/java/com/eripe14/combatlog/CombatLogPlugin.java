@@ -68,7 +68,7 @@ public class CombatLogPlugin extends JavaPlugin {
                 .commandInstance(new TagCommand(this.combatLogManager, this.messageConfig, this.pluginConfig, this.messageAnnouncer))
                 .commandInstance(new UnTagCommand(this.combatLogManager, this.messageConfig, this.getServer(), this.messageAnnouncer))
 
-                .invalidUsageHandler(new InvalidUsage(this.messageAnnouncer))
+                .invalidUsageHandler(new InvalidUsage(this.messageAnnouncer, this.messageConfig))
                 .permissionHandler(new PermissionMessage(this.messageConfig, this.messageAnnouncer))
 
                 .register();
