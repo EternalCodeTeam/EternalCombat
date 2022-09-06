@@ -36,7 +36,6 @@ public class CombatTask implements Runnable {
             Instant now = Instant.now();
             Instant remainingTime = combat.getEndOfCombatLog();
 
-
             if (now.isBefore(remainingTime)) {
                 Duration between = Duration.between(now, remainingTime);
 
