@@ -1,35 +1,30 @@
-package com.eripe14.combatlog.combatlog;
+package com.eripe14.combatlog.combat;
 
 import java.time.Duration;
 import java.time.Instant;
-import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
 
-public class CombatLogManager {
+public class CombatManager {
 
-    private final Map<UUID, Combat> combatLogMap = new HashMap<>();
+    private final Map<UUID, Combat> combats = new HashMap<>();
 
     public boolean isInCombat(UUID player) {
-        return this.combatLogMap.containsKey(player);
+        return this.combats.containsKey(player);
     }
 
     public UUID getEnemy(UUID player) {
-        Combat combat = this.combatLogMap.get(player);
+        Combat combat = this.combats.get(player);
 
         return combat.getEnemy();
     }
 
     public void remove(UUID player) {
-        combatLogMap.remove(player);
-    }
-
-    public List<UUID> getPlayersInCombat() {
-        return new ArrayList<>(this.combatLogMap.keySet());
+        combats.remove(player);
     }
     
     public void tag(UUID player, UUID enemy, Duration time) {
@@ -42,11 +37,11 @@ public class CombatLogManager {
 
         Combat combat = new Combat(player, enemy, extendedTime);
 
-        combatLogMap.put(player, combat);
+        combats.put(player, combat);
     }
 
     public Optional<Duration> getLeftTime(UUID player) {
-        Combat combat = this.getCombatLogMap().get(player);
+        Combat combat = this.combats.get(player);
 
         Instant now = Instant.now();
         Instant endOfCombatLog = combat.getEndOfCombatLog();
@@ -56,8 +51,8 @@ public class CombatLogManager {
         return Optional.ofNullable(between);
     }
 
-    public Map<UUID, Combat> getCombatLogMap() {
-        return Collections.unmodifiableMap(this.combatLogMap);
+    public Collection<Combat> getCombats() {
+        return Collections.unmodifiableCollection(this.combats.values());
     }
 
 }

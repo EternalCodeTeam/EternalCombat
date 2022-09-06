@@ -1,6 +1,6 @@
 package com.eripe14.combatlog.listener.entity;
 
-import com.eripe14.combatlog.combatlog.CombatLogManager;
+import com.eripe14.combatlog.combat.CombatManager;
 import com.eripe14.combatlog.config.MessageConfig;
 import com.eripe14.combatlog.message.MessageAnnouncer;
 import org.bukkit.Server;
@@ -11,13 +11,13 @@ import org.bukkit.event.entity.EntityDeathEvent;
 
 public class EntityDeathListener implements Listener {
 
-    private final CombatLogManager combatLogManager;
+    private final CombatManager combatManager;
     private final MessageConfig messageConfig;
     private final Server server;
     private final MessageAnnouncer messageAnnouncer;
 
-    public EntityDeathListener(CombatLogManager combatLogManager, MessageConfig messageConfig, Server server, MessageAnnouncer messageAnnouncer) {
-        this.combatLogManager = combatLogManager;
+    public EntityDeathListener(CombatManager combatManager, MessageConfig messageConfig, Server server, MessageAnnouncer messageAnnouncer) {
+        this.combatManager = combatManager;
         this.messageConfig = messageConfig;
         this.server = server;
         this.messageAnnouncer = messageAnnouncer;
@@ -29,11 +29,11 @@ public class EntityDeathListener implements Listener {
             return;
         }
 
-        if (!this.combatLogManager.isInCombat(player.getUniqueId())) {
+        if (!this.combatManager.isInCombat(player.getUniqueId())) {
             return;
         }
 
-        Player enemy = this.server.getPlayer(this.combatLogManager.getEnemy(player.getUniqueId()));
+        Player enemy = this.server.getPlayer(this.combatManager.getEnemy(player.getUniqueId()));
 
         if (enemy == null) {
             return;
@@ -41,7 +41,7 @@ public class EntityDeathListener implements Listener {
 
         this.messageAnnouncer.sendMessage(enemy.getUniqueId(), this.messageConfig.unTagPlayer);
 
-        this.combatLogManager.remove(player.getUniqueId());
-        this.combatLogManager.remove(enemy.getUniqueId());
+        this.combatManager.remove(player.getUniqueId());
+        this.combatManager.remove(enemy.getUniqueId());
     }
 }

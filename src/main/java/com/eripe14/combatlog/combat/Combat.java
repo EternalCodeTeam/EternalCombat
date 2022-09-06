@@ -1,4 +1,4 @@
-package com.eripe14.combatlog.combatlog;
+package com.eripe14.combatlog.combat;
 
 import java.time.Instant;
 import java.util.UUID;

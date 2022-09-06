@@ -1,6 +1,6 @@
 package com.eripe14.combatlog.command.implementation;
 
-import com.eripe14.combatlog.combatlog.CombatLogManager;
+import com.eripe14.combatlog.combat.CombatManager;
 import com.eripe14.combatlog.config.MessageConfig;
 import com.eripe14.combatlog.message.MessageAnnouncer;
 import dev.rollczi.litecommands.argument.Arg;
@@ -18,13 +18,13 @@ import java.util.UUID;
 @Permission("eternalcombatlog.untag")
 public class UnTagCommand {
 
-    private final CombatLogManager combatLogManager;
+    private final CombatManager combatManager;
     private final MessageConfig messageConfig;
     private final Server server;
     private final MessageAnnouncer messageAnnouncer;
 
-    public UnTagCommand(CombatLogManager combatLogManager, MessageConfig messageConfig, Server server, MessageAnnouncer messageAnnouncer) {
-        this.combatLogManager = combatLogManager;
+    public UnTagCommand(CombatManager combatManager, MessageConfig messageConfig, Server server, MessageAnnouncer messageAnnouncer) {
+        this.combatManager = combatManager;
         this.messageConfig = messageConfig;
         this.server = server;
         this.messageAnnouncer = messageAnnouncer;
@@ -32,7 +32,7 @@ public class UnTagCommand {
 
     @Execute(min = 1)
     public void execute(Player player, @Arg @Name("target") Player target) {
-        UUID enemyUuid = this.combatLogManager.getEnemy(target.getUniqueId());
+        UUID enemyUuid = this.combatManager.getEnemy(target.getUniqueId());
 
         Player enemy = server.getPlayer(enemyUuid);
 
@@ -43,8 +43,8 @@ public class UnTagCommand {
         this.messageAnnouncer.sendMessage(target.getUniqueId(), this.messageConfig.unTagPlayer);
         this.messageAnnouncer.sendMessage(enemy.getUniqueId(), this.messageConfig.unTagPlayer);
 
-        this.combatLogManager.remove(target.getUniqueId());
-        this.combatLogManager.remove(enemy.getUniqueId());
+        this.combatManager.remove(target.getUniqueId());
+        this.combatManager.remove(enemy.getUniqueId());
 
         Formatter formatter = new Formatter();
 

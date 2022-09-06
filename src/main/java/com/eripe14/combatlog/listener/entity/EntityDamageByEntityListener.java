@@ -1,6 +1,6 @@
 package com.eripe14.combatlog.listener.entity;
 
-import com.eripe14.combatlog.combatlog.CombatLogManager;
+import com.eripe14.combatlog.combat.CombatManager;
 import com.eripe14.combatlog.config.MessageConfig;
 import com.eripe14.combatlog.config.PluginConfig;
 import com.eripe14.combatlog.message.MessageAnnouncer;
@@ -13,13 +13,13 @@ import java.time.Duration;
 
 public class EntityDamageByEntityListener implements Listener {
 
-    private final CombatLogManager combatLogManager;
+    private final CombatManager combatManager;
     private final MessageConfig messageConfig;
     private final PluginConfig pluginConfig;
     private final MessageAnnouncer messageAnnouncer;
 
-    public EntityDamageByEntityListener(CombatLogManager combatLogManager, MessageConfig messageConfig, PluginConfig pluginConfig, MessageAnnouncer messageAnnouncer) {
-        this.combatLogManager = combatLogManager;
+    public EntityDamageByEntityListener(CombatManager combatManager, MessageConfig messageConfig, PluginConfig pluginConfig, MessageAnnouncer messageAnnouncer) {
+        this.combatManager = combatManager;
         this.messageConfig = messageConfig;
         this.pluginConfig = pluginConfig;
         this.messageAnnouncer = messageAnnouncer;
@@ -35,8 +35,8 @@ public class EntityDamageByEntityListener implements Listener {
             return;
         }
 
-        this.combatLogManager.tag(player.getUniqueId(), enemy.getUniqueId(), Duration.ofSeconds(this.pluginConfig.combatLogTime));
-        this.combatLogManager.tag(enemy.getUniqueId(), player.getUniqueId(), Duration.ofSeconds(this.pluginConfig.combatLogTime));
+        this.combatManager.tag(player.getUniqueId(), enemy.getUniqueId(), Duration.ofSeconds(this.pluginConfig.combatLogTime));
+        this.combatManager.tag(enemy.getUniqueId(), player.getUniqueId(), Duration.ofSeconds(this.pluginConfig.combatLogTime));
 
         this.messageAnnouncer.sendMessage(player.getUniqueId(), this.messageConfig.tagPlayer);
         this.messageAnnouncer.sendMessage(enemy.getUniqueId(), this.messageConfig.tagPlayer);

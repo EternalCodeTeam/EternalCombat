@@ -1,6 +1,6 @@
 package com.eripe14.combatlog.listener.player;
 
-import com.eripe14.combatlog.combatlog.CombatLogManager;
+import com.eripe14.combatlog.combat.CombatManager;
 import com.eripe14.combatlog.config.MessageConfig;
 import com.eripe14.combatlog.config.PluginConfig;
 import com.eripe14.combatlog.message.MessageAnnouncer;
@@ -11,13 +11,13 @@ import org.bukkit.event.player.PlayerCommandPreprocessEvent;
 
 public class PlayerCommandPreprocessListener implements Listener {
 
-    private final CombatLogManager combatLogManager;
+    private final CombatManager combatManager;
     private final PluginConfig pluginConfig;
     private final MessageConfig messageConfig;
     private final MessageAnnouncer messageAnnouncer;
 
-    public PlayerCommandPreprocessListener(CombatLogManager combatLogManager, PluginConfig pluginConfig, MessageConfig messageConfig, MessageAnnouncer messageAnnouncer) {
-        this.combatLogManager = combatLogManager;
+    public PlayerCommandPreprocessListener(CombatManager combatManager, PluginConfig pluginConfig, MessageConfig messageConfig, MessageAnnouncer messageAnnouncer) {
+        this.combatManager = combatManager;
         this.pluginConfig = pluginConfig;
         this.messageConfig = messageConfig;
         this.messageAnnouncer = messageAnnouncer;
@@ -27,7 +27,7 @@ public class PlayerCommandPreprocessListener implements Listener {
     public void onPlayerCommandPreprocess(PlayerCommandPreprocessEvent event) {
         Player player = event.getPlayer();
 
-        if (!this.combatLogManager.isInCombat(player.getUniqueId())) {
+        if (!this.combatManager.isInCombat(player.getUniqueId())) {
             return;
         }
 

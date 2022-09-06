@@ -1,6 +1,6 @@
 package com.eripe14.combatlog.listener.player;
 
-import com.eripe14.combatlog.combatlog.CombatLogManager;
+import com.eripe14.combatlog.combat.CombatManager;
 import com.eripe14.combatlog.config.MessageConfig;
 import com.eripe14.combatlog.message.MessageAnnouncer;
 import org.bukkit.Server;
@@ -11,13 +11,13 @@ import org.bukkit.event.player.PlayerQuitEvent;
 
 public class PlayerQuitListener implements Listener {
 
-    private final CombatLogManager combatLogManager;
+    private final CombatManager combatManager;
     private final MessageConfig messageConfig;
     private final Server server;
     private final MessageAnnouncer messageAnnouncer;
 
-    public PlayerQuitListener(CombatLogManager combatLogManager, MessageConfig messageConfig, Server server, MessageAnnouncer messageAnnouncer) {
-        this.combatLogManager = combatLogManager;
+    public PlayerQuitListener(CombatManager combatManager, MessageConfig messageConfig, Server server, MessageAnnouncer messageAnnouncer) {
+        this.combatManager = combatManager;
         this.messageConfig = messageConfig;
         this.server = server;
         this.messageAnnouncer = messageAnnouncer;
@@ -27,11 +27,11 @@ public class PlayerQuitListener implements Listener {
     public void onPlayerQuit(PlayerQuitEvent event) {
         Player player = event.getPlayer();
 
-        if (!this.combatLogManager.isInCombat(player.getUniqueId())) {
+        if (!this.combatManager.isInCombat(player.getUniqueId())) {
             return;
         }
 
-        Player enemy = this.server.getPlayer(this.combatLogManager.getEnemy(player.getUniqueId()));
+        Player enemy = this.server.getPlayer(this.combatManager.getEnemy(player.getUniqueId()));
 
         if (enemy == null) {
             return;
@@ -39,8 +39,8 @@ public class PlayerQuitListener implements Listener {
 
         this.messageAnnouncer.sendMessage(enemy.getUniqueId(), this.messageConfig.unTagPlayer);
 
-        combatLogManager.remove(enemy.getUniqueId());
-        combatLogManager.remove(player.getUniqueId());
+        combatManager.remove(enemy.getUniqueId());
+        combatManager.remove(player.getUniqueId());
 
         player.setHealth(0.0);
     }

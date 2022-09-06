@@ -1,6 +1,6 @@
 package com.eripe14.combatlog;
 
-import com.eripe14.combatlog.combatlog.CombatLogManager;
+import com.eripe14.combatlog.combat.CombatManager;
 import com.eripe14.combatlog.command.handler.InvalidUsage;
 import com.eripe14.combatlog.command.handler.PermissionMessage;
 import com.eripe14.combatlog.command.implementation.TagCommand;
@@ -13,7 +13,7 @@ import com.eripe14.combatlog.listener.entity.EntityDeathListener;
 import com.eripe14.combatlog.listener.player.PlayerCommandPreprocessListener;
 import com.eripe14.combatlog.listener.player.PlayerQuitListener;
 import com.eripe14.combatlog.message.MessageAnnouncer;
-import com.eripe14.combatlog.scheduler.CombatLogManageTask;
+import com.eripe14.combatlog.scheduler.CombatTask;
 import com.eripe14.combatlog.util.legacy.LegacyColorProcessor;
 import dev.rollczi.litecommands.LiteCommands;
 import dev.rollczi.litecommands.bukkit.LiteBukkitFactory;
@@ -41,7 +41,7 @@ public class CombatLogPlugin extends JavaPlugin {
 
     private MessageAnnouncer messageAnnouncer;
 
-    private CombatLogManager combatLogManager;
+    private CombatManager combatManager;
 
     private LiteCommands<CommandSender> liteCommands;
 
@@ -53,7 +53,7 @@ public class CombatLogPlugin extends JavaPlugin {
 
     @Override
     public void onEnable() {
-        this.combatLogManager = new CombatLogManager();
+        this.combatManager = new CombatManager();
 
         this.audienceProvider = BukkitAudiences.create(this);
         this.miniMessage = MiniMessage.builder()
@@ -65,8 +65,8 @@ public class CombatLogPlugin extends JavaPlugin {
         this.liteCommands = LiteBukkitFactory.builder(this.getServer(), "eternal-combatlog")
                 .argument(Player.class, new BukkitPlayerArgument<>(this.getServer(), this.messageConfig.cantFindPlayer))
 
-                .commandInstance(new TagCommand(this.combatLogManager, this.messageConfig, this.pluginConfig, this.messageAnnouncer))
-                .commandInstance(new UnTagCommand(this.combatLogManager, this.messageConfig, this.getServer(), this.messageAnnouncer))
+                .commandInstance(new TagCommand(this.combatManager, this.messageConfig, this.pluginConfig, this.messageAnnouncer))
+                .commandInstance(new UnTagCommand(this.combatManager, this.messageConfig, this.getServer(), this.messageAnnouncer))
 
                 .invalidUsageHandler(new InvalidUsage(this.messageAnnouncer, this.messageConfig))
                 .permissionHandler(new PermissionMessage(this.messageConfig, this.messageAnnouncer))
@@ -74,18 +74,18 @@ public class CombatLogPlugin extends JavaPlugin {
                 .register();
 
         this.getServer().getScheduler().runTaskTimer(this,
-                new CombatLogManageTask(
-                        this.combatLogManager,
+                new CombatTask(
+                        this.combatManager,
                         this.messageConfig,
                         this.getServer(),
                         this.messageAnnouncer),
                         20L, 20L);
 
         Stream.of(
-                new EntityDamageByEntityListener(this.combatLogManager, this.messageConfig, this.pluginConfig, this.messageAnnouncer),
-                new EntityDeathListener(this.combatLogManager, this.messageConfig, this.getServer(), this.messageAnnouncer),
-                new PlayerCommandPreprocessListener(this.combatLogManager, this.pluginConfig, this.messageConfig, this.messageAnnouncer),
-                new PlayerQuitListener(this.combatLogManager, this.messageConfig, this.getServer(), this.messageAnnouncer)
+                new EntityDamageByEntityListener(this.combatManager, this.messageConfig, this.pluginConfig, this.messageAnnouncer),
+                new EntityDeathListener(this.combatManager, this.messageConfig, this.getServer(), this.messageAnnouncer),
+                new PlayerCommandPreprocessListener(this.combatManager, this.pluginConfig, this.messageConfig, this.messageAnnouncer),
+                new PlayerQuitListener(this.combatManager, this.messageConfig, this.getServer(), this.messageAnnouncer)
         ).forEach(listener -> this.getServer().getPluginManager().registerEvents(listener, this));
     }
 
@@ -101,8 +101,8 @@ public class CombatLogPlugin extends JavaPlugin {
         return this.messageAnnouncer;
     }
 
-    public CombatLogManager getCombatLogManager() {
-        return this.combatLogManager;
+    public CombatManager getCombatLogManager() {
+        return this.combatManager;
     }
 
     public PluginConfig getPluginConfig() {

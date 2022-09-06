@@ -1,6 +1,6 @@
 package com.eripe14.combatlog.command.implementation;
 
-import com.eripe14.combatlog.combatlog.CombatLogManager;
+import com.eripe14.combatlog.combat.CombatManager;
 import com.eripe14.combatlog.config.MessageConfig;
 import com.eripe14.combatlog.config.PluginConfig;
 import com.eripe14.combatlog.message.MessageAnnouncer;
@@ -18,13 +18,13 @@ import java.time.Duration;
 @Permission("eternalcombatlog.tag")
 public class TagCommand {
 
-    private final CombatLogManager combatLogManager;
+    private final CombatManager combatManager;
     private final MessageConfig messageConfig;
     private final PluginConfig pluginConfig;
     private final MessageAnnouncer messageAnnouncer;
 
-    public TagCommand(CombatLogManager combatLogManager, MessageConfig messageConfig, PluginConfig pluginConfig, MessageAnnouncer messageAnnouncer) {
-        this.combatLogManager = combatLogManager;
+    public TagCommand(CombatManager combatManager, MessageConfig messageConfig, PluginConfig pluginConfig, MessageAnnouncer messageAnnouncer) {
+        this.combatManager = combatManager;
         this.messageConfig = messageConfig;
         this.pluginConfig = pluginConfig;
         this.messageAnnouncer = messageAnnouncer;
@@ -32,8 +32,8 @@ public class TagCommand {
 
     @Execute(min = 2)
     public void execute(Player player, @Arg @Name("firstTarget") Player firstTarget, @Arg @Name("secondTarget") Player secondTarget) {
-        this.combatLogManager.tag(firstTarget.getUniqueId(), secondTarget.getUniqueId(), Duration.ofSeconds(this.pluginConfig.combatLogTime));
-        this.combatLogManager.tag(secondTarget.getUniqueId(), firstTarget.getUniqueId(), Duration.ofSeconds(this.pluginConfig.combatLogTime));
+        this.combatManager.tag(firstTarget.getUniqueId(), secondTarget.getUniqueId(), Duration.ofSeconds(this.pluginConfig.combatLogTime));
+        this.combatManager.tag(secondTarget.getUniqueId(), firstTarget.getUniqueId(), Duration.ofSeconds(this.pluginConfig.combatLogTime));
 
         Formatter formatter = new Formatter();
 
