@@ -1,19 +1,19 @@
 package com.eripe14.combatlog;
 
 import com.eripe14.combatlog.combat.CombatManager;
+import com.eripe14.combatlog.combat.CombatTask;
 import com.eripe14.combatlog.command.handler.InvalidUsage;
 import com.eripe14.combatlog.command.handler.PermissionMessage;
 import com.eripe14.combatlog.command.implementation.TagCommand;
 import com.eripe14.combatlog.command.implementation.UnTagCommand;
-import com.eripe14.combatlog.config.ConfigFactory;
-import com.eripe14.combatlog.config.MessageConfig;
-import com.eripe14.combatlog.config.PluginConfig;
+import com.eripe14.combatlog.config.ConfigManager;
+import com.eripe14.combatlog.config.implementation.MessageConfig;
+import com.eripe14.combatlog.config.implementation.PluginConfig;
 import com.eripe14.combatlog.listener.entity.EntityDamageByEntityListener;
 import com.eripe14.combatlog.listener.entity.EntityDeathListener;
 import com.eripe14.combatlog.listener.player.PlayerCommandPreprocessListener;
 import com.eripe14.combatlog.listener.player.PlayerQuitListener;
 import com.eripe14.combatlog.message.MessageAnnouncer;
-import com.eripe14.combatlog.combat.CombatTask;
 import com.eripe14.combatlog.util.legacy.LegacyColorProcessor;
 import dev.rollczi.litecommands.LiteCommands;
 import dev.rollczi.litecommands.bukkit.LiteBukkitFactory;
@@ -21,17 +21,14 @@ import dev.rollczi.litecommands.bukkit.tools.BukkitPlayerArgument;
 import net.kyori.adventure.platform.AudienceProvider;
 import net.kyori.adventure.platform.bukkit.BukkitAudiences;
 import net.kyori.adventure.text.minimessage.MiniMessage;
+import org.bukkit.Server;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 
-import java.io.File;
 import java.util.stream.Stream;
 
-public class CombatLogPlugin extends JavaPlugin {
-
-    private final File messagePath = new File(this.getDataFolder(), "messages.yml");
-    private final File configPath = new File(this.getDataFolder(), "config.yml");
+public final class CombatLogPlugin extends JavaPlugin {
 
     private MessageConfig messageConfig;
     private PluginConfig pluginConfig;
@@ -46,14 +43,11 @@ public class CombatLogPlugin extends JavaPlugin {
     private LiteCommands<CommandSender> liteCommands;
 
     @Override
-    public void onLoad() {
-        this.messageConfig = new ConfigFactory(messagePath).loadMessageConfig();
-        this.pluginConfig = new ConfigFactory(configPath).loadPluginConfig();
-    }
-
-    @Override
     public void onEnable() {
-        this.combatManager = new CombatManager();
+        ConfigManager configManager = new ConfigManager(this.getDataFolder());
+
+        this.messageConfig = configManager.load(new MessageConfig());
+        this.pluginConfig = configManager.load(new PluginConfig());
 
         this.audienceProvider = BukkitAudiences.create(this);
         this.miniMessage = MiniMessage.builder()
@@ -62,7 +56,11 @@ public class CombatLogPlugin extends JavaPlugin {
 
         this.messageAnnouncer = new MessageAnnouncer(this.audienceProvider, this.miniMessage);
 
-        this.liteCommands = LiteBukkitFactory.builder(this.getServer(), "eternal-combatlog")
+        this.combatManager = new CombatManager();
+
+        Server server = this.getServer();
+
+        this.liteCommands = LiteBukkitFactory.builder(server, "eternal-combatlog")
                 .argument(Player.class, new BukkitPlayerArgument<>(this.getServer(), this.messageConfig.cantFindPlayer))
 
                 .commandInstance(new TagCommand(this.combatManager, this.messageConfig, this.pluginConfig, this.messageAnnouncer))
@@ -73,13 +71,9 @@ public class CombatLogPlugin extends JavaPlugin {
 
                 .register();
 
-        this.getServer().getScheduler().runTaskTimer(this,
-                new CombatTask(
-                        this.combatManager,
-                        this.messageConfig,
-                        this.getServer(),
-                        this.messageAnnouncer),
-                        20L, 20L);
+        CombatTask combatTask = new CombatTask(this.combatManager, this.messageConfig, server, this.messageAnnouncer);
+
+        this.getServer().getScheduler().runTaskTimer(this, combatTask, 20L, 20L);
 
         Stream.of(
                 new EntityDamageByEntityListener(this.combatManager, this.messageConfig, this.pluginConfig, this.messageAnnouncer),

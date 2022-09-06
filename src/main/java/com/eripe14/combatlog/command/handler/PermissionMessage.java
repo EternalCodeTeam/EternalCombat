@@ -1,6 +1,6 @@
 package com.eripe14.combatlog.command.handler;
 
-import com.eripe14.combatlog.config.MessageConfig;
+import com.eripe14.combatlog.config.implementation.MessageConfig;
 import com.eripe14.combatlog.message.MessageAnnouncer;
 import dev.rollczi.litecommands.command.LiteInvocation;
 import dev.rollczi.litecommands.command.permission.RequiredPermissions;

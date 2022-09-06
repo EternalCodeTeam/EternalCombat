@@ -1,7 +1,7 @@
 package com.eripe14.combatlog.command.implementation;
 
 import com.eripe14.combatlog.combat.CombatManager;
-import com.eripe14.combatlog.config.MessageConfig;
+import com.eripe14.combatlog.config.implementation.MessageConfig;
 import com.eripe14.combatlog.message.MessageAnnouncer;
 import dev.rollczi.litecommands.argument.Arg;
 import dev.rollczi.litecommands.argument.Name;

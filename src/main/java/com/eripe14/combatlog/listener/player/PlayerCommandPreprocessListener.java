@@ -1,8 +1,8 @@
 package com.eripe14.combatlog.listener.player;
 
 import com.eripe14.combatlog.combat.CombatManager;
-import com.eripe14.combatlog.config.MessageConfig;
-import com.eripe14.combatlog.config.PluginConfig;
+import com.eripe14.combatlog.config.implementation.MessageConfig;
+import com.eripe14.combatlog.config.implementation.PluginConfig;
 import com.eripe14.combatlog.message.MessageAnnouncer;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
