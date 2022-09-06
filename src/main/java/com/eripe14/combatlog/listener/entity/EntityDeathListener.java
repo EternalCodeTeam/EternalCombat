@@ -1,4 +1,4 @@
-package com.eripe14.combatlog.listeners.player;
+package com.eripe14.combatlog.listener.entity;
 
 import com.eripe14.combatlog.combatlog.CombatLogManager;
 import com.eripe14.combatlog.config.MessageConfig;
@@ -7,16 +7,16 @@ import org.bukkit.Server;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
-import org.bukkit.event.player.PlayerQuitEvent;
+import org.bukkit.event.entity.EntityDeathEvent;
 
-public class PlayerQuitListener implements Listener {
+public class EntityDeathListener implements Listener {
 
     private final CombatLogManager combatLogManager;
     private final MessageConfig messageConfig;
     private final Server server;
     private final MessageAnnouncer messageAnnouncer;
 
-    public PlayerQuitListener(CombatLogManager combatLogManager, MessageConfig messageConfig, Server server, MessageAnnouncer messageAnnouncer) {
+    public EntityDeathListener(CombatLogManager combatLogManager, MessageConfig messageConfig, Server server, MessageAnnouncer messageAnnouncer) {
         this.combatLogManager = combatLogManager;
         this.messageConfig = messageConfig;
         this.server = server;
@@ -24,8 +24,10 @@ public class PlayerQuitListener implements Listener {
     }
 
     @EventHandler
-    public void onPlayerQuit(PlayerQuitEvent event) {
-        Player player = event.getPlayer();
+    public void onEntityDeath(EntityDeathEvent event) {
+        if (!(event.getEntity() instanceof Player player)) {
+            return;
+        }
 
         if (!this.combatLogManager.isInCombat(player.getUniqueId())) {
             return;
@@ -39,9 +41,7 @@ public class PlayerQuitListener implements Listener {
 
         this.messageAnnouncer.sendMessage(enemy.getUniqueId(), this.messageConfig.unTagPlayer);
 
-        combatLogManager.remove(enemy.getUniqueId());
-        combatLogManager.remove(player.getUniqueId());
-
-        player.setHealth(0.0);
+        this.combatLogManager.remove(player.getUniqueId());
+        this.combatLogManager.remove(enemy.getUniqueId());
     }
 }

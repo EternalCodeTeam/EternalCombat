@@ -15,7 +15,7 @@ public class MessageConfig extends OkaeriConfig {
 
     public String cantFindPlayer = "&4Nie znaleziono podanego gracza!";
 
-    public String combatLogDuration = "&dCombatLog &7minie za: &d%TIME%";
+    public String combatLogDuration = "&dCombatLog &7minie za: &d{TIME}";
 
     public String tagPlayer = "&7Zdobyłeś &dCombatLog&7, wyjście z serwera wiążę się ze śmiercią!";
 
@@ -25,13 +25,13 @@ public class MessageConfig extends OkaeriConfig {
 
     @Comment("Sekcja z wiadomościami dla administracji.")
 
-    public String adminTagPlayer = "&7Nadałeś &dCombatLoga&7, graczu &d%FIRST_PLAYER%&7 oraz &d%SECOND_PLAYER%&7.";
+    public String adminTagPlayer = "&7Nadałeś &dCombatLoga&7, graczu &d{FIRST_PLAYER}&7 oraz &d{SECOND_PLAYER}&7.";
 
-    public String adminUnTagPlayer = "&7Odebrałeś &dCombatLoga&7, graczu &d%PLAYER%&7 oraz jego przeciwnikowi.";
+    public String adminUnTagPlayer = "&7Odebrałeś &dCombatLoga&7, graczu &d{PLAYER}&7 oraz jego przeciwnikowi.";
 
     @Comment("Sekcja z wiadomościami do komend.")
 
-    public String invalidUsage = "&4Nie poprawne użycie komendy &8>> &7%COMMAND%";
+    public String invalidUsage = "&4Nie poprawne użycie komendy &8>> &7{COMMAND}.";
 
     public String invalidUsageHeader = "&cNie poprawne użycie komendy!";
 

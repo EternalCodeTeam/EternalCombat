@@ -1,4 +1,4 @@
-package com.eripe14.combatlog.commands.handler;
+package com.eripe14.combatlog.command.handler;
 
 import com.eripe14.combatlog.config.MessageConfig;
 import com.eripe14.combatlog.message.MessageAnnouncer;
@@ -29,7 +29,7 @@ public class InvalidUsage implements InvalidUsageHandler<CommandSender> {
 
         Formatter formatter = new Formatter();
 
-        formatter.register("%COMMAND%", schematics.get(0));
+        formatter.register("{COMMAND}", schematics.get(0));
 
         if (schematics.size() == 1) {
             this.messageAnnouncer.sendMessage(player.getUniqueId(), formatter.format(this.messageConfig.invalidUsage));

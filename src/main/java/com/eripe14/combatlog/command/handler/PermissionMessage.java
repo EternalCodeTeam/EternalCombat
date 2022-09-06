@@ -1,4 +1,4 @@
-package com.eripe14.combatlog.commands.handler;
+package com.eripe14.combatlog.command.handler;
 
 import com.eripe14.combatlog.config.MessageConfig;
 import com.eripe14.combatlog.message.MessageAnnouncer;

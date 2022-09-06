@@ -1,4 +1,4 @@
-package com.eripe14.combatlog.commands.implementation;
+package com.eripe14.combatlog.command.implementation;
 
 import com.eripe14.combatlog.combatlog.CombatLogManager;
 import com.eripe14.combatlog.config.MessageConfig;
@@ -37,8 +37,8 @@ public class TagCommand {
 
         Formatter formatter = new Formatter();
 
-        formatter.register("%FIRST_PLAYER%", firstTarget.getName());
-        formatter.register("%SECOND_PLAYER%", secondTarget.getName());
+        formatter.register("{FIRST_PLAYER}", firstTarget.getName());
+        formatter.register("{SECOND_PLAYER}", secondTarget.getName());
 
         this.messageAnnouncer.sendMessage(player.getUniqueId(), this.messageConfig.adminTagPlayer);
 

@@ -1,4 +1,4 @@
-package com.eripe14.combatlog.commands.implementation;
+package com.eripe14.combatlog.command.implementation;
 
 import com.eripe14.combatlog.combatlog.CombatLogManager;
 import com.eripe14.combatlog.config.MessageConfig;
@@ -48,7 +48,7 @@ public class UnTagCommand {
 
         Formatter formatter = new Formatter();
 
-        formatter.register("%PLAYER%", target.getName());
+        formatter.register("{PLAYER}", target.getName());
 
         this.messageAnnouncer.sendMessage(player.getUniqueId(), this.messageConfig.adminUnTagPlayer);
     }

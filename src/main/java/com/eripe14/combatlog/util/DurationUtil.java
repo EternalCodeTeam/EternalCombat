@@ -1,4 +1,4 @@
-package com.eripe14.combatlog.bukkit.util;
+package com.eripe14.combatlog.util;
 
 import java.time.Duration;
 import java.util.concurrent.TimeUnit;

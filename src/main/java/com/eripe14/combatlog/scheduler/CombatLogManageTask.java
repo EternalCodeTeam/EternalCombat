@@ -1,6 +1,6 @@
 package com.eripe14.combatlog.scheduler;
 
-import com.eripe14.combatlog.bukkit.util.DurationUtil;
+import com.eripe14.combatlog.util.DurationUtil;
 import com.eripe14.combatlog.combatlog.CombatLogManager;
 import com.eripe14.combatlog.config.MessageConfig;
 import com.eripe14.combatlog.message.MessageAnnouncer;
@@ -53,7 +53,7 @@ public class CombatLogManageTask implements Runnable {
 
             Formatter formatter = new Formatter();
 
-            formatter.register("%TIME%", DurationUtil.format(leftTime));
+            formatter.register("{TIME}", DurationUtil.format(leftTime));
 
             this.messageAnnouncer.sendActionBar(uuid, formatter.format(this.messageConfig.combatLogDuration));
         }

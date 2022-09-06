@@ -1,4 +1,4 @@
-package com.eripe14.combatlog.shared.legacy;
+package com.eripe14.combatlog.util.legacy;
 
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;

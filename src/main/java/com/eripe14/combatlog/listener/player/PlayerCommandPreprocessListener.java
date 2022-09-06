@@ -1,4 +1,4 @@
-package com.eripe14.combatlog.listeners.player;
+package com.eripe14.combatlog.listener.player;
 
 import com.eripe14.combatlog.combatlog.CombatLogManager;
 import com.eripe14.combatlog.config.MessageConfig;

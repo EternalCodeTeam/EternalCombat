@@ -1,4 +1,4 @@
-package com.eripe14.combatlog.listeners.entity;
+package com.eripe14.combatlog.listener.entity;
 
 import com.eripe14.combatlog.combatlog.CombatLogManager;
 import com.eripe14.combatlog.config.MessageConfig;

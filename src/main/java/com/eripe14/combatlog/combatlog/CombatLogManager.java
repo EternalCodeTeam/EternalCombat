@@ -31,13 +31,16 @@ public class CombatLogManager {
     public List<UUID> getPlayersInCombat() {
         return new ArrayList<>(this.combatLogMap.keySet());
     }
-
+    
     public void tag(UUID player, UUID enemy, Duration time) {
         if (isInCombat(player)) {
             this.remove(player);
         }
 
-        Combat combat = new Combat(player, enemy, Instant.now().plus(time));
+        Instant now = Instant.now();
+        Instant extendedTime = now.plus(time);
+
+        Combat combat = new Combat(player, enemy, extendedTime);
 
         combatLogMap.put(player, combat);
     }
