@@ -13,7 +13,7 @@ import com.eripe14.combatlog.listener.entity.EntityDeathListener;
 import com.eripe14.combatlog.listener.player.PlayerCommandPreprocessListener;
 import com.eripe14.combatlog.listener.player.PlayerQuitListener;
 import com.eripe14.combatlog.message.MessageAnnouncer;
-import com.eripe14.combatlog.scheduler.CombatTask;
+import com.eripe14.combatlog.combat.CombatTask;
 import com.eripe14.combatlog.util.legacy.LegacyColorProcessor;
 import dev.rollczi.litecommands.LiteCommands;
 import dev.rollczi.litecommands.bukkit.LiteBukkitFactory;
