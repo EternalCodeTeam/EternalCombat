@@ -2,7 +2,6 @@ package com.eripe14.combatlog.message;
 
 import net.kyori.adventure.platform.AudienceProvider;
 import net.kyori.adventure.text.minimessage.MiniMessage;
-import org.bukkit.command.CommandSender;
 
 import java.util.UUID;
 
@@ -20,13 +19,8 @@ public final class MessageAnnouncer {
         this.audienceProvider.player(uuid).sendMessage(this.miniMessage.deserialize(message));
     }
 
-    public void sendConsoleMessage(String message) {
-        this.audienceProvider.console().sendMessage(this.miniMessage.deserialize(message));
-    }
-
     public void sendActionBar(UUID uuid, String message) {
         this.audienceProvider.player(uuid).sendActionBar(this.miniMessage.deserialize(message));
     }
-
 
 }

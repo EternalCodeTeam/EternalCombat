@@ -24,7 +24,7 @@ public class CombatManager {
     }
 
     public void remove(UUID player) {
-        combats.remove(player);
+        this.combats.remove(player);
     }
     
     public void tag(UUID player, UUID enemy, Duration time) {
@@ -37,18 +37,7 @@ public class CombatManager {
 
         Combat combat = new Combat(player, enemy, extendedTime);
 
-        combats.put(player, combat);
-    }
-
-    public Optional<Duration> getLeftTime(UUID player) {
-        Combat combat = this.combats.get(player);
-
-        Instant now = Instant.now();
-        Instant endOfCombatLog = combat.getEndOfCombatLog();
-
-        Duration between = Duration.between(now, endOfCombatLog);
-
-        return Optional.ofNullable(between);
+        this.combats.put(player, combat);
     }
 
     public Collection<Combat> getCombats() {
