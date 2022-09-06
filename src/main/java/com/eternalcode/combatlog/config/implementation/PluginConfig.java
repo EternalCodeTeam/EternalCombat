@@ -6,11 +6,12 @@ import net.dzikoysk.cdn.source.Resource;
 import net.dzikoysk.cdn.source.Source;
 
 import java.io.File;
+import java.time.Duration;
 import java.util.List;
 
 public class PluginConfig implements ReloadableConfig {
 
-    public int combatLogTime = 20;
+    public Duration combatLogTime = Duration.ofSeconds(20);
 
     public List<String> blockedCommands = new ImmutableList.Builder<String>()
             .add("gamemode")

@@ -32,8 +32,10 @@ public class TagCommand {
 
     @Execute(min = 2)
     public void execute(Player player, @Arg @Name("firstTarget") Player firstTarget, @Arg @Name("secondTarget") Player secondTarget) {
-        this.combatManager.tag(firstTarget.getUniqueId(), secondTarget.getUniqueId(), Duration.ofSeconds(this.pluginConfig.combatLogTime));
-        this.combatManager.tag(secondTarget.getUniqueId(), firstTarget.getUniqueId(), Duration.ofSeconds(this.pluginConfig.combatLogTime));
+        Duration combatTime = this.pluginConfig.combatLogTime;
+
+        this.combatManager.tag(firstTarget.getUniqueId(), secondTarget.getUniqueId(), combatTime);
+        this.combatManager.tag(secondTarget.getUniqueId(), firstTarget.getUniqueId(), combatTime);
 
         Formatter formatter = new Formatter();
 

@@ -38,9 +38,10 @@ public class EntityDamageByEntityListener implements Listener {
         Player player = (Player) event.getEntity();
         Player enemy = (Player) event.getDamager();
 
+        Duration combatTime = this.pluginConfig.combatLogTime;
 
-        this.combatManager.tag(player.getUniqueId(), enemy.getUniqueId(), Duration.ofSeconds(this.pluginConfig.combatLogTime));
-        this.combatManager.tag(enemy.getUniqueId(), player.getUniqueId(), Duration.ofSeconds(this.pluginConfig.combatLogTime));
+        this.combatManager.tag(player.getUniqueId(), enemy.getUniqueId(), combatTime);
+        this.combatManager.tag(enemy.getUniqueId(), player.getUniqueId(), combatTime);
 
         this.messageAnnouncer.sendMessage(player.getUniqueId(), this.messageConfig.tagPlayer);
         this.messageAnnouncer.sendMessage(enemy.getUniqueId(), this.messageConfig.tagPlayer);
