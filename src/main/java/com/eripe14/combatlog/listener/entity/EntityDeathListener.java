@@ -1,7 +1,7 @@
 package com.eripe14.combatlog.listener.entity;
 
 import com.eripe14.combatlog.combat.CombatManager;
-import com.eripe14.combatlog.config.MessageConfig;
+import com.eripe14.combatlog.config.implementation.MessageConfig;
 import com.eripe14.combatlog.message.MessageAnnouncer;
 import org.bukkit.Server;
 import org.bukkit.entity.Player;
@@ -25,9 +25,11 @@ public class EntityDeathListener implements Listener {
 
     @EventHandler
     public void onEntityDeath(EntityDeathEvent event) {
-        if (!(event.getEntity() instanceof Player player)) {
+        if (!(event.getEntity() instanceof Player)) {
             return;
         }
+
+        Player player = (Player) event.getEntity();
 
         if (!this.combatManager.isInCombat(player.getUniqueId())) {
             return;

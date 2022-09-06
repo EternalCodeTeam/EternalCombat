@@ -1,8 +1,8 @@
 package com.eripe14.combatlog.listener.entity;
 
 import com.eripe14.combatlog.combat.CombatManager;
-import com.eripe14.combatlog.config.MessageConfig;
-import com.eripe14.combatlog.config.PluginConfig;
+import com.eripe14.combatlog.config.implementation.MessageConfig;
+import com.eripe14.combatlog.config.implementation.PluginConfig;
 import com.eripe14.combatlog.message.MessageAnnouncer;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -27,13 +27,17 @@ public class EntityDamageByEntityListener implements Listener {
 
     @EventHandler
     public void onEntityDamageByEntity(EntityDamageByEntityEvent event) {
-        if (!(event.getEntity() instanceof Player player)) {
+        if (!(event.getEntity() instanceof Player)) {
             return;
         }
 
-        if (!(event.getDamager() instanceof Player enemy)) {
+        if (!(event.getDamager() instanceof Player)) {
             return;
         }
+
+        Player player = (Player) event.getEntity();
+        Player enemy = (Player) event.getDamager();
+
 
         this.combatManager.tag(player.getUniqueId(), enemy.getUniqueId(), Duration.ofSeconds(this.pluginConfig.combatLogTime));
         this.combatManager.tag(enemy.getUniqueId(), player.getUniqueId(), Duration.ofSeconds(this.pluginConfig.combatLogTime));
