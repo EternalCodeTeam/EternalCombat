@@ -1,5 +1,6 @@
 package com.eripe14.combatlog;
 
+import com.eripe14.combatlog.combat.Combat;
 import com.eripe14.combatlog.combat.CombatManager;
 import com.eripe14.combatlog.combat.CombatTask;
 import com.eripe14.combatlog.command.handler.InvalidUsage;
@@ -81,6 +82,16 @@ public final class CombatLogPlugin extends JavaPlugin {
                 new PlayerCommandPreprocessListener(this.combatManager, this.pluginConfig, this.messageConfig, this.messageAnnouncer),
                 new PlayerQuitListener(this.combatManager, this.messageConfig, this.getServer(), this.messageAnnouncer)
         ).forEach(listener -> this.getServer().getPluginManager().registerEvents(listener, this));
+    }
+
+    @Override
+    public void onDisable() {
+        this.liteCommands.getPlatform().unregisterAll();
+        this.audienceProvider.close();
+
+        for (Combat combat : this.combatManager.getCombats()) {
+            this.combatManager.remove(combat.getUuid());
+        }
     }
 
     public MiniMessage getMiniMessage() {
