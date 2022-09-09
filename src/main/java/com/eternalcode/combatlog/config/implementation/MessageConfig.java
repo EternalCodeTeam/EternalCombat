@@ -30,6 +30,12 @@ public class MessageConfig implements ReloadableConfig {
 
     public String blockPlaceBlocked = "&cNie możesz stawiać bloków podczas walki ponizej 40 kratki!";
 
+    public String inCombat = "&cJesteś podczas walki!";
+
+    public String notInCombat = "&aNie jesteś podczas walki!";
+
+    public String reload = "&aPomyślnie przeładowano konfigurację!";
+
     @Override
     public Resource resource(File folder) {
         return Source.of(folder, "messages.yml");

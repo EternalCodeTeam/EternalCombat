@@ -5,6 +5,8 @@ import com.eternalcode.combatlog.combat.CombatManager;
 import com.eternalcode.combatlog.combat.CombatTask;
 import com.eternalcode.combatlog.command.handler.InvalidUsage;
 import com.eternalcode.combatlog.command.handler.PermissionMessage;
+import com.eternalcode.combatlog.command.implementation.FightCommand;
+import com.eternalcode.combatlog.command.implementation.ReloadCommand;
 import com.eternalcode.combatlog.command.implementation.TagCommand;
 import com.eternalcode.combatlog.command.implementation.UnTagCommand;
 import com.eternalcode.combatlog.config.ConfigManager;
@@ -68,6 +70,8 @@ public final class CombatLogPlugin extends JavaPlugin {
 
                 .commandInstance(new TagCommand(this.combatManager, this.messageConfig, this.pluginConfig, this.messageAnnouncer))
                 .commandInstance(new UnTagCommand(this.combatManager, this.messageConfig, this.getServer(), this.messageAnnouncer))
+                .commandInstance(new FightCommand(this.combatManager, this.messageAnnouncer, this.messageConfig))
+                .commandInstance(new ReloadCommand(configManager, this.messageAnnouncer, this.messageConfig))
 
                 .invalidUsageHandler(new InvalidUsage(this.messageAnnouncer, this.messageConfig))
                 .permissionHandler(new PermissionMessage(this.messageConfig, this.messageAnnouncer))
@@ -83,8 +87,8 @@ public final class CombatLogPlugin extends JavaPlugin {
                 new EntityDeathListener(this.combatManager, this.messageConfig, this.getServer(), this.messageAnnouncer),
                 new PlayerCommandPreprocessListener(this.combatManager, this.pluginConfig, this.messageConfig, this.messageAnnouncer),
                 new PlayerQuitListener(this.combatManager, this.messageConfig, this.getServer(), this.messageAnnouncer),
-                new BlockPlaceListener(this.combatManager, this.messageAnnouncer, this.messageConfig, this.pluginConfig)
-                new InventoryOpenListener(this.combatManager, this.messageAnnouncer, this.messageConfig)
+                new BlockPlaceListener(this.combatManager, this.messageAnnouncer, this.messageConfig, this.pluginConfig),
+                new InventoryOpenListener(this.combatManager, this.messageAnnouncer, this.messageConfig, this.pluginConfig)
         ).forEach(listener -> this.getServer().getPluginManager().registerEvents(listener, this));
     }
 
