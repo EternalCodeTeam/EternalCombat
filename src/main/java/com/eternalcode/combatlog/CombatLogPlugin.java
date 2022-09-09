@@ -10,6 +10,7 @@ import com.eternalcode.combatlog.command.implementation.UnTagCommand;
 import com.eternalcode.combatlog.config.ConfigManager;
 import com.eternalcode.combatlog.config.implementation.MessageConfig;
 import com.eternalcode.combatlog.config.implementation.PluginConfig;
+import com.eternalcode.combatlog.listener.BlockPlaceListener;
 import com.eternalcode.combatlog.listener.InventoryOpenListener;
 import com.eternalcode.combatlog.listener.entity.EntityDamageByEntityListener;
 import com.eternalcode.combatlog.listener.entity.EntityDeathListener;
@@ -82,7 +83,8 @@ public final class CombatLogPlugin extends JavaPlugin {
                 new EntityDeathListener(this.combatManager, this.messageConfig, this.getServer(), this.messageAnnouncer),
                 new PlayerCommandPreprocessListener(this.combatManager, this.pluginConfig, this.messageConfig, this.messageAnnouncer),
                 new PlayerQuitListener(this.combatManager, this.messageConfig, this.getServer(), this.messageAnnouncer),
-                new InventoryOpenListener(this.combatManager, this.messageAnnouncer, this.messageConfig)
+                new InventoryOpenListener(this.combatManager, this.messageAnnouncer, this.messageConfig),
+                new BlockPlaceListener(this.combatManager, this.messageAnnouncer, this.messageConfig, this.pluginConfig)
         ).forEach(listener -> this.getServer().getPluginManager().registerEvents(listener, this));
     }
 

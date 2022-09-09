@@ -28,6 +28,8 @@ public class MessageConfig implements ReloadableConfig {
 
     public String inventoryBlocked = "&cNie możesz otworzyć tego ekwipunku podczas walki!";
 
+    public String blockPlaceBlocked = "&cNie możesz stawiać bloków podczas walki ponizej 40 kratki!";
+
     @Override
     public Resource resource(File folder) {
         return Source.of(folder, "messages.yml");

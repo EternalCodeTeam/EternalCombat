@@ -22,6 +22,12 @@ public class PluginConfig implements ReloadableConfig {
     @Description("# Czy blokować otwieranie inventory?")
     public boolean blockingInventories = true;
 
+    @Description("# Czy blokować stawianie bloków?")
+    public boolean blockPlace = true;
+
+    @Description("# Od którego poziomu blokować stawianie bloków?")
+    public int blockPlaceLevel = 40;
+
     @Override
     public Resource resource(File folder) {
         return Source.of(folder, "config.yml");
