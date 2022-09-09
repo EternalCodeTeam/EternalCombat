@@ -83,8 +83,8 @@ public final class CombatLogPlugin extends JavaPlugin {
                 new EntityDeathListener(this.combatManager, this.messageConfig, this.getServer(), this.messageAnnouncer),
                 new PlayerCommandPreprocessListener(this.combatManager, this.pluginConfig, this.messageConfig, this.messageAnnouncer),
                 new PlayerQuitListener(this.combatManager, this.messageConfig, this.getServer(), this.messageAnnouncer),
-                new InventoryOpenListener(this.combatManager, this.messageAnnouncer, this.messageConfig),
                 new BlockPlaceListener(this.combatManager, this.messageAnnouncer, this.messageConfig, this.pluginConfig)
+                new InventoryOpenListener(this.combatManager, this.messageAnnouncer, this.messageConfig)
         ).forEach(listener -> this.getServer().getPluginManager().registerEvents(listener, this));
     }
 
