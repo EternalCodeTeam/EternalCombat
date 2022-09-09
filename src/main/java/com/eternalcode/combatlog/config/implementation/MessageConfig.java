@@ -26,6 +26,8 @@ public class MessageConfig implements ReloadableConfig {
 
     public String invalidUsage = "&7Poprawne użycie: &e{COMMAND}.";
 
+    public String inventoryBlocked = "&cNie możesz otworzyć tego ekwipunku podczas walki!";
+
     @Override
     public Resource resource(File folder) {
         return Source.of(folder, "messages.yml");

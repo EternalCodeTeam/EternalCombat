@@ -2,6 +2,7 @@ package com.eternalcode.combatlog.config.implementation;
 
 import com.eternalcode.combatlog.config.ReloadableConfig;
 import com.google.common.collect.ImmutableList;
+import net.dzikoysk.cdn.entity.Description;
 import net.dzikoysk.cdn.source.Resource;
 import net.dzikoysk.cdn.source.Source;
 
@@ -17,6 +18,9 @@ public class PluginConfig implements ReloadableConfig {
             .add("gamemode")
             .add("tp")
             .build();
+
+    @Description("# Czy blokować otwieranie inventory?")
+    public boolean blockingInventories = true;
 
     @Override
     public Resource resource(File folder) {
