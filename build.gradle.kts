@@ -5,7 +5,7 @@ plugins {
 }
 
 group = "com.eternalcode"
-version = "1.0.0-SNAPSHOT"
+version = "1.0.0"
 
 repositories {
     mavenCentral()
@@ -18,9 +18,11 @@ repositories {
 dependencies {
     compileOnly("org.spigotmc:spigot-api:1.18.1-R0.1-SNAPSHOT")
 
+    // kyori
     implementation("net.kyori:adventure-platform-bukkit:4.1.2")
     implementation("net.kyori:adventure-text-minimessage:4.11.0")
 
+    // litecommands
     implementation("dev.rollczi.litecommands:bukkit-adventure:2.5.0")
 
     // cdn configs
