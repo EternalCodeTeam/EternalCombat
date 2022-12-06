@@ -26,7 +26,7 @@ dependencies {
     implementation("dev.rollczi.litecommands:bukkit-adventure:2.5.0")
 
     // cdn configs
-    implementation("net.dzikoysk:cdn:1.14.0")
+    implementation("net.dzikoysk:cdn:1.14.1")
 }
 
 bukkit {
