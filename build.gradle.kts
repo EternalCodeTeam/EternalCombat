@@ -61,7 +61,7 @@ tasks.withType<com.github.jengelman.gradle.plugins.shadow.tasks.ShadowJar> {
     mergeServiceFiles()
     minimize()
 
-    val prefix = "com.eternalcode.combatlog.lib"
+    val prefix = "com.eternalcode.combatlog.libs"
     listOf(
             "panda.std",
             "panda.utilities",
