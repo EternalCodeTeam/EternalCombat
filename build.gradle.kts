@@ -2,6 +2,7 @@ plugins {
     id("java-library")
     id("net.minecrell.plugin-yml.bukkit") version "0.5.2"
     id("com.github.johnrengelman.shadow") version "7.1.2"
+    id("xyz.jpenilla.run-paper") version "2.0.0"
 }
 
 group = "com.eternalcode"
@@ -16,7 +17,7 @@ repositories {
 }
 
 dependencies {
-    compileOnly("org.spigotmc:spigot-api:1.18.1-R0.1-SNAPSHOT")
+    compileOnly("org.spigotmc:spigot-api:1.19.3-R0.1-SNAPSHOT")
 
     // kyori
     implementation("net.kyori:adventure-platform-bukkit:4.2.0")
@@ -50,17 +51,17 @@ tasks.withType<com.github.jengelman.gradle.plugins.shadow.tasks.ShadowJar> {
     archiveFileName.set("EternalCombatLog v${project.version} (MC 1.8.8-1.19x).jar")
 
     exclude(
-        "org/intellij/lang/annotations/**",
-        "org/jetbrains/annotations/**",
-        "org/checkerframework/**",
-        "META-INF/**",
-        "javax/**"
+            "org/intellij/lang/annotations/**",
+            "org/jetbrains/annotations/**",
+            "org/checkerframework/**",
+            "META-INF/**",
+            "javax/**"
     )
 
     mergeServiceFiles()
     minimize()
 
-    val prefix = "com.eternalcode.combatlog.libs"
+    val prefix = "com.eternalcode.combatlog.lib"
     listOf(
             "panda.std",
             "panda.utilities",
