@@ -72,4 +72,10 @@ tasks.withType<com.github.jengelman.gradle.plugins.shadow.tasks.ShadowJar> {
     ).forEach { pack ->
         relocate(pack, "$prefix.$pack")
     }
+
+    tasks {
+        runServer {
+            minecraftVersion("1.19.3")
+        }
+    }
 }

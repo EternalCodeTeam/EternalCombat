@@ -23,14 +23,12 @@ public class FightCommand {
     }
 
     @Execute
-    void excute(Player player) {
-        UUID uniqueId = player.getUniqueId();
+    void execute(Player player) {
+        final UUID uniqueId = player.getUniqueId();
 
         if (this.combatManager.isInCombat(uniqueId)) {
             this.announcer.sendMessage(uniqueId, this.messages.inCombat);
-        }
-
-        else {
+        } else {
             this.announcer.sendMessage(uniqueId, this.messages.notInCombat);
         }
     }
