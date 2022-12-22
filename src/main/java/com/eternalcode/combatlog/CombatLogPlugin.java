@@ -18,7 +18,6 @@ import com.eternalcode.combatlog.listener.entity.EntityDamageByEntityListener;
 import com.eternalcode.combatlog.listener.entity.EntityDeathListener;
 import com.eternalcode.combatlog.listener.player.PlayerCommandPreprocessListener;
 import com.eternalcode.combatlog.listener.player.PlayerQuitListener;
-import com.eternalcode.combatlog.message.MessageAnnouncer;
 import com.eternalcode.combatlog.util.legacy.LegacyColorProcessor;
 import dev.rollczi.litecommands.LiteCommands;
 import dev.rollczi.litecommands.bukkit.LiteBukkitFactory;
@@ -41,7 +40,7 @@ public final class CombatLogPlugin extends JavaPlugin {
     private AudienceProvider audienceProvider;
     private MiniMessage miniMessage;
 
-    private MessageAnnouncer messageAnnouncer;
+    private NotificationAnnouncer notificationAnnouncer;
 
     private CombatManager combatManager;
 
@@ -59,7 +58,7 @@ public final class CombatLogPlugin extends JavaPlugin {
                 .postProcessor(new LegacyColorProcessor())
                 .build();
 
-        this.messageAnnouncer = new MessageAnnouncer(this.audienceProvider, this.miniMessage);
+        this.notificationAnnouncer = new NotificationAnnouncer(this.audienceProvider, this.miniMessage);
 
         this.combatManager = new CombatManager();
 
@@ -68,34 +67,39 @@ public final class CombatLogPlugin extends JavaPlugin {
         this.liteCommands = LiteBukkitFactory.builder(server, "eternal-combatlog")
                 .argument(Player.class, new BukkitPlayerArgument<>(this.getServer(), this.messageConfig.cantFindPlayer))
 
-                .commandInstance(new TagCommand(this.combatManager, this.messageConfig, this.pluginConfig, this.messageAnnouncer))
-                .commandInstance(new UnTagCommand(this.combatManager, this.messageConfig, this.getServer(), this.messageAnnouncer))
-                .commandInstance(new FightCommand(this.combatManager, this.messageAnnouncer, this.messageConfig))
-                .commandInstance(new ReloadCommand(configManager, this.messageAnnouncer, this.messageConfig))
+                .commandInstance(new TagCommand(this.combatManager, this.messageConfig, this.pluginConfig, this.notificationAnnouncer))
+                .commandInstance(new UnTagCommand(this.combatManager, this.messageConfig, this.getServer(), this.notificationAnnouncer))
+                .commandInstance(new FightCommand(this.combatManager, this.notificationAnnouncer, this.messageConfig))
+                .commandInstance(new ReloadCommand(configManager, this.notificationAnnouncer, this.messageConfig))
 
-                .invalidUsageHandler(new InvalidUsage(this.messageAnnouncer, this.messageConfig))
-                .permissionHandler(new PermissionMessage(this.messageConfig, this.messageAnnouncer))
+                .invalidUsageHandler(new InvalidUsage(this.notificationAnnouncer, this.messageConfig))
+                .permissionHandler(new PermissionMessage(this.messageConfig, this.notificationAnnouncer))
 
                 .register();
 
-        CombatTask combatTask = new CombatTask(this.combatManager, this.messageConfig, server, this.messageAnnouncer);
+        CombatTask combatTask = new CombatTask(this.combatManager, this.messageConfig, server, this.notificationAnnouncer);
 
         this.getServer().getScheduler().runTaskTimer(this, combatTask, 20L, 20L);
 
         Stream.of(
-                new EntityDamageByEntityListener(this.combatManager, this.messageConfig, this.pluginConfig, this.messageAnnouncer),
-                new EntityDeathListener(this.combatManager, this.messageConfig, this.getServer(), this.messageAnnouncer),
-                new PlayerCommandPreprocessListener(this.combatManager, this.pluginConfig, this.messageConfig, this.messageAnnouncer),
-                new PlayerQuitListener(this.combatManager, this.messageConfig, this.getServer(), this.messageAnnouncer),
-                new BlockPlaceListener(this.combatManager, this.messageAnnouncer, this.messageConfig, this.pluginConfig),
-                new InventoryOpenListener(this.combatManager, this.messageAnnouncer, this.messageConfig, this.pluginConfig)
+                new EntityDamageByEntityListener(this.combatManager, this.messageConfig, this.pluginConfig, this.notificationAnnouncer),
+                new EntityDeathListener(this.combatManager, this.messageConfig, this.getServer(), this.notificationAnnouncer),
+                new PlayerCommandPreprocessListener(this.combatManager, this.pluginConfig, this.messageConfig, this.notificationAnnouncer),
+                new PlayerQuitListener(this.combatManager, this.messageConfig, this.getServer(), this.notificationAnnouncer),
+                new BlockPlaceListener(this.combatManager, this.notificationAnnouncer, this.messageConfig, this.pluginConfig),
+                new InventoryOpenListener(this.combatManager, this.notificationAnnouncer, this.messageConfig, this.pluginConfig)
         ).forEach(listener -> this.getServer().getPluginManager().registerEvents(listener, this));
     }
 
     @Override
     public void onDisable() {
-        this.liteCommands.getPlatform().unregisterAll();
-        this.audienceProvider.close();
+        if (this.liteCommands != null) {
+            this.liteCommands.getPlatform().unregisterAll();
+        }
+
+        if (this.audienceProvider != null) {
+            this.audienceProvider.close();
+        }
 
         for (Combat combat : this.combatManager.getCombats()) {
             this.combatManager.remove(combat.getUuid());
@@ -110,8 +114,8 @@ public final class CombatLogPlugin extends JavaPlugin {
         return this.audienceProvider;
     }
 
-    public MessageAnnouncer getMessageAnnouncer() {
-        return this.messageAnnouncer;
+    public NotificationAnnouncer getMessageAnnouncer() {
+        return this.notificationAnnouncer;
     }
 
     public CombatManager getCombatLogManager() {

@@ -3,7 +3,8 @@ package com.eternalcode.combatlog.listener;
 import com.eternalcode.combatlog.combat.CombatManager;
 import com.eternalcode.combatlog.config.implementation.MessageConfig;
 import com.eternalcode.combatlog.config.implementation.PluginConfig;
-import com.eternalcode.combatlog.message.MessageAnnouncer;
+import com.eternalcode.combatlog.NotificationAnnouncer;
+import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.InventoryOpenEvent;
@@ -13,11 +14,11 @@ import java.util.UUID;
 public class InventoryOpenListener implements Listener {
 
     private final CombatManager combatManager;
-    private final MessageAnnouncer announcer;
+    private final NotificationAnnouncer announcer;
     private final MessageConfig messages;
     private final PluginConfig config;
 
-    public InventoryOpenListener(CombatManager combatManager, MessageAnnouncer announcer, MessageConfig messages, PluginConfig config) {
+    public InventoryOpenListener(CombatManager combatManager, NotificationAnnouncer announcer, MessageConfig messages, PluginConfig config) {
         this.combatManager = combatManager;
         this.announcer = announcer;
         this.messages = messages;
@@ -30,6 +31,7 @@ public class InventoryOpenListener implements Listener {
             return;
         }
 
+        Player player = (Player) event.getPlayer();
         UUID uniqueId = event.getPlayer().getUniqueId();
 
         if (!this.combatManager.isInCombat(uniqueId)) {
@@ -38,6 +40,6 @@ public class InventoryOpenListener implements Listener {
 
         event.setCancelled(true);
 
-        this.announcer.sendMessage(uniqueId, this.messages.inventoryBlocked);
+        this.announcer.sendMessage(player, this.messages.inventoryBlocked);
     }
 }

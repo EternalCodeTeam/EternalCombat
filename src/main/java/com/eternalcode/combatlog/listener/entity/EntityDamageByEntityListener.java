@@ -3,7 +3,7 @@ package com.eternalcode.combatlog.listener.entity;
 import com.eternalcode.combatlog.combat.CombatManager;
 import com.eternalcode.combatlog.config.implementation.MessageConfig;
 import com.eternalcode.combatlog.config.implementation.PluginConfig;
-import com.eternalcode.combatlog.message.MessageAnnouncer;
+import com.eternalcode.combatlog.NotificationAnnouncer;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -16,13 +16,13 @@ public class EntityDamageByEntityListener implements Listener {
     private final CombatManager combatManager;
     private final MessageConfig messageConfig;
     private final PluginConfig pluginConfig;
-    private final MessageAnnouncer messageAnnouncer;
+    private final NotificationAnnouncer notificationAnnouncer;
 
-    public EntityDamageByEntityListener(CombatManager combatManager, MessageConfig messageConfig, PluginConfig pluginConfig, MessageAnnouncer messageAnnouncer) {
+    public EntityDamageByEntityListener(CombatManager combatManager, MessageConfig messageConfig, PluginConfig pluginConfig, NotificationAnnouncer notificationAnnouncer) {
         this.combatManager = combatManager;
         this.messageConfig = messageConfig;
         this.pluginConfig = pluginConfig;
-        this.messageAnnouncer = messageAnnouncer;
+        this.notificationAnnouncer = notificationAnnouncer;
     }
 
     @EventHandler
@@ -43,8 +43,8 @@ public class EntityDamageByEntityListener implements Listener {
         this.combatManager.tag(player.getUniqueId(), enemy.getUniqueId(), combatTime);
         this.combatManager.tag(enemy.getUniqueId(), player.getUniqueId(), combatTime);
 
-        this.messageAnnouncer.sendMessage(player.getUniqueId(), this.messageConfig.tagPlayer);
-        this.messageAnnouncer.sendMessage(enemy.getUniqueId(), this.messageConfig.tagPlayer);
+        this.notificationAnnouncer.sendMessage(player, this.messageConfig.tagPlayer);
+        this.notificationAnnouncer.sendMessage(enemy, this.messageConfig.tagPlayer);
     }
 
 }

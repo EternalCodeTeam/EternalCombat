@@ -2,7 +2,7 @@ package com.eternalcode.combatlog.listener.player;
 
 import com.eternalcode.combatlog.combat.CombatManager;
 import com.eternalcode.combatlog.config.implementation.MessageConfig;
-import com.eternalcode.combatlog.message.MessageAnnouncer;
+import com.eternalcode.combatlog.NotificationAnnouncer;
 import org.bukkit.Server;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -14,13 +14,13 @@ public class PlayerQuitListener implements Listener {
     private final CombatManager combatManager;
     private final MessageConfig messageConfig;
     private final Server server;
-    private final MessageAnnouncer messageAnnouncer;
+    private final NotificationAnnouncer notificationAnnouncer;
 
-    public PlayerQuitListener(CombatManager combatManager, MessageConfig messageConfig, Server server, MessageAnnouncer messageAnnouncer) {
+    public PlayerQuitListener(CombatManager combatManager, MessageConfig messageConfig, Server server, NotificationAnnouncer notificationAnnouncer) {
         this.combatManager = combatManager;
         this.messageConfig = messageConfig;
         this.server = server;
-        this.messageAnnouncer = messageAnnouncer;
+        this.notificationAnnouncer = notificationAnnouncer;
     }
 
     @EventHandler
@@ -37,11 +37,11 @@ public class PlayerQuitListener implements Listener {
             return;
         }
 
-        this.messageAnnouncer.sendMessage(enemy.getUniqueId(), this.messageConfig.unTagPlayer);
+        this.notificationAnnouncer.sendMessage(enemy, this.messageConfig.unTagPlayer);
 
-        combatManager.remove(enemy.getUniqueId());
-        combatManager.remove(player.getUniqueId());
+        this.combatManager.remove(enemy.getUniqueId());
+        this.combatManager.remove(player.getUniqueId());
 
-        player.setHealth(0.0);
+        player.setHealth(0.0f);
     }
 }

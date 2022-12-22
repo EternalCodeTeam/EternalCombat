@@ -1,3 +1,5 @@
+import com.github.jengelman.gradle.plugins.shadow.tasks.ShadowJar
+
 plugins {
     id("java-library")
     id("net.minecrell.plugin-yml.bukkit") version "0.5.2"
@@ -28,6 +30,11 @@ dependencies {
 
     // cdn configs
     implementation("net.dzikoysk:cdn:1.14.1")
+
+    // tests
+    testImplementation("org.codehaus.groovy:groovy-all:3.0.13")
+    testImplementation("org.junit.jupiter:junit-jupiter-api:5.9.1")
+
 }
 
 bukkit {
@@ -35,6 +42,7 @@ bukkit {
     apiVersion = "1.13"
     prefix = "EternalCombatLog"
     name = "EternalCombatLog"
+    author = "EternalCode"
     version = "${project.version}"
 }
 
@@ -47,7 +55,17 @@ tasks.withType<JavaCompile> {
     options.encoding = "UTF-8"
 }
 
-tasks.withType<com.github.jengelman.gradle.plugins.shadow.tasks.ShadowJar> {
+tasks.getByName<Test>("test") {
+    useJUnitPlatform()
+}
+
+tasks {
+    runServer {
+        minecraftVersion("1.19.3")
+    }
+}
+
+tasks.withType<ShadowJar> {
     archiveFileName.set("EternalCombatLog v${project.version} (MC 1.8.8-1.19x).jar")
 
     exclude(
@@ -71,11 +89,5 @@ tasks.withType<com.github.jengelman.gradle.plugins.shadow.tasks.ShadowJar> {
             "dev.rollczi.litecommands",
     ).forEach { pack ->
         relocate(pack, "$prefix.$pack")
-    }
-
-    tasks {
-        runServer {
-            minecraftVersion("1.19.3")
-        }
     }
 }

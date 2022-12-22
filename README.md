@@ -7,6 +7,5 @@
 
 </div>
 
-# Informations
-- EternalCombatLog supports Minecraft version 1.17.1, 1.18.2, 1.19.2+
-- EternalCombatLog requires Java 17 or higher. On older versions, the plugin may not work properly.
+# Information's
+- EternalCombatLog tested on 1.17.1 - 1.19.3 version

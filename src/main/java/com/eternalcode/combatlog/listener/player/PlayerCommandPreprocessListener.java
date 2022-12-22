@@ -3,7 +3,7 @@ package com.eternalcode.combatlog.listener.player;
 import com.eternalcode.combatlog.combat.CombatManager;
 import com.eternalcode.combatlog.config.implementation.MessageConfig;
 import com.eternalcode.combatlog.config.implementation.PluginConfig;
-import com.eternalcode.combatlog.message.MessageAnnouncer;
+import com.eternalcode.combatlog.NotificationAnnouncer;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -14,13 +14,13 @@ public class PlayerCommandPreprocessListener implements Listener {
     private final CombatManager combatManager;
     private final PluginConfig pluginConfig;
     private final MessageConfig messageConfig;
-    private final MessageAnnouncer messageAnnouncer;
+    private final NotificationAnnouncer notificationAnnouncer;
 
-    public PlayerCommandPreprocessListener(CombatManager combatManager, PluginConfig pluginConfig, MessageConfig messageConfig, MessageAnnouncer messageAnnouncer) {
+    public PlayerCommandPreprocessListener(CombatManager combatManager, PluginConfig pluginConfig, MessageConfig messageConfig, NotificationAnnouncer notificationAnnouncer) {
         this.combatManager = combatManager;
         this.pluginConfig = pluginConfig;
         this.messageConfig = messageConfig;
-        this.messageAnnouncer = messageAnnouncer;
+        this.notificationAnnouncer = notificationAnnouncer;
     }
 
     @EventHandler
@@ -40,7 +40,7 @@ public class PlayerCommandPreprocessListener implements Listener {
 
             event.setCancelled(true);
 
-            this.messageAnnouncer.sendMessage(player.getUniqueId(), this.messageConfig.cantUseCommand);
+            this.notificationAnnouncer.sendMessage(player, this.messageConfig.cantUseCommand);
         }
     }
 }

@@ -1,8 +1,8 @@
 package com.eternalcode.combatlog.combat;
 
-import com.eternalcode.combatlog.util.DurationUtil;
 import com.eternalcode.combatlog.config.implementation.MessageConfig;
-import com.eternalcode.combatlog.message.MessageAnnouncer;
+import com.eternalcode.combatlog.NotificationAnnouncer;
+import com.eternalcode.combatlog.util.DurationUtil;
 import org.bukkit.Server;
 import org.bukkit.entity.Player;
 import panda.utilities.text.Formatter;
@@ -15,13 +15,13 @@ public class CombatTask implements Runnable {
     private final CombatManager combatManager;
     private final MessageConfig messageConfig;
     private final Server server;
-    private final MessageAnnouncer messageAnnouncer;
+    private final NotificationAnnouncer notificationAnnouncer;
 
-    public CombatTask(CombatManager combatManager, MessageConfig messageConfig, Server server, MessageAnnouncer messageAnnouncer) {
+    public CombatTask(CombatManager combatManager, MessageConfig messageConfig, Server server, NotificationAnnouncer notificationAnnouncer) {
         this.combatManager = combatManager;
         this.messageConfig = messageConfig;
         this.server = server;
-        this.messageAnnouncer = messageAnnouncer;
+        this.notificationAnnouncer = notificationAnnouncer;
     }
 
     @Override
@@ -39,17 +39,17 @@ public class CombatTask implements Runnable {
             if (now.isBefore(remainingTime)) {
                 Duration between = Duration.between(now, remainingTime);
 
-                Formatter formatter = new Formatter();
-                formatter.register("{TIME}", DurationUtil.format(between));
+                Formatter formatter = new Formatter()
+                        .register("{TIME}", DurationUtil.format(between));
 
-                this.messageAnnouncer.sendActionBar(player.getUniqueId(), formatter.format(this.messageConfig.combatActionBar));
+                this.notificationAnnouncer.sendActionBar(player, formatter.format(this.messageConfig.combatActionBar));
 
                 continue;
             }
 
             this.combatManager.remove(combat.getUuid());
 
-            this.messageAnnouncer.sendMessage(player.getUniqueId(), this.messageConfig.unTagPlayer);
+            this.notificationAnnouncer.sendMessage(player, this.messageConfig.unTagPlayer);
 
         }
     }
