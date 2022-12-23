@@ -15,7 +15,7 @@ public class InvalidUsage implements InvalidUsageHandler<CommandSender> {
     private final MessageConfig messagesConfig;
     private final NotificationAnnouncer notificationAnnouncer;
 
-    public InvalidUsage(MessageConfig messagesConfig, com.eternalcode.combatlog.NotificationAnnouncer notificationAnnouncer) {
+    public InvalidUsage(MessageConfig messagesConfig, NotificationAnnouncer notificationAnnouncer) {
         this.messagesConfig = messagesConfig;
         this.notificationAnnouncer = notificationAnnouncer;
     }
