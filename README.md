@@ -15,7 +15,7 @@ CombatLog uses java 11+, so you need to have it installed on your server.
 
 <details><summary>Permissions for CombatLog</summary>
 
-- `combatlog.fight` - Allows to check is player in combat `/combatlog fight`
+- `combatlog.fight` - Allows to check if player in combat `/combatlog fight`
 - `combatlog.reload` - Allows to reload plugin `/combatlog reload`
 - `combatlog.tag` - Allows to create fights between two players  `/combatlog tag <first_player> <second_player>`
 - `combatlog.untag` - Allows to remove fight from player `/combatlog untag <player>`
