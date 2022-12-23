@@ -15,17 +15,17 @@ public class PluginConfig implements ReloadableConfig {
     public Duration combatLogTime = Duration.ofSeconds(20);
 
     public List<String> blockedCommands = new ImmutableList.Builder<String>()
-            .add("enderchest")
-            .add("spawn")
+            .add("gamemode")
+            .add("tp")
             .build();
 
-    @Description("# Should opening inventories be blocked?")
+    @Description("# Czy blokować otwieranie inventory?")
     public boolean blockingInventories = true;
 
-    @Description("# Should placing blocks be blocked?")
+    @Description("# Czy blokować stawianie bloków?")
     public boolean blockPlace = true;
 
-    @Description("# From which level should placing blocks be blocked?")
+    @Description("# From which level should place blocks be blocked?")
     public int blockPlaceLevel = 40;
 
     @Override

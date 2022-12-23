@@ -45,7 +45,7 @@ public class BlockPlaceListener implements Listener {
         if (level <= this.config.blockPlaceLevel) {
             event.setCancelled(true);
 
-            this.announcer.sendMessage(player, this.messages.blockPlaceBlocked);
+            this.announcer.announceMessage(uniqueId, this.messages.blockPlaceBlocked);
         }
     }
 }

@@ -8,6 +8,8 @@ import dev.rollczi.litecommands.command.permission.Permission;
 import dev.rollczi.litecommands.command.route.Route;
 import org.bukkit.entity.Player;
 
+import java.util.UUID;
+
 @Route(name = "combatlog")
 public class ReloadCommand {
 
@@ -22,9 +24,11 @@ public class ReloadCommand {
     }
 
     @Execute(route = "reload")
-    @Permission("eternalcombatlog.reload")
+    @Permission("combatlog.reload")
     void execute(Player player) {
+        UUID playerUniqueId = player.getUniqueId();
+
         this.configManager.reload();
-        this.announcer.sendMessage(player, this.messages.reload);
+        this.announcer.announceMessage(playerUniqueId, this.messages.reload);
     }
 }

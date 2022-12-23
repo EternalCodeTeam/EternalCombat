@@ -8,13 +8,15 @@ import dev.rollczi.litecommands.argument.Name;
 import dev.rollczi.litecommands.command.execute.Execute;
 import dev.rollczi.litecommands.command.permission.Permission;
 import dev.rollczi.litecommands.command.route.Route;
+import dev.rollczi.litecommands.command.section.Section;
 import org.bukkit.Server;
 import org.bukkit.entity.Player;
 import panda.utilities.text.Formatter;
 
 import java.util.UUID;
 
-@Route(name = "combatlog")
+@Route(name = "untag")
+@Permission("eternalcombatlog.untag")
 public class UnTagCommand {
 
     private final CombatManager combatManager;
@@ -30,9 +32,11 @@ public class UnTagCommand {
     }
 
     @Execute(route = "untag", min = 1)
-    @Permission("eternalcombatlog.untag")
+    @Permission("combatlog.untag")
     public void execute(Player player, @Arg @Name("target") Player target) {
-        UUID enemyUuid = this.combatManager.getEnemy(target.getUniqueId());
+        UUID uniqueId = target.getUniqueId();
+        UUID playerUniqueId = player.getUniqueId();
+        UUID enemyUuid = this.combatManager.getEnemy(uniqueId);
 
         Player enemy = server.getPlayer(enemyUuid);
 
@@ -40,15 +44,17 @@ public class UnTagCommand {
             return;
         }
 
-        this.notificationAnnouncer.sendMessage(target, this.messageConfig.unTagPlayer);
-        this.notificationAnnouncer.sendMessage(enemy, this.messageConfig.unTagPlayer);
+        UUID enemyUniqueId = enemy.getUniqueId();
 
-        this.combatManager.remove(target.getUniqueId());
-        this.combatManager.remove(enemy.getUniqueId());
+        this.notificationAnnouncer.announceMessage(uniqueId, this.messageConfig.unTagPlayer);
+        this.notificationAnnouncer.announceMessage(enemyUniqueId, this.messageConfig.unTagPlayer);
+
+        this.combatManager.remove(uniqueId);
+        this.combatManager.remove(enemyUniqueId);
 
         Formatter formatter = new Formatter()
                 .register("{PLAYER}", target.getName());
 
-        this.notificationAnnouncer.sendMessage(player, formatter.format(this.messageConfig.adminUnTagPlayer));
+        this.notificationAnnouncer.announceMessage(playerUniqueId, formatter.format(this.messageConfig.adminUnTagPlayer));
     }
 }

@@ -9,6 +9,8 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerCommandPreprocessEvent;
 
+import java.util.UUID;
+
 public class PlayerCommandPreprocessListener implements Listener {
 
     private final CombatManager combatManager;
@@ -27,7 +29,8 @@ public class PlayerCommandPreprocessListener implements Listener {
     public void onPlayerCommandPreprocess(PlayerCommandPreprocessEvent event) {
         Player player = event.getPlayer();
 
-        if (!this.combatManager.isInCombat(player.getUniqueId())) {
+        UUID playerUniqueId = player.getUniqueId();
+        if (!this.combatManager.isInCombat(playerUniqueId)) {
             return;
         }
 
@@ -40,7 +43,7 @@ public class PlayerCommandPreprocessListener implements Listener {
 
             event.setCancelled(true);
 
-            this.notificationAnnouncer.sendMessage(player, this.messageConfig.cantUseCommand);
+            this.notificationAnnouncer.announceMessage(playerUniqueId, this.messageConfig.cantUseCommand);
         }
     }
 }

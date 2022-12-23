@@ -37,4 +37,4 @@ jobs:
         uses: actions/upload-artifact@v3.1.1
         with:
           name: 'Successfully build CombatLog JDK${{ matrix.jdk }}'
-          path: build/libs/EternalCombatLog*.jar
+          path: build/libs/CombatLog*.jar

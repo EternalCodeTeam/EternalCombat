@@ -25,10 +25,10 @@ public class ConfigManager {
     }
 
     public <T extends ReloadableConfig> T load(T config) {
-        this.cdn.load(config.resource(this.dataFolder), config)
+        cdn.load(config.resource(this.dataFolder), config)
                 .orThrow(RuntimeException::new);
 
-        this.cdn.render(config, config.resource(this.dataFolder))
+        cdn.render(config, config.resource(this.dataFolder))
                 .orThrow(RuntimeException::new);
 
         this.configs.add(config);

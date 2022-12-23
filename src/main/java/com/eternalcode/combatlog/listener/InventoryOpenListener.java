@@ -4,7 +4,6 @@ import com.eternalcode.combatlog.combat.CombatManager;
 import com.eternalcode.combatlog.config.implementation.MessageConfig;
 import com.eternalcode.combatlog.config.implementation.PluginConfig;
 import com.eternalcode.combatlog.NotificationAnnouncer;
-import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.InventoryOpenEvent;
@@ -31,7 +30,6 @@ public class InventoryOpenListener implements Listener {
             return;
         }
 
-        Player player = (Player) event.getPlayer();
         UUID uniqueId = event.getPlayer().getUniqueId();
 
         if (!this.combatManager.isInCombat(uniqueId)) {
@@ -40,6 +38,6 @@ public class InventoryOpenListener implements Listener {
 
         event.setCancelled(true);
 
-        this.announcer.sendMessage(player, this.messages.inventoryBlocked);
+        this.announcer.announceMessage(uniqueId, this.messages.inventoryBlocked);
     }
 }

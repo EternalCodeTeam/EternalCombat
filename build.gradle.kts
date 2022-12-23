@@ -34,15 +34,13 @@ dependencies {
     // tests
     testImplementation("org.codehaus.groovy:groovy-all:3.0.13")
     testImplementation("org.junit.jupiter:junit-jupiter-api:5.9.1")
-
 }
 
 bukkit {
     main = "com.eternalcode.combatlog.CombatLogPlugin"
     apiVersion = "1.13"
-    prefix = "EternalCombatLog"
-    name = "EternalCombatLog"
-    author = "EternalCode"
+    prefix = "CombatLog"
+    name = "CombatLog"
     version = "${project.version}"
 }
 
@@ -66,7 +64,7 @@ tasks {
 }
 
 tasks.withType<ShadowJar> {
-    archiveFileName.set("EternalCombatLog v${project.version} (MC 1.8.8-1.19x).jar")
+    archiveFileName.set("CombatLog v${project.version} (MC 1.8.8-1.19x).jar")
 
     exclude(
             "org/intellij/lang/annotations/**",

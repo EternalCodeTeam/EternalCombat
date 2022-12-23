@@ -10,6 +10,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 
 import java.time.Duration;
+import java.util.UUID;
 
 public class EntityDamageByEntityListener implements Listener {
 
@@ -40,11 +41,14 @@ public class EntityDamageByEntityListener implements Listener {
 
         Duration combatTime = this.pluginConfig.combatLogTime;
 
-        this.combatManager.tag(player.getUniqueId(), enemy.getUniqueId(), combatTime);
-        this.combatManager.tag(enemy.getUniqueId(), player.getUniqueId(), combatTime);
+        UUID enemyUniqueId = enemy.getUniqueId();
+        UUID playerUniqueId = player.getUniqueId();
 
-        this.notificationAnnouncer.sendMessage(player, this.messageConfig.tagPlayer);
-        this.notificationAnnouncer.sendMessage(enemy, this.messageConfig.tagPlayer);
+        this.combatManager.tag(playerUniqueId, enemyUniqueId, combatTime);
+        this.combatManager.tag(enemyUniqueId, playerUniqueId, combatTime);
+
+        this.notificationAnnouncer.announceMessage(playerUniqueId, this.messageConfig.tagPlayer);
+        this.notificationAnnouncer.announceMessage(enemyUniqueId, this.messageConfig.tagPlayer);
     }
 
 }

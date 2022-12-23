@@ -9,6 +9,8 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerQuitEvent;
 
+import java.util.UUID;
+
 public class PlayerQuitListener implements Listener {
 
     private final CombatManager combatManager;
@@ -37,11 +39,15 @@ public class PlayerQuitListener implements Listener {
             return;
         }
 
-        this.notificationAnnouncer.sendMessage(enemy, this.messageConfig.unTagPlayer);
+        combatManager.remove(enemy.getUniqueId());
+        combatManager.remove(player.getUniqueId());
 
-        this.combatManager.remove(enemy.getUniqueId());
+        UUID enemyUniqueId = enemy.getUniqueId();
+        this.notificationAnnouncer.announceMessage(enemyUniqueId, this.messageConfig.unTagPlayer);
+
+        this.combatManager.remove(enemyUniqueId);
         this.combatManager.remove(player.getUniqueId());
 
-        player.setHealth(0.0f);
+        player.setHealth(0.0);
     }
 }

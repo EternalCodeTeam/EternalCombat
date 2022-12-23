@@ -1,7 +1,8 @@
 package com.eternalcode.combatlog.command.handler;
 
-import com.eternalcode.combatlog.config.implementation.MessageConfig;
+
 import com.eternalcode.combatlog.NotificationAnnouncer;
+import com.eternalcode.combatlog.config.implementation.MessageConfig;
 import dev.rollczi.litecommands.command.LiteInvocation;
 import dev.rollczi.litecommands.handle.InvalidUsageHandler;
 import dev.rollczi.litecommands.schematic.Schematic;
@@ -11,23 +12,34 @@ import panda.utilities.text.Formatter;
 
 public class InvalidUsage implements InvalidUsageHandler<CommandSender> {
 
+    private final MessageConfig messagesConfig;
     private final NotificationAnnouncer notificationAnnouncer;
-    private final MessageConfig messageConfig;
 
-    public InvalidUsage(NotificationAnnouncer notificationAnnouncer, MessageConfig messageConfig) {
+    public InvalidUsage(MessageConfig messagesConfig, com.eternalcode.combatlog.NotificationAnnouncer notificationAnnouncer) {
+        this.messagesConfig = messagesConfig;
         this.notificationAnnouncer = notificationAnnouncer;
-        this.messageConfig = messageConfig;
     }
 
     @Override
-    public void handle(CommandSender sender, LiteInvocation invocation, Schematic schematic) {
-        Player player = (Player) sender;
+    public void handle(CommandSender commandSender, LiteInvocation invocation, Schematic scheme) {
+        if (commandSender instanceof Player) {
+            Player player = (Player) commandSender;
 
-        Formatter formatter = new Formatter();
-        formatter.register("{COMMAND}", schematic.first());
+            if (scheme.getSchematics().size() > 1) {
+                for (String schematic : scheme.getSchematics()) {
 
-        this.notificationAnnouncer.sendMessage(player, formatter.format(this.messageConfig.invalidUsage));
+                    Formatter formatter = new Formatter()
+                            .register("{USAGE}", schematic);
 
+                    this.notificationAnnouncer.announceMessage(player.getUniqueId(), formatter.format(this.messagesConfig.invalidUsage));
+                }
+            }
+            else {
+                Formatter formatter = new Formatter()
+                        .register("{USAGE}", scheme.getSchematics().get(0));
+
+                this.notificationAnnouncer.announceMessage(player.getUniqueId(), formatter.format(this.messagesConfig.invalidUsage));
+            }
+        }
     }
-
 }

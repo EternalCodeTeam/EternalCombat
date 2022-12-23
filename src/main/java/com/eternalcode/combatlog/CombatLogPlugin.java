@@ -20,7 +20,8 @@ import com.eternalcode.combatlog.listener.player.PlayerCommandPreprocessListener
 import com.eternalcode.combatlog.listener.player.PlayerQuitListener;
 import com.eternalcode.combatlog.util.legacy.LegacyColorProcessor;
 import dev.rollczi.litecommands.LiteCommands;
-import dev.rollczi.litecommands.bukkit.LiteBukkitFactory;
+import dev.rollczi.litecommands.bukkit.adventure.platform.LiteBukkitAdventurePlatformFactory;
+import dev.rollczi.litecommands.bukkit.tools.BukkitOnlyPlayerContextual;
 import dev.rollczi.litecommands.bukkit.tools.BukkitPlayerArgument;
 import net.kyori.adventure.platform.AudienceProvider;
 import net.kyori.adventure.platform.bukkit.BukkitAudiences;
@@ -48,6 +49,8 @@ public final class CombatLogPlugin extends JavaPlugin {
 
     @Override
     public void onEnable() {
+        Server server = this.getServer();
+
         ConfigManager configManager = new ConfigManager(this.getDataFolder());
 
         this.messageConfig = configManager.load(new MessageConfig());
@@ -62,18 +65,17 @@ public final class CombatLogPlugin extends JavaPlugin {
 
         this.combatManager = new CombatManager();
 
-        Server server = this.getServer();
-
-        this.liteCommands = LiteBukkitFactory.builder(server, "eternal-combatlog")
+        this.liteCommands = LiteBukkitAdventurePlatformFactory.builder(server, "combatlog", this.audienceProvider, this.miniMessage)
                 .argument(Player.class, new BukkitPlayerArgument<>(this.getServer(), this.messageConfig.cantFindPlayer))
+                .contextualBind(Player.class, new BukkitOnlyPlayerContextual<>(""))
+
+                .invalidUsageHandler(new InvalidUsage(this.messageConfig, this.notificationAnnouncer))
+                .permissionHandler(new PermissionMessage(this.messageConfig, this.notificationAnnouncer))
 
                 .commandInstance(new TagCommand(this.combatManager, this.messageConfig, this.pluginConfig, this.notificationAnnouncer))
                 .commandInstance(new UnTagCommand(this.combatManager, this.messageConfig, this.getServer(), this.notificationAnnouncer))
                 .commandInstance(new FightCommand(this.combatManager, this.notificationAnnouncer, this.messageConfig))
                 .commandInstance(new ReloadCommand(configManager, this.notificationAnnouncer, this.messageConfig))
-
-                .invalidUsageHandler(new InvalidUsage(this.notificationAnnouncer, this.messageConfig))
-                .permissionHandler(new PermissionMessage(this.messageConfig, this.notificationAnnouncer))
 
                 .register();
 

@@ -8,13 +8,15 @@ import dev.rollczi.litecommands.argument.Arg;
 import dev.rollczi.litecommands.argument.Name;
 import dev.rollczi.litecommands.command.execute.Execute;
 import dev.rollczi.litecommands.command.permission.Permission;
-import dev.rollczi.litecommands.command.route.Route;
+import dev.rollczi.litecommands.command.section.Section;
 import org.bukkit.entity.Player;
 import panda.utilities.text.Formatter;
 
 import java.time.Duration;
+import java.util.UUID;
 
-@Route(name = "combatlog")
+@Section(route = "tag")
+@Permission("eternalcombatlog.tag")
 public class TagCommand {
 
     private final CombatManager combatManager;
@@ -30,22 +32,32 @@ public class TagCommand {
     }
 
     @Execute(route = "tag", min = 2)
-    @Permission("eternalcombatlog.tag")
+    @Permission("combatlog.tag")
+    // TODO: Make second target optional
     public void execute(Player player, @Arg @Name("firstTarget") Player firstTarget, @Arg @Name("secondTarget") Player secondTarget) {
         Duration combatTime = this.pluginConfig.combatLogTime;
 
-        this.combatManager.tag(firstTarget.getUniqueId(), secondTarget.getUniqueId(), combatTime);
-        this.combatManager.tag(secondTarget.getUniqueId(), firstTarget.getUniqueId(), combatTime);
+        UUID firstTargetUniqueId = firstTarget.getUniqueId();
+        UUID secondTargetUniqueId = secondTarget.getUniqueId();
+        UUID playerUniqueId = player.getUniqueId();
+
+        if (playerUniqueId.equals(firstTargetUniqueId) || playerUniqueId.equals(secondTargetUniqueId)) {
+            this.notificationAnnouncer.announceMessage(playerUniqueId, this.messageConfig.cantTagSelf);
+            return;
+        }
+
+        this.combatManager.tag(firstTargetUniqueId, secondTargetUniqueId, combatTime);
+        this.combatManager.tag(secondTargetUniqueId, firstTargetUniqueId, combatTime);
 
         Formatter formatter = new Formatter()
                 .register("{FIRST_PLAYER}", firstTarget.getName())
                 .register("{SECOND_PLAYER}", secondTarget.getName());
 
         String format = formatter.format(this.messageConfig.adminTagPlayer);
-        this.notificationAnnouncer.sendMessage(player, format);
+        this.notificationAnnouncer.announceMessage(playerUniqueId, format);
 
-        this.notificationAnnouncer.sendMessage(firstTarget, this.messageConfig.tagPlayer);
-        this.notificationAnnouncer.sendMessage(secondTarget, this.messageConfig.tagPlayer);
+        this.notificationAnnouncer.announceMessage(firstTargetUniqueId, this.messageConfig.tagPlayer);
+        this.notificationAnnouncer.announceMessage(secondTargetUniqueId, this.messageConfig.tagPlayer);
     }
 
 }

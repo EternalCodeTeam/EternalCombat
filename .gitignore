@@ -1,14 +1,4 @@
-# intellij
-*.iml
-*.ipr
-*.iws
-.idea/
-.gradle/
-run/
-out/
-build/
-
-.DS_Store
-[Dd]esktop.ini
-
-!gradle/wrapper/gradle-wrapper.jar
+.idea
+.gradle
+run
+build

@@ -9,6 +9,8 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDeathEvent;
 
+import java.util.UUID;
+
 public class EntityDeathListener implements Listener {
 
     private final CombatManager combatManager;
@@ -30,20 +32,23 @@ public class EntityDeathListener implements Listener {
         }
 
         Player player = (Player) event.getEntity();
+        UUID playerUniqueId = player.getUniqueId();
 
-        if (!this.combatManager.isInCombat(player.getUniqueId())) {
+        if (!this.combatManager.isInCombat(playerUniqueId)) {
             return;
         }
 
-        Player enemy = this.server.getPlayer(this.combatManager.getEnemy(player.getUniqueId()));
+        Player enemy = this.server.getPlayer(this.combatManager.getEnemy(playerUniqueId));
 
         if (enemy == null) {
             return;
         }
 
-        this.notificationAnnouncer.sendMessage(enemy, this.messageConfig.unTagPlayer);
+        UUID enemyUniqueId = enemy.getUniqueId();
 
-        this.combatManager.remove(player.getUniqueId());
-        this.combatManager.remove(enemy.getUniqueId());
+        this.notificationAnnouncer.announceMessage(enemyUniqueId, this.messageConfig.unTagPlayer);
+
+        this.combatManager.remove(playerUniqueId);
+        this.combatManager.remove(enemyUniqueId);
     }
 }

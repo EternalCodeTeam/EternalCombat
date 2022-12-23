@@ -22,7 +22,7 @@ public class MessageConfig implements ReloadableConfig {
 
     public String adminTagPlayer = "&7You have given combatLog to &e{FIRST_PLAYER}&7 and &e{SECOND_PLAYER}&7.";
 
-    public String adminUnTagPlayer = "&7You have removed combatLog from &e{FIRST_PLAYER}&7 and &e{SECOND_PLAYER}&7.";
+    public String adminUnTagPlayer = "&7You have removed combatLog from &e{PLAYER}.";
 
     public String invalidUsage = "&7Correct usage: &e{COMMAND}.";
 
@@ -35,6 +35,8 @@ public class MessageConfig implements ReloadableConfig {
     public String notInCombat = "&aYou are not in combat!";
 
     public String reload = "&aConfiguration successfully reloaded!";
+
+    public String cantTagSelf = "&cYou cannot tag yourself!";
 
     @Override
     public Resource resource(File folder) {

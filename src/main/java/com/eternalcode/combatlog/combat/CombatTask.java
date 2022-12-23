@@ -1,7 +1,7 @@
 package com.eternalcode.combatlog.combat;
 
-import com.eternalcode.combatlog.config.implementation.MessageConfig;
 import com.eternalcode.combatlog.NotificationAnnouncer;
+import com.eternalcode.combatlog.config.implementation.MessageConfig;
 import com.eternalcode.combatlog.util.DurationUtil;
 import org.bukkit.Server;
 import org.bukkit.entity.Player;
@@ -9,6 +9,7 @@ import panda.utilities.text.Formatter;
 
 import java.time.Duration;
 import java.time.Instant;
+import java.util.UUID;
 
 public class CombatTask implements Runnable {
 
@@ -36,20 +37,26 @@ public class CombatTask implements Runnable {
             Instant now = Instant.now();
             Instant remainingTime = combat.getEndOfCombatLog();
 
+            UUID playerUniqueId = player.getUniqueId();
+
+            /*
+             * TODO: Add announcement to configs like EternalCore
+             * combatMessage: "[CHAT, ACTIONBAR] You are in combat for {time} more seconds."
+             */
             if (now.isBefore(remainingTime)) {
                 Duration between = Duration.between(now, remainingTime);
 
                 Formatter formatter = new Formatter()
                         .register("{TIME}", DurationUtil.format(between));
 
-                this.notificationAnnouncer.sendActionBar(player, formatter.format(this.messageConfig.combatActionBar));
+                this.notificationAnnouncer.announceActionBar(playerUniqueId, formatter.format(this.messageConfig.combatActionBar));
 
                 continue;
             }
 
             this.combatManager.remove(combat.getUuid());
 
-            this.notificationAnnouncer.sendMessage(player, this.messageConfig.unTagPlayer);
+            this.notificationAnnouncer.announceMessageAndActionBar(playerUniqueId, this.messageConfig.unTagPlayer);
 
         }
     }
