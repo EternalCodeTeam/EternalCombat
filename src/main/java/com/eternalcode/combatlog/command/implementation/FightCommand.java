@@ -8,7 +8,6 @@ import dev.rollczi.litecommands.argument.Name;
 import dev.rollczi.litecommands.command.execute.Execute;
 import dev.rollczi.litecommands.command.permission.Permission;
 import dev.rollczi.litecommands.command.route.Route;
-import dev.rollczi.litecommands.command.section.Section;
 import org.bukkit.entity.Player;
 
 import java.util.UUID;

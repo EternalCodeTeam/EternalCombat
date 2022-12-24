@@ -1,9 +1,9 @@
 package com.eternalcode.combatlog.command.implementation;
 
+import com.eternalcode.combatlog.NotificationAnnouncer;
 import com.eternalcode.combatlog.combat.CombatManager;
 import com.eternalcode.combatlog.config.implementation.MessageConfig;
 import com.eternalcode.combatlog.config.implementation.PluginConfig;
-import com.eternalcode.combatlog.NotificationAnnouncer;
 import dev.rollczi.litecommands.argument.Arg;
 import dev.rollczi.litecommands.argument.Name;
 import dev.rollczi.litecommands.command.execute.Execute;

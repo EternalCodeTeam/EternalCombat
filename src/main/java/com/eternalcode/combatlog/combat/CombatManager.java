@@ -25,7 +25,7 @@ public class CombatManager {
     public void remove(UUID player) {
         this.combats.remove(player);
     }
-    
+
     public void tag(UUID player, UUID enemy, Duration time) {
         if (isInCombat(player)) {
             this.remove(player);

@@ -1,8 +1,8 @@
 package com.eternalcode.combatlog.listener.player;
 
+import com.eternalcode.combatlog.NotificationAnnouncer;
 import com.eternalcode.combatlog.combat.CombatManager;
 import com.eternalcode.combatlog.config.implementation.MessageConfig;
-import com.eternalcode.combatlog.NotificationAnnouncer;
 import org.bukkit.Server;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -39,8 +39,8 @@ public class PlayerQuitListener implements Listener {
             return;
         }
 
-        combatManager.remove(enemy.getUniqueId());
-        combatManager.remove(player.getUniqueId());
+        this.combatManager.remove(enemy.getUniqueId());
+        this.combatManager.remove(player.getUniqueId());
 
         UUID enemyUniqueId = enemy.getUniqueId();
         this.notificationAnnouncer.announceMessage(enemyUniqueId, this.messageConfig.unTagPlayer);

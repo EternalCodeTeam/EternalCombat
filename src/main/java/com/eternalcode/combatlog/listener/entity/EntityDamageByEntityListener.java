@@ -1,9 +1,9 @@
 package com.eternalcode.combatlog.listener.entity;
 
+import com.eternalcode.combatlog.NotificationAnnouncer;
 import com.eternalcode.combatlog.combat.CombatManager;
 import com.eternalcode.combatlog.config.implementation.MessageConfig;
 import com.eternalcode.combatlog.config.implementation.PluginConfig;
-import com.eternalcode.combatlog.NotificationAnnouncer;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
