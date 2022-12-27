@@ -10,7 +10,7 @@
 </div>
 
 # Information's
-CombatLog has been tested on versions 1.17.1 - 1.19.3, but probably works on most versions of Minecraft. If you find compatibility issues report them in the "Issues" tab.
+CombatLog has been tested on versions 1.17.1 - 1.19.3, but probably works on most versions of Minecraft. If you find compatibility issues report them in the [Issues](https://github.com/EternalCodeTeam/CombatLog/issues) tab.
 CombatLog uses java 11+, so you need to have it installed on your server.
 
 <details><summary>Permissions for CombatLog</summary>
