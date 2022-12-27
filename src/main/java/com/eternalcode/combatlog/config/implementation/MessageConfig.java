@@ -22,7 +22,7 @@ public class MessageConfig implements ReloadableConfig {
 
     public String adminTagPlayer = "&7You have given combatLog to &e{FIRST_PLAYER}&7 and &e{SECOND_PLAYER}&7.";
 
-    public String adminUnTagPlayer = "&7You have removed combatLog from &e{PLAYER}.";
+    public String adminUnTagPlayer = "&7You have removed &e{PLAYER} from fight.";
 
     public String invalidUsage = "&7Correct usage: &e{COMMAND}.";
 
