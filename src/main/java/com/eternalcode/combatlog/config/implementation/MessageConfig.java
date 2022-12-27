@@ -8,7 +8,7 @@ import java.io.File;
 
 public class MessageConfig implements ReloadableConfig {
 
-    public String noPermission = "&cYou do not have permission to perform this command!";
+    public String noPermission = "&cYou don't have permission to perform this command!";
 
     public String cantFindPlayer = "&cThe specified player could not be found!";
 
