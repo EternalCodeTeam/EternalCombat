@@ -22,6 +22,4 @@ public final class DurationUtil {
                 .replaceAll("(\\d[HMS])(?!$)", "$1 ")
                 .toLowerCase();
     }
-
-
 }

@@ -39,10 +39,6 @@ public class CombatTask implements Runnable {
 
             UUID playerUniqueId = player.getUniqueId();
 
-            /*
-             * TODO: Add announcement to configs like EternalCore
-             * combatMessage: "[CHAT, ACTIONBAR] You are in combat for {time} more seconds."
-             */
             if (now.isBefore(remainingTime)) {
                 Duration between = Duration.between(now, remainingTime);
 
@@ -55,8 +51,7 @@ public class CombatTask implements Runnable {
             }
 
             this.combatManager.remove(combat.getUuid());
-
-            this.notificationAnnouncer.announceMessageAndActionBar(playerUniqueId, this.messageConfig.unTagPlayer);
+            this.notificationAnnouncer.announceActionBar(playerUniqueId, this.messageConfig.unTagPlayer);
 
         }
     }

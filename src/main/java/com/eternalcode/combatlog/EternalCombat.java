@@ -33,16 +33,14 @@ import org.bukkit.plugin.java.JavaPlugin;
 
 import java.util.stream.Stream;
 
-public final class CombatLogPlugin extends JavaPlugin {
+public final class EternalCombat extends JavaPlugin {
 
     private MessageConfig messageConfig;
     private PluginConfig pluginConfig;
 
     private AudienceProvider audienceProvider;
     private MiniMessage miniMessage;
-
     private NotificationAnnouncer notificationAnnouncer;
-
     private CombatManager combatManager;
 
     private LiteCommands<CommandSender> liteCommands;
@@ -65,9 +63,9 @@ public final class CombatLogPlugin extends JavaPlugin {
 
         this.combatManager = new CombatManager();
 
-        this.liteCommands = LiteBukkitAdventurePlatformFactory.builder(server, "combatlog", this.audienceProvider, this.miniMessage)
+        this.liteCommands = LiteBukkitAdventurePlatformFactory.builder(server, "eternalcombat", this.audienceProvider)
                 .argument(Player.class, new BukkitPlayerArgument<>(this.getServer(), this.messageConfig.cantFindPlayer))
-                .contextualBind(Player.class, new BukkitOnlyPlayerContextual<>(""))
+                .contextualBind(Player.class, new BukkitOnlyPlayerContextual<>(this.messageConfig.onlyForPlayers))
 
                 .invalidUsageHandler(new InvalidUsage(this.messageConfig, this.notificationAnnouncer))
                 .permissionHandler(new PermissionMessage(this.messageConfig, this.notificationAnnouncer))
@@ -108,31 +106,4 @@ public final class CombatLogPlugin extends JavaPlugin {
         }
     }
 
-    public MiniMessage getMiniMessage() {
-        return this.miniMessage;
-    }
-
-    public AudienceProvider getAudienceProvider() {
-        return this.audienceProvider;
-    }
-
-    public NotificationAnnouncer getMessageAnnouncer() {
-        return this.notificationAnnouncer;
-    }
-
-    public CombatManager getCombatLogManager() {
-        return this.combatManager;
-    }
-
-    public PluginConfig getPluginConfig() {
-        return this.pluginConfig;
-    }
-
-    public MessageConfig getMessageConfig() {
-        return this.messageConfig;
-    }
-
-    public LiteCommands<CommandSender> getLiteCommands() {
-        return this.liteCommands;
-    }
 }

@@ -1,6 +1,6 @@
 ---
 name: Feature request
-about: Suggest an idea for EternalCombatLog <3
+about: Suggest an idea for EternalCombat <3
 title: ''
 labels: ''
 assignees: ''

@@ -10,8 +10,6 @@ jobs:
         java:
           - 11
           - 17
-          - 18
-          - 19
       fail-fast: false
     steps:
       - name: Checkout
@@ -36,5 +34,5 @@ jobs:
       - name: Upload a Build Artifact
         uses: actions/upload-artifact@v3.1.1
         with:
-          name: 'Successfully build CombatLog JDK${{ matrix.jdk }}'
+          name: 'Successfully build EternalCombat JDK${{ matrix.jdk }}'
           path: build/libs/CombatLog*.jar

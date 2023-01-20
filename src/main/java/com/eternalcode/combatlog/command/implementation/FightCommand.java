@@ -12,7 +12,8 @@ import org.bukkit.entity.Player;
 
 import java.util.UUID;
 
-@Route(name = "fight", aliases = "walka")
+@Route(name = "fight")
+@Permission("combatlog.fight")
 public class FightCommand {
 
     private final CombatManager combatManager;
@@ -25,8 +26,7 @@ public class FightCommand {
         this.messages = messages;
     }
 
-    @Execute(route = "fight")
-    @Permission("combatlog.fight")
+    @Execute(route = "fight", min = 1)
     void execute(Player player, @Arg @Name("target") Player target) {
         UUID targetUniqueId = target.getUniqueId();
         UUID playerUniqueId = player.getUniqueId();

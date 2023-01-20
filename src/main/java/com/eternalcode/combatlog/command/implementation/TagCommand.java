@@ -8,15 +8,15 @@ import dev.rollczi.litecommands.argument.Arg;
 import dev.rollczi.litecommands.argument.Name;
 import dev.rollczi.litecommands.command.execute.Execute;
 import dev.rollczi.litecommands.command.permission.Permission;
-import dev.rollczi.litecommands.command.section.Section;
+import dev.rollczi.litecommands.command.route.Route;
 import org.bukkit.entity.Player;
 import panda.utilities.text.Formatter;
 
 import java.time.Duration;
 import java.util.UUID;
 
-@Section(route = "tag")
-@Permission("eternalcombatlog.tag")
+@Route(name = "tag")
+@Permission("eternalcombat.tag")
 public class TagCommand {
 
     private final CombatManager combatManager;
@@ -32,8 +32,6 @@ public class TagCommand {
     }
 
     @Execute(route = "tag", min = 2)
-    @Permission("combatlog.tag")
-    // TODO: Make second target optional
     public void execute(Player player, @Arg @Name("firstTarget") Player firstTarget, @Arg @Name("secondTarget") Player secondTarget) {
         Duration combatTime = this.pluginConfig.combatLogTime;
 

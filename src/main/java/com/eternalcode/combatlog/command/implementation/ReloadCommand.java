@@ -11,6 +11,7 @@ import org.bukkit.entity.Player;
 import java.util.UUID;
 
 @Route(name = "combatlog")
+@Permission("eternalcombat.reload")
 public class ReloadCommand {
 
     private final ConfigManager configManager;
@@ -24,7 +25,6 @@ public class ReloadCommand {
     }
 
     @Execute(route = "reload")
-    @Permission("combatlog.reload")
     void execute(Player player) {
         UUID playerUniqueId = player.getUniqueId();
 

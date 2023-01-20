@@ -22,24 +22,12 @@ public class InvalidUsage implements InvalidUsageHandler<CommandSender> {
 
     @Override
     public void handle(CommandSender commandSender, LiteInvocation invocation, Schematic scheme) {
-        if (commandSender instanceof Player) {
-            Player player = (Player) commandSender;
+        for (String schematic : scheme.getSchematics()) {
 
-            if (scheme.getSchematics().size() > 1) {
-                for (String schematic : scheme.getSchematics()) {
+            Formatter formatter = new Formatter()
+                    .register("{USAGE}", schematic);
 
-                    Formatter formatter = new Formatter()
-                            .register("{USAGE}", schematic);
-
-                    this.notificationAnnouncer.announceMessage(player.getUniqueId(), formatter.format(this.messagesConfig.invalidUsage));
-                }
-            }
-            else {
-                Formatter formatter = new Formatter()
-                        .register("{USAGE}", scheme.getSchematics().get(0));
-
-                this.notificationAnnouncer.announceMessage(player.getUniqueId(), formatter.format(this.messagesConfig.invalidUsage));
-            }
+            this.notificationAnnouncer.announceMessage(commandSender, formatter.format(this.messagesConfig.invalidUsage));
         }
     }
 }

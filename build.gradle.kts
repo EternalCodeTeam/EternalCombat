@@ -1,7 +1,8 @@
 import com.github.jengelman.gradle.plugins.shadow.tasks.ShadowJar
 
 plugins {
-    id("java-library")
+    `java-library`
+
     id("net.minecrell.plugin-yml.bukkit") version "0.5.2"
     id("com.github.johnrengelman.shadow") version "7.1.2"
     id("xyz.jpenilla.run-paper") version "2.0.1"
@@ -26,7 +27,7 @@ dependencies {
     implementation("net.kyori:adventure-text-minimessage:4.12.0")
 
     // litecommands
-    implementation("dev.rollczi.litecommands:bukkit-adventure:2.7.0")
+    implementation("dev.rollczi.litecommands:bukkit-adventure:2.7.2")
 
     // cdn configs
     implementation("net.dzikoysk:cdn:1.14.1")
@@ -40,8 +41,8 @@ dependencies {
 bukkit {
     main = "com.eternalcode.combatlog.CombatLogPlugin"
     apiVersion = "1.13"
-    prefix = "CombatLog"
-    name = "CombatLog"
+    prefix = "EternalCombat"
+    name = "EternalCombat"
     version = "${project.version}"
 }
 
@@ -65,14 +66,14 @@ tasks {
 }
 
 tasks.withType<ShadowJar> {
-    archiveFileName.set("CombatLog v${project.version} (MC 1.8.8-1.19x).jar")
+    archiveFileName.set("EternalCombat v${project.version} (MC 1.8.8-1.19x).jar")
 
     exclude(
-            "org/intellij/lang/annotations/**",
-            "org/jetbrains/annotations/**",
-            "org/checkerframework/**",
-            "META-INF/**",
-            "javax/**"
+        "org/intellij/lang/annotations/**",
+        "org/jetbrains/annotations/**",
+        "org/checkerframework/**",
+        "META-INF/**",
+        "javax/**"
     )
 
     mergeServiceFiles()
@@ -80,12 +81,12 @@ tasks.withType<ShadowJar> {
 
     val prefix = "com.eternalcode.combatlog.libs"
     listOf(
-            "panda.std",
-            "panda.utilities",
-            "org.panda-lang",
-            "net.dzikoysk",
-            "net.kyori",
-            "dev.rollczi.litecommands",
+        "panda.std",
+        "panda.utilities",
+        "org.panda-lang",
+        "net.dzikoysk",
+        "net.kyori",
+        "dev.rollczi.litecommands",
     ).forEach { pack ->
         relocate(pack, "$prefix.$pack")
     }

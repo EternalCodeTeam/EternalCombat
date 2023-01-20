@@ -22,18 +22,14 @@ public class PermissionMessage implements PermissionHandler<CommandSender> {
 
     @Override
     public void handle(CommandSender commandSender, LiteInvocation invocation, RequiredPermissions requiredPermissions) {
-        if (commandSender instanceof Player) {
-            Player player = (Player) commandSender;
+        String value = Joiner.on(", ")
+                .join(requiredPermissions.getPermissions())
+                .toString();
 
-            String value = Joiner.on(", ")
-                    .join(requiredPermissions.getPermissions())
-                    .toString();
+        Formatter formatter = new Formatter()
+                .register("{PERMISSION}", value);
 
-            Formatter formatter = new Formatter()
-                    .register("{PERMISSION}", value);
-
-            this.notificationAnnouncer.announceMessage(player.getUniqueId(), formatter.format(this.messageConfig.noPermission));
-        }
+        this.notificationAnnouncer.announceMessage(commandSender, formatter.format(this.messageConfig.noPermission));
     }
 
 }

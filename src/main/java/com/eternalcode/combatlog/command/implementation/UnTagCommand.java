@@ -15,7 +15,7 @@ import panda.utilities.text.Formatter;
 import java.util.UUID;
 
 @Route(name = "untag")
-@Permission("eternalcombatlog.untag")
+@Permission("eternalcombat.untag")
 public class UnTagCommand {
 
     private final CombatManager combatManager;
@@ -31,7 +31,7 @@ public class UnTagCommand {
     }
 
     @Execute(route = "untag", min = 1)
-    @Permission("combatlog.untag")
+    @Permission("eternalcombat.untag")
     public void execute(Player player, @Arg @Name("target") Player target) {
         UUID uniqueId = target.getUniqueId();
         UUID playerUniqueId = player.getUniqueId();
