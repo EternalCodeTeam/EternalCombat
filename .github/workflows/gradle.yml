@@ -32,7 +32,7 @@ jobs:
       - name: Build the Jar
         run: './gradlew shadowJar'
       - name: Upload a Build Artifact
-        uses: actions/upload-artifact@v3.1.1
+        uses: actions/upload-artifact@v3.1.2
         with:
           name: 'Successfully build EternalCombat using JDK ${{ matrix.jdk }}'
           path: build/libs/EternalCombat*.jar
