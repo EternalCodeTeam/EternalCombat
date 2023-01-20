@@ -34,7 +34,7 @@ dependencies {
 
     // tests
     testImplementation("org.junit.jupiter:junit-jupiter-params:5.9.2")
-    testImplementation("org.codehaus.groovy:groovy-all:3.0.13")
+    testImplementation("org.codehaus.groovy:groovy-all:3.0.14")
     testImplementation("org.junit.jupiter:junit-jupiter-api:5.9.2")
 }
 
