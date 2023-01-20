@@ -19,6 +19,7 @@ CombatLog requires Java 11 or later, so make sure it's installed on your server.
 - `eternalcombat.reload` - Allows to reload plugin `/combatlog reload`
 - `eternalcombat.tag` - Allows to create fights between two players  `/combatlog tag <first_player> <second_player>`
 - `eternalcombat.untag` - Allows to remove player from fight `/combatlog untag <player>`
+- `eternalcombat.receiveupdates` - Allows you to receive notifications about the new version of the plugin when attaching
 
 ### Contributing
 We welcome all contributions to the EternalCombat project! Please check out [code of conduct](.github/CONTRIBUTING.md) for more information on how to contribute and our [code of conduct](./.github/CODE_OF_CONDUCT.md)

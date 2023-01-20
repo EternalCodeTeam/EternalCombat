@@ -18,7 +18,10 @@ import com.eternalcode.combat.listener.entity.EntityDamageByEntityListener;
 import com.eternalcode.combat.listener.entity.EntityDeathListener;
 import com.eternalcode.combat.listener.player.PlayerCommandPreprocessListener;
 import com.eternalcode.combat.listener.player.PlayerQuitListener;
+import com.eternalcode.combat.updater.UpdaterController;
+import com.eternalcode.combat.updater.UpdaterService;
 import com.eternalcode.combat.util.legacy.LegacyColorProcessor;
+import com.google.common.base.Stopwatch;
 import dev.rollczi.litecommands.LiteCommands;
 import dev.rollczi.litecommands.bukkit.adventure.platform.LiteBukkitAdventurePlatformFactory;
 import dev.rollczi.litecommands.bukkit.tools.BukkitOnlyPlayerContextual;
@@ -31,37 +34,45 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 
+import java.util.concurrent.TimeUnit;
 import java.util.stream.Stream;
 
 public final class EternalCombat extends JavaPlugin {
 
+    private ConfigManager configManager;
+
     private MessageConfig messageConfig;
     private PluginConfig pluginConfig;
+
+    private CombatManager combatManager;
+
+    private UpdaterService updaterService;
 
     private AudienceProvider audienceProvider;
     private MiniMessage miniMessage;
     private NotificationAnnouncer notificationAnnouncer;
-    private CombatManager combatManager;
 
     private LiteCommands<CommandSender> liteCommands;
 
     @Override
     public void onEnable() {
+        Stopwatch started = Stopwatch.createStarted();
         Server server = this.getServer();
 
-        ConfigManager configManager = new ConfigManager(this.getDataFolder());
+        this.configManager = new ConfigManager(this.getDataFolder());
 
         this.messageConfig = configManager.load(new MessageConfig());
         this.pluginConfig = configManager.load(new PluginConfig());
+
+        this.combatManager = new CombatManager();
+
+        this.updaterService = new UpdaterService(this.getDescription());
 
         this.audienceProvider = BukkitAudiences.create(this);
         this.miniMessage = MiniMessage.builder()
                 .postProcessor(new LegacyColorProcessor())
                 .build();
-
         this.notificationAnnouncer = new NotificationAnnouncer(this.audienceProvider, this.miniMessage);
-
-        this.combatManager = new CombatManager();
 
         this.liteCommands = LiteBukkitAdventurePlatformFactory.builder(server, "eternalcombat", this.audienceProvider)
                 .argument(Player.class, new BukkitPlayerArgument<>(this.getServer(), this.messageConfig.cantFindPlayer))
@@ -89,8 +100,12 @@ public final class EternalCombat extends JavaPlugin {
                 new PlayerCommandPreprocessListener(this.combatManager, this.pluginConfig, this.messageConfig, this.notificationAnnouncer),
                 new PlayerQuitListener(this.combatManager, this.messageConfig, this.getServer(), this.notificationAnnouncer),
                 new BlockPlaceListener(this.combatManager, this.notificationAnnouncer, this.messageConfig, this.pluginConfig),
-                new InventoryOpenListener(this.combatManager, this.notificationAnnouncer, this.messageConfig, this.pluginConfig)
+                new InventoryOpenListener(this.combatManager, this.notificationAnnouncer, this.messageConfig, this.pluginConfig),
+                new UpdaterController(this.updaterService, this.pluginConfig, this.audienceProvider, this.miniMessage)
         ).forEach(listener -> this.getServer().getPluginManager().registerEvents(listener, this));
+
+        long millis = started.elapsed(TimeUnit.MILLISECONDS);
+        this.getLogger().info("Successfully loaded EternalCombat in " + millis + "ms");
     }
 
     @Override

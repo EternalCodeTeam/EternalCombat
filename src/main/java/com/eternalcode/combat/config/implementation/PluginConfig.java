@@ -12,6 +12,9 @@ import java.util.List;
 
 public class PluginConfig implements ReloadableConfig {
 
+    @Description({ " ", "# Whether the player after entering the server should receive information about the new version of the plugin?" })
+    public boolean receiveUpdates = true;
+
     @Description("# The length of time the combat is to last")
     public Duration combatLogTime = Duration.ofSeconds(20);
 
@@ -21,7 +24,7 @@ public class PluginConfig implements ReloadableConfig {
             .add("tp")
             .build();
 
-    @Description({ " ", "# Block the opening of inventory??" })
+    @Description({ " ", "# Block the opening of inventory?" })
     public boolean blockingInventories = true;
 
     @Description({ " ", "# Whether to block the placement of blocks?" })
