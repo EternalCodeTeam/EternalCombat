@@ -1,1 +1,1 @@
-rootProject.name = "CombatLog"
+rootProject.name = "EternalCombat"
