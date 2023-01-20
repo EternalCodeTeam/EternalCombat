@@ -10,7 +10,7 @@ We welcome all contributions to the EternalCombat project!
 5. Submit a pull request to the main repository.
 
 ### Code of Conduct
-We expect all contributors to follow our [code of conduct](./.github/CODE_OF_CONDUCT.md).
+We expect all contributors to follow our [code of conduct](CODE_OF_CONDUCT.md).
 
 ### Reporting Issues
 If you find an issue with the plugin, please report it in the [Issues tab](https://github.com/EternalCodeTeam/EternalCombat/issues). Please provide as much information as possible, including the version of Minecraft and the plugin you are using, as well as any error messages or logs.

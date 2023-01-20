@@ -21,7 +21,7 @@ CombatLog requires Java 11 or later, so make sure it's installed on your server.
 - `eternalcombat.untag` - Allows to remove player from fight `/combatlog untag <player>`
 
 ### Contributing
-We welcome all contributions to the EternalCombat project! Please check out [code of conduct](./CONTRIBUTING.md) for more information on how to contribute and our [code of conduct](./.github/CODE_OF_CONDUCT.md)
+We welcome all contributions to the EternalCombat project! Please check out [code of conduct](.github/CONTRIBUTING.md) for more information on how to contribute and our [code of conduct](./.github/CODE_OF_CONDUCT.md)
 
 ### Reporting Issues
 If you find an issue with the plugin, please report it in the [Issues tab](https://github.com/EternalCodeTeam/EternalCombat/issues). Please provide as much information as possible, including the version of Minecraft and the plugin you are using, as well as any error messages or logs
