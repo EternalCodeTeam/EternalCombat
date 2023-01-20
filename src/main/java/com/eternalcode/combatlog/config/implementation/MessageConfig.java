@@ -14,7 +14,7 @@ public class MessageConfig implements ReloadableConfig {
     public String cantFindPlayer = "&cThe specified player could not be found!";
     public String combatActionBar = "&dCombat ends in: &f{TIME}";
     public String tagPlayer = "&cYou are in combat, do not leave the server!";
-    public String unTagPlayer = "&aYou are no longer in combat!";
+    public String unTagPlayer = "&aYou are no longer in combat! You can safely leave the server.";
     public String cantUseCommand = "&cUsing this command during combat is prohibited!";
     public String adminTagPlayer = "&7You have given combatLog to &e{FIRST_PLAYER}&7 and &e{SECOND_PLAYER}&7.";
     public String adminUnTagPlayer = "&7You have removed &e{PLAYER} from fight.";
