@@ -70,10 +70,11 @@ public final class EternalCombat extends JavaPlugin {
                 .invalidUsageHandler(new InvalidUsage(this.messageConfig, this.notificationAnnouncer))
                 .permissionHandler(new PermissionMessage(this.messageConfig, this.notificationAnnouncer))
 
-                .commandInstance(new TagCommand(this.combatManager, this.messageConfig, this.pluginConfig, this.notificationAnnouncer))
-                .commandInstance(new UnTagCommand(this.combatManager, this.messageConfig, this.getServer(), this.notificationAnnouncer))
-                .commandInstance(new FightCommand(this.combatManager, this.notificationAnnouncer, this.messageConfig))
-                .commandInstance(new ReloadCommand(configManager, this.notificationAnnouncer, this.messageConfig))
+                .commandInstance(
+                        new TagCommand(this.combatManager, this.messageConfig, this.pluginConfig, this.notificationAnnouncer),
+                        new UnTagCommand(this.combatManager, this.messageConfig, this.getServer(), this.notificationAnnouncer),
+                        new FightCommand(this.combatManager, this.notificationAnnouncer, this.messageConfig),
+                        new ReloadCommand(configManager, this.notificationAnnouncer, this.messageConfig))
 
                 .register();
 

@@ -39,7 +39,7 @@ dependencies {
 }
 
 bukkit {
-    main = "com.eternalcode.combatlog.EternalCombat"
+    main = "com.eternalcode.combat.EternalCombat"
     apiVersion = "1.13"
     prefix = "EternalCombat"
     name = "EternalCombat"
@@ -79,7 +79,7 @@ tasks.withType<ShadowJar> {
     mergeServiceFiles()
     minimize()
 
-    val prefix = "com.eternalcode.combatlog.libs"
+    val prefix = "com.eternalcode.combat.libs"
     listOf(
         "panda.std",
         "panda.utilities",
