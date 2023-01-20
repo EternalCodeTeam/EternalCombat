@@ -15,11 +15,13 @@ repositories {
     mavenCentral()
     mavenLocal()
 
+    maven { url = uri("https://repo.eternalcode.pl/releases") }
     maven { url = uri("https://hub.spigotmc.org/nexus/content/repositories/snapshots/") }
     maven { url = uri("https://repo.panda-lang.org/releases") }
 }
 
 dependencies {
+    // Spigot api
     compileOnly("org.spigotmc:spigot-api:1.19.3-R0.1-SNAPSHOT")
 
     // kyori
@@ -31,6 +33,9 @@ dependencies {
 
     // cdn configs
     implementation("net.dzikoysk:cdn:1.14.3")
+
+    // GitCheck
+    implementation("com.eternalcode:gitcheck:1.0.0")
 
     // tests
     testImplementation("org.junit.jupiter:junit-jupiter-params:5.9.2")
