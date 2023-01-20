@@ -9,7 +9,7 @@ import java.io.File;
 
 public class MessageConfig implements ReloadableConfig {
 
-    public String onlyForPlayers = "&cTa komenda jest dostepna tylko dla graczy!";
+    public String onlyForPlayers = "&cThis command is only available to players!";
     public String noPermission = "&cYou don't have permission to perform this command!";
     public String cantFindPlayer = "&cThe specified player could not be found!";
     public String combatActionBar = "&dCombat ends in: &f{TIME}";

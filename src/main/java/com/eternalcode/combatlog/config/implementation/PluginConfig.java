@@ -12,20 +12,22 @@ import java.util.List;
 
 public class PluginConfig implements ReloadableConfig {
 
+    @Description("# The length of time the combat is to last")
     public Duration combatLogTime = Duration.ofSeconds(20);
 
+    @Description({ " ", "# Blocked commands that the player will not be able to use during combat" })
     public List<String> blockedCommands = new ImmutableList.Builder<String>()
             .add("gamemode")
             .add("tp")
             .build();
 
-    @Description("# Czy blokować otwieranie inventory?")
+    @Description({ " ", "# Block the opening of inventory??" })
     public boolean blockingInventories = true;
 
-    @Description("# Czy blokować stawianie bloków?")
+    @Description({ " ", "# Whether to block the placement of blocks?" })
     public boolean blockPlace = true;
 
-    @Description("# From which level should place blocks be blocked?")
+    @Description({ " ", "# From which level should place blocks be blocked?" })
     public int blockPlaceLevel = 40;
 
     @Override

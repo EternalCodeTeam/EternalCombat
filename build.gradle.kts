@@ -30,7 +30,7 @@ dependencies {
     implementation("dev.rollczi.litecommands:bukkit-adventure:2.7.2")
 
     // cdn configs
-    implementation("net.dzikoysk:cdn:1.14.1")
+    implementation("net.dzikoysk:cdn:1.14.3")
 
     // tests
     testImplementation("org.junit.jupiter:junit-jupiter-params:5.9.1")
@@ -39,7 +39,7 @@ dependencies {
 }
 
 bukkit {
-    main = "com.eternalcode.combatlog.CombatLogPlugin"
+    main = "com.eternalcode.combatlog.EternalCombat"
     apiVersion = "1.13"
     prefix = "EternalCombat"
     name = "EternalCombat"
