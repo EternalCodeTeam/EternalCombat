@@ -74,7 +74,8 @@ public final class EternalCombat extends JavaPlugin {
                         new TagCommand(this.combatManager, this.messageConfig, this.pluginConfig, this.notificationAnnouncer),
                         new UnTagCommand(this.combatManager, this.messageConfig, this.getServer(), this.notificationAnnouncer),
                         new FightCommand(this.combatManager, this.notificationAnnouncer, this.messageConfig),
-                        new ReloadCommand(configManager, this.notificationAnnouncer, this.messageConfig))
+                        new ReloadCommand(configManager, this.notificationAnnouncer, this.messageConfig)
+                )
 
                 .register();
 
