@@ -1,6 +1,6 @@
 ---
 name: Bug report
-about: Create a bug report to help us improve EternalCombatLog <3
+about: Create a bug report to help us improve EternalCombat <3
 title: ''
 labels: ''
 assignees: ''

@@ -1,5 +1,8 @@
+import com.github.jengelman.gradle.plugins.shadow.tasks.ShadowJar
+
 plugins {
-    id("java-library")
+    `java-library`
+
     id("net.minecrell.plugin-yml.bukkit") version "0.5.2"
     id("com.github.johnrengelman.shadow") version "7.1.2"
     id("xyz.jpenilla.run-paper") version "2.0.1"
@@ -24,17 +27,22 @@ dependencies {
     implementation("net.kyori:adventure-text-minimessage:4.12.0")
 
     // litecommands
-    implementation("dev.rollczi.litecommands:bukkit-adventure:2.7.0")
+    implementation("dev.rollczi.litecommands:bukkit-adventure:2.7.2")
 
     // cdn configs
-    implementation("net.dzikoysk:cdn:1.14.1")
+    implementation("net.dzikoysk:cdn:1.14.3")
+
+    // tests
+    testImplementation("org.junit.jupiter:junit-jupiter-params:5.9.1")
+    testImplementation("org.codehaus.groovy:groovy-all:3.0.13")
+    testImplementation("org.junit.jupiter:junit-jupiter-api:5.9.1")
 }
 
 bukkit {
-    main = "com.eternalcode.combatlog.CombatLogPlugin"
+    main = "com.eternalcode.combat.EternalCombat"
     apiVersion = "1.13"
-    prefix = "EternalCombatLog"
-    name = "EternalCombatLog"
+    prefix = "EternalCombat"
+    name = "EternalCombat"
     version = "${project.version}"
 }
 
@@ -47,28 +55,38 @@ tasks.withType<JavaCompile> {
     options.encoding = "UTF-8"
 }
 
-tasks.withType<com.github.jengelman.gradle.plugins.shadow.tasks.ShadowJar> {
-    archiveFileName.set("EternalCombatLog v${project.version} (MC 1.8.8-1.19x).jar")
+tasks.getByName<Test>("test") {
+    useJUnitPlatform()
+}
+
+tasks {
+    runServer {
+        minecraftVersion("1.19.3")
+    }
+}
+
+tasks.withType<ShadowJar> {
+    archiveFileName.set("EternalCombat v${project.version} (MC 1.8.8-1.19x).jar")
 
     exclude(
-            "org/intellij/lang/annotations/**",
-            "org/jetbrains/annotations/**",
-            "org/checkerframework/**",
-            "META-INF/**",
-            "javax/**"
+        "org/intellij/lang/annotations/**",
+        "org/jetbrains/annotations/**",
+        "org/checkerframework/**",
+        "META-INF/**",
+        "javax/**"
     )
 
     mergeServiceFiles()
     minimize()
 
-    val prefix = "com.eternalcode.combatlog.libs"
+    val prefix = "com.eternalcode.combat.libs"
     listOf(
-            "panda.std",
-            "panda.utilities",
-            "org.panda-lang",
-            "net.dzikoysk",
-            "net.kyori",
-            "dev.rollczi.litecommands",
+        "panda.std",
+        "panda.utilities",
+        "org.panda-lang",
+        "net.dzikoysk",
+        "net.kyori",
+        "dev.rollczi.litecommands",
     ).forEach { pack ->
         relocate(pack, "$prefix.$pack")
     }
