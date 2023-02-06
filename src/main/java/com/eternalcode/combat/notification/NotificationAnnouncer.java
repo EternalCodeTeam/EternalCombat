@@ -8,7 +8,17 @@ import net.kyori.adventure.title.Title;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
+import java.util.Map;
+import java.util.function.BiConsumer;
+
 public final class NotificationAnnouncer {
+
+    private final static Map<NotificationType, BiConsumer<Audience, Component>> NOTIFICATION_HANDLERS = Map.of(
+        NotificationType.CHAT, Audience::sendMessage,
+        NotificationType.ACTION_BAR, Audience::sendActionBar,
+        NotificationType.TITLE, (audience, component) -> audience.showTitle(Title.title(component, Component.empty())),
+        NotificationType.SUBTITLE, (audience, component) -> audience.showTitle(Title.title(Component.empty(), component))
+    );
 
     private final AudienceProvider audienceProvider;
     private final MiniMessage miniMessage;
@@ -18,34 +28,21 @@ public final class NotificationAnnouncer {
         this.miniMessage = miniMessage;
     }
 
-    public void sendWithType(CommandSender commandSender, NotificationType notificationType, String text) {
+    public void send(CommandSender commandSender, NotificationType notificationType, String text) {
         Audience audience = this.audience(commandSender);
+        Component component = miniMessage.deserialize(text);
 
-        switch (notificationType) {
-            case ACTION_BAR:
-                audience.sendActionBar(this.miniMessage.deserialize(text));
-                break;
-            case TITLE:
-                audience.showTitle(Title.title(this.miniMessage.deserialize(text), Component.empty()));
-                break;
-            case SUBTITLE:
-                audience.showTitle(Title.title(Component.empty(), this.miniMessage.deserialize(text)));
-                break;
-            case CHAT:
-            default: audience.sendMessage(this.miniMessage.deserialize(text));
+        BiConsumer<Audience, Component> handler = NOTIFICATION_HANDLERS.get(notificationType);
+
+        if (handler == null) {
+            return;
         }
-    }
 
-    public void sendMessage(CommandSender commandSender, String text) {
-        Audience audience = this.audience(commandSender);
-
-        audience.sendMessage(this.miniMessage.deserialize(text));
+        handler.accept(audience, component);
     }
 
     private Audience audience(CommandSender sender) {
-        if (sender instanceof Player) {
-            Player player = (Player) sender;
-
+        if (sender instanceof Player player) {
             return this.audienceProvider.player(player.getUniqueId());
         }
 

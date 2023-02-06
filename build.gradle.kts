@@ -43,7 +43,7 @@ dependencies {
 }
 
 bukkit {
-    main = "com.eternalcode.combat.EternalCombat"
+    main = "com.eternalcode.combat.CombatPlugin"
     author = "EternalCodeTeam"
     apiVersion = "1.13"
     prefix = "EternalCombat"
@@ -52,8 +52,8 @@ bukkit {
 }
 
 java {
-    sourceCompatibility = JavaVersion.VERSION_11
-    targetCompatibility = JavaVersion.VERSION_11
+    sourceCompatibility = JavaVersion.VERSION_17
+    targetCompatibility = JavaVersion.VERSION_17
 }
 
 tasks.withType<JavaCompile> {

@@ -11,7 +11,7 @@ import org.bukkit.event.player.PlayerJoinEvent;
 
 import java.util.concurrent.CompletableFuture;
 
-public class UpdaterController implements Listener {
+public class UpdaterNotificationController implements Listener {
 
     private static final String NEW_VERSION_AVAILABLE = "<b><gradient:#8a1212:#fc6b03>ChatFormatter:</gradient></b> <color:#fce303>New version of EternalCombat is available, please update!";
 
@@ -20,7 +20,7 @@ public class UpdaterController implements Listener {
     private final AudienceProvider audienceProvider;
     private final MiniMessage miniMessage;
 
-    public UpdaterController(UpdaterService updaterService, PluginConfig pluginConfig, AudienceProvider audienceProvider, MiniMessage miniMessage) {
+    public UpdaterNotificationController(UpdaterService updaterService, PluginConfig pluginConfig, AudienceProvider audienceProvider, MiniMessage miniMessage) {
         this.updaterService = updaterService;
         this.pluginConfig = pluginConfig;
         this.audienceProvider = audienceProvider;

@@ -8,7 +8,6 @@ import org.bukkit.entity.Player;
 import panda.utilities.text.Formatter;
 
 import java.time.Duration;
-import java.time.Instant;
 
 public class CombatTask implements Runnable {
 
@@ -26,29 +25,26 @@ public class CombatTask implements Runnable {
 
     @Override
     public void run() {
-        for (Combat combat : this.combatManager.getCombats()) {
-            Player player = this.server.getPlayer(combat.getUuid());
+        for (CombatTag combatTag : this.combatManager.getCombats()) {
+            Player player = this.server.getPlayer(combatTag.getTaggedPlayer());
 
             if (player == null) {
                 return;
             }
 
-            Instant now = Instant.now();
-            Instant end = combat.getEndOfCombatLog();
-
-            if (now.isBefore(end)) {
-                Duration remaining = Duration.between(now, end);
+            if (!combatTag.isExpired()) {
+                Duration remaining = combatTag.getRemainingDuration();
 
                 Formatter format = new Formatter()
                     .register("{TIME}", DurationUtil.format(remaining));
 
-                this.announcer.sendWithType(player, this.config.settings.combatNotificationType, format.format(this.config.messages.combatFormat));
+                this.announcer.send(player, this.config.settings.combatNotificationType, format.format(this.config.messages.combatFormat));
 
                 continue;
             }
 
-            this.combatManager.remove(combat.getUuid());
-            this.announcer.sendWithType(player, this.config.settings.combatNotificationType, this.config.messages.unTagPlayer);
+            this.combatManager.untag(combatTag.getTaggedPlayer());
+            this.announcer.send(player, this.config.settings.combatNotificationType, this.config.messages.unTagPlayer);
         }
     }
 }

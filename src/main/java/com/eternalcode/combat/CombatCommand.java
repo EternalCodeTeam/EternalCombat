@@ -1,9 +1,11 @@
-package com.eternalcode.combat.command.implementation;
+package com.eternalcode.combat;
 
+import com.eternalcode.combat.config.ConfigManager;
 import com.eternalcode.combat.notification.NotificationAnnouncer;
 import com.eternalcode.combat.combat.CombatManager;
 import com.eternalcode.combat.config.implementation.PluginConfig;
 import dev.rollczi.litecommands.argument.Arg;
+import dev.rollczi.litecommands.command.async.Async;
 import dev.rollczi.litecommands.command.execute.Execute;
 import dev.rollczi.litecommands.command.permission.Permission;
 import dev.rollczi.litecommands.command.route.Route;
@@ -14,24 +16,25 @@ import panda.utilities.text.Formatter;
 import java.time.Duration;
 import java.util.UUID;
 
-@Route(name = "combatlog fight")
-@Permission("eternalcombat.fight")
-public class FightCommand {
+@Route(name = "combatlog", aliases = "combat")
+public class CombatCommand {
 
     private final CombatManager combatManager;
+    private final ConfigManager configManager;
     private final NotificationAnnouncer announcer;
     private final PluginConfig config;
     private final Server server;
 
-    public FightCommand(CombatManager combatManager, NotificationAnnouncer announcer, PluginConfig config, Server server) {
+    public CombatCommand(CombatManager combatManager, ConfigManager configManager, NotificationAnnouncer announcer, PluginConfig config, Server server) {
         this.combatManager = combatManager;
+        this.configManager = configManager;
         this.announcer = announcer;
         this.config = config;
         this.server = server;
     }
 
     @Execute(route = "status", required = 1)
-    @Permission("eternalcombat.fight.status")
+    @Permission("eternalcombat.status")
     void status(Player player, @Arg Player target) {
         UUID targetUniqueId = target.getUniqueId();
         PluginConfig.Messages messages = this.config.messages;
@@ -42,7 +45,7 @@ public class FightCommand {
     }
 
     @Execute(route = "tag", required = 1)
-    @Permission("eternalcombat.fight.tag")
+    @Permission("eternalcombat.tag")
     void tag(Player player, @Arg Player target) {
         UUID targetUniqueId = target.getUniqueId();
         Duration time = this.config.settings.combatLogTime;
@@ -55,7 +58,7 @@ public class FightCommand {
     }
 
     @Execute(route = "tag", required = 2)
-    @Permission("eternalcombat.fight.tag")
+    @Permission("eternalcombat.tag")
     public void tagMultiple(Player player, @Arg Player firstTarget, @Arg Player secondTarget) {
         Duration combatTime = this.config.settings.combatLogTime;
         PluginConfig.Messages messages = this.config.messages;
@@ -84,7 +87,7 @@ public class FightCommand {
     }
 
     @Execute(route = "untag", required = 1)
-    @Permission("eternalcombat.fight.untag")
+    @Permission("eternalcombat.untag")
     void untag(Player player, @Arg Player target) {
         UUID uniqueId = target.getUniqueId();
         UUID enemyUuid = this.combatManager.getEnemy(uniqueId);
@@ -100,12 +103,20 @@ public class FightCommand {
         this.announcer.sendMessage(target, this.config.messages.unTagPlayer);
         this.announcer.sendMessage(enemy, this.config.messages.unTagPlayer);
 
-        this.combatManager.remove(uniqueId);
-        this.combatManager.remove(enemyUniqueId);
+        this.combatManager.untag(uniqueId);
+        this.combatManager.untag(enemyUniqueId);
 
         Formatter formatter = new Formatter()
             .register("{PLAYER}", target.getName());
 
         this.announcer.sendMessage(player, formatter.format(this.config.messages.adminUnTagPlayer));
+    }
+
+    @Async
+    @Execute(route = "reload")
+    @Permission("eternalcombat.reload")
+    void execute(Player player) {
+        this.configManager.reload();
+        this.announcer.sendMessage(player, this.config.messages.reload);
     }
 }

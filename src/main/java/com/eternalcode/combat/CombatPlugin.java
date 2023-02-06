@@ -1,22 +1,16 @@
 package com.eternalcode.combat;
 
-import com.eternalcode.combat.combat.Combat;
 import com.eternalcode.combat.combat.CombatManager;
 import com.eternalcode.combat.combat.CombatTask;
-import com.eternalcode.combat.command.handler.InvalidUsage;
-import com.eternalcode.combat.command.handler.PermissionMessage;
-import com.eternalcode.combat.command.implementation.FightCommand;
-import com.eternalcode.combat.command.implementation.ReloadCommand;
+import com.eternalcode.combat.combat.controller.CombatActionBlockerController;
+import com.eternalcode.combat.combat.controller.CombatTagController;
+import com.eternalcode.combat.combat.controller.CombatUnTagController;
+import com.eternalcode.combat.command.InvalidUsage;
+import com.eternalcode.combat.command.PermissionMessage;
 import com.eternalcode.combat.config.ConfigManager;
 import com.eternalcode.combat.config.implementation.PluginConfig;
-import com.eternalcode.combat.listener.BlockPlaceListener;
-import com.eternalcode.combat.listener.InventoryOpenListener;
-import com.eternalcode.combat.listener.entity.EntityDamageByEntityListener;
-import com.eternalcode.combat.listener.entity.EntityDeathListener;
-import com.eternalcode.combat.listener.player.PlayerCommandPreprocessListener;
-import com.eternalcode.combat.listener.player.PlayerQuitListener;
 import com.eternalcode.combat.notification.NotificationAnnouncer;
-import com.eternalcode.combat.updater.UpdaterController;
+import com.eternalcode.combat.updater.UpdaterNotificationController;
 import com.eternalcode.combat.updater.UpdaterService;
 import com.eternalcode.combat.util.legacy.LegacyColorProcessor;
 import com.google.common.base.Stopwatch;
@@ -35,7 +29,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Stream;
 
-public final class EternalCombat extends JavaPlugin {
+public final class CombatPlugin extends JavaPlugin {
 
     private ConfigManager configManager;
     private PluginConfig pluginConfig;
@@ -55,10 +49,9 @@ public final class EternalCombat extends JavaPlugin {
         Server server = this.getServer();
 
         this.configManager = new ConfigManager(this.getDataFolder());
-        this.pluginConfig = configManager.load(new PluginConfig());
+        this.pluginConfig = this.configManager.load(new PluginConfig());
 
         this.combatManager = new CombatManager();
-
         this.updaterService = new UpdaterService(this.getDescription());
 
         this.audienceProvider = BukkitAudiences.create(this);
@@ -67,7 +60,6 @@ public final class EternalCombat extends JavaPlugin {
             .build();
 
         this.notificationAnnouncer = new NotificationAnnouncer(this.audienceProvider, this.miniMessage);
-
         this.liteCommands = LiteBukkitAdventurePlatformFactory.builder(server, "eternalcombat", this.audienceProvider)
             .argument(Player.class, new BukkitPlayerArgument<>(this.getServer(), this.pluginConfig.messages.cantFindPlayer))
             .contextualBind(Player.class, new BukkitOnlyPlayerContextual<>(this.pluginConfig.messages.onlyForPlayers))
@@ -76,23 +68,19 @@ public final class EternalCombat extends JavaPlugin {
             .permissionHandler(new PermissionMessage(this.pluginConfig, this.notificationAnnouncer))
 
             .commandInstance(
-                new FightCommand(this.combatManager, this.notificationAnnouncer, this.pluginConfig, server),
-                new ReloadCommand(this.configManager, this.pluginConfig, this.notificationAnnouncer)
+                new CombatCommand(this.combatManager, this.configManager, this.notificationAnnouncer, this.pluginConfig, server)
             )
 
             .register();
 
         CombatTask combatTask = new CombatTask(this.combatManager, this.pluginConfig, server, this.notificationAnnouncer);
-        this.getServer().getScheduler().runTaskTimer(this, combatTask, 20L, 20L);
+        this.getServer().getScheduler().runTaskTimerAsynchronously(this, combatTask, 20L, 20L);
 
         Stream.of(
-            new EntityDamageByEntityListener(this.combatManager, this.pluginConfig, this.notificationAnnouncer),
-            new EntityDeathListener(this.combatManager, this.pluginConfig, server, this.notificationAnnouncer),
-            new PlayerCommandPreprocessListener(this.combatManager, this.pluginConfig, this.notificationAnnouncer),
-            new PlayerQuitListener(this.combatManager, this.pluginConfig, server, this.notificationAnnouncer),
-            new BlockPlaceListener(this.combatManager, this.notificationAnnouncer, this.pluginConfig),
-            new InventoryOpenListener(this.combatManager, this.notificationAnnouncer, this.pluginConfig),
-            new UpdaterController(this.updaterService, this.pluginConfig, this.audienceProvider, this.miniMessage)
+            new CombatTagController(this.combatManager, this.pluginConfig, this.notificationAnnouncer),
+            new CombatUnTagController(this.combatManager, this.pluginConfig, this.notificationAnnouncer),
+            new CombatActionBlockerController(this.combatManager, this.notificationAnnouncer, this.pluginConfig),
+            new UpdaterNotificationController(this.updaterService, this.pluginConfig, this.audienceProvider, this.miniMessage)
         ).forEach(listener -> this.getServer().getPluginManager().registerEvents(listener, this));
 
         long millis = started.elapsed(TimeUnit.MILLISECONDS);
@@ -109,8 +97,6 @@ public final class EternalCombat extends JavaPlugin {
             this.audienceProvider.close();
         }
 
-        for (Combat combat : this.combatManager.getCombats()) {
-            this.combatManager.remove(combat.getUuid());
-        }
+        this.combatManager.untagAll();
     }
 }
