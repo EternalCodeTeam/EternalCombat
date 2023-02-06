@@ -19,9 +19,9 @@ EternalCombat has been tested on Minecraft versions 1.17.1 to 1.19.3, but it sho
 
 ### Permissions for CombatLog
 
-- `eternalcombat.fight.status` - Allows to check if the player is in combat `/combatlog fight status <player>`
-- `eternalcombat.fight.tag` - Allows to create fights between two players  `/combatlog fight tag <first_player> <optional_second_player>`
-- `eternalcombat.fight.untag` - Allows to remove player from fight `/combatlog fight untag <player>`
+- `eternalcombat.status` - Allows to check if the player is in combat `/combatlog status <player>`
+- `eternalcombat.tag` - Allows to create fights between two players  `/combatlog tag <first_player> <optional_second_player>`
+- `eternalcombat.untag` - Allows to remove player from fight `/combatlog untag <player>`
 - `eternalcombat.reload` - Allows to reload plugin `/combatlog reload`
 - `eternalcombat.receiveupdates` - Allows you to receive notifications about the new version of the plugin when attaching
 
