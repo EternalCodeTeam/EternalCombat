@@ -1,6 +1,7 @@
 package com.eternalcode.combat.config.implementation;
 
 import com.eternalcode.combat.config.ReloadableConfig;
+import com.eternalcode.combat.notification.NotificationType;
 import com.google.common.collect.ImmutableList;
 import net.dzikoysk.cdn.entity.Description;
 import net.dzikoysk.cdn.source.Resource;
@@ -21,8 +22,12 @@ public class PluginConfig implements ReloadableConfig {
     public static class Settings {
         @Description({ " ", "# Whether the player after entering the server should receive information about the new version of the plugin?" })
         public boolean receiveUpdates = true;
+
         @Description("# The length of time the combat is to last")
         public Duration combatLogTime = Duration.ofSeconds(20);
+
+        @Description("# Combat log notification type, available types: ACTION_BAR, CHAT, TITLE")
+        public NotificationType combatNotificationType = NotificationType.ACTION_BAR;
 
         @Description({ " ", "# Blocked commands that the player will not be able to use during combat" })
         public List<String> blockedCommands = new ImmutableList.Builder<String>()
@@ -45,7 +50,7 @@ public class PluginConfig implements ReloadableConfig {
         public String onlyForPlayers = "&cThis command is only available to players!";
         public String noPermission = "&cYou don't have permission to perform this command!";
         public String cantFindPlayer = "&cThe specified player could not be found!";
-        public String combatActionBar = "&dCombat ends in: &f{TIME}";
+        public String combatFormat = "&dCombat ends in: &f{TIME}";
         public String tagPlayer = "&cYou are in combat, do not leave the server!";
         public String unTagPlayer = "&aYou are no longer in combat! You can safely leave the server.";
         public String cantUseCommand = "&cUsing this command during combat is prohibited!";

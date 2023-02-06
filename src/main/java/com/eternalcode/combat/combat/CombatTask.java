@@ -1,7 +1,7 @@
 package com.eternalcode.combat.combat;
 
-import com.eternalcode.combat.NotificationAnnouncer;
 import com.eternalcode.combat.config.implementation.PluginConfig;
+import com.eternalcode.combat.notification.NotificationAnnouncer;
 import com.eternalcode.combat.util.DurationUtil;
 import org.bukkit.Server;
 import org.bukkit.entity.Player;
@@ -42,12 +42,25 @@ public class CombatTask implements Runnable {
                 Formatter format = new Formatter()
                     .register("{TIME}", DurationUtil.format(remaining));
 
-                this.announcer.sendMessage(player, format.format(this.config.messages.combatActionBar));
+                this.announcer.sendMessage(player, format.format(this.config.messages.combatFormat));
+
                 continue;
             }
 
             this.combatManager.remove(combat.getUuid());
-            this.announcer.sendMessage(player, this.config.messages.unTagPlayer);
+            this.sendCombatNotice(player, this.config.messages.unTagPlayer);
         }
     }
+
+    void sendCombatNotice(Player player, String message) {
+        switch (this.config.settings.combatNotificationType) {
+            case CHAT:
+                this.announcer.sendMessage(player, message);
+                break;
+            case ACTION_BAR:
+                this.announcer.sendActionBar(player, message);
+                break;
+        }
+    }
+
 }

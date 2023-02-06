@@ -44,6 +44,7 @@ dependencies {
 
 bukkit {
     main = "com.eternalcode.combat.EternalCombat"
+    author = "EternalCodeTeam"
     apiVersion = "1.13"
     prefix = "EternalCombat"
     name = "EternalCombat"

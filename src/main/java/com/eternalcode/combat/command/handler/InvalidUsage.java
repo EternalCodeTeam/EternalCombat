@@ -1,7 +1,7 @@
 package com.eternalcode.combat.command.handler;
 
 
-import com.eternalcode.combat.NotificationAnnouncer;
+import com.eternalcode.combat.notification.NotificationAnnouncer;
 import com.eternalcode.combat.config.implementation.PluginConfig;
 import dev.rollczi.litecommands.command.LiteInvocation;
 import dev.rollczi.litecommands.handle.InvalidUsageHandler;

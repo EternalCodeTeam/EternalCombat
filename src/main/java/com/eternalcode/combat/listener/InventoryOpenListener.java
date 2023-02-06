@@ -1,6 +1,6 @@
 package com.eternalcode.combat.listener;
 
-import com.eternalcode.combat.NotificationAnnouncer;
+import com.eternalcode.combat.notification.NotificationAnnouncer;
 import com.eternalcode.combat.combat.CombatManager;
 import com.eternalcode.combat.config.implementation.PluginConfig;
 import org.bukkit.entity.Player;

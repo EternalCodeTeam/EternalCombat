@@ -15,6 +15,7 @@ import com.eternalcode.combat.listener.entity.EntityDamageByEntityListener;
 import com.eternalcode.combat.listener.entity.EntityDeathListener;
 import com.eternalcode.combat.listener.player.PlayerCommandPreprocessListener;
 import com.eternalcode.combat.listener.player.PlayerQuitListener;
+import com.eternalcode.combat.notification.NotificationAnnouncer;
 import com.eternalcode.combat.updater.UpdaterController;
 import com.eternalcode.combat.updater.UpdaterService;
 import com.eternalcode.combat.util.legacy.LegacyColorProcessor;
@@ -82,7 +83,6 @@ public final class EternalCombat extends JavaPlugin {
             .register();
 
         CombatTask combatTask = new CombatTask(this.combatManager, this.pluginConfig, server, this.notificationAnnouncer);
-
         this.getServer().getScheduler().runTaskTimer(this, combatTask, 20L, 20L);
 
         Stream.of(

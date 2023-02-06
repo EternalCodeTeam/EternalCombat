@@ -1,6 +1,6 @@
 package com.eternalcode.combat.command.implementation;
 
-import com.eternalcode.combat.NotificationAnnouncer;
+import com.eternalcode.combat.notification.NotificationAnnouncer;
 import com.eternalcode.combat.combat.CombatManager;
 import com.eternalcode.combat.config.implementation.PluginConfig;
 import dev.rollczi.litecommands.argument.Arg;
@@ -69,8 +69,8 @@ public class FightCommand {
             return;
         }
 
-        this.combatManager.tag(firstTargetUniqueId, secondTargetUniqueId, combatTime);
-        this.combatManager.tag(secondTargetUniqueId, firstTargetUniqueId, combatTime);
+        this.combatManager.tag(firstTargetUniqueId, combatTime);
+        this.combatManager.tag(secondTargetUniqueId, combatTime);
 
         Formatter formatter = new Formatter()
             .register("{FIRST_PLAYER}", firstTarget.getName())
