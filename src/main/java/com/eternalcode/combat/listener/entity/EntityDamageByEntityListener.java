@@ -41,8 +41,8 @@ public class EntityDamageByEntityListener implements Listener {
         UUID enemyUniqueId = enemy.getUniqueId();
         UUID playerUniqueId = player.getUniqueId();
 
-        this.combatManager.tag(playerUniqueId, enemyUniqueId, combatTime);
-        this.combatManager.tag(enemyUniqueId, playerUniqueId, combatTime);
+        this.combatManager.tag(enemyUniqueId, combatTime);
+        this.combatManager.tag(playerUniqueId, combatTime);
 
         this.notificationAnnouncer.sendMessage(player, this.config.messages.tagPlayer);
         this.notificationAnnouncer.sendMessage(enemy, this.config.messages.tagPlayer);

@@ -12,11 +12,11 @@ import panda.utilities.text.Joiner;
 public class PermissionMessage implements PermissionHandler<CommandSender> {
 
     private final PluginConfig config;
-    private final NotificationAnnouncer notificationAnnouncer;
+    private final NotificationAnnouncer announcer;
 
-    public PermissionMessage(PluginConfig config, NotificationAnnouncer notificationAnnouncer) {
+    public PermissionMessage(PluginConfig config, NotificationAnnouncer announcer) {
         this.config = config;
-        this.notificationAnnouncer = notificationAnnouncer;
+        this.announcer = announcer;
     }
 
     @Override
@@ -28,7 +28,7 @@ public class PermissionMessage implements PermissionHandler<CommandSender> {
         Formatter formatter = new Formatter()
             .register("{PERMISSION}", value);
 
-        this.notificationAnnouncer.sendMessage(commandSender, formatter.format(this.config.messages.noPermission));
+        this.announcer.sendMessage(commandSender, formatter.format(this.config.messages.noPermission));
     }
 
 }

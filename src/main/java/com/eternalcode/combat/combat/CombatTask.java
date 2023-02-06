@@ -42,25 +42,13 @@ public class CombatTask implements Runnable {
                 Formatter format = new Formatter()
                     .register("{TIME}", DurationUtil.format(remaining));
 
-                this.announcer.sendMessage(player, format.format(this.config.messages.combatFormat));
+                this.announcer.sendWithType(player, this.config.settings.combatNotificationType, format.format(this.config.messages.combatFormat));
 
                 continue;
             }
 
             this.combatManager.remove(combat.getUuid());
-            this.sendCombatNotice(player, this.config.messages.unTagPlayer);
+            this.announcer.sendWithType(player, this.config.settings.combatNotificationType, this.config.messages.unTagPlayer);
         }
     }
-
-    void sendCombatNotice(Player player, String message) {
-        switch (this.config.settings.combatNotificationType) {
-            case CHAT:
-                this.announcer.sendMessage(player, message);
-                break;
-            case ACTION_BAR:
-                this.announcer.sendActionBar(player, message);
-                break;
-        }
-    }
-
 }

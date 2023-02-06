@@ -2,12 +2,11 @@ package com.eternalcode.combat.notification;
 
 import net.kyori.adventure.audience.Audience;
 import net.kyori.adventure.platform.AudienceProvider;
+import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.minimessage.MiniMessage;
 import net.kyori.adventure.title.Title;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
-
-import java.time.Duration;
 
 public final class NotificationAnnouncer {
 
@@ -19,16 +18,28 @@ public final class NotificationAnnouncer {
         this.miniMessage = miniMessage;
     }
 
-    public void sendMessage(CommandSender sender, String message) {
-        Audience audience = this.audience(sender);
+    public void sendWithType(CommandSender commandSender, NotificationType notificationType, String text) {
+        Audience audience = this.audience(commandSender);
 
-        audience.sendMessage(this.miniMessage.deserialize(message));
+        switch (notificationType) {
+            case ACTION_BAR:
+                audience.sendActionBar(this.miniMessage.deserialize(text));
+                break;
+            case TITLE:
+                audience.showTitle(Title.title(this.miniMessage.deserialize(text), Component.empty()));
+                break;
+            case SUBTITLE:
+                audience.showTitle(Title.title(Component.empty(), this.miniMessage.deserialize(text)));
+                break;
+            case CHAT:
+            default: audience.sendMessage(this.miniMessage.deserialize(text));
+        }
     }
 
-    public void sendActionBar(Player player, String message) {
-        Audience audience = this.audience(player);
+    public void sendMessage(CommandSender commandSender, String text) {
+        Audience audience = this.audience(commandSender);
 
-        audience.sendActionBar(this.miniMessage.deserialize(message));
+        audience.sendMessage(this.miniMessage.deserialize(text));
     }
 
     private Audience audience(CommandSender sender) {
