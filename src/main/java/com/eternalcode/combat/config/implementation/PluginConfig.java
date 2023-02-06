@@ -28,7 +28,7 @@ public class PluginConfig implements ReloadableConfig {
         @Description("# The length of time the combat is to last")
         public Duration combatLogTime = Duration.ofSeconds(20);
 
-        @Description("# Combat log notification type, available types: ACTION_BAR, CHAT, TITLE")
+        @Description("# Combat log notification type, available types: ACTION_BAR, CHAT, TITLE, SUBTITLE")
         public NotificationType combatNotificationType = NotificationType.ACTION_BAR;
 
         @Description({ " ", "# Blocked commands that the player will not be able to use during combat" })
@@ -58,13 +58,13 @@ public class PluginConfig implements ReloadableConfig {
         public String cantUseCommand = "&cUsing this command during combat is prohibited!";
         public String adminTagPlayer = "&7You have tagged &e{PLAYER}";
         public String adminTagPlayerMultiple = "&7You have tagged &e{FIRST_PLAYER}&7 and &e{SECOND_PLAYER}&7.";
-        public String adminUnTagPlayer = "&7You have removed &e{PLAYER} from fight.";
+        public String adminUnTagPlayer = "&7You have removed &e{PLAYER} from the fight.";
         public String invalidUsage = "&7Correct usage: &e{USAGE}.";
         public String inventoryBlocked = "&cYou cannot open this inventory during combat!";
         public String blockPlaceBlocked = "&cYou cannot place blocks during combat below 40 blocks!";
         public String inCombat = "&cYou are in combat!";
         public String notInCombat = "&aYou are not in combat!";
-        public String reload = "&aConfiguration successfully reloaded!";
+        public String reload = "&aConfiguration has been successfully reloaded!";
         public String cantTagSelf = "&cYou cannot tag yourself!";
     }
 

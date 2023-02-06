@@ -92,7 +92,7 @@ public class CombatCommand {
         UUID uniqueId = target.getUniqueId();
         UUID enemyUuid = this.combatManager.getEnemy(uniqueId);
 
-        Player enemy = server.getPlayer(enemyUuid);
+        Player enemy = this.server.getPlayer(enemyUuid);
 
         if (enemy == null) {
             return;

@@ -13,12 +13,12 @@ public class CombatUnTagController implements Listener {
 
     private final CombatManager combatManager;
     private final PluginConfig config;
-    private final NotificationAnnouncer notificationAnnouncer;
+    private final NotificationAnnouncer announcer;
 
-    public CombatUnTagController(CombatManager combatManager, PluginConfig config, NotificationAnnouncer notificationAnnouncer) {
+    public CombatUnTagController(CombatManager combatManager, PluginConfig config, NotificationAnnouncer announcer) {
         this.combatManager = combatManager;
         this.config = config;
-        this.notificationAnnouncer = notificationAnnouncer;
+        this.announcer = announcer;
     }
 
     @EventHandler
@@ -31,7 +31,7 @@ public class CombatUnTagController implements Listener {
             return;
         }
 
-        this.notificationAnnouncer.sendMessage(player, this.config.messages.unTagPlayer);
+        this.announcer.sendMessage(player, this.config.messages.unTagPlayer);
         this.combatManager.untag(player.getUniqueId());
     }
 

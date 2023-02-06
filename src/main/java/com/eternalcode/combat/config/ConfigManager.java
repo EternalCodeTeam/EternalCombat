@@ -38,7 +38,7 @@ public class ConfigManager {
 
     public void reload() {
         for (ReloadableConfig config : this.configs) {
-            load(config);
+            this.load(config);
         }
     }
 

@@ -30,7 +30,7 @@ public final class NotificationAnnouncer {
 
     public void send(CommandSender commandSender, NotificationType notificationType, String text) {
         Audience audience = this.audience(commandSender);
-        Component component = miniMessage.deserialize(text);
+        Component component = this.miniMessage.deserialize(text);
 
         BiConsumer<Audience, Component> handler = NOTIFICATION_HANDLERS.get(notificationType);
 
@@ -41,8 +41,15 @@ public final class NotificationAnnouncer {
         handler.accept(audience, component);
     }
 
+    public void sendMessage(CommandSender commandSender, String text) {
+        Audience audience = this.audience(commandSender);
+
+        audience.sendMessage(this.miniMessage.deserialize(text));
+    }
+
     private Audience audience(CommandSender sender) {
         if (sender instanceof Player player) {
+
             return this.audienceProvider.player(player.getUniqueId());
         }
 

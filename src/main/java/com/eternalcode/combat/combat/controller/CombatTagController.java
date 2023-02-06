@@ -17,12 +17,12 @@ public class CombatTagController implements Listener {
 
     private final CombatManager combatManager;
     private final PluginConfig config;
-    private final NotificationAnnouncer notificationAnnouncer;
+    private final NotificationAnnouncer announcer;
 
-    public CombatTagController(CombatManager combatManager, PluginConfig config, NotificationAnnouncer notificationAnnouncer) {
+    public CombatTagController(CombatManager combatManager, PluginConfig config, NotificationAnnouncer announcer) {
         this.combatManager = combatManager;
         this.config = config;
-        this.notificationAnnouncer = notificationAnnouncer;
+        this.announcer = announcer;
     }
 
     @EventHandler
@@ -45,8 +45,8 @@ public class CombatTagController implements Listener {
         this.combatManager.tag(attackedUniqueId, combatTime);
         this.combatManager.tag(enemyUniqueId, combatTime);
 
-        this.notificationAnnouncer.sendMessage(attacked, this.config.messages.tagPlayer);
-        this.notificationAnnouncer.sendMessage(enemy, this.config.messages.tagPlayer);
+        this.announcer.sendMessage(attacked, this.config.messages.tagPlayer);
+        this.announcer.sendMessage(enemy, this.config.messages.tagPlayer);
     }
 
     private @Nullable Player getDamager(EntityDamageByEntityEvent event) {

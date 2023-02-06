@@ -2,6 +2,7 @@ import com.github.jengelman.gradle.plugins.shadow.tasks.ShadowJar
 
 plugins {
     `java-library`
+    checkstyle
 
     id("net.minecrell.plugin-yml.bukkit") version "0.5.2"
     id("com.github.johnrengelman.shadow") version "7.1.2"
@@ -10,6 +11,15 @@ plugins {
 
 group = "com.eternalcode"
 version = "1.0.0"
+
+checkstyle {
+    toolVersion = "10.7.0"
+
+    configFile = file("${rootDir}/config/checkstyle/checkstyle.xml")
+
+    maxErrors = 0
+    maxWarnings = 0
+}
 
 repositories {
     mavenCentral()
@@ -72,6 +82,8 @@ tasks {
 
 tasks.withType<ShadowJar> {
     archiveFileName.set("EternalCombat v${project.version} (MC 1.8.8-1.19x).jar")
+
+    dependsOn("checkstyleMain")
 
     exclude(
         "org/intellij/lang/annotations/**",
