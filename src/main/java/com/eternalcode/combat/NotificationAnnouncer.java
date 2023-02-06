@@ -1,11 +1,10 @@
 package com.eternalcode.combat;
 
+import net.kyori.adventure.audience.Audience;
 import net.kyori.adventure.platform.AudienceProvider;
 import net.kyori.adventure.text.minimessage.MiniMessage;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
-
-import java.util.UUID;
 
 public final class NotificationAnnouncer {
 
@@ -17,22 +16,25 @@ public final class NotificationAnnouncer {
         this.miniMessage = miniMessage;
     }
 
-    public void announceActionBar(UUID uniqueId, String message) {
-        this.audienceProvider.player(uniqueId).sendActionBar(this.miniMessage.deserialize(message));
+    public void sendMessage(CommandSender sender, String message) {
+        Audience audience = this.audience(sender);
+
+        audience.sendMessage(this.miniMessage.deserialize(message));
     }
 
-    public void announceMessage(UUID uniqueId, String message) {
-        this.audienceProvider.player(uniqueId).sendMessage(this.miniMessage.deserialize(message));
+    public void sendActionBar(Player player, String message) {
+        Audience audience = this.audience(player);
+
+        audience.sendActionBar(this.miniMessage.deserialize(message));
     }
 
-    public void announceMessage(CommandSender commandSender, String message) {
-        if (commandSender instanceof Player) {
-            Player player = (Player) commandSender;
+    private Audience audience(CommandSender sender) {
+        if (sender instanceof Player) {
+            Player player = (Player) sender;
 
-            this.audienceProvider.player(player.getUniqueId()).sendMessage(this.miniMessage.deserialize(message));
-            return;
+            return this.audienceProvider.player(player.getUniqueId());
         }
 
-        this.audienceProvider.console().sendMessage(this.miniMessage.deserialize(message));
+        return this.audienceProvider.console();
     }
 }

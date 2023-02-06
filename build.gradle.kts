@@ -29,7 +29,7 @@ dependencies {
     implementation("net.kyori:adventure-text-minimessage:4.12.0")
 
     // litecommands
-    implementation("dev.rollczi.litecommands:bukkit-adventure:2.7.2")
+    implementation("dev.rollczi.litecommands:bukkit-adventure:2.8.2")
 
     // cdn configs
     implementation("net.dzikoysk:cdn:1.14.3")
@@ -39,7 +39,6 @@ dependencies {
 
     // tests
     testImplementation("org.junit.jupiter:junit-jupiter-params:5.9.2")
-    testImplementation("org.codehaus.groovy:groovy-all:3.0.14")
     testImplementation("org.junit.jupiter:junit-jupiter-api:5.9.2")
 }
 
@@ -76,7 +75,6 @@ tasks.withType<ShadowJar> {
     exclude(
         "org/intellij/lang/annotations/**",
         "org/jetbrains/annotations/**",
-        "org/checkerframework/**",
         "META-INF/**",
         "javax/**"
     )
@@ -92,6 +90,9 @@ tasks.withType<ShadowJar> {
         "net.dzikoysk",
         "net.kyori",
         "dev.rollczi.litecommands",
+        "com.eternalcode.gitcheck",
+        "org.json.simple",
+        "kotlin"
     ).forEach { pack ->
         relocate(pack, "$prefix.$pack")
     }

@@ -39,6 +39,19 @@ public class CombatManager {
         this.combats.put(player, combat);
     }
 
+    public void tag(UUID enemy, Duration time) {
+        if (isInCombat(enemy)) {
+            this.remove(enemy);
+        }
+
+        Instant now = Instant.now();
+        Instant extendedTime = now.plus(time);
+
+        Combat combat = new Combat(enemy, enemy, extendedTime);
+
+        this.combats.put(enemy, combat);
+    }
+
     public Collection<Combat> getCombats() {
         return Collections.unmodifiableCollection(this.combats.values());
     }

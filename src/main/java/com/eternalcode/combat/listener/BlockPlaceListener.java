@@ -2,7 +2,6 @@ package com.eternalcode.combat.listener;
 
 import com.eternalcode.combat.NotificationAnnouncer;
 import com.eternalcode.combat.combat.CombatManager;
-import com.eternalcode.combat.config.implementation.MessageConfig;
 import com.eternalcode.combat.config.implementation.PluginConfig;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
@@ -16,19 +15,17 @@ public class BlockPlaceListener implements Listener {
 
     private final CombatManager combatManager;
     private final NotificationAnnouncer announcer;
-    private final MessageConfig messages;
     private final PluginConfig config;
 
-    public BlockPlaceListener(CombatManager combatManager, NotificationAnnouncer announcer, MessageConfig messages, PluginConfig config) {
+    public BlockPlaceListener(CombatManager combatManager, NotificationAnnouncer announcer, PluginConfig config) {
         this.combatManager = combatManager;
         this.announcer = announcer;
-        this.messages = messages;
         this.config = config;
     }
 
     @EventHandler
     void onPlace(BlockPlaceEvent event) {
-        if (!this.config.blockPlace) {
+        if (!this.config.settings.blockPlace) {
             return;
         }
 
@@ -42,10 +39,10 @@ public class BlockPlaceListener implements Listener {
         Block block = event.getBlock();
         int level = block.getY();
 
-        if (level <= this.config.blockPlaceLevel) {
+        if (level <= this.config.settings.blockPlaceLevel) {
             event.setCancelled(true);
 
-            this.announcer.announceMessage(uniqueId, this.messages.blockPlaceBlocked);
+            this.announcer.sendMessage(player, this.config.messages.blockPlaceBlocked);
         }
     }
 }

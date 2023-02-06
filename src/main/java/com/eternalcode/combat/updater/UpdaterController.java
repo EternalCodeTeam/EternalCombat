@@ -32,7 +32,7 @@ public class UpdaterController implements Listener {
         Player player = event.getPlayer();
         Audience audience = this.audienceProvider.player(player.getUniqueId());
 
-        if (!player.hasPermission("eternalcombat.receiveupdates") || !this.pluginConfig.receiveUpdates) {
+        if (!player.hasPermission("eternalcombat.receiveupdates") || !this.pluginConfig.settings.receiveUpdates) {
             return;
         }
 

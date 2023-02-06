@@ -1,7 +1,7 @@
 package com.eternalcode.combat.command.handler;
 
 import com.eternalcode.combat.NotificationAnnouncer;
-import com.eternalcode.combat.config.implementation.MessageConfig;
+import com.eternalcode.combat.config.implementation.PluginConfig;
 import dev.rollczi.litecommands.command.LiteInvocation;
 import dev.rollczi.litecommands.command.permission.RequiredPermissions;
 import dev.rollczi.litecommands.handle.PermissionHandler;
@@ -11,24 +11,24 @@ import panda.utilities.text.Joiner;
 
 public class PermissionMessage implements PermissionHandler<CommandSender> {
 
-    private final MessageConfig messageConfig;
+    private final PluginConfig config;
     private final NotificationAnnouncer notificationAnnouncer;
 
-    public PermissionMessage(MessageConfig messageConfig, NotificationAnnouncer notificationAnnouncer) {
-        this.messageConfig = messageConfig;
+    public PermissionMessage(PluginConfig config, NotificationAnnouncer notificationAnnouncer) {
+        this.config = config;
         this.notificationAnnouncer = notificationAnnouncer;
     }
 
     @Override
     public void handle(CommandSender commandSender, LiteInvocation invocation, RequiredPermissions requiredPermissions) {
         String value = Joiner.on(", ")
-                .join(requiredPermissions.getPermissions())
-                .toString();
+            .join(requiredPermissions.getPermissions())
+            .toString();
 
         Formatter formatter = new Formatter()
-                .register("{PERMISSION}", value);
+            .register("{PERMISSION}", value);
 
-        this.notificationAnnouncer.announceMessage(commandSender, formatter.format(this.messageConfig.noPermission));
+        this.notificationAnnouncer.sendMessage(commandSender, formatter.format(this.config.messages.noPermission));
     }
 
 }

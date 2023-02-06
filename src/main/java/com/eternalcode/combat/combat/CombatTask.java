@@ -1,7 +1,7 @@
 package com.eternalcode.combat.combat;
 
 import com.eternalcode.combat.NotificationAnnouncer;
-import com.eternalcode.combat.config.implementation.MessageConfig;
+import com.eternalcode.combat.config.implementation.PluginConfig;
 import com.eternalcode.combat.util.DurationUtil;
 import org.bukkit.Server;
 import org.bukkit.entity.Player;
@@ -9,20 +9,19 @@ import panda.utilities.text.Formatter;
 
 import java.time.Duration;
 import java.time.Instant;
-import java.util.UUID;
 
 public class CombatTask implements Runnable {
 
     private final CombatManager combatManager;
-    private final MessageConfig messageConfig;
+    private final PluginConfig config;
     private final Server server;
-    private final NotificationAnnouncer notificationAnnouncer;
+    private final NotificationAnnouncer announcer;
 
-    public CombatTask(CombatManager combatManager, MessageConfig messageConfig, Server server, NotificationAnnouncer notificationAnnouncer) {
+    public CombatTask(CombatManager combatManager, PluginConfig config, Server server, NotificationAnnouncer announcer) {
         this.combatManager = combatManager;
-        this.messageConfig = messageConfig;
+        this.config = config;
         this.server = server;
-        this.notificationAnnouncer = notificationAnnouncer;
+        this.announcer = announcer;
     }
 
     @Override
@@ -35,24 +34,20 @@ public class CombatTask implements Runnable {
             }
 
             Instant now = Instant.now();
-            Instant remainingTime = combat.getEndOfCombatLog();
+            Instant end = combat.getEndOfCombatLog();
 
-            UUID playerUniqueId = player.getUniqueId();
+            if (now.isBefore(end)) {
+                Duration remaining = Duration.between(now, end);
 
-            if (now.isBefore(remainingTime)) {
-                Duration between = Duration.between(now, remainingTime);
+                Formatter format = new Formatter()
+                    .register("{TIME}", DurationUtil.format(remaining));
 
-                Formatter formatter = new Formatter()
-                        .register("{TIME}", DurationUtil.format(between));
-
-                this.notificationAnnouncer.announceActionBar(playerUniqueId, formatter.format(this.messageConfig.combatActionBar));
-
+                this.announcer.sendMessage(player, format.format(this.config.messages.combatActionBar));
                 continue;
             }
 
             this.combatManager.remove(combat.getUuid());
-            this.notificationAnnouncer.announceActionBar(playerUniqueId, this.messageConfig.unTagPlayer);
-
+            this.announcer.sendMessage(player, this.config.messages.unTagPlayer);
         }
     }
 }

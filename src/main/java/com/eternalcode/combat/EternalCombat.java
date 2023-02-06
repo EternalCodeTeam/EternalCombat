@@ -7,10 +7,7 @@ import com.eternalcode.combat.command.handler.InvalidUsage;
 import com.eternalcode.combat.command.handler.PermissionMessage;
 import com.eternalcode.combat.command.implementation.FightCommand;
 import com.eternalcode.combat.command.implementation.ReloadCommand;
-import com.eternalcode.combat.command.implementation.TagCommand;
-import com.eternalcode.combat.command.implementation.UnTagCommand;
 import com.eternalcode.combat.config.ConfigManager;
-import com.eternalcode.combat.config.implementation.MessageConfig;
 import com.eternalcode.combat.config.implementation.PluginConfig;
 import com.eternalcode.combat.listener.BlockPlaceListener;
 import com.eternalcode.combat.listener.InventoryOpenListener;
@@ -40,12 +37,9 @@ import java.util.stream.Stream;
 public final class EternalCombat extends JavaPlugin {
 
     private ConfigManager configManager;
-
-    private MessageConfig messageConfig;
     private PluginConfig pluginConfig;
 
     private CombatManager combatManager;
-
     private UpdaterService updaterService;
 
     private AudienceProvider audienceProvider;
@@ -60,8 +54,6 @@ public final class EternalCombat extends JavaPlugin {
         Server server = this.getServer();
 
         this.configManager = new ConfigManager(this.getDataFolder());
-
-        this.messageConfig = configManager.load(new MessageConfig());
         this.pluginConfig = configManager.load(new PluginConfig());
 
         this.combatManager = new CombatManager();
@@ -70,38 +62,37 @@ public final class EternalCombat extends JavaPlugin {
 
         this.audienceProvider = BukkitAudiences.create(this);
         this.miniMessage = MiniMessage.builder()
-                .postProcessor(new LegacyColorProcessor())
-                .build();
+            .postProcessor(new LegacyColorProcessor())
+            .build();
+
         this.notificationAnnouncer = new NotificationAnnouncer(this.audienceProvider, this.miniMessage);
 
         this.liteCommands = LiteBukkitAdventurePlatformFactory.builder(server, "eternalcombat", this.audienceProvider)
-                .argument(Player.class, new BukkitPlayerArgument<>(this.getServer(), this.messageConfig.cantFindPlayer))
-                .contextualBind(Player.class, new BukkitOnlyPlayerContextual<>(this.messageConfig.onlyForPlayers))
+            .argument(Player.class, new BukkitPlayerArgument<>(this.getServer(), this.pluginConfig.messages.cantFindPlayer))
+            .contextualBind(Player.class, new BukkitOnlyPlayerContextual<>(this.pluginConfig.messages.onlyForPlayers))
 
-                .invalidUsageHandler(new InvalidUsage(this.messageConfig, this.notificationAnnouncer))
-                .permissionHandler(new PermissionMessage(this.messageConfig, this.notificationAnnouncer))
+            .invalidUsageHandler(new InvalidUsage(this.pluginConfig, this.notificationAnnouncer))
+            .permissionHandler(new PermissionMessage(this.pluginConfig, this.notificationAnnouncer))
 
-                .commandInstance(
-                        new TagCommand(this.combatManager, this.messageConfig, this.pluginConfig, this.notificationAnnouncer),
-                        new UnTagCommand(this.combatManager, this.messageConfig, this.getServer(), this.notificationAnnouncer),
-                        new FightCommand(this.combatManager, this.notificationAnnouncer, this.messageConfig),
-                        new ReloadCommand(configManager, this.notificationAnnouncer, this.messageConfig)
-                )
+            .commandInstance(
+                new FightCommand(this.combatManager, this.notificationAnnouncer, this.pluginConfig, server),
+                new ReloadCommand(this.configManager, this.pluginConfig, this.notificationAnnouncer)
+            )
 
-                .register();
+            .register();
 
-        CombatTask combatTask = new CombatTask(this.combatManager, this.messageConfig, server, this.notificationAnnouncer);
+        CombatTask combatTask = new CombatTask(this.combatManager, this.pluginConfig, server, this.notificationAnnouncer);
 
         this.getServer().getScheduler().runTaskTimer(this, combatTask, 20L, 20L);
 
         Stream.of(
-                new EntityDamageByEntityListener(this.combatManager, this.messageConfig, this.pluginConfig, this.notificationAnnouncer),
-                new EntityDeathListener(this.combatManager, this.messageConfig, this.getServer(), this.notificationAnnouncer),
-                new PlayerCommandPreprocessListener(this.combatManager, this.pluginConfig, this.messageConfig, this.notificationAnnouncer),
-                new PlayerQuitListener(this.combatManager, this.messageConfig, this.getServer(), this.notificationAnnouncer),
-                new BlockPlaceListener(this.combatManager, this.notificationAnnouncer, this.messageConfig, this.pluginConfig),
-                new InventoryOpenListener(this.combatManager, this.notificationAnnouncer, this.messageConfig, this.pluginConfig),
-                new UpdaterController(this.updaterService, this.pluginConfig, this.audienceProvider, this.miniMessage)
+            new EntityDamageByEntityListener(this.combatManager, this.pluginConfig, this.notificationAnnouncer),
+            new EntityDeathListener(this.combatManager, this.pluginConfig, server, this.notificationAnnouncer),
+            new PlayerCommandPreprocessListener(this.combatManager, this.pluginConfig, this.notificationAnnouncer),
+            new PlayerQuitListener(this.combatManager, this.pluginConfig, server, this.notificationAnnouncer),
+            new BlockPlaceListener(this.combatManager, this.notificationAnnouncer, this.pluginConfig),
+            new InventoryOpenListener(this.combatManager, this.notificationAnnouncer, this.pluginConfig),
+            new UpdaterController(this.updaterService, this.pluginConfig, this.audienceProvider, this.miniMessage)
         ).forEach(listener -> this.getServer().getPluginManager().registerEvents(listener, this));
 
         long millis = started.elapsed(TimeUnit.MILLISECONDS);
@@ -122,5 +113,4 @@ public final class EternalCombat extends JavaPlugin {
             this.combatManager.remove(combat.getUuid());
         }
     }
-
 }

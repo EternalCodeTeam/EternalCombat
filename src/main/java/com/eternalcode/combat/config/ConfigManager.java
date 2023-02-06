@@ -12,10 +12,10 @@ import java.util.Set;
 public class ConfigManager {
 
     private final Cdn cdn = CdnFactory
-            .createYamlLike()
-            .getSettings()
-            .withComposer(Duration.class, new DurationComposer())
-            .build();
+        .createYamlLike()
+        .getSettings()
+        .withComposer(Duration.class, new DurationComposer())
+        .build();
 
     private final Set<ReloadableConfig> configs = new HashSet<>();
     private final File dataFolder;
@@ -26,10 +26,10 @@ public class ConfigManager {
 
     public <T extends ReloadableConfig> T load(T config) {
         this.cdn.load(config.resource(this.dataFolder), config)
-                .orThrow(RuntimeException::new);
+            .orThrow(RuntimeException::new);
 
         this.cdn.render(config, config.resource(this.dataFolder))
-                .orThrow(RuntimeException::new);
+            .orThrow(RuntimeException::new);
 
         this.configs.add(config);
 

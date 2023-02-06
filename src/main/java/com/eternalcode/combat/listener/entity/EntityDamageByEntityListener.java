@@ -2,7 +2,6 @@ package com.eternalcode.combat.listener.entity;
 
 import com.eternalcode.combat.NotificationAnnouncer;
 import com.eternalcode.combat.combat.CombatManager;
-import com.eternalcode.combat.config.implementation.MessageConfig;
 import com.eternalcode.combat.config.implementation.PluginConfig;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -15,14 +14,12 @@ import java.util.UUID;
 public class EntityDamageByEntityListener implements Listener {
 
     private final CombatManager combatManager;
-    private final MessageConfig messageConfig;
-    private final PluginConfig pluginConfig;
+    private final PluginConfig config;
     private final NotificationAnnouncer notificationAnnouncer;
 
-    public EntityDamageByEntityListener(CombatManager combatManager, MessageConfig messageConfig, PluginConfig pluginConfig, NotificationAnnouncer notificationAnnouncer) {
+    public EntityDamageByEntityListener(CombatManager combatManager, PluginConfig config, NotificationAnnouncer notificationAnnouncer) {
         this.combatManager = combatManager;
-        this.messageConfig = messageConfig;
-        this.pluginConfig = pluginConfig;
+        this.config = config;
         this.notificationAnnouncer = notificationAnnouncer;
     }
 
@@ -39,7 +36,7 @@ public class EntityDamageByEntityListener implements Listener {
         Player player = (Player) event.getEntity();
         Player enemy = (Player) event.getDamager();
 
-        Duration combatTime = this.pluginConfig.combatLogTime;
+        Duration combatTime = this.config.settings.combatLogTime;
 
         UUID enemyUniqueId = enemy.getUniqueId();
         UUID playerUniqueId = player.getUniqueId();
@@ -47,8 +44,7 @@ public class EntityDamageByEntityListener implements Listener {
         this.combatManager.tag(playerUniqueId, enemyUniqueId, combatTime);
         this.combatManager.tag(enemyUniqueId, playerUniqueId, combatTime);
 
-        this.notificationAnnouncer.announceMessage(playerUniqueId, this.messageConfig.tagPlayer);
-        this.notificationAnnouncer.announceMessage(enemyUniqueId, this.messageConfig.tagPlayer);
+        this.notificationAnnouncer.sendMessage(player, this.config.messages.tagPlayer);
+        this.notificationAnnouncer.sendMessage(enemy, this.config.messages.tagPlayer);
     }
-
 }
