@@ -54,7 +54,9 @@ public class CombatCommand {
             .register("{PLAYER}", target.getName());
 
         this.combatManager.tag(targetUniqueId, time);
-        this.announcer.sendMessage(player, formatter.format(this.config.messages.adminTagPlayer));
+
+        String format = formatter.format(this.config.messages.adminTagPlayer);
+        this.announcer.sendMessage(player, format);
     }
 
     @Execute(route = "tag", required = 2)
@@ -109,7 +111,8 @@ public class CombatCommand {
         Formatter formatter = new Formatter()
             .register("{PLAYER}", target.getName());
 
-        this.announcer.sendMessage(player, formatter.format(this.config.messages.adminUnTagPlayer));
+        String format = formatter.format(this.config.messages.adminUnTagPlayer);
+        this.announcer.sendMessage(player, format);
     }
 
     @Async
