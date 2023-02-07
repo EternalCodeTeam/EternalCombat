@@ -42,18 +42,19 @@ public class CombatTagController implements Listener {
         UUID attackedUniqueId = attacked.getUniqueId();
         UUID enemyUniqueId = enemy.getUniqueId();
 
+        if (!this.combatManager.isInCombat(attackedUniqueId) || !this.combatManager.isInCombat(enemyUniqueId)) {
+            this.announcer.sendMessage(attacked, this.config.messages.tagPlayer);
+            this.announcer.sendMessage(enemy, this.config.messages.tagPlayer);
+        }
+
         this.combatManager.tag(attackedUniqueId, combatTime);
         this.combatManager.tag(enemyUniqueId, combatTime);
-
-        this.announcer.sendMessage(attacked, this.config.messages.tagPlayer);
-        this.announcer.sendMessage(enemy, this.config.messages.tagPlayer);
     }
 
     private @Nullable Player getDamager(EntityDamageByEntityEvent event) {
         if (event.getDamager() instanceof Player damager) {
             return damager;
         }
-
 
         if (event.getDamager() instanceof Projectile projectile && projectile.getShooter() instanceof Player shooter) {
             return shooter;

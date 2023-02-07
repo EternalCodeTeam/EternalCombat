@@ -8,6 +8,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDeathEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
+import panda.utilities.text.Formatter;
 
 public class CombatUnTagController implements Listener {
 
@@ -27,7 +28,7 @@ public class CombatUnTagController implements Listener {
             return;
         }
 
-        if (this.combatManager.isInCombat(player.getUniqueId())) {
+        if (!this.combatManager.isInCombat(player.getUniqueId())) {
             return;
         }
 
@@ -43,7 +44,13 @@ public class CombatUnTagController implements Listener {
             return;
         }
 
+        Formatter formatter = new Formatter()
+            .register("{PLAYER}", player.getName());
+
+        String format = formatter.format(this.config.messages.playerLoggedInCombat);
+
         this.combatManager.untag(player.getUniqueId());
+        this.announcer.broadcast(player, format);
         player.setHealth(0.0);
     }
 
