@@ -49,7 +49,6 @@ public final class NotificationAnnouncer {
 
     private Audience audience(CommandSender sender) {
         if (sender instanceof Player player) {
-
             return this.audienceProvider.player(player.getUniqueId());
         }
 
