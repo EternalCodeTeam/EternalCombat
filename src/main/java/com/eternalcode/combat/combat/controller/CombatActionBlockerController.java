@@ -41,11 +41,12 @@ public class CombatActionBlockerController implements Listener {
         Block block = event.getBlock();
         int level = block.getY();
 
-        if (level <= this.config.settings.blockPlaceLevel) {
-            event.setCancelled(true);
-
-            this.announcer.sendMessage(player, this.config.messages.blockPlaceBlocked);
+        if (level > this.config.settings.blockPlaceLevel) {
+            return;
         }
+
+        event.setCancelled(true);
+        this.announcer.sendMessage(player, this.config.messages.blockPlaceBlocked);
     }
 
     @EventHandler
