@@ -35,10 +35,11 @@ public class CombatTask implements Runnable {
             if (!combatTag.isExpired()) {
                 Duration remaining = combatTag.getRemainingDuration();
 
-                Formatter format = new Formatter()
+                Formatter formatter = new Formatter()
                     .register("{TIME}", DurationUtil.format(remaining));
 
-                this.announcer.send(player, this.config.settings.combatNotificationType, format.format(this.config.messages.combatFormat));
+                String format = formatter.format(this.config.messages.combatFormat);
+                this.announcer.send(player, this.config.settings.combatNotificationType, format);
 
                 continue;
             }
