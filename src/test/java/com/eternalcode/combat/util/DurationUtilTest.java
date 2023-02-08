@@ -1,32 +1,34 @@
 package com.eternalcode.combat.util;
 
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.MethodSource;
 
 import java.time.Duration;
-import java.time.temporal.ChronoUnit;
+import java.util.Arrays;
+import java.util.Collection;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 class DurationUtilTest {
 
-    @Test
-    void milliseconds() {
-        assertEquals("0s", DurationUtil.format(Duration.ofMillis(5L)));
-        assertEquals("0.005s", DurationUtil.format(Duration.ofMillis(5L), false));
+    private static Collection<Object[]> data() {
+        return Arrays.asList(new Object[][] {
+            { Duration.ofMinutes(3).plusSeconds(30).plusMillis(500), true, "3m 30s" },
+            { Duration.ofMinutes(3).plusSeconds(30).plusMillis(500), false, "3m 30.5s" },
+            { Duration.ofMillis(500), true, "0s" },
+            { Duration.ofMillis(500), false, "0.5s" },
+            { Duration.ofSeconds(30).plusMillis(500), true, "30s" },
+            { Duration.ofSeconds(30).plusMillis(500), false, "30.5s" },
+            { Duration.ofHours(1).plusMinutes(30).plusSeconds(30).plusMillis(500), true, "1h 30m 30s" },
+            { Duration.ofHours(1).plusMinutes(30).plusSeconds(30).plusMillis(500), false, "1h 30m 30.5s" },
+            { Duration.ZERO, false, "0s" }
+        });
     }
 
-    @Test
-    void seconds() {
-        assertEquals("5s", DurationUtil.format(Duration.ofSeconds(5L)));
-    }
-
-    @Test
-    void minutes() {
-        assertEquals("5m", DurationUtil.format(Duration.ofMinutes(5L)));
-    }
-
-    @Test
-    void hours() {
-        assertEquals("8h 20m", DurationUtil.format(Duration.ofHours(8L).plus(20, ChronoUnit.MINUTES)));
+    @ParameterizedTest
+    @MethodSource("data")
+    void testFormat(Duration duration, boolean removeMillis, String expected) {
+        String actual = DurationUtil.format(duration, removeMillis);
+        assertEquals(expected, actual);
     }
 }

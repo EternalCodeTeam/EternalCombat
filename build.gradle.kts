@@ -28,6 +28,7 @@ repositories {
     maven { url = uri("https://repo.eternalcode.pl/releases") }
     maven { url = uri("https://hub.spigotmc.org/nexus/content/repositories/snapshots/") }
     maven { url = uri("https://repo.panda-lang.org/releases") }
+    maven { url = uri("https://papermc.io/repo/repository/maven-public/") }
 }
 
 dependencies {
@@ -48,8 +49,11 @@ dependencies {
     implementation("com.eternalcode:gitcheck:1.0.0")
 
     // tests
-    testImplementation("org.junit.jupiter:junit-jupiter-params:5.9.2")
+    testImplementation("org.spigotmc:spigot-api:1.19.3-R0.1-SNAPSHOT")
+    testImplementation("org.codehaus.groovy:groovy-all:3.0.14")
     testImplementation("org.junit.jupiter:junit-jupiter-api:5.9.2")
+    testImplementation("org.junit.jupiter:junit-jupiter-params:5.9.2")
+    testImplementation("com.github.seeseemelk:MockBukkit-v1.19:2.144.5")
 }
 
 bukkit {
@@ -66,13 +70,13 @@ java {
     targetCompatibility = JavaVersion.VERSION_17
 }
 
+tasks.getByName<Test>("test") {
+    useJUnitPlatform()
+}
+
 tasks.withType<JavaCompile> {
     options.compilerArgs = listOf("-Xlint:deprecation", "-parameters")
     options.encoding = "UTF-8"
-}
-
-tasks.getByName<Test>("test") {
-    useJUnitPlatform()
 }
 
 tasks {
