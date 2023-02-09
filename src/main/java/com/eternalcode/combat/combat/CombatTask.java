@@ -1,58 +1,51 @@
 package com.eternalcode.combat.combat;
 
-import com.eternalcode.combat.NotificationAnnouncer;
-import com.eternalcode.combat.config.implementation.MessageConfig;
+import com.eternalcode.combat.config.implementation.PluginConfig;
+import com.eternalcode.combat.notification.NotificationAnnouncer;
 import com.eternalcode.combat.util.DurationUtil;
 import org.bukkit.Server;
 import org.bukkit.entity.Player;
 import panda.utilities.text.Formatter;
 
 import java.time.Duration;
-import java.time.Instant;
-import java.util.UUID;
 
 public class CombatTask implements Runnable {
 
     private final CombatManager combatManager;
-    private final MessageConfig messageConfig;
+    private final PluginConfig config;
     private final Server server;
-    private final NotificationAnnouncer notificationAnnouncer;
+    private final NotificationAnnouncer announcer;
 
-    public CombatTask(CombatManager combatManager, MessageConfig messageConfig, Server server, NotificationAnnouncer notificationAnnouncer) {
+    public CombatTask(CombatManager combatManager, PluginConfig config, Server server, NotificationAnnouncer announcer) {
         this.combatManager = combatManager;
-        this.messageConfig = messageConfig;
+        this.config = config;
         this.server = server;
-        this.notificationAnnouncer = notificationAnnouncer;
+        this.announcer = announcer;
     }
 
     @Override
     public void run() {
-        for (Combat combat : this.combatManager.getCombats()) {
-            Player player = this.server.getPlayer(combat.getUuid());
+        for (CombatTag combatTag : this.combatManager.getCombats()) {
+            Player player = this.server.getPlayer(combatTag.getTaggedPlayer());
 
             if (player == null) {
                 return;
             }
 
-            Instant now = Instant.now();
-            Instant remainingTime = combat.getEndOfCombatLog();
-
-            UUID playerUniqueId = player.getUniqueId();
-
-            if (now.isBefore(remainingTime)) {
-                Duration between = Duration.between(now, remainingTime);
+            if (!combatTag.isExpired()) {
+                Duration remaining = combatTag.getRemainingDuration();
 
                 Formatter formatter = new Formatter()
-                        .register("{TIME}", DurationUtil.format(between));
+                    .register("{TIME}", DurationUtil.format(remaining));
 
-                this.notificationAnnouncer.announceActionBar(playerUniqueId, formatter.format(this.messageConfig.combatActionBar));
+                String format = formatter.format(this.config.messages.combatFormat);
+                this.announcer.send(player, this.config.settings.combatNotificationType, format);
 
                 continue;
             }
 
-            this.combatManager.remove(combat.getUuid());
-            this.notificationAnnouncer.announceActionBar(playerUniqueId, this.messageConfig.unTagPlayer);
-
+            this.combatManager.untag(combatTag.getTaggedPlayer());
+            this.announcer.send(player, this.config.settings.combatNotificationType, this.config.messages.unTagPlayer);
         }
     }
 }

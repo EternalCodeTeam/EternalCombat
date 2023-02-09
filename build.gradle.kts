@@ -2,6 +2,7 @@ import com.github.jengelman.gradle.plugins.shadow.tasks.ShadowJar
 
 plugins {
     `java-library`
+    checkstyle
 
     id("net.minecrell.plugin-yml.bukkit") version "0.5.2"
     id("com.github.johnrengelman.shadow") version "7.1.2"
@@ -11,6 +12,15 @@ plugins {
 group = "com.eternalcode"
 version = "1.0.0"
 
+checkstyle {
+    toolVersion = "10.7.0"
+
+    configFile = file("${rootDir}/config/checkstyle/checkstyle.xml")
+
+    maxErrors = 0
+    maxWarnings = 0
+}
+
 repositories {
     mavenCentral()
     mavenLocal()
@@ -18,6 +28,7 @@ repositories {
     maven { url = uri("https://repo.eternalcode.pl/releases") }
     maven { url = uri("https://hub.spigotmc.org/nexus/content/repositories/snapshots/") }
     maven { url = uri("https://repo.panda-lang.org/releases") }
+    maven { url = uri("https://papermc.io/repo/repository/maven-public/") }
 }
 
 dependencies {
@@ -29,7 +40,7 @@ dependencies {
     implementation("net.kyori:adventure-text-minimessage:4.12.0")
 
     // litecommands
-    implementation("dev.rollczi.litecommands:bukkit-adventure:2.7.2")
+    implementation("dev.rollczi.litecommands:bukkit-adventure:2.8.3")
 
     // cdn configs
     implementation("net.dzikoysk:cdn:1.14.3")
@@ -38,13 +49,16 @@ dependencies {
     implementation("com.eternalcode:gitcheck:1.0.0")
 
     // tests
-    testImplementation("org.junit.jupiter:junit-jupiter-params:5.9.2")
+    testImplementation("org.spigotmc:spigot-api:1.19.3-R0.1-SNAPSHOT")
     testImplementation("org.codehaus.groovy:groovy-all:3.0.14")
     testImplementation("org.junit.jupiter:junit-jupiter-api:5.9.2")
+    testImplementation("org.junit.jupiter:junit-jupiter-params:5.9.2")
+    testImplementation("com.github.seeseemelk:MockBukkit-v1.19:2.144.5")
 }
 
 bukkit {
-    main = "com.eternalcode.combat.EternalCombat"
+    main = "com.eternalcode.combat.CombatPlugin"
+    author = "EternalCodeTeam"
     apiVersion = "1.13"
     prefix = "EternalCombat"
     name = "EternalCombat"
@@ -52,16 +66,17 @@ bukkit {
 }
 
 java {
-    sourceCompatibility = JavaVersion.VERSION_11
-    targetCompatibility = JavaVersion.VERSION_11
-}
-
-tasks.withType<JavaCompile> {
-    options.encoding = "UTF-8"
+    sourceCompatibility = JavaVersion.VERSION_17
+    targetCompatibility = JavaVersion.VERSION_17
 }
 
 tasks.getByName<Test>("test") {
     useJUnitPlatform()
+}
+
+tasks.withType<JavaCompile> {
+    options.compilerArgs = listOf("-Xlint:deprecation", "-parameters")
+    options.encoding = "UTF-8"
 }
 
 tasks {
@@ -73,10 +88,11 @@ tasks {
 tasks.withType<ShadowJar> {
     archiveFileName.set("EternalCombat v${project.version} (MC 1.8.8-1.19x).jar")
 
+    dependsOn("checkstyleMain")
+
     exclude(
         "org/intellij/lang/annotations/**",
         "org/jetbrains/annotations/**",
-        "org/checkerframework/**",
         "META-INF/**",
         "javax/**"
     )
@@ -92,6 +108,9 @@ tasks.withType<ShadowJar> {
         "net.dzikoysk",
         "net.kyori",
         "dev.rollczi.litecommands",
+        "com.eternalcode.gitcheck",
+        "org.json.simple",
+        "kotlin"
     ).forEach { pack ->
         relocate(pack, "$prefix.$pack")
     }

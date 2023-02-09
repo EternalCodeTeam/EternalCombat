@@ -10,7 +10,6 @@ public final class LegacyColorProcessor implements UnaryOperator<Component> {
     @Override
     public Component apply(Component component) {
         return component.replaceText(builder -> builder.match(Pattern.compile(".*"))
-                .replacement((matchResult, builder1) -> Legacy.component(matchResult.group())));
+            .replacement((matchResult, builder1) -> Legacy.component(matchResult.group())));
     }
-
 }
