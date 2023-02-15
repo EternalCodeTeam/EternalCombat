@@ -79,12 +79,14 @@ public class CombatActionBlockerController implements Listener {
         String command = event.getMessage();
 
         for (String blockedCommand : this.config.settings.blockedCommands) {
-            if (command.startsWith(blockedCommand)) {
-
-                event.setCancelled(true);
-                this.announcer.sendMessage(player, config.messages.cantUseCommand);
-                break;
+            if (!command.startsWith(blockedCommand)) {
+                continue;
             }
+
+            event.setCancelled(true);
+
+            this.announcer.sendMessage(player, this.config.messages.cantUseCommand);
         }
+
     }
 }

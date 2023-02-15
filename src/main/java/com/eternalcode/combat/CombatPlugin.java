@@ -31,16 +31,8 @@ import java.util.stream.Stream;
 
 public final class CombatPlugin extends JavaPlugin {
 
-    private ConfigManager configManager;
-    private PluginConfig pluginConfig;
-
     private CombatManager combatManager;
-    private UpdaterService updaterService;
-
     private AudienceProvider audienceProvider;
-    private MiniMessage miniMessage;
-    private NotificationAnnouncer notificationAnnouncer;
-
     private LiteCommands<CommandSender> liteCommands;
 
     @Override
@@ -48,37 +40,37 @@ public final class CombatPlugin extends JavaPlugin {
         Stopwatch started = Stopwatch.createStarted();
         Server server = this.getServer();
 
-        this.configManager = new ConfigManager(this.getDataFolder());
-        this.pluginConfig = this.configManager.load(new PluginConfig());
+        ConfigManager configManager = new ConfigManager(this.getDataFolder());
+        PluginConfig pluginConfig = configManager.load(new PluginConfig());
 
         this.combatManager = new CombatManager();
-        this.updaterService = new UpdaterService(this.getDescription());
+        UpdaterService updaterService = new UpdaterService(this.getDescription());
 
         this.audienceProvider = BukkitAudiences.create(this);
-        this.miniMessage = MiniMessage.builder()
+        MiniMessage miniMessage = MiniMessage.builder()
             .postProcessor(new LegacyColorProcessor())
             .build();
 
-        this.notificationAnnouncer = new NotificationAnnouncer(this.audienceProvider, this.miniMessage);
+        NotificationAnnouncer notificationAnnouncer = new NotificationAnnouncer(this.audienceProvider, miniMessage);
         this.liteCommands = LiteBukkitAdventurePlatformFactory.builder(server, "eternalcombat", this.audienceProvider)
-            .argument(Player.class, new BukkitPlayerArgument<>(this.getServer(), this.pluginConfig.messages.cantFindPlayer))
-            .contextualBind(Player.class, new BukkitOnlyPlayerContextual<>(this.pluginConfig.messages.onlyForPlayers))
+            .argument(Player.class, new BukkitPlayerArgument<>(this.getServer(), pluginConfig.messages.cantFindPlayer))
+            .contextualBind(Player.class, new BukkitOnlyPlayerContextual<>(pluginConfig.messages.onlyForPlayers))
 
-            .invalidUsageHandler(new InvalidUsage(this.pluginConfig, this.notificationAnnouncer))
-            .permissionHandler(new PermissionMessage(this.pluginConfig, this.notificationAnnouncer))
+            .invalidUsageHandler(new InvalidUsage(pluginConfig, notificationAnnouncer))
+            .permissionHandler(new PermissionMessage(pluginConfig, notificationAnnouncer))
 
-            .commandInstance(new CombatCommand(this.combatManager, this.configManager, this.notificationAnnouncer, this.pluginConfig, server))
+            .commandInstance(new CombatCommand(this.combatManager, configManager, notificationAnnouncer, pluginConfig, server))
 
             .register();
 
-        CombatTask combatTask = new CombatTask(this.combatManager, this.pluginConfig, server, this.notificationAnnouncer);
+        CombatTask combatTask = new CombatTask(this.combatManager, pluginConfig, server, notificationAnnouncer);
         this.getServer().getScheduler().runTaskTimerAsynchronously(this, combatTask, 20L, 20L);
 
         Stream.of(
-            new CombatTagController(this.combatManager, this.pluginConfig, this.notificationAnnouncer),
-            new CombatUnTagController(this.combatManager, this.pluginConfig, this.notificationAnnouncer),
-            new CombatActionBlockerController(this.combatManager, this.notificationAnnouncer, this.pluginConfig),
-            new UpdaterNotificationController(this.updaterService, this.pluginConfig, this.audienceProvider, this.miniMessage)
+            new CombatTagController(this.combatManager, pluginConfig, notificationAnnouncer),
+            new CombatUnTagController(this.combatManager, pluginConfig, notificationAnnouncer),
+            new CombatActionBlockerController(this.combatManager, notificationAnnouncer, pluginConfig),
+            new UpdaterNotificationController(updaterService, pluginConfig, this.audienceProvider, miniMessage)
         ).forEach(listener -> this.getServer().getPluginManager().registerEvents(listener, this));
 
         long millis = started.elapsed(TimeUnit.MILLISECONDS);
