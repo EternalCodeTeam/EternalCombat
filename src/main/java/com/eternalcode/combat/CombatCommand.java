@@ -1,9 +1,9 @@
 package com.eternalcode.combat;
 
-import com.eternalcode.combat.config.ConfigManager;
-import com.eternalcode.combat.notification.NotificationAnnouncer;
 import com.eternalcode.combat.combat.CombatManager;
+import com.eternalcode.combat.config.ConfigManager;
 import com.eternalcode.combat.config.implementation.PluginConfig;
+import com.eternalcode.combat.notification.NotificationAnnouncer;
 import dev.rollczi.litecommands.argument.Arg;
 import dev.rollczi.litecommands.command.async.Async;
 import dev.rollczi.litecommands.command.execute.Execute;
@@ -91,27 +91,17 @@ public class CombatCommand {
     @Execute(route = "untag", required = 1)
     @Permission("eternalcombat.untag")
     void untag(Player player, @Arg Player target) {
-        UUID uniqueId = target.getUniqueId();
-        UUID enemyUuid = this.combatManager.getEnemy(uniqueId);
-
+        UUID enemyUuid = this.combatManager.getEnemy(target.getUniqueId());
         Player enemy = this.server.getPlayer(enemyUuid);
 
-        if (enemy == null) {
-            return;
-        }
-
-        UUID enemyUniqueId = enemy.getUniqueId();
-
         this.announcer.sendMessage(target, this.config.messages.unTagPlayer);
-        this.announcer.sendMessage(enemy, this.config.messages.unTagPlayer);
-
-        this.combatManager.untag(uniqueId);
-        this.combatManager.untag(enemyUniqueId);
+        this.combatManager.untag(enemy.getUniqueId());
 
         Formatter formatter = new Formatter()
             .register("{PLAYER}", target.getName());
 
         String format = formatter.format(this.config.messages.adminUnTagPlayer);
+
         this.announcer.sendMessage(player, format);
     }
 

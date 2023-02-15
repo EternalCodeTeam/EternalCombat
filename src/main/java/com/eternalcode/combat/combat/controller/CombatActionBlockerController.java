@@ -1,8 +1,8 @@
 package com.eternalcode.combat.combat.controller;
 
-import com.eternalcode.combat.notification.NotificationAnnouncer;
 import com.eternalcode.combat.combat.CombatManager;
 import com.eternalcode.combat.config.implementation.PluginConfig;
+import com.eternalcode.combat.notification.NotificationAnnouncer;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -55,8 +55,8 @@ public class CombatActionBlockerController implements Listener {
             return;
         }
 
-        UUID uniqueId = event.getPlayer().getUniqueId();
         Player player = (Player) event.getPlayer();
+        UUID uniqueId = player.getUniqueId();
 
         if (!this.combatManager.isInCombat(uniqueId)) {
             return;
@@ -79,13 +79,12 @@ public class CombatActionBlockerController implements Listener {
         String command = event.getMessage();
 
         for (String blockedCommand : this.config.settings.blockedCommands) {
-            if (!command.contains(blockedCommand)) {
-                return;
+            if (command.startsWith(blockedCommand)) {
+
+                event.setCancelled(true);
+                this.announcer.sendMessage(player, config.messages.cantUseCommand);
+                break;
             }
-
-            event.setCancelled(true);
-
-            this.announcer.sendMessage(player, this.config.messages.cantUseCommand);
         }
     }
 }

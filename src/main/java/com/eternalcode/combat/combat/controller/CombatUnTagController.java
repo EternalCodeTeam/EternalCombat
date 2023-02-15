@@ -1,8 +1,8 @@
 package com.eternalcode.combat.combat.controller;
 
-import com.eternalcode.combat.notification.NotificationAnnouncer;
 import com.eternalcode.combat.combat.CombatManager;
 import com.eternalcode.combat.config.implementation.PluginConfig;
+import com.eternalcode.combat.notification.NotificationAnnouncer;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -23,7 +23,7 @@ public class CombatUnTagController implements Listener {
     }
 
     @EventHandler
-    public void onEntityDeath(EntityDeathEvent event) {
+    void onEntityDeath(EntityDeathEvent event) {
         if (!(event.getEntity() instanceof Player player)) {
             return;
         }
@@ -37,7 +37,7 @@ public class CombatUnTagController implements Listener {
     }
 
     @EventHandler
-    public void onPlayerQuit(PlayerQuitEvent event) {
+    void onPlayerQuit(PlayerQuitEvent event) {
         Player player = event.getPlayer();
 
         if (!this.combatManager.isInCombat(player.getUniqueId())) {

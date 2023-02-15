@@ -1,5 +1,7 @@
 package com.eternalcode.combat.combat;
 
+import org.jetbrains.annotations.Nullable;
+
 import java.time.Duration;
 import java.time.Instant;
 import java.util.Collection;

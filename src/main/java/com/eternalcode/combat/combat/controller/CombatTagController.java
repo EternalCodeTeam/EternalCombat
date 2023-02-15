@@ -1,8 +1,8 @@
 package com.eternalcode.combat.combat.controller;
 
-import com.eternalcode.combat.notification.NotificationAnnouncer;
 import com.eternalcode.combat.combat.CombatManager;
 import com.eternalcode.combat.config.implementation.PluginConfig;
+import com.eternalcode.combat.notification.NotificationAnnouncer;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Projectile;
 import org.bukkit.event.EventHandler;
@@ -26,7 +26,7 @@ public class CombatTagController implements Listener {
     }
 
     @EventHandler
-    public void onEntityDamageByEntity(EntityDamageByEntityEvent event) {
+    void onEntityDamageByEntity(EntityDamageByEntityEvent event) {
         if (!(event.getEntity() instanceof Player attacked)) {
             return;
         }
@@ -42,16 +42,20 @@ public class CombatTagController implements Listener {
         UUID attackedUniqueId = attacked.getUniqueId();
         UUID enemyUniqueId = enemy.getUniqueId();
 
-        if (!this.combatManager.isInCombat(attackedUniqueId) || !this.combatManager.isInCombat(enemyUniqueId)) {
-            this.announcer.sendMessage(attacked, this.config.messages.tagPlayer);
+        if (!this.combatManager.isInCombat(attackedUniqueId)) {
             this.announcer.sendMessage(enemy, this.config.messages.tagPlayer);
+        }
+
+        if (!this.combatManager.isInCombat(enemyUniqueId)) {
+            this.announcer.sendMessage(attacked, this.config.messages.tagPlayer);
         }
 
         this.combatManager.tag(attackedUniqueId, combatTime);
         this.combatManager.tag(enemyUniqueId, combatTime);
     }
 
-    private @Nullable Player getDamager(EntityDamageByEntityEvent event) {
+    @Nullable
+    Player getDamager(EntityDamageByEntityEvent event) {
         if (event.getDamager() instanceof Player damager) {
             return damager;
         }

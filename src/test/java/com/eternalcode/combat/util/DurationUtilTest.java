@@ -12,7 +12,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 class DurationUtilTest {
 
     private static Collection<Object[]> data() {
-        return Arrays.asList(new Object[][] {
+        return Arrays.asList(new Object[][]{
             { Duration.ofMinutes(3).plusSeconds(30).plusMillis(500), true, "3m 30s" },
             { Duration.ofMinutes(3).plusSeconds(30).plusMillis(500), false, "3m 30.5s" },
             { Duration.ofMillis(500), true, "0s" },

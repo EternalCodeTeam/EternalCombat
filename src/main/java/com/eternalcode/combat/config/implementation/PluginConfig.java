@@ -20,12 +20,17 @@ public class PluginConfig implements ReloadableConfig {
     @Description("# Do you want to change the plugin settings?")
     public Settings settings = new Settings();
 
+    @Override
+    public Resource resource(File folder) {
+        return Source.of(folder, "config.yml");
+    }
+
     @Contextual
     public static class Settings {
-        @Description({ " ", "# Whether the player after entering the server should receive information about the new version of the plugin?" })
+        @Description("# Whether the player after entering the server should receive information about the new version of the plugin?")
         public boolean receiveUpdates = true;
 
-        @Description("# The length of time the combat is to last")
+        @Description({ " ", "# The length of time the combat is to last" })
         public Duration combatLogTime = Duration.ofSeconds(20);
 
         @Description("# Combat log notification type, available types: ACTION_BAR, CHAT, TITLE, SUBTITLE")
@@ -67,10 +72,5 @@ public class PluginConfig implements ReloadableConfig {
         public String notInCombat = "&aYou are not in combat!";
         public String reload = "&aConfiguration has been successfully reloaded!";
         public String cantTagSelf = "&cYou cannot tag yourself!";
-    }
-
-    @Override
-    public Resource resource(File folder) {
-        return Source.of(folder, "config.yml");
     }
 }
