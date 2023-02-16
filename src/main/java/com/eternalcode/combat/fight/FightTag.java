@@ -1,16 +1,16 @@
-package com.eternalcode.combat.combat;
+package com.eternalcode.combat.fight;
 
 import java.time.Duration;
 import java.time.Instant;
 import java.util.UUID;
 
-public class CombatTag {
+public class FightTag {
 
     private final UUID taggedPlayer;
 
     private final Instant endOfCombatLog;
 
-    CombatTag(UUID enemy, Instant endOfCombatLog) {
+    FightTag(UUID enemy, Instant endOfCombatLog) {
         this.taggedPlayer = enemy;
         this.endOfCombatLog = endOfCombatLog;
     }

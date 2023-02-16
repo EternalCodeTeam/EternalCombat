@@ -1,6 +1,6 @@
-package com.eternalcode.combat.combat.controller;
+package com.eternalcode.combat.fight.controller;
 
-import com.eternalcode.combat.combat.CombatManager;
+import com.eternalcode.combat.fight.FightManager;
 import com.eternalcode.combat.config.implementation.PluginConfig;
 import com.eternalcode.combat.notification.NotificationAnnouncer;
 import org.bukkit.entity.Player;
@@ -10,14 +10,14 @@ import org.bukkit.event.entity.EntityDeathEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import panda.utilities.text.Formatter;
 
-public class CombatUnTagController implements Listener {
+public class FightUnTagController implements Listener {
 
-    private final CombatManager combatManager;
+    private final FightManager fightManager;
     private final PluginConfig config;
     private final NotificationAnnouncer announcer;
 
-    public CombatUnTagController(CombatManager combatManager, PluginConfig config, NotificationAnnouncer announcer) {
-        this.combatManager = combatManager;
+    public FightUnTagController(FightManager fightManager, PluginConfig config, NotificationAnnouncer announcer) {
+        this.fightManager = fightManager;
         this.config = config;
         this.announcer = announcer;
     }
@@ -28,19 +28,19 @@ public class CombatUnTagController implements Listener {
             return;
         }
 
-        if (!this.combatManager.isInCombat(player.getUniqueId())) {
+        if (!this.fightManager.isInCombat(player.getUniqueId())) {
             return;
         }
 
         this.announcer.sendMessage(player, this.config.messages.unTagPlayer);
-        this.combatManager.untag(player.getUniqueId());
+        this.fightManager.untag(player.getUniqueId());
     }
 
     @EventHandler
     void onPlayerQuit(PlayerQuitEvent event) {
         Player player = event.getPlayer();
 
-        if (!this.combatManager.isInCombat(player.getUniqueId())) {
+        if (!this.fightManager.isInCombat(player.getUniqueId())) {
             return;
         }
 
@@ -49,7 +49,7 @@ public class CombatUnTagController implements Listener {
 
         String format = formatter.format(this.config.messages.playerLoggedInCombat);
 
-        this.combatManager.untag(player.getUniqueId());
+        this.fightManager.untag(player.getUniqueId());
         this.announcer.broadcast(player, format);
         player.setHealth(0.0);
     }

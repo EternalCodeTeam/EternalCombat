@@ -1,6 +1,6 @@
-package com.eternalcode.combat.combat.controller;
+package com.eternalcode.combat.fight.controller;
 
-import com.eternalcode.combat.combat.CombatManager;
+import com.eternalcode.combat.fight.FightManager;
 import com.eternalcode.combat.config.implementation.PluginConfig;
 import com.eternalcode.combat.notification.NotificationAnnouncer;
 import org.bukkit.entity.Player;
@@ -13,14 +13,14 @@ import javax.annotation.Nullable;
 import java.time.Duration;
 import java.util.UUID;
 
-public class CombatTagController implements Listener {
+public class FightTagController implements Listener {
 
-    private final CombatManager combatManager;
+    private final FightManager fightManager;
     private final PluginConfig config;
     private final NotificationAnnouncer announcer;
 
-    public CombatTagController(CombatManager combatManager, PluginConfig config, NotificationAnnouncer announcer) {
-        this.combatManager = combatManager;
+    public FightTagController(FightManager fightManager, PluginConfig config, NotificationAnnouncer announcer) {
+        this.fightManager = fightManager;
         this.config = config;
         this.announcer = announcer;
     }
@@ -42,16 +42,16 @@ public class CombatTagController implements Listener {
         UUID attackedUniqueId = attacked.getUniqueId();
         UUID enemyUniqueId = enemy.getUniqueId();
 
-        if (!this.combatManager.isInCombat(attackedUniqueId)) {
+        if (!this.fightManager.isInCombat(attackedUniqueId)) {
             this.announcer.sendMessage(enemy, this.config.messages.tagPlayer);
         }
 
-        if (!this.combatManager.isInCombat(enemyUniqueId)) {
+        if (!this.fightManager.isInCombat(enemyUniqueId)) {
             this.announcer.sendMessage(attacked, this.config.messages.tagPlayer);
         }
 
-        this.combatManager.tag(attackedUniqueId, combatTime);
-        this.combatManager.tag(enemyUniqueId, combatTime);
+        this.fightManager.tag(attackedUniqueId, combatTime);
+        this.fightManager.tag(enemyUniqueId, combatTime);
     }
 
     @Nullable

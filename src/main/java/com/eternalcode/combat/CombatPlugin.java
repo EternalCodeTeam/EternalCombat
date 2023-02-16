@@ -1,10 +1,10 @@
 package com.eternalcode.combat;
 
-import com.eternalcode.combat.combat.CombatManager;
-import com.eternalcode.combat.combat.CombatTask;
-import com.eternalcode.combat.combat.controller.CombatActionBlockerController;
-import com.eternalcode.combat.combat.controller.CombatTagController;
-import com.eternalcode.combat.combat.controller.CombatUnTagController;
+import com.eternalcode.combat.fight.FightManager;
+import com.eternalcode.combat.fight.FightTask;
+import com.eternalcode.combat.fight.controller.FightActionBlockerController;
+import com.eternalcode.combat.fight.controller.FightTagController;
+import com.eternalcode.combat.fight.controller.FightUnTagController;
 import com.eternalcode.combat.command.InvalidUsage;
 import com.eternalcode.combat.command.PermissionMessage;
 import com.eternalcode.combat.config.ConfigManager;
@@ -31,7 +31,7 @@ import java.util.stream.Stream;
 
 public final class CombatPlugin extends JavaPlugin {
 
-    private CombatManager combatManager;
+    private FightManager fightManager;
     private AudienceProvider audienceProvider;
     private LiteCommands<CommandSender> liteCommands;
 
@@ -43,7 +43,7 @@ public final class CombatPlugin extends JavaPlugin {
         ConfigManager configManager = new ConfigManager(this.getDataFolder());
         PluginConfig pluginConfig = configManager.load(new PluginConfig());
 
-        this.combatManager = new CombatManager();
+        this.fightManager = new FightManager();
         UpdaterService updaterService = new UpdaterService(this.getDescription());
 
         this.audienceProvider = BukkitAudiences.create(this);
@@ -59,17 +59,17 @@ public final class CombatPlugin extends JavaPlugin {
             .invalidUsageHandler(new InvalidUsage(pluginConfig, notificationAnnouncer))
             .permissionHandler(new PermissionMessage(pluginConfig, notificationAnnouncer))
 
-            .commandInstance(new CombatCommand(this.combatManager, configManager, notificationAnnouncer, pluginConfig, server))
+            .commandInstance(new CombatCommand(this.fightManager, configManager, notificationAnnouncer, pluginConfig, server))
 
             .register();
 
-        CombatTask combatTask = new CombatTask(this.combatManager, pluginConfig, server, notificationAnnouncer);
-        this.getServer().getScheduler().runTaskTimerAsynchronously(this, combatTask, 20L, 20L);
+        FightTask fightTask = new FightTask(this.fightManager, pluginConfig, server, notificationAnnouncer);
+        this.getServer().getScheduler().runTaskTimerAsynchronously(this, fightTask, 20L, 20L);
 
         Stream.of(
-            new CombatTagController(this.combatManager, pluginConfig, notificationAnnouncer),
-            new CombatUnTagController(this.combatManager, pluginConfig, notificationAnnouncer),
-            new CombatActionBlockerController(this.combatManager, notificationAnnouncer, pluginConfig),
+            new FightTagController(this.fightManager, pluginConfig, notificationAnnouncer),
+            new FightUnTagController(this.fightManager, pluginConfig, notificationAnnouncer),
+            new FightActionBlockerController(this.fightManager, notificationAnnouncer, pluginConfig),
             new UpdaterNotificationController(updaterService, pluginConfig, this.audienceProvider, miniMessage)
         ).forEach(listener -> this.getServer().getPluginManager().registerEvents(listener, this));
 
@@ -87,6 +87,6 @@ public final class CombatPlugin extends JavaPlugin {
             this.audienceProvider.close();
         }
 
-        this.combatManager.untagAll();
+        this.fightManager.untagAll();
     }
 }
