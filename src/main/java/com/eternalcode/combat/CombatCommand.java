@@ -1,8 +1,8 @@
 package com.eternalcode.combat;
 
-import com.eternalcode.combat.fight.FightManager;
 import com.eternalcode.combat.config.ConfigManager;
 import com.eternalcode.combat.config.implementation.PluginConfig;
+import com.eternalcode.combat.fight.FightManager;
 import com.eternalcode.combat.notification.NotificationAnnouncer;
 import dev.rollczi.litecommands.argument.Arg;
 import dev.rollczi.litecommands.command.async.Async;

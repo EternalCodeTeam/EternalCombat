@@ -1,7 +1,7 @@
 package com.eternalcode.combat.fight.controller;
 
-import com.eternalcode.combat.fight.FightManager;
 import com.eternalcode.combat.config.implementation.PluginConfig;
+import com.eternalcode.combat.fight.FightManager;
 import com.eternalcode.combat.notification.NotificationAnnouncer;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;

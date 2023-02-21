@@ -1,14 +1,14 @@
 package com.eternalcode.combat;
 
+import com.eternalcode.combat.command.InvalidUsage;
+import com.eternalcode.combat.command.PermissionMessage;
+import com.eternalcode.combat.config.ConfigManager;
+import com.eternalcode.combat.config.implementation.PluginConfig;
 import com.eternalcode.combat.fight.FightManager;
 import com.eternalcode.combat.fight.FightTask;
 import com.eternalcode.combat.fight.controller.FightActionBlockerController;
 import com.eternalcode.combat.fight.controller.FightTagController;
 import com.eternalcode.combat.fight.controller.FightUnTagController;
-import com.eternalcode.combat.command.InvalidUsage;
-import com.eternalcode.combat.command.PermissionMessage;
-import com.eternalcode.combat.config.ConfigManager;
-import com.eternalcode.combat.config.implementation.PluginConfig;
 import com.eternalcode.combat.notification.NotificationAnnouncer;
 import com.eternalcode.combat.updater.UpdaterNotificationController;
 import com.eternalcode.combat.updater.UpdaterService;
