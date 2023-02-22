@@ -31,12 +31,6 @@ public class FightManager {
         return Optional.of(fightTag);
     }
 
-    public UUID getEnemy(UUID player) {
-        FightTag fightTag = this.fights.get(player);
-
-        return fightTag.getTaggedPlayer();
-    }
-
     public void untag(UUID player) {
         this.fights.remove(player);
     }

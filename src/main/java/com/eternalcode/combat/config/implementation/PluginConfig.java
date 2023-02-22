@@ -17,7 +17,7 @@ public class PluginConfig implements ReloadableConfig {
     @Description("# Do you want to change the plugin messages?")
     public Messages messages = new Messages();
 
-    @Description("# Do you want to change the plugin settings?")
+    @Description({ " ", "# Do you want to change the plugin settings?" })
     public Settings settings = new Settings();
 
     @Override
@@ -33,7 +33,7 @@ public class PluginConfig implements ReloadableConfig {
         @Description({ " ", "# The length of time the combat is to last" })
         public Duration combatLogTime = Duration.ofSeconds(20);
 
-        @Description("# Combat log notification type, available types: ACTION_BAR, CHAT, TITLE, SUBTITLE")
+        @Description({ " ", "# Combat log notification type, available types: ACTION_BAR, CHAT, TITLE, SUBTITLE" })
         public NotificationType combatNotificationType = NotificationType.ACTION_BAR;
 
         @Description({ " ", "# Blocked commands that the player will not be able to use during combat" })
