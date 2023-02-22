@@ -1,4 +1,4 @@
-package com.eternalcode.combat.combat;
+package com.eternalcode.combat.fight;
 
 import com.eternalcode.combat.config.implementation.PluginConfig;
 import com.eternalcode.combat.notification.NotificationAnnouncer;
@@ -9,15 +9,15 @@ import panda.utilities.text.Formatter;
 
 import java.time.Duration;
 
-public class CombatTask implements Runnable {
+public class FightTask implements Runnable {
 
-    private final CombatManager combatManager;
+    private final FightManager fightManager;
     private final PluginConfig config;
     private final Server server;
     private final NotificationAnnouncer announcer;
 
-    public CombatTask(CombatManager combatManager, PluginConfig config, Server server, NotificationAnnouncer announcer) {
-        this.combatManager = combatManager;
+    public FightTask(FightManager fightManager, PluginConfig config, Server server, NotificationAnnouncer announcer) {
+        this.fightManager = fightManager;
         this.config = config;
         this.server = server;
         this.announcer = announcer;
@@ -25,15 +25,15 @@ public class CombatTask implements Runnable {
 
     @Override
     public void run() {
-        for (CombatTag combatTag : this.combatManager.getCombats()) {
-            Player player = this.server.getPlayer(combatTag.getTaggedPlayer());
+        for (FightTag fightTag : this.fightManager.getFights()) {
+            Player player = this.server.getPlayer(fightTag.getTaggedPlayer());
 
             if (player == null) {
                 return;
             }
 
-            if (!combatTag.isExpired()) {
-                Duration remaining = combatTag.getRemainingDuration();
+            if (!fightTag.isExpired()) {
+                Duration remaining = fightTag.getRemainingDuration();
 
                 Formatter formatter = new Formatter()
                     .register("{TIME}", DurationUtil.format(remaining));
@@ -44,7 +44,7 @@ public class CombatTask implements Runnable {
                 continue;
             }
 
-            this.combatManager.untag(combatTag.getTaggedPlayer());
+            this.fightManager.untag(fightTag.getTaggedPlayer());
             this.announcer.send(player, this.config.settings.combatNotificationType, this.config.messages.unTagPlayer);
         }
     }

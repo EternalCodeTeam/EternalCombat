@@ -1,9 +1,9 @@
 package com.eternalcode.combat;
 
 import com.eternalcode.combat.config.ConfigManager;
-import com.eternalcode.combat.notification.NotificationAnnouncer;
-import com.eternalcode.combat.combat.CombatManager;
 import com.eternalcode.combat.config.implementation.PluginConfig;
+import com.eternalcode.combat.fight.FightManager;
+import com.eternalcode.combat.notification.NotificationAnnouncer;
 import dev.rollczi.litecommands.argument.Arg;
 import dev.rollczi.litecommands.command.async.Async;
 import dev.rollczi.litecommands.command.execute.Execute;
@@ -19,18 +19,16 @@ import java.util.UUID;
 @Route(name = "combatlog", aliases = "combat")
 public class CombatCommand {
 
-    private final CombatManager combatManager;
+    private final FightManager fightManager;
     private final ConfigManager configManager;
     private final NotificationAnnouncer announcer;
     private final PluginConfig config;
-    private final Server server;
 
-    public CombatCommand(CombatManager combatManager, ConfigManager configManager, NotificationAnnouncer announcer, PluginConfig config, Server server) {
-        this.combatManager = combatManager;
+    public CombatCommand(FightManager fightManager, ConfigManager configManager, NotificationAnnouncer announcer, PluginConfig config) {
+        this.fightManager = fightManager;
         this.configManager = configManager;
         this.announcer = announcer;
         this.config = config;
-        this.server = server;
     }
 
     @Execute(route = "status", required = 1)
@@ -39,9 +37,12 @@ public class CombatCommand {
         UUID targetUniqueId = target.getUniqueId();
         PluginConfig.Messages messages = this.config.messages;
 
-        this.announcer.sendMessage(player, this.combatManager.isInCombat(targetUniqueId)
-            ? messages.inCombat
-            : messages.notInCombat);
+        Formatter formatter = new Formatter()
+            .register("{PLAYER}", target.getName());
+
+        this.announcer.sendMessage(player, this.fightManager.isInCombat(targetUniqueId)
+            ? formatter.format(messages.inCombat)
+            : formatter.format(messages.notInCombat));
     }
 
     @Execute(route = "tag", required = 1)
@@ -53,7 +54,7 @@ public class CombatCommand {
         Formatter formatter = new Formatter()
             .register("{PLAYER}", target.getName());
 
-        this.combatManager.tag(targetUniqueId, time);
+        this.fightManager.tag(targetUniqueId, time);
 
         String format = formatter.format(this.config.messages.adminTagPlayer);
         this.announcer.sendMessage(player, format);
@@ -74,8 +75,8 @@ public class CombatCommand {
             return;
         }
 
-        this.combatManager.tag(firstTargetUniqueId, combatTime);
-        this.combatManager.tag(secondTargetUniqueId, combatTime);
+        this.fightManager.tag(firstTargetUniqueId, combatTime);
+        this.fightManager.tag(secondTargetUniqueId, combatTime);
 
         Formatter formatter = new Formatter()
             .register("{FIRST_PLAYER}", firstTarget.getName())
@@ -91,27 +92,21 @@ public class CombatCommand {
     @Execute(route = "untag", required = 1)
     @Permission("eternalcombat.untag")
     void untag(Player player, @Arg Player target) {
-        UUID uniqueId = target.getUniqueId();
-        UUID enemyUuid = this.combatManager.getEnemy(uniqueId);
+        UUID targetUniqueId = target.getUniqueId();
 
-        Player enemy = this.server.getPlayer(enemyUuid);
-
-        if (enemy == null) {
+        if (!this.fightManager.isInCombat(targetUniqueId)) {
+            this.announcer.sendMessage(player, this.config.messages.playerIsNoInCombat);
             return;
         }
 
-        UUID enemyUniqueId = enemy.getUniqueId();
-
         this.announcer.sendMessage(target, this.config.messages.unTagPlayer);
-        this.announcer.sendMessage(enemy, this.config.messages.unTagPlayer);
-
-        this.combatManager.untag(uniqueId);
-        this.combatManager.untag(enemyUniqueId);
+        this.fightManager.untag(targetUniqueId);
 
         Formatter formatter = new Formatter()
             .register("{PLAYER}", target.getName());
 
         String format = formatter.format(this.config.messages.adminUnTagPlayer);
+
         this.announcer.sendMessage(player, format);
     }
 

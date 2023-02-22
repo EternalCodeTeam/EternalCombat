@@ -1,8 +1,8 @@
-package com.eternalcode.combat.combat.controller;
+package com.eternalcode.combat.fight.controller;
 
-import com.eternalcode.combat.notification.NotificationAnnouncer;
-import com.eternalcode.combat.combat.CombatManager;
 import com.eternalcode.combat.config.implementation.PluginConfig;
+import com.eternalcode.combat.fight.FightManager;
+import com.eternalcode.combat.notification.NotificationAnnouncer;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -13,14 +13,14 @@ import org.bukkit.event.player.PlayerCommandPreprocessEvent;
 
 import java.util.UUID;
 
-public class CombatActionBlockerController implements Listener {
+public class FightActionBlockerController implements Listener {
 
-    private final CombatManager combatManager;
+    private final FightManager fightManager;
     private final NotificationAnnouncer announcer;
     private final PluginConfig config;
 
-    public CombatActionBlockerController(CombatManager combatManager, NotificationAnnouncer announcer, PluginConfig config) {
-        this.combatManager = combatManager;
+    public FightActionBlockerController(FightManager fightManager, NotificationAnnouncer announcer, PluginConfig config) {
+        this.fightManager = fightManager;
         this.announcer = announcer;
         this.config = config;
     }
@@ -34,7 +34,7 @@ public class CombatActionBlockerController implements Listener {
         Player player = event.getPlayer();
         UUID uniqueId = player.getUniqueId();
 
-        if (!this.combatManager.isInCombat(uniqueId)) {
+        if (!this.fightManager.isInCombat(uniqueId)) {
             return;
         }
 
@@ -55,10 +55,10 @@ public class CombatActionBlockerController implements Listener {
             return;
         }
 
-        UUID uniqueId = event.getPlayer().getUniqueId();
         Player player = (Player) event.getPlayer();
+        UUID uniqueId = player.getUniqueId();
 
-        if (!this.combatManager.isInCombat(uniqueId)) {
+        if (!this.fightManager.isInCombat(uniqueId)) {
             return;
         }
 
@@ -72,20 +72,21 @@ public class CombatActionBlockerController implements Listener {
         Player player = event.getPlayer();
         UUID playerUniqueId = player.getUniqueId();
 
-        if (!this.combatManager.isInCombat(playerUniqueId)) {
+        if (!this.fightManager.isInCombat(playerUniqueId)) {
             return;
         }
 
-        String command = event.getMessage();
+        String command = event.getMessage().replace("/", "");
 
         for (String blockedCommand : this.config.settings.blockedCommands) {
-            if (!command.contains(blockedCommand)) {
-                return;
+            if (!command.startsWith(blockedCommand)) {
+                continue;
             }
 
             event.setCancelled(true);
 
             this.announcer.sendMessage(player, this.config.messages.cantUseCommand);
         }
+
     }
 }

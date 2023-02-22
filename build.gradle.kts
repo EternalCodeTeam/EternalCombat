@@ -43,17 +43,21 @@ dependencies {
     implementation("dev.rollczi.litecommands:bukkit-adventure:2.8.3")
 
     // cdn configs
-    implementation("net.dzikoysk:cdn:1.14.3")
+    implementation("net.dzikoysk:cdn:1.14.3") {
+        exclude(group = "org.jetbrains.kotlin")
+    }
 
     // GitCheck
     implementation("com.eternalcode:gitcheck:1.0.0")
 
+    // bstats
+    implementation("org.bstats:bstats-bukkit:3.0.0")
+
     // tests
     testImplementation("org.spigotmc:spigot-api:1.19.3-R0.1-SNAPSHOT")
-    testImplementation("org.codehaus.groovy:groovy-all:3.0.14")
     testImplementation("org.junit.jupiter:junit-jupiter-api:5.9.2")
     testImplementation("org.junit.jupiter:junit-jupiter-params:5.9.2")
-    testImplementation("com.github.seeseemelk:MockBukkit-v1.19:2.144.5")
+    testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:5.9.2")
 }
 
 bukkit {
@@ -107,10 +111,10 @@ tasks.withType<ShadowJar> {
         "org.panda-lang",
         "net.dzikoysk",
         "net.kyori",
+        "org.bstats",
         "dev.rollczi.litecommands",
         "com.eternalcode.gitcheck",
         "org.json.simple",
-        "kotlin"
     ).forEach { pack ->
         relocate(pack, "$prefix.$pack")
     }

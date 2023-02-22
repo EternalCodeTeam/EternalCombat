@@ -1,8 +1,8 @@
 package com.eternalcode.combat.command;
 
 
-import com.eternalcode.combat.notification.NotificationAnnouncer;
 import com.eternalcode.combat.config.implementation.PluginConfig;
+import com.eternalcode.combat.notification.NotificationAnnouncer;
 import dev.rollczi.litecommands.command.LiteInvocation;
 import dev.rollczi.litecommands.handle.InvalidUsageHandler;
 import dev.rollczi.litecommands.schematic.Schematic;
