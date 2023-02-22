@@ -57,6 +57,7 @@ public class PluginConfig implements ReloadableConfig {
         public String onlyForPlayers = "&cThis command is only available to players!";
         public String noPermission = "&cYou don't have permission to perform this command!";
         public String cantFindPlayer = "&cThe specified player could not be found!";
+        public String playerIsNoInCombat = "&cThis player is not in combat!";
         public String combatFormat = "&dCombat ends in: &f{TIME}";
         public String tagPlayer = "&cYou are in combat, do not leave the server!";
         public String unTagPlayer = "&aYou are no longer in combat! You can safely leave the server.";

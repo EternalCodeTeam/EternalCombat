@@ -23,14 +23,12 @@ public class CombatCommand {
     private final ConfigManager configManager;
     private final NotificationAnnouncer announcer;
     private final PluginConfig config;
-    private final Server server;
 
-    public CombatCommand(FightManager fightManager, ConfigManager configManager, NotificationAnnouncer announcer, PluginConfig config, Server server) {
+    public CombatCommand(FightManager fightManager, ConfigManager configManager, NotificationAnnouncer announcer, PluginConfig config) {
         this.fightManager = fightManager;
         this.configManager = configManager;
         this.announcer = announcer;
         this.config = config;
-        this.server = server;
     }
 
     @Execute(route = "status", required = 1)
@@ -91,14 +89,19 @@ public class CombatCommand {
     @Execute(route = "untag", required = 1)
     @Permission("eternalcombat.untag")
     void untag(Player player, @Arg Player target) {
-        Player enemy = this.server.getPlayer(target.getUniqueId());
+        if (target == null) {
+            return;
+        }
 
-        if (enemy == null) {
+        UUID targetUniqueId = target.getUniqueId();
+
+        if (!this.fightManager.isInCombat(targetUniqueId)) {
+            this.announcer.sendMessage(player, this.config.messages.playerIsNoInCombat);
             return;
         }
 
         this.announcer.sendMessage(target, this.config.messages.unTagPlayer);
-        this.fightManager.untag(enemy.getUniqueId());
+        this.fightManager.untag(targetUniqueId);
 
         Formatter formatter = new Formatter()
             .register("{PLAYER}", target.getName());
