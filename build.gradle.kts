@@ -54,6 +54,7 @@ dependencies {
     testImplementation("org.spigotmc:spigot-api:1.19.3-R0.1-SNAPSHOT")
     testImplementation("org.junit.jupiter:junit-jupiter-api:5.9.2")
     testImplementation("org.junit.jupiter:junit-jupiter-params:5.9.2")
+    testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:5.9.2")
 }
 
 bukkit {
@@ -94,8 +95,7 @@ tasks.withType<ShadowJar> {
         "org/intellij/lang/annotations/**",
         "org/jetbrains/annotations/**",
         "META-INF/**",
-        "javax/**",
-        "kotlin/**"
+        "javax/**"
     )
 
     mergeServiceFiles()

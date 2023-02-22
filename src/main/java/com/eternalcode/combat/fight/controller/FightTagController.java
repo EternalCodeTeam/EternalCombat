@@ -27,31 +27,31 @@ public class FightTagController implements Listener {
 
     @EventHandler
     void onEntityDamageByEntity(EntityDamageByEntityEvent event) {
-        if (!(event.getEntity() instanceof Player attacked)) {
+        if (!(event.getEntity() instanceof Player attackedPlayerByPerson)) {
             return;
         }
 
-        Player enemy = this.getDamager(event);
+        Player personToAddCombatTime = this.getDamager(event);
 
-        if (enemy == null) {
+        if (personToAddCombatTime == null) {
             return;
         }
 
         Duration combatTime = this.config.settings.combatLogTime;
 
-        UUID attackedUniqueId = attacked.getUniqueId();
-        UUID enemyUniqueId = enemy.getUniqueId();
+        UUID attackedUniqueId = attackedPlayerByPerson.getUniqueId();
+        UUID personToAddCombatTimeUniqueId = personToAddCombatTime.getUniqueId();
 
         if (!this.fightManager.isInCombat(attackedUniqueId)) {
-            this.announcer.sendMessage(enemy, this.config.messages.tagPlayer);
+            this.announcer.sendMessage(personToAddCombatTime, this.config.messages.tagPlayer);
         }
 
-        if (!this.fightManager.isInCombat(enemyUniqueId)) {
-            this.announcer.sendMessage(attacked, this.config.messages.tagPlayer);
+        if (!this.fightManager.isInCombat(personToAddCombatTimeUniqueId)) {
+            this.announcer.sendMessage(attackedPlayerByPerson, this.config.messages.tagPlayer);
         }
 
         this.fightManager.tag(attackedUniqueId, combatTime);
-        this.fightManager.tag(enemyUniqueId, combatTime);
+        this.fightManager.tag(personToAddCombatTimeUniqueId, combatTime);
     }
 
     @Nullable

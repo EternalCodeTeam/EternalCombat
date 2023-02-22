@@ -5,7 +5,6 @@ import java.time.Instant;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Map;
-import java.util.Optional;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -14,21 +13,18 @@ public class FightManager {
     private final Map<UUID, FightTag> fights = new ConcurrentHashMap<>();
 
     public boolean isInCombat(UUID player) {
-        return this.getTag(player).isPresent();
-    }
-
-    public Optional<FightTag> getTag(UUID player) {
         FightTag fightTag = this.fights.get(player);
 
         if (fightTag == null) {
-            return Optional.empty();
+            return false;
         }
 
         if (fightTag.isExpired()) {
-            return Optional.empty();
+            this.fights.remove(player);
+            return false;
         }
 
-        return Optional.of(fightTag);
+        return true;
     }
 
     public void untag(UUID player) {
@@ -51,4 +47,5 @@ public class FightManager {
     public void untagAll() {
         this.fights.clear();
     }
+
 }

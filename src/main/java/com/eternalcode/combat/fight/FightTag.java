@@ -10,8 +10,8 @@ public class FightTag {
 
     private final Instant endOfCombatLog;
 
-    FightTag(UUID enemy, Instant endOfCombatLog) {
-        this.taggedPlayer = enemy;
+    FightTag(UUID personToAddCombat, Instant endOfCombatLog) {
+        this.taggedPlayer = personToAddCombat;
         this.endOfCombatLog = endOfCombatLog;
     }
 

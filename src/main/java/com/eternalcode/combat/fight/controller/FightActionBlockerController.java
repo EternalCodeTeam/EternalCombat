@@ -76,7 +76,7 @@ public class FightActionBlockerController implements Listener {
             return;
         }
 
-        String command = event.getMessage();
+        String command = event.getMessage().replace("/", "");
 
         for (String blockedCommand : this.config.settings.blockedCommands) {
             if (!command.startsWith(blockedCommand)) {
