@@ -37,9 +37,12 @@ public class CombatCommand {
         UUID targetUniqueId = target.getUniqueId();
         PluginConfig.Messages messages = this.config.messages;
 
+        Formatter formatter = new Formatter()
+            .register("{PLAYER}", target.getName());
+
         this.announcer.sendMessage(player, this.fightManager.isInCombat(targetUniqueId)
-            ? messages.inCombat
-            : messages.notInCombat);
+            ? formatter.format(messages.inCombat)
+            : formatter.format(messages.notInCombat));
     }
 
     @Execute(route = "tag", required = 1)

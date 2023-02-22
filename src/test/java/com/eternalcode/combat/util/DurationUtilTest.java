@@ -33,10 +33,10 @@ class DurationUtilTest {
 
             { "1h 30m 30s", true, Duration.ofHours(1).plusMinutes(30).plusSeconds(30).plusMillis(500) },
             { "1h 30m 30.5s", false, Duration.ofHours(1).plusMinutes(30).plusSeconds(30).plusMillis(500) },
-            { "26h 3m 4s", true, Duration.ofDays(1).plusHours(2).plusMinutes(3).plusSeconds(4).plusMillis(500) },
             { "1h 1m 1s", true, Duration.ofHours(1).plusMinutes(1).plusSeconds(1) },
             { "23h 59m 59s", true, Duration.ofHours(23).plusMinutes(59).plusSeconds(59) },
             { "23h 59m 59s", true, Duration.ofHours(23).plusMinutes(59).plusSeconds(59).plusMillis(999) },
+            { "26h 3m 4s", true, Duration.ofDays(1).plusHours(2).plusMinutes(3).plusSeconds(4).plusMillis(500) },
             { "1h 1m 1s", true, Duration.ofHours(1).plusMinutes(1).plusSeconds(1).plusMillis(1) },
 
             { "1h 1s", true, Duration.ofHours(1).plusSeconds(1) },
