@@ -89,10 +89,6 @@ public class CombatCommand {
     @Execute(route = "untag", required = 1)
     @Permission("eternalcombat.untag")
     void untag(Player player, @Arg Player target) {
-        if (target == null) {
-            return;
-        }
-
         UUID targetUniqueId = target.getUniqueId();
 
         if (!this.fightManager.isInCombat(targetUniqueId)) {
