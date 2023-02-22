@@ -50,6 +50,9 @@ dependencies {
     // GitCheck
     implementation("com.eternalcode:gitcheck:1.0.0")
 
+    // bstats
+    implementation("org.bstats:bstats-bukkit:3.0.0")
+
     // tests
     testImplementation("org.spigotmc:spigot-api:1.19.3-R0.1-SNAPSHOT")
     testImplementation("org.junit.jupiter:junit-jupiter-api:5.9.2")
@@ -108,6 +111,7 @@ tasks.withType<ShadowJar> {
         "org.panda-lang",
         "net.dzikoysk",
         "net.kyori",
+        "org.bstats",
         "dev.rollczi.litecommands",
         "com.eternalcode.gitcheck",
         "org.json.simple",

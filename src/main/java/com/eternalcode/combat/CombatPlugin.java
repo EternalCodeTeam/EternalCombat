@@ -21,6 +21,7 @@ import dev.rollczi.litecommands.bukkit.tools.BukkitPlayerArgument;
 import net.kyori.adventure.platform.AudienceProvider;
 import net.kyori.adventure.platform.bukkit.BukkitAudiences;
 import net.kyori.adventure.text.minimessage.MiniMessage;
+import org.bstats.bukkit.Metrics;
 import org.bukkit.Server;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
@@ -65,6 +66,8 @@ public final class CombatPlugin extends JavaPlugin {
 
         FightTask fightTask = new FightTask(this.fightManager, pluginConfig, server, notificationAnnouncer);
         this.getServer().getScheduler().runTaskTimerAsynchronously(this, fightTask, 20L, 20L);
+
+        new Metrics(this, 17803);
 
         Stream.of(
             new FightTagController(this.fightManager, pluginConfig, notificationAnnouncer),
