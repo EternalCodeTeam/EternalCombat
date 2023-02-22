@@ -13,11 +13,11 @@ public class FightManager {
     private final Map<UUID, FightTag> fights = new ConcurrentHashMap<>();
 
     public boolean isInCombat(UUID player) {
-        FightTag fightTag = this.fights.get(player);
-
-        if (fightTag == null) {
+        if (!this.fights.containsKey(player)) {
             return false;
         }
+
+        FightTag fightTag = this.fights.get(player);
 
         if (fightTag.isExpired()) {
             this.fights.remove(player);
