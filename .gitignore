@@ -1,4 +1,8 @@
+.classpath
 .idea
 .gradle
-run
+.project
+.settings
+bin
 build
+run
