@@ -4,8 +4,8 @@ plugins {
     `java-library`
     checkstyle
 
-    id("net.minecrell.plugin-yml.bukkit") version "0.5.2"
-    id("com.github.johnrengelman.shadow") version "7.1.2"
+    id("net.minecrell.plugin-yml.bukkit") version "0.5.3"
+    id("com.github.johnrengelman.shadow") version "8.0.0"
     id("xyz.jpenilla.run-paper") version "2.0.1"
 }
 
@@ -40,7 +40,7 @@ dependencies {
     implementation("net.kyori:adventure-text-minimessage:4.12.0")
 
     // litecommands
-    implementation("dev.rollczi.litecommands:bukkit-adventure:2.8.3")
+    implementation("dev.rollczi.litecommands:bukkit-adventure:2.8.4")
 
     // cdn configs
     implementation("net.dzikoysk:cdn:1.14.3") {
@@ -51,7 +51,7 @@ dependencies {
     implementation("com.eternalcode:gitcheck:1.0.0")
 
     // bstats
-    implementation("org.bstats:bstats-bukkit:3.0.0")
+    implementation("org.bstats:bstats-bukkit:3.0.1")
 
     // tests
     testImplementation("org.spigotmc:spigot-api:1.19.3-R0.1-SNAPSHOT")
