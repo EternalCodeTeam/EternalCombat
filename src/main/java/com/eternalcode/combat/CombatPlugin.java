@@ -7,7 +7,6 @@ import com.eternalcode.combat.config.implementation.PluginConfig;
 import com.eternalcode.combat.fight.FightManager;
 import com.eternalcode.combat.fight.FightTask;
 import com.eternalcode.combat.fight.controller.FightActionBlockerController;
-import com.eternalcode.combat.fight.controller.FightActionDamageController;
 import com.eternalcode.combat.fight.controller.FightTagController;
 import com.eternalcode.combat.fight.controller.FightUnTagController;
 import com.eternalcode.combat.notification.NotificationAnnouncer;
@@ -74,7 +73,6 @@ public final class CombatPlugin extends JavaPlugin {
             new FightTagController(this.fightManager, pluginConfig, notificationAnnouncer),
             new FightUnTagController(this.fightManager, pluginConfig, notificationAnnouncer),
             new FightActionBlockerController(this.fightManager, notificationAnnouncer, pluginConfig),
-            new FightActionDamageController(this.fightManager, pluginConfig, notificationAnnouncer),
             new UpdaterNotificationController(updaterService, pluginConfig, this.audienceProvider, miniMessage)
         ).forEach(listener -> this.getServer().getPluginManager().registerEvents(listener, this));
 

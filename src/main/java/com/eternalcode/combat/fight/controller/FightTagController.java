@@ -9,9 +9,11 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
+import org.bukkit.event.entity.EntityDamageEvent;
 
 import javax.annotation.Nullable;
 import java.time.Duration;
+import java.util.List;
 import java.util.UUID;
 
 public class FightTagController implements Listener {
@@ -53,6 +55,34 @@ public class FightTagController implements Listener {
 
         this.fightManager.tag(attackedUniqueId, combatTime);
         this.fightManager.tag(personToAddCombatTimeUniqueId, combatTime);
+    }
+
+    @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
+    void onEntityDamage(EntityDamageEvent event) {
+        if (!this.config.settings.enableDamageCauses) {
+            return;
+        }
+
+        if (!(event.getEntity() instanceof Player player)) {
+            return;
+        }
+
+        Duration combatTime = this.config.settings.combatLogTime;
+
+        UUID uuid = player.getUniqueId();
+
+        List<EntityDamageEvent.DamageCause> damageCauses = this.config.settings.damageCauses;
+        EntityDamageEvent.DamageCause cause = event.getCause();
+
+        if (!damageCauses.contains(cause)) {
+            return;
+        }
+
+        if (!this.fightManager.isInCombat(uuid)) {
+            this.announcer.sendMessage(player, this.config.messages.tagPlayer);
+        }
+
+        this.fightManager.tag(uuid, combatTime);
     }
 
     @Nullable
