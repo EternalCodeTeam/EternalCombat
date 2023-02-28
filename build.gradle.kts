@@ -101,9 +101,6 @@ tasks.withType<ShadowJar> {
         "javax/**"
     )
 
-    mergeServiceFiles()
-    minimize()
-
     val prefix = "com.eternalcode.combat.libs"
     listOf(
         "panda.std",
