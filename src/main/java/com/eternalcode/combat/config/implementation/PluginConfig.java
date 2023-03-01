@@ -56,10 +56,11 @@ public class PluginConfig implements ReloadableConfig {
         public boolean enableDamageCauses = true;
 
         @Description({ " ", "# After what type of damage the player should get a combat log?",
-        "# You can find a list of all stocks here: https://hub.spigotmc.org/javadocs/spigot/org/bukkit/event/entity/EntityDamageEvent.DamageCause.html" })
+        "# You can find a list of all stocks here: https://hub.spigotmc.org/javadocs/spigot/org/bukkit/event/entity/EntityDamageEvent.DamageCause.html",
+        "# If you don't want the combatlog to be given to players for a certain damage type, simply remove it from this list" })
         public List<EntityDamageEvent.DamageCause> damageCauses = new ImmutableList.Builder<EntityDamageEvent.DamageCause>()
             .add(EntityDamageEvent.DamageCause.LAVA)
-            .add(EntityDamageEvent.DamageCause.FALL)
+            .add(EntityDamageEvent.DamageCause.CONTACT)
             .add(EntityDamageEvent.DamageCause.FIRE)
             .add(EntityDamageEvent.DamageCause.FIRE_TICK)
             .build();
