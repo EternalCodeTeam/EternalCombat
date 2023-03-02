@@ -7,6 +7,7 @@ import net.dzikoysk.cdn.entity.Contextual;
 import net.dzikoysk.cdn.entity.Description;
 import net.dzikoysk.cdn.source.Resource;
 import net.dzikoysk.cdn.source.Source;
+import org.bukkit.event.entity.EntityDamageEvent;
 
 import java.io.File;
 import java.time.Duration;
@@ -50,6 +51,19 @@ public class PluginConfig implements ReloadableConfig {
 
         @Description({ " ", "# From which level should place blocks be blocked?" })
         public int blockPlaceLevel = 40;
+
+        @Description({ " ", "# Should the option below be enabled?" })
+        public boolean enableDamageCauses = true;
+
+        @Description({ " ", "# After what type of damage the player should get a combat log?",
+        "# You can find a list of all stocks here: https://hub.spigotmc.org/javadocs/spigot/org/bukkit/event/entity/EntityDamageEvent.DamageCause.html",
+        "# If you don't want the combatlog to be given to players for a certain damage type, simply remove it from this list" })
+        public List<EntityDamageEvent.DamageCause> damageCauses = new ImmutableList.Builder<EntityDamageEvent.DamageCause>()
+            .add(EntityDamageEvent.DamageCause.LAVA)
+            .add(EntityDamageEvent.DamageCause.CONTACT)
+            .add(EntityDamageEvent.DamageCause.FIRE)
+            .add(EntityDamageEvent.DamageCause.FIRE_TICK)
+            .build();
     }
 
     @Contextual
