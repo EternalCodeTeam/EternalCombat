@@ -10,7 +10,7 @@ plugins {
 }
 
 group = "com.eternalcode"
-version = "1.0.1"
+version = "1.0.2"
 
 checkstyle {
     toolVersion = "10.7.0"
@@ -93,6 +93,8 @@ tasks.withType<ShadowJar> {
     archiveFileName.set("EternalCombat v${project.version} (MC 1.8.8-1.19x).jar")
 
     dependsOn("checkstyleMain")
+    dependsOn("checkstyleTest")
+    dependsOn("test")
 
     exclude(
         "org/intellij/lang/annotations/**",
