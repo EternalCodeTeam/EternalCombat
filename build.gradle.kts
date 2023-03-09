@@ -5,7 +5,7 @@ plugins {
     checkstyle
 
     id("net.minecrell.plugin-yml.bukkit") version "0.5.3"
-    id("com.github.johnrengelman.shadow") version "8.0.0"
+    id("com.github.johnrengelman.shadow") version "8.1.0"
     id("xyz.jpenilla.run-paper") version "2.0.1"
 }
 
@@ -13,7 +13,7 @@ group = "com.eternalcode"
 version = "1.0.2"
 
 checkstyle {
-    toolVersion = "10.7.0"
+    toolVersion = "10.8.1"
 
     configFile = file("${rootDir}/config/checkstyle/checkstyle.xml")
 
@@ -40,10 +40,10 @@ dependencies {
     implementation("net.kyori:adventure-text-minimessage:4.12.0")
 
     // litecommands
-    implementation("dev.rollczi.litecommands:bukkit-adventure:2.8.4")
+    implementation("dev.rollczi.litecommands:bukkit-adventure:2.8.6")
 
     // cdn configs
-    implementation("net.dzikoysk:cdn:1.14.3") {
+    implementation("net.dzikoysk:cdn:1.14.4") {
         exclude(group = "org.jetbrains.kotlin")
     }
 
