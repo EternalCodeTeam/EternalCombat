@@ -5,7 +5,7 @@ plugins {
     checkstyle
 
     id("net.minecrell.plugin-yml.bukkit") version "0.5.3"
-    id("com.github.johnrengelman.shadow") version "8.1.0"
+    id("com.github.johnrengelman.shadow") version "8.1.1"
     id("xyz.jpenilla.run-paper") version "2.0.1"
 }
 
@@ -13,7 +13,7 @@ group = "com.eternalcode"
 version = "1.0.2"
 
 checkstyle {
-    toolVersion = "10.8.1"
+    toolVersion = "10.9.3"
 
     configFile = file("${rootDir}/config/checkstyle/checkstyle.xml")
 
@@ -36,8 +36,8 @@ dependencies {
     compileOnly("org.spigotmc:spigot-api:1.19.3-R0.1-SNAPSHOT")
 
     // kyori
-    implementation("net.kyori:adventure-platform-bukkit:4.2.0")
-    implementation("net.kyori:adventure-text-minimessage:4.12.0")
+    implementation("net.kyori:adventure-platform-bukkit:4.3.0")
+    implementation("net.kyori:adventure-text-minimessage:4.13.0")
 
     // litecommands
     implementation("dev.rollczi.litecommands:bukkit-adventure:2.8.6")
@@ -51,7 +51,7 @@ dependencies {
     implementation("com.eternalcode:gitcheck:1.0.0")
 
     // bstats
-    implementation("org.bstats:bstats-bukkit:3.0.1")
+    implementation("org.bstats:bstats-bukkit:3.0.2")
 
     // tests
     testImplementation("org.spigotmc:spigot-api:1.19.3-R0.1-SNAPSHOT")
