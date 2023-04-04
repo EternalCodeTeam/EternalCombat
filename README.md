@@ -10,17 +10,17 @@
 [![Discord](https://raw.githubusercontent.com/intergrav/devins-badges/v3/assets/cozy/social/discord-plural_vector.svg)](https://discord.gg/FQ7jmGBd6c)
 
 [![Gradle](https://raw.githubusercontent.com/intergrav/devins-badges/v3/assets/cozy/built-with/gradle_vector.svg)](https://gradle.org/)
-[![Java](https://raw.githubusercontent.com/intergrav/devins-badges/v3/assets/cozy/built-with/java11_vector.svg)](https://www.java.com/)
+[![Java](https://raw.githubusercontent.com/intergrav/devins-badges/v3/assets/cozy/built-with/java17_vector.svg)](https://www.java.com/)
 </div>
 
 ### Information
 
 EternalCombat has been tested on Minecraft versions 1.17.1 to 1.19.3, but it should work on most other versions. If you
 encounter any compatibility issues, please report them in the
-[Issues tab](https://github.com/EternalCodeTeam/EternalCombat/issues). The plugin requires Java 11 or later, so please
+[Issues tab](https://github.com/EternalCodeTeam/EternalCombat/issues). The plugin requires Java 17 or later, so please
 make sure it is installed on your server.
 
-### Permissions for CombatLog
+### Permissions for EternalCombat
 
 - `eternalcombat.status` - Allows to check if the player is in combat `/combatlog status <player>`
 - `eternalcombat.tag` - Allows to create fights between two
