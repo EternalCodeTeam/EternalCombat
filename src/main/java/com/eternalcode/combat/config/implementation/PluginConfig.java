@@ -70,7 +70,7 @@ public class PluginConfig implements ReloadableConfig {
         @Description({ " ", "# Whether the player should get potion effects during combat?" })
         public boolean givePotionEffects = true;
 
-        @Description({ " ", "# What potion effects should the player get after getting the combatlog?",
+        @Description({ " ", "# What potion effects should the player get after getting tagged?",
         "# You can find full list of potion effect types here: https://hub.spigotmc.org/javadocs/spigot/org/bukkit/potion/PotionEffectType.html",
         "# Amplifiers in Minecraft start with number 0, so one is zero, etc. " })
         public List<PotionEffect> potionEffects = new ImmutableList.Builder<PotionEffect>()
