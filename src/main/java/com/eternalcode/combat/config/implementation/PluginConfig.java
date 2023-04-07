@@ -72,9 +72,9 @@ public class PluginConfig implements ReloadableConfig {
 
         @Description({ " ", "# What potion effects should the player get after getting the combatlog?",
         "# You can find full list of potion effect types here: https://hub.spigotmc.org/javadocs/spigot/org/bukkit/potion/PotionEffectType.html",
-        "# " })
+        "# Amplifier zero is in minecraft one, one is two etc.  " })
         public List<PotionEffect> potionEffects = new ImmutableList.Builder<PotionEffect>()
-            .add(new PotionEffect(PotionEffectType.SLOW_DIGGING, 20 * 20, 2))
+            .add(new PotionEffect(PotionEffectType.JUMP, 20 * 20, 2))
             .add(new PotionEffect(PotionEffectType.FAST_DIGGING, 20 * 20, 0))
             .build();
     }
