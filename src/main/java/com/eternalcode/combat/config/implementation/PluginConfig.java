@@ -67,7 +67,7 @@ public class PluginConfig implements ReloadableConfig {
             .add(EntityDamageEvent.DamageCause.FIRE_TICK)
             .build();
 
-        @Description({ " ", "# Whether the player should get potion effects during the combatlog?" })
+        @Description({ " ", "# Whether the player should get potion effects during combat?" })
         public boolean givePotionEffects = true;
 
         @Description({ " ", "# What potion effects should the player get after getting the combatlog?",
