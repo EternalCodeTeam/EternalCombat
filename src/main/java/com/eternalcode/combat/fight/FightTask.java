@@ -12,12 +12,14 @@ import java.time.Duration;
 public class FightTask implements Runnable {
 
     private final FightManager fightManager;
+    private final FightPotionEffectManager fightPotionEffectManager;
     private final PluginConfig config;
     private final Server server;
     private final NotificationAnnouncer announcer;
 
-    public FightTask(FightManager fightManager, PluginConfig config, Server server, NotificationAnnouncer announcer) {
+    public FightTask(FightManager fightManager, FightPotionEffectManager fightPotionEffectManager, PluginConfig config, Server server, NotificationAnnouncer announcer) {
         this.fightManager = fightManager;
+        this.fightPotionEffectManager = fightPotionEffectManager;
         this.config = config;
         this.server = server;
         this.announcer = announcer;
@@ -44,6 +46,7 @@ public class FightTask implements Runnable {
                 continue;
             }
 
+            this.fightPotionEffectManager.restorePotionEffects(player);
             this.fightManager.untag(fightTag.getTaggedPlayer());
             this.announcer.send(player, this.config.settings.combatNotificationType, this.config.messages.unTagPlayer);
         }

@@ -5,6 +5,7 @@ import com.eternalcode.combat.command.PermissionMessage;
 import com.eternalcode.combat.config.ConfigManager;
 import com.eternalcode.combat.config.implementation.PluginConfig;
 import com.eternalcode.combat.fight.FightManager;
+import com.eternalcode.combat.fight.FightPotionEffectManager;
 import com.eternalcode.combat.fight.FightTask;
 import com.eternalcode.combat.fight.controller.FightActionBlockerController;
 import com.eternalcode.combat.fight.controller.FightTagController;
@@ -33,6 +34,7 @@ import java.util.stream.Stream;
 public final class CombatPlugin extends JavaPlugin {
 
     private FightManager fightManager;
+    private FightPotionEffectManager fightPotionEffectManager;
     private AudienceProvider audienceProvider;
     private LiteCommands<CommandSender> liteCommands;
 
@@ -45,6 +47,7 @@ public final class CombatPlugin extends JavaPlugin {
         PluginConfig pluginConfig = configManager.load(new PluginConfig());
 
         this.fightManager = new FightManager();
+        this.fightPotionEffectManager = new FightPotionEffectManager();
         UpdaterService updaterService = new UpdaterService(this.getDescription());
 
         this.audienceProvider = BukkitAudiences.create(this);
@@ -64,13 +67,13 @@ public final class CombatPlugin extends JavaPlugin {
 
             .register();
 
-        FightTask fightTask = new FightTask(this.fightManager, pluginConfig, server, notificationAnnouncer);
-        this.getServer().getScheduler().runTaskTimerAsynchronously(this, fightTask, 20L, 20L);
+        FightTask fightTask = new FightTask(this.fightManager, this.fightPotionEffectManager, pluginConfig, server, notificationAnnouncer);
+        this.getServer().getScheduler().runTaskTimer(this, fightTask, 20L, 20L);
 
         new Metrics(this, 17803);
 
         Stream.of(
-            new FightTagController(this.fightManager, pluginConfig, notificationAnnouncer),
+            new FightTagController(this.fightManager, this.fightPotionEffectManager, pluginConfig, notificationAnnouncer),
             new FightUnTagController(this.fightManager, pluginConfig, notificationAnnouncer),
             new FightActionBlockerController(this.fightManager, notificationAnnouncer, pluginConfig),
             new UpdaterNotificationController(updaterService, pluginConfig, this.audienceProvider, miniMessage)

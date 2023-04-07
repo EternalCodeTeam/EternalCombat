@@ -8,6 +8,8 @@ import net.dzikoysk.cdn.entity.Description;
 import net.dzikoysk.cdn.source.Resource;
 import net.dzikoysk.cdn.source.Source;
 import org.bukkit.event.entity.EntityDamageEvent;
+import org.bukkit.potion.PotionEffect;
+import org.bukkit.potion.PotionEffectType;
 
 import java.io.File;
 import java.time.Duration;
@@ -63,6 +65,17 @@ public class PluginConfig implements ReloadableConfig {
             .add(EntityDamageEvent.DamageCause.CONTACT)
             .add(EntityDamageEvent.DamageCause.FIRE)
             .add(EntityDamageEvent.DamageCause.FIRE_TICK)
+            .build();
+
+        @Description({ " ", "# Whether the player should get potion effects during the combatlog?" })
+        public boolean givePotionEffects = true;
+
+        @Description({ " ", "# What potion effects should the player get after getting the combatlog?",
+        "# You can find full list of potion effect types here: https://hub.spigotmc.org/javadocs/spigot/org/bukkit/potion/PotionEffectType.html",
+        "# " })
+        public List<PotionEffect> potionEffects = new ImmutableList.Builder<PotionEffect>()
+            .add(new PotionEffect(PotionEffectType.SLOW_DIGGING, 20 * 20, 2))
+            .add(new PotionEffect(PotionEffectType.FAST_DIGGING, 20 * 20, 0))
             .build();
     }
 

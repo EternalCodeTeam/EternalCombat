@@ -2,6 +2,7 @@ package com.eternalcode.combat.fight.controller;
 
 import com.eternalcode.combat.config.implementation.PluginConfig;
 import com.eternalcode.combat.fight.FightManager;
+import com.eternalcode.combat.fight.FightPotionEffectManager;
 import com.eternalcode.combat.notification.NotificationAnnouncer;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Projectile;
@@ -10,6 +11,7 @@ import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
+import org.bukkit.potion.PotionEffect;
 
 import javax.annotation.Nullable;
 import java.time.Duration;
@@ -19,11 +21,13 @@ import java.util.UUID;
 public class FightTagController implements Listener {
 
     private final FightManager fightManager;
+    private final FightPotionEffectManager fightPotionEffectManager;
     private final PluginConfig config;
     private final NotificationAnnouncer announcer;
 
-    public FightTagController(FightManager fightManager, PluginConfig config, NotificationAnnouncer announcer) {
+    public FightTagController(FightManager fightManager, FightPotionEffectManager fightPotionEffectManager, PluginConfig config, NotificationAnnouncer announcer) {
         this.fightManager = fightManager;
+        this.fightPotionEffectManager = fightPotionEffectManager;
         this.config = config;
         this.announcer = announcer;
     }
@@ -52,6 +56,12 @@ public class FightTagController implements Listener {
         if (!this.fightManager.isInCombat(personToAddCombatTimeUniqueId)) {
             this.announcer.sendMessage(attackedPlayerByPerson, this.config.messages.tagPlayer);
         }
+
+        this.fightPotionEffectManager.addPlayerPotionEffects(attackedPlayerByPerson);
+        this.fightPotionEffectManager.addPlayerPotionEffects(personToAddCombatTime);
+
+        this.givePotionEffects(attackedPlayerByPerson);
+        this.givePotionEffects(personToAddCombatTime);
 
         this.fightManager.tag(attackedUniqueId, combatTime);
         this.fightManager.tag(personToAddCombatTimeUniqueId, combatTime);
@@ -82,6 +92,10 @@ public class FightTagController implements Listener {
             this.announcer.sendMessage(player, this.config.messages.tagPlayer);
         }
 
+        this.fightPotionEffectManager.addPlayerPotionEffects(player);
+
+        this.givePotionEffects(player);
+
         this.fightManager.tag(uuid, combatTime);
     }
 
@@ -96,6 +110,16 @@ public class FightTagController implements Listener {
         }
 
         return null;
+    }
+
+    private void givePotionEffects(Player player) {
+        if (!this.config.settings.givePotionEffects) {
+            return;
+        }
+
+        for (PotionEffect potionEffect : this.config.settings.potionEffects) {
+            player.addPotionEffect(potionEffect);
+        }
     }
 
 }
