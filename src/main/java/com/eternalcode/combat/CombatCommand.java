@@ -9,7 +9,6 @@ import dev.rollczi.litecommands.command.async.Async;
 import dev.rollczi.litecommands.command.execute.Execute;
 import dev.rollczi.litecommands.command.permission.Permission;
 import dev.rollczi.litecommands.command.route.Route;
-import org.bukkit.Server;
 import org.bukkit.entity.Player;
 import panda.utilities.text.Formatter;
 
@@ -41,8 +40,8 @@ public class CombatCommand {
             .register("{PLAYER}", target.getName());
 
         this.announcer.sendMessage(player, this.fightManager.isInCombat(targetUniqueId)
-            ? formatter.format(messages.inCombat)
-            : formatter.format(messages.notInCombat));
+            ? formatter.format(messages.admin.playerInCombat)
+            : formatter.format(messages.admin.adminPlayerNotInCombat));
     }
 
     @Execute(route = "tag", required = 1)
@@ -56,7 +55,7 @@ public class CombatCommand {
 
         this.fightManager.tag(targetUniqueId, time);
 
-        String format = formatter.format(this.config.messages.adminTagPlayer);
+        String format = formatter.format(this.config.messages.admin.adminTagPlayer);
         this.announcer.sendMessage(player, format);
     }
 
@@ -71,7 +70,7 @@ public class CombatCommand {
         UUID playerUniqueId = player.getUniqueId();
 
         if (playerUniqueId.equals(firstTargetUniqueId) || playerUniqueId.equals(secondTargetUniqueId)) {
-            this.announcer.sendMessage(player, messages.cantTagSelf);
+            this.announcer.sendMessage(player, messages.admin.adminCantTagSelf);
             return;
         }
 
@@ -82,7 +81,7 @@ public class CombatCommand {
             .register("{FIRST_PLAYER}", firstTarget.getName())
             .register("{SECOND_PLAYER}", secondTarget.getName());
 
-        String format = formatter.format(messages.adminTagPlayerMultiple);
+        String format = formatter.format(messages.admin.adminTagPlayerMultiple);
         this.announcer.sendMessage(player, format);
 
         this.announcer.sendMessage(firstTarget, messages.tagPlayer);
@@ -95,7 +94,7 @@ public class CombatCommand {
         UUID targetUniqueId = target.getUniqueId();
 
         if (!this.fightManager.isInCombat(targetUniqueId)) {
-            this.announcer.sendMessage(player, this.config.messages.playerIsNoInCombat);
+            this.announcer.sendMessage(player, this.config.messages.admin.adminPlayerIsNoInCombat);
             return;
         }
 
@@ -105,7 +104,7 @@ public class CombatCommand {
         Formatter formatter = new Formatter()
             .register("{PLAYER}", target.getName());
 
-        String format = formatter.format(this.config.messages.adminUnTagPlayer);
+        String format = formatter.format(this.config.messages.admin.adminUnTagPlayer);
 
         this.announcer.sendMessage(player, format);
     }
@@ -115,6 +114,6 @@ public class CombatCommand {
     @Permission("eternalcombat.reload")
     void execute(Player player) {
         this.configManager.reload();
-        this.announcer.sendMessage(player, this.config.messages.reload);
+        this.announcer.sendMessage(player, this.config.messages.admin.reload);
     }
 }
