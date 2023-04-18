@@ -75,7 +75,7 @@ public class PluginConfig implements ReloadableConfig {
         @Description("# Do you want to change the admin messages?")
         public Admin admin = new Admin();
 
-        @Description({ " ", "# Combat log message format, eg. on the actionbar (you can use {TIME} variable to display the time left in combat" })
+        @Description({ " ", "# Combat log message format, eg. on the actionbar (you can use {TIME} variable to display the time left in combat)" })
         public String combatFormat = "&dCombat ends in: &f{TIME}";
 
         @Description("# Message sent when the player does not have permission to perform a command")
