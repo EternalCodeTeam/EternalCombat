@@ -76,17 +76,16 @@ public class FightActionBlockerController implements Listener {
             return;
         }
 
-        String command = event.getMessage().replace("/", "");
+        String command = event.getMessage().split(" ")[0].substring(1).toLowerCase();
+        boolean commandBlocked = this.config.settings.blockedCommands.contains(command);
+        PluginConfig.CommandBlockingMode mode = this.config.settings.commandBlockingMode;
 
-        for (String blockedCommand : this.config.settings.blockedCommands) {
-            if (!command.startsWith(blockedCommand)) {
-                continue;
-            }
+        boolean shouldCancel = (mode == PluginConfig.CommandBlockingMode.BLACKLIST) == commandBlocked;
 
+        if (shouldCancel) {
             event.setCancelled(true);
-
             this.announcer.sendMessage(player, this.config.messages.cantUseCommand);
         }
-
     }
+
 }

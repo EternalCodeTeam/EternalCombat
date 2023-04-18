@@ -38,6 +38,9 @@ public class PluginConfig implements ReloadableConfig {
         @Description("# Combat log notification type, available types: ACTION_BAR, CHAT, TITLE, SUBTITLE")
         public NotificationType combatNotificationType = NotificationType.ACTION_BAR;
 
+        @Description("# Command blocking mode, available modes: WHITELIST, BLACKLIST")
+        public CommandBlockingMode commandBlockingMode = CommandBlockingMode.BLACKLIST;
+
         @Description("# Blocked commands that the player will not be able to use during combat")
         public List<String> blockedCommands = new ImmutableList.Builder<String>()
             .add("gamemode")
@@ -137,5 +140,10 @@ public class PluginConfig implements ReloadableConfig {
             @Description("# Message sent when admin tries to tag themselves")
             public String adminCantTagSelf = "&cYou cannot tag yourself!";
         }
+    }
+
+    public enum CommandBlockingMode {
+        WHITELIST,
+        BLACKLIST
     }
 }
