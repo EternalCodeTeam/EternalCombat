@@ -79,7 +79,7 @@ public class FightActionBlockerController implements Listener {
 
         String command = event.getMessage().split(" ")[0].substring(1).toLowerCase();
 
-        boolean isMatchCommand = this.config.settings.blockedCommands.stream()
+        boolean isMatchCommand = this.config.settings.blockedCommandsList.stream()
             .anyMatch(command::startsWith);
 
         FightCommandMode mode = this.config.settings.fightCommandMode;

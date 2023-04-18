@@ -47,7 +47,7 @@ public class PluginConfig implements ReloadableConfig {
             "# Based on BLACKLIST mode, all commands in the list is blocked, and all others are allowed",
             "# Based on WHITELIST mode, all commands in the list is allowed, and all others are blocked",
         })
-        public List<String> blockedCommands = new ImmutableList.Builder<String>()
+        public List<String> blockedCommandsList = new ImmutableList.Builder<String>()
             .add("gamemode")
             .add("tp")
             .build();
