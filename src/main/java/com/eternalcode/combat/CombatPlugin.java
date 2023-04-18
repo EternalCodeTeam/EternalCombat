@@ -55,7 +55,7 @@ public final class CombatPlugin extends JavaPlugin {
         NotificationAnnouncer notificationAnnouncer = new NotificationAnnouncer(this.audienceProvider, miniMessage);
         this.liteCommands = LiteBukkitAdventurePlatformFactory.builder(server, "eternalcombat", this.audienceProvider)
             .argument(Player.class, new BukkitPlayerArgument<>(this.getServer(), pluginConfig.messages.cantFindPlayer))
-            .contextualBind(Player.class, new BukkitOnlyPlayerContextual<>(pluginConfig.messages.onlyForPlayers))
+            .contextualBind(Player.class, new BukkitOnlyPlayerContextual<>(pluginConfig.messages.admin.onlyForPlayers))
 
             .invalidUsageHandler(new InvalidUsage(pluginConfig, notificationAnnouncer))
             .permissionHandler(new PermissionMessage(pluginConfig, notificationAnnouncer))
