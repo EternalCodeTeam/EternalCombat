@@ -1,6 +1,7 @@
 package com.eternalcode.combat.config.implementation;
 
 import com.eternalcode.combat.config.ReloadableConfig;
+import com.eternalcode.combat.fight.FightCommandMode;
 import com.eternalcode.combat.notification.NotificationType;
 import com.google.common.collect.ImmutableList;
 import net.dzikoysk.cdn.entity.Contextual;
@@ -38,8 +39,15 @@ public class PluginConfig implements ReloadableConfig {
         @Description("# Combat log notification type, available types: ACTION_BAR, CHAT, TITLE, SUBTITLE")
         public NotificationType combatNotificationType = NotificationType.ACTION_BAR;
 
-        @Description("# Blocked commands that the player will not be able to use during combat")
-        public List<String> blockedCommands = new ImmutableList.Builder<String>()
+        @Description("# Command blocking mode, available modes: WHITELIST, BLACKLIST")
+        public FightCommandMode fightCommandMode = FightCommandMode.BLACKLIST;
+
+        @Description({
+            "# List of commands based of the mode above",
+            "# Based on BLACKLIST mode, all commands in the list is blocked, and all others are allowed",
+            "# Based on WHITELIST mode, all commands in the list is allowed, and all others are blocked",
+        })
+        public List<String> fightCommandsList = new ImmutableList.Builder<String>()
             .add("gamemode")
             .add("tp")
             .build();
@@ -138,4 +146,5 @@ public class PluginConfig implements ReloadableConfig {
             public String adminCantTagSelf = "&cYou cannot tag yourself!";
         }
     }
+    
 }
