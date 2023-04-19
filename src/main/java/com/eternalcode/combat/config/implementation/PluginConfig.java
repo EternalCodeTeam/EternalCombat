@@ -73,7 +73,7 @@ public class PluginConfig implements ReloadableConfig {
             "# If you want disable placing only specific blocks, enable blockPlace and add blocks to this list above",
             "# If you want disable this feature completely, disable blockPlace option above",
         })
-        public List<Material> preventPlaceSpecificBlocks = new ImmutableList.Builder<Material>().build();
+        public List<Material> preventPlaceSpecificBlocks = List.of();
 
         @Description("# Should the option below be enabled?")
         public boolean enableDamageCauses = true;
