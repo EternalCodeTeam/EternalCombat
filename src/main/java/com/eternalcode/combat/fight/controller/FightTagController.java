@@ -34,6 +34,10 @@ public class FightTagController implements Listener {
             return;
         }
 
+        if (this.isPlayerInDisabledWorld(attackedPlayerByPerson)) {
+            return;
+        }
+
         Player personToAddCombatTime = this.getDamager(event);
 
         if (personToAddCombatTime == null) {
@@ -67,6 +71,10 @@ public class FightTagController implements Listener {
             return;
         }
 
+        if (this.isPlayerInDisabledWorld(player)) {
+            return;
+        }
+
         Duration combatTime = this.config.settings.combatLogTime;
 
         UUID uuid = player.getUniqueId();
@@ -96,6 +104,12 @@ public class FightTagController implements Listener {
         }
 
         return null;
+    }
+
+    private boolean isPlayerInDisabledWorld(Player player) {
+        String worldName = player.getWorld().getName();
+
+        return this.config.settings.disabledWorlds.contains(worldName);
     }
 
 }
