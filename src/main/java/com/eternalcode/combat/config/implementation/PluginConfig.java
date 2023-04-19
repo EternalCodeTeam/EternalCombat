@@ -36,6 +36,11 @@ public class PluginConfig implements ReloadableConfig {
         @Description("# The length of time the combat is to last")
         public Duration combatLogTime = Duration.ofSeconds(20);
 
+        @Description("# List of worlds to ignore")
+        public List<String> disabledWorlds = new ImmutableList.Builder<String>()
+            .add("your_world")
+            .build();
+
         @Description("# Combat log notification type, available types: ACTION_BAR, CHAT, TITLE, SUBTITLE")
         public NotificationType combatNotificationType = NotificationType.ACTION_BAR;
 
