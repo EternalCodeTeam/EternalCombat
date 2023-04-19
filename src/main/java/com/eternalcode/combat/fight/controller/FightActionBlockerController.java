@@ -4,6 +4,7 @@ import com.eternalcode.combat.config.implementation.PluginConfig;
 import com.eternalcode.combat.fight.FightCommandMode;
 import com.eternalcode.combat.fight.FightManager;
 import com.eternalcode.combat.notification.NotificationAnnouncer;
+import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -28,7 +29,7 @@ public class FightActionBlockerController implements Listener {
 
     @EventHandler
     void onPlace(BlockPlaceEvent event) {
-        if (!this.config.settings.blockPlace) {
+        if (!this.config.settings.preventPlace) {
             return;
         }
 
@@ -42,12 +43,18 @@ public class FightActionBlockerController implements Listener {
         Block block = event.getBlock();
         int level = block.getY();
 
-        if (level > this.config.settings.blockPlaceLevel) {
-            return;
+        boolean isBlockPlaceLevel = level > this.config.settings.blockPlaceLevel;
+        if (isBlockPlaceLevel && this.config.settings.preventPlaceSpecificBlocks.isEmpty()) {
+            event.setCancelled(true);
+            this.announcer.sendMessage(player, this.config.messages.blockPlaceBlocked);
         }
 
-        event.setCancelled(true);
-        this.announcer.sendMessage(player, this.config.messages.blockPlaceBlocked);
+        Material blockMaterial = block.getType();
+        boolean isBlockInDisabledList = this.config.settings.preventPlaceSpecificBlocks.contains(blockMaterial);
+        if (isBlockPlaceLevel && isBlockInDisabledList) {
+            event.setCancelled(true);
+            this.announcer.sendMessage(player, this.config.messages.blockPlaceBlocked);
+        }
     }
 
     @EventHandler
