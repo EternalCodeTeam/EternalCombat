@@ -8,6 +8,7 @@ import net.dzikoysk.cdn.entity.Contextual;
 import net.dzikoysk.cdn.entity.Description;
 import net.dzikoysk.cdn.source.Resource;
 import net.dzikoysk.cdn.source.Source;
+import org.bukkit.Material;
 import org.bukkit.event.entity.EntityDamageEvent;
 
 import java.io.File;
@@ -61,10 +62,18 @@ public class PluginConfig implements ReloadableConfig {
         public boolean blockingInventories = true;
 
         @Description("# Whether to block the placement of blocks?")
-        public boolean blockPlace = true;
+        public boolean preventPlace = true;
 
         @Description("# From which level should place blocks be blocked?")
         public int blockPlaceLevel = 40;
+
+        @Description({
+            "# Disable placing specific blocks?",
+            "# If you want to block all blocks, enable blockPlace and make this list empty",
+            "# If you want disable placing only specific blocks, enable blockPlace and add blocks to this list above",
+            "# If you want disable this feature completely, disable blockPlace option above",
+        })
+        public List<Material> preventPlaceSpecificBlocks = List.of();
 
         @Description("# Should the option below be enabled?")
         public boolean enableDamageCauses = true;
@@ -119,7 +128,7 @@ public class PluginConfig implements ReloadableConfig {
         public String inventoryBlocked = "&cYou cannot open this inventory during combat!";
 
         @Description("# Message sent when player tries to place a block, but the block place is blocked")
-        public String blockPlaceBlocked = "&cYou cannot place blocks during combat below 40 blocks!";
+        public String blockPlaceBlocked = "&cYou cannot place below 40Y coordinate during combat!";
 
         @Contextual
         public static class Admin {
