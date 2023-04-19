@@ -32,7 +32,7 @@ public class FightUnTagController implements Listener {
             return;
         }
 
-        this.announcer.sendMessage(player, this.config.messages.unTagPlayer);
+        this.announcer.sendMessage(player, this.config.messages.playerUntagged);
         this.fightManager.untag(player.getUniqueId());
     }
 
@@ -47,7 +47,7 @@ public class FightUnTagController implements Listener {
         Formatter formatter = new Formatter()
             .register("{PLAYER}", player.getName());
 
-        String format = formatter.format(this.config.messages.playerLoggedInCombat);
+        String format = formatter.format(this.config.messages.playerLoggedOutDuringCombat);
 
         this.fightManager.untag(player.getUniqueId());
         this.announcer.broadcast(player, format);

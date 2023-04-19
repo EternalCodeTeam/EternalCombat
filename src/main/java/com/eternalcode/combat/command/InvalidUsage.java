@@ -29,7 +29,7 @@ public class InvalidUsage implements InvalidUsageHandler<CommandSender> {
             Formatter formatter = new Formatter()
                 .register("{USAGE}", schematic);
 
-            this.announcer.sendMessage(commandSender, formatter.format(this.config.messages.invalidUsage));
+            this.announcer.sendMessage(commandSender, formatter.format(this.config.messages.invalidCommandUsage));
         }
     }
 }

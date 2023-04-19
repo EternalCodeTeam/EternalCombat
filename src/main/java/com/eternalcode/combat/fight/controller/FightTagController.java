@@ -44,17 +44,17 @@ public class FightTagController implements Listener {
             return;
         }
 
-        Duration combatTime = this.config.settings.combatLogTime;
+        Duration combatTime = this.config.settings.combatDuration;
 
         UUID attackedUniqueId = attackedPlayerByPerson.getUniqueId();
         UUID personToAddCombatTimeUniqueId = personToAddCombatTime.getUniqueId();
 
         if (!this.fightManager.isInCombat(attackedUniqueId)) {
-            this.announcer.sendMessage(personToAddCombatTime, this.config.messages.tagPlayer);
+            this.announcer.sendMessage(personToAddCombatTime, this.config.messages.playerTagged);
         }
 
         if (!this.fightManager.isInCombat(personToAddCombatTimeUniqueId)) {
-            this.announcer.sendMessage(attackedPlayerByPerson, this.config.messages.tagPlayer);
+            this.announcer.sendMessage(attackedPlayerByPerson, this.config.messages.playerTagged);
         }
 
         this.fightManager.tag(attackedUniqueId, combatTime);
@@ -63,7 +63,7 @@ public class FightTagController implements Listener {
 
     @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
     void onEntityDamage(EntityDamageEvent event) {
-        if (!this.config.settings.enableDamageCauses) {
+        if (!this.config.settings.shouldEnableDamageCauses) {
             return;
         }
 
@@ -75,11 +75,11 @@ public class FightTagController implements Listener {
             return;
         }
 
-        Duration combatTime = this.config.settings.combatLogTime;
+        Duration combatTime = this.config.settings.combatDuration;
 
         UUID uuid = player.getUniqueId();
 
-        List<EntityDamageEvent.DamageCause> damageCauses = this.config.settings.damageCauses;
+        List<EntityDamageEvent.DamageCause> damageCauses = this.config.settings.damageCausesToLog;
         EntityDamageEvent.DamageCause cause = event.getCause();
 
         if (!damageCauses.contains(cause)) {
@@ -87,7 +87,7 @@ public class FightTagController implements Listener {
         }
 
         if (!this.fightManager.isInCombat(uuid)) {
-            this.announcer.sendMessage(player, this.config.messages.tagPlayer);
+            this.announcer.sendMessage(player, this.config.messages.playerTagged);
         }
 
         this.fightManager.tag(uuid, combatTime);
@@ -109,7 +109,7 @@ public class FightTagController implements Listener {
     private boolean isPlayerInDisabledWorld(Player player) {
         String worldName = player.getWorld().getName();
 
-        return this.config.settings.disabledWorlds.contains(worldName);
+        return this.config.settings.worldsToIgnore.contains(worldName);
     }
 
 }

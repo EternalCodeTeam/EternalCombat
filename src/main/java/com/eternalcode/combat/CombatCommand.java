@@ -48,7 +48,7 @@ public class CombatCommand {
     @Permission("eternalcombat.tag")
     void tag(Player player, @Arg Player target) {
         UUID targetUniqueId = target.getUniqueId();
-        Duration time = this.config.settings.combatLogTime;
+        Duration time = this.config.settings.combatDuration;
 
         Formatter formatter = new Formatter()
             .register("{PLAYER}", target.getName());
@@ -62,7 +62,7 @@ public class CombatCommand {
     @Execute(route = "tag", required = 2)
     @Permission("eternalcombat.tag")
     public void tagMultiple(Player player, @Arg Player firstTarget, @Arg Player secondTarget) {
-        Duration combatTime = this.config.settings.combatLogTime;
+        Duration combatTime = this.config.settings.combatDuration;
         PluginConfig.Messages messages = this.config.messages;
 
         UUID firstTargetUniqueId = firstTarget.getUniqueId();
@@ -70,7 +70,7 @@ public class CombatCommand {
         UUID playerUniqueId = player.getUniqueId();
 
         if (playerUniqueId.equals(firstTargetUniqueId) || playerUniqueId.equals(secondTargetUniqueId)) {
-            this.announcer.sendMessage(player, messages.admin.adminCantTagSelf);
+            this.announcer.sendMessage(player, messages.admin.adminCannotTagSelf);
             return;
         }
 
@@ -81,11 +81,11 @@ public class CombatCommand {
             .register("{FIRST_PLAYER}", firstTarget.getName())
             .register("{SECOND_PLAYER}", secondTarget.getName());
 
-        String format = formatter.format(messages.admin.adminTagPlayerMultiple);
+        String format = formatter.format(messages.admin.adminTagMultiplePlayers);
         this.announcer.sendMessage(player, format);
 
-        this.announcer.sendMessage(firstTarget, messages.tagPlayer);
-        this.announcer.sendMessage(secondTarget, messages.tagPlayer);
+        this.announcer.sendMessage(firstTarget, messages.playerTagged);
+        this.announcer.sendMessage(secondTarget, messages.playerTagged);
     }
 
     @Execute(route = "untag", required = 1)
@@ -94,17 +94,17 @@ public class CombatCommand {
         UUID targetUniqueId = target.getUniqueId();
 
         if (!this.fightManager.isInCombat(targetUniqueId)) {
-            this.announcer.sendMessage(player, this.config.messages.admin.adminPlayerIsNoInCombat);
+            this.announcer.sendMessage(player, this.config.messages.admin.adminPlayerNotInCombat);
             return;
         }
 
-        this.announcer.sendMessage(target, this.config.messages.unTagPlayer);
+        this.announcer.sendMessage(target, this.config.messages.playerUntagged);
         this.fightManager.untag(targetUniqueId);
 
         Formatter formatter = new Formatter()
             .register("{PLAYER}", target.getName());
 
-        String format = formatter.format(this.config.messages.admin.adminUnTagPlayer);
+        String format = formatter.format(this.config.messages.admin.adminUntagPlayer);
 
         this.announcer.sendMessage(player, format);
     }

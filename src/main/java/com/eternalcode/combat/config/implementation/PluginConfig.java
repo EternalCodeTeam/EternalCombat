@@ -3,7 +3,6 @@ package com.eternalcode.combat.config.implementation;
 import com.eternalcode.combat.config.ReloadableConfig;
 import com.eternalcode.combat.fight.FightCommandMode;
 import com.eternalcode.combat.notification.NotificationType;
-import com.google.common.collect.ImmutableList;
 import net.dzikoysk.cdn.entity.Contextual;
 import net.dzikoysk.cdn.entity.Description;
 import net.dzikoysk.cdn.source.Resource;
@@ -31,107 +30,108 @@ public class PluginConfig implements ReloadableConfig {
     @Contextual
     public static class Settings {
 
-        @Description("# Whether the player after entering the server should receive information about the new version of the plugin?")
-        public boolean receiveUpdates = true;
+        @Description("# Whether the player should receive information about new plugin updates upon joining the server")
+        public boolean shouldReceivePluginUpdates = true;
 
-        @Description("# The length of time the combat is to last")
-        public Duration combatLogTime = Duration.ofSeconds(20);
+        @Description("# The duration of combat in seconds")
+        public Duration combatDuration = Duration.ofSeconds(20);
 
         @Description("# List of worlds to ignore")
-        public List<String> disabledWorlds = new ImmutableList.Builder<String>()
-            .add("your_world")
-            .build();
+        public List<String> worldsToIgnore = List.of(
+            "your_world"
+        );
 
         @Description("# Combat log notification type, available types: ACTION_BAR, CHAT, TITLE, SUBTITLE")
-        public NotificationType combatNotificationType = NotificationType.ACTION_BAR;
+        public NotificationType notificationType = NotificationType.ACTION_BAR;
 
         @Description("# Command blocking mode, available modes: WHITELIST, BLACKLIST")
-        public FightCommandMode fightCommandMode = FightCommandMode.BLACKLIST;
+        public FightCommandMode commandBlockingMode = FightCommandMode.BLACKLIST;
 
         @Description({
-            "# List of commands based of the mode above",
-            "# Based on BLACKLIST mode, all commands in the list is blocked, and all others are allowed",
-            "# Based on WHITELIST mode, all commands in the list is allowed, and all others are blocked",
+            "# List of commands based on the mode above",
+            "# Based on BLACKLIST mode, all commands in the list are blocked, and all others are allowed",
+            "# Based on WHITELIST mode, all commands in the list are allowed, and all others are blocked",
         })
-        public List<String> fightCommandsList = new ImmutableList.Builder<String>()
-            .add("gamemode")
-            .add("tp")
-            .build();
+        public List<String> blockedCommands = List.of(
+            "gamemode",
+            "spawn",
+            "tp"
+        );
 
         @Description("# Block the opening of inventory?")
-        public boolean blockingInventories = true;
+        public boolean shouldPreventInventoryOpening = true;
 
         @Description("# Whether to block the placement of blocks?")
-        public boolean preventPlace = true;
+        public boolean shouldPreventBlockPlacing = true;
 
-        @Description("# From which level should place blocks be blocked?")
-        public int blockPlaceLevel = 40;
+        @Description("# The minimum Y level at which block placing is blocked")
+        public int minBlockPlacingLevel = 40;
 
         @Description({
             "# Disable placing specific blocks?",
-            "# If you want to block all blocks, enable blockPlace and make this list empty",
-            "# If you want disable placing only specific blocks, enable blockPlace and add blocks to this list above",
-            "# If you want disable this feature completely, disable blockPlace option above",
+            "# If you want to block all blocks, enable shouldPreventBlockPlacing and make this list empty",
+            "# If you want to disable placing only specific blocks, enable shouldPreventBlockPlacing and add blocks to this list above",
+            "# If you want to disable this feature completely, disable shouldPreventBlockPlacing option above",
         })
-        public List<Material> preventPlaceSpecificBlocks = List.of();
+        public List<Material> specificBlocksToPreventPlacing = List.of();
 
         @Description("# Should the option below be enabled?")
-        public boolean enableDamageCauses = true;
+        public boolean shouldEnableDamageCauses = true;
 
         @Description({
             "# After what type of damage the player should get a combat log?",
-            "# You can find a list of all stocks here: https://hub.spigotmc.org/javadocs/spigot/org/bukkit/event/entity/EntityDamageEvent.DamageCause.html",
-            "# If you don't want the combatlog to be given to players for a certain damage type, simply remove it from this list"
+            "# You can find a list of all causes here: https://hub.spigotmc.org/javadocs/spigot/org/bukkit/event/entity/EntityDamageEvent.DamageCause.html",
+            "# If you don't want the combat log to be given to players for a certain damage type, simply remove it from this list"
         })
-        public List<EntityDamageEvent.DamageCause> damageCauses = new ImmutableList.Builder<EntityDamageEvent.DamageCause>()
-            .add(EntityDamageEvent.DamageCause.LAVA)
-            .add(EntityDamageEvent.DamageCause.CONTACT)
-            .add(EntityDamageEvent.DamageCause.FIRE)
-            .add(EntityDamageEvent.DamageCause.FIRE_TICK)
-            .build();
+        public List<EntityDamageEvent.DamageCause> damageCausesToLog = List.of(
+            EntityDamageEvent.DamageCause.LAVA,
+            EntityDamageEvent.DamageCause.CONTACT,
+            EntityDamageEvent.DamageCause.FIRE,
+            EntityDamageEvent.DamageCause.FIRE_TICK
+        );
     }
 
     @Contextual
     public static class Messages {
 
         @Description("# Do you want to change the admin messages?")
-        public Admin admin = new Admin();
+        public AdminMessages admin = new AdminMessages();
 
-        @Description({ " ", "# Combat log message format, eg. on the actionbar (you can use {TIME} variable to display the time left in combat)" })
+        @Description({ " ", "# Combat log message format, e.g. on the actionbar (you can use {TIME} variable to display the time left in combat)" })
         public String combatFormat = "&dCombat ends in: &f{TIME}";
 
         @Description("# Message sent when the player does not have permission to perform a command")
         public String noPermission = "&cYou don't have permission to perform this command!";
 
-        @Description("# Message sent when the player is not in combat")
-        public String cantFindPlayer = "&cThe specified player could not be found!";
+        @Description("# Message sent when the specified player could not be found")
+        public String playerNotFound = "&cThe specified player could not be found!";
 
-        @Description("# Message sent when the player enter to combat")
-        public String tagPlayer = "&cYou are in combat, do not leave the server!";
+        @Description("# Message sent when the player enters combat")
+        public String playerTagged = "&cYou are in combat, do not leave the server!";
 
-        @Description("# Message sent when the player leave combat")
-        public String unTagPlayer = "&aYou are no longer in combat! You can safely leave the server.";
+        @Description("# Message sent when the player leaves combat")
+        public String playerUntagged = "&aYou are no longer in combat! You can safely leave the server.";
 
         @Description("# This is broadcast when the player is in combat and logs out")
-        public String playerLoggedInCombat = "&c{PLAYER} logged off during the fight!";
+        public String playerLoggedOutDuringCombat = "&c{PLAYER} logged off during the fight!";
 
         @Description({
             "# Message sent when the player is in combat and tries to use a disabled command",
             "# you can configure the list of disabled commands in the blockedCommands section of the config.yml file"
         })
-        public String cantUseCommand = "&cUsing this command during combat is prohibited!";
+        public String commandDisabledDuringCombat = "&cUsing this command during combat is prohibited!";
 
         @Description("# Message sent when player tries to use a command with invalid arguments")
-        public String invalidUsage = "&7Correct usage: &e{USAGE}.";
+        public String invalidCommandUsage = "&7Correct usage: &e{USAGE}";
 
         @Description("# Message sent when player tries to open inventory, but the inventory open is blocked")
-        public String inventoryBlocked = "&cYou cannot open this inventory during combat!";
+        public String inventoryBlockedDuringCombat = "&cYou cannot open this inventory during combat!";
 
         @Description("# Message sent when player tries to place a block, but the block place is blocked")
-        public String blockPlaceBlocked = "&cYou cannot place below 40Y coordinate during combat!";
+        public String blockPlacingBlockedDuringCombat = "&cYou cannot place below 40Y coordinate during combat!";
 
         @Contextual
-        public static class Admin {
+        public static class AdminMessages {
             @Description("# Message sent when the configuration is reloaded")
             public String reload = "&aConfiguration has been successfully reloaded!";
 
@@ -142,23 +142,23 @@ public class PluginConfig implements ReloadableConfig {
             public String adminTagPlayer = "&7You have tagged &e{PLAYER}";
 
             @Description("# Message sent when a player is tagged by an admin")
-            public String adminTagPlayerMultiple = "&7You have tagged &e{FIRST_PLAYER}&7 and &e{SECOND_PLAYER}&7.";
+            public String adminTagMultiplePlayers = "&7You have tagged &e{FIRST_PLAYER}&7 and &e{SECOND_PLAYER}&7.";
 
             @Description("# Message sent to admin when they remove a player from combat")
-            public String adminUnTagPlayer = "&7You have removed &e{PLAYER}&7 from the fight.";
+            public String adminUntagPlayer = "&7You have removed &e{PLAYER}&7 from the fight.";
 
             @Description("# Message sent when the player is not in combat")
-            public String adminPlayerIsNoInCombat = "&cThis player is not in combat!";
+            public String adminPlayerNotInCombat = "&cThis player is not in combat!";
 
             @Description("# Message sent when the player is in combat")
-            public String playerInCombat = "&c{PLAYER} is in the middle of a fight!";
+            public String playerInCombat = "&c{PLAYER} is currently in combat!";
 
             @Description("# Message sent when a player is not in combat")
-            public String adminPlayerNotInCombat = "&a{PLAYER} is not in combat";
+            public String playerNotInCombat = "&a{PLAYER} is not currently in combat.";
 
-            @Description("# Message sent when admin tries to tag themselves")
-            public String adminCantTagSelf = "&cYou cannot tag yourself!";
+            @Description("# Message sent when an admin tries to tag themselves")
+            public String adminCannotTagSelf = "&cYou cannot tag yourself!";
         }
     }
-    
+
 }
