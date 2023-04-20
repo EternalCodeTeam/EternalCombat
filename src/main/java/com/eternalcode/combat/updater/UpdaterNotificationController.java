@@ -32,7 +32,7 @@ public class UpdaterNotificationController implements Listener {
         Player player = event.getPlayer();
         Audience audience = this.audienceProvider.player(player.getUniqueId());
 
-        if (!player.hasPermission("eternalcombat.receiveupdates") || !this.pluginConfig.settings.receiveUpdates) {
+        if (!player.hasPermission("eternalcombat.receiveupdates") || !this.pluginConfig.settings.shouldReceivePluginUpdates) {
             return;
         }
 

@@ -13,6 +13,7 @@ import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.inventory.InventoryOpenEvent;
 import org.bukkit.event.player.PlayerCommandPreprocessEvent;
 
+import java.util.List;
 import java.util.UUID;
 
 public class FightActionBlockerController implements Listener {
@@ -29,7 +30,7 @@ public class FightActionBlockerController implements Listener {
 
     @EventHandler
     void onPlace(BlockPlaceEvent event) {
-        if (!this.config.settings.preventPlace) {
+        if (!this.config.settings.shouldPreventBlockPlacing) {
             return;
         }
 
@@ -43,23 +44,25 @@ public class FightActionBlockerController implements Listener {
         Block block = event.getBlock();
         int level = block.getY();
 
-        boolean isBlockPlaceLevel = level > this.config.settings.blockPlaceLevel;
-        if (isBlockPlaceLevel && this.config.settings.preventPlaceSpecificBlocks.isEmpty()) {
+        List<Material> specificBlocksToPreventPlacing = this.config.settings.specificBlocksToPreventPlacing;
+
+        boolean isBlockPlaceLevel = level > this.config.settings.minBlockPlacingLevel;
+        if (isBlockPlaceLevel && specificBlocksToPreventPlacing.isEmpty()) {
             event.setCancelled(true);
-            this.announcer.sendMessage(player, this.config.messages.blockPlaceBlocked);
+            this.announcer.sendMessage(player, this.config.messages.blockPlacingBlockedDuringCombat);
         }
 
         Material blockMaterial = block.getType();
-        boolean isBlockInDisabledList = this.config.settings.preventPlaceSpecificBlocks.contains(blockMaterial);
+        boolean isBlockInDisabledList = specificBlocksToPreventPlacing.contains(blockMaterial);
         if (isBlockPlaceLevel && isBlockInDisabledList) {
             event.setCancelled(true);
-            this.announcer.sendMessage(player, this.config.messages.blockPlaceBlocked);
+            this.announcer.sendMessage(player, this.config.messages.blockPlacingBlockedDuringCombat);
         }
     }
 
     @EventHandler
     void onOpenInventory(InventoryOpenEvent event) {
-        if (!this.config.settings.blockingInventories) {
+        if (!this.config.settings.shouldPreventInventoryOpening) {
             return;
         }
 
@@ -72,7 +75,7 @@ public class FightActionBlockerController implements Listener {
 
         event.setCancelled(true);
 
-        this.announcer.sendMessage(player, this.config.messages.inventoryBlocked);
+        this.announcer.sendMessage(player, this.config.messages.inventoryBlockedDuringCombat);
     }
 
     @EventHandler
@@ -86,16 +89,16 @@ public class FightActionBlockerController implements Listener {
 
         String command = event.getMessage().split(" ")[0].substring(1).toLowerCase();
 
-        boolean isMatchCommand = this.config.settings.fightCommandsList.stream()
+        boolean isMatchCommand = this.config.settings.blockedCommands.stream()
             .anyMatch(command::startsWith);
 
-        FightCommandMode mode = this.config.settings.fightCommandMode;
+        FightCommandMode mode = this.config.settings.commandBlockingMode;
 
         boolean shouldCancel = mode.shouldBlock(isMatchCommand);
 
         if (shouldCancel) {
             event.setCancelled(true);
-            this.announcer.sendMessage(player, this.config.messages.cantUseCommand);
+            this.announcer.sendMessage(player, this.config.messages.commandDisabledDuringCombat);
         }
     }
 

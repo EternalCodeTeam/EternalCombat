@@ -39,13 +39,13 @@ public class FightTask implements Runnable {
                     .register("{TIME}", DurationUtil.format(remaining));
 
                 String format = formatter.format(this.config.messages.combatFormat);
-                this.announcer.send(player, this.config.settings.combatNotificationType, format);
+                this.announcer.send(player, this.config.settings.notificationType, format);
 
                 continue;
             }
 
             this.fightManager.untag(fightTag.getTaggedPlayer());
-            this.announcer.send(player, this.config.settings.combatNotificationType, this.config.messages.unTagPlayer);
+            this.announcer.send(player, this.config.settings.notificationType, this.config.messages.playerUntagged);
         }
     }
 }
