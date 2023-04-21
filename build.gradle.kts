@@ -50,6 +50,9 @@ dependencies {
     // GitCheck
     implementation("com.eternalcode:gitcheck:1.0.0")
 
+    // commons
+    implementation("org.apache.commons:commons-io:1.3.2")
+
     // bstats
     implementation("org.bstats:bstats-bukkit:3.0.2")
 
@@ -114,6 +117,7 @@ tasks.withType<ShadowJar> {
         "dev.rollczi.litecommands",
         "com.eternalcode.gitcheck",
         "org.json.simple",
+        "org.apache.commons"
     ).forEach { pack ->
         relocate(pack, "$prefix.$pack")
     }

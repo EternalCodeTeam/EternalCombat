@@ -2,6 +2,7 @@ package com.eternalcode.combat;
 
 import com.eternalcode.combat.command.InvalidUsage;
 import com.eternalcode.combat.command.PermissionMessage;
+import com.eternalcode.combat.config.ConfigBackupService;
 import com.eternalcode.combat.config.ConfigManager;
 import com.eternalcode.combat.config.implementation.PluginConfig;
 import com.eternalcode.combat.fight.FightManager;
@@ -27,6 +28,7 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 
+import java.io.File;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Stream;
 
@@ -41,7 +43,9 @@ public final class CombatPlugin extends JavaPlugin {
         Stopwatch started = Stopwatch.createStarted();
         Server server = this.getServer();
 
-        ConfigManager configManager = new ConfigManager(this.getDataFolder());
+        File dataFolder = this.getDataFolder();
+        ConfigBackupService backupService = new ConfigBackupService(dataFolder);
+        ConfigManager configManager = new ConfigManager(backupService, dataFolder);
         PluginConfig pluginConfig = configManager.load(new PluginConfig());
 
         this.fightManager = new FightManager();

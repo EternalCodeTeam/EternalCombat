@@ -11,6 +11,8 @@ import java.util.Set;
 
 public class ConfigManager {
 
+    private final ConfigBackupService backupService;
+
     private final Cdn cdn = CdnFactory
         .createYamlLike()
         .getSettings()
@@ -20,11 +22,14 @@ public class ConfigManager {
     private final Set<ReloadableConfig> configs = new HashSet<>();
     private final File dataFolder;
 
-    public ConfigManager(File dataFolder) {
+    public ConfigManager(ConfigBackupService backupService, File dataFolder) {
+        this.backupService = backupService;
         this.dataFolder = dataFolder;
     }
 
     public <T extends ReloadableConfig> T load(T config) {
+        this.backupService.createBackup();
+
         this.cdn.load(config.resource(this.dataFolder), config)
             .orThrow(RuntimeException::new);
 
