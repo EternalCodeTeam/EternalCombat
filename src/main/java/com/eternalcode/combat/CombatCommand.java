@@ -9,6 +9,7 @@ import dev.rollczi.litecommands.command.async.Async;
 import dev.rollczi.litecommands.command.execute.Execute;
 import dev.rollczi.litecommands.command.permission.Permission;
 import dev.rollczi.litecommands.command.route.Route;
+import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import panda.utilities.text.Formatter;
 
@@ -32,7 +33,7 @@ public class CombatCommand {
 
     @Execute(route = "status", required = 1)
     @Permission("eternalcombat.status")
-    void status(Player player, @Arg Player target) {
+    void status(CommandSender player, @Arg Player target) {
         UUID targetUniqueId = target.getUniqueId();
         PluginConfig.Messages messages = this.config.messages;
 
@@ -112,7 +113,7 @@ public class CombatCommand {
     @Async
     @Execute(route = "reload")
     @Permission("eternalcombat.reload")
-    void execute(Player player) {
+    void execute(CommandSender player) {
         this.configManager.reload();
         this.announcer.sendMessage(player, this.config.messages.admin.reload);
     }
