@@ -6,14 +6,14 @@ plugins {
 
     id("net.minecrell.plugin-yml.bukkit") version "0.5.3"
     id("com.github.johnrengelman.shadow") version "8.1.1"
-    id("xyz.jpenilla.run-paper") version "2.0.1"
+    id("xyz.jpenilla.run-paper") version "2.1.0"
 }
 
 group = "com.eternalcode"
 version = "1.0.3"
 
 checkstyle {
-    toolVersion = "10.9.3"
+    toolVersion = "10.11.0"
 
     configFile = file("${rootDir}/config/checkstyle/checkstyle.xml")
 
@@ -58,9 +58,9 @@ dependencies {
 
     // tests
     testImplementation("org.spigotmc:spigot-api:1.19.3-R0.1-SNAPSHOT")
-    testImplementation("org.junit.jupiter:junit-jupiter-api:5.9.2")
-    testImplementation("org.junit.jupiter:junit-jupiter-params:5.9.2")
-    testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:5.9.2")
+    testImplementation("org.junit.jupiter:junit-jupiter-api:5.9.3")
+    testImplementation("org.junit.jupiter:junit-jupiter-params:5.9.3")
+    testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:5.9.3")
 }
 
 bukkit {
