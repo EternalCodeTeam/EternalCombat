@@ -10,6 +10,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockPlaceEvent;
+import org.bukkit.event.entity.EntityToggleGlideEvent;
 import org.bukkit.event.inventory.InventoryOpenEvent;
 import org.bukkit.event.player.PlayerCommandPreprocessEvent;
 
@@ -61,6 +62,24 @@ public class FightActionBlockerController implements Listener {
     }
 
     @EventHandler
+    public void onToggleGlide(EntityToggleGlideEvent event) {
+        if (!this.config.settings.shouldPreventElytraUsage) {
+            return;
+        }
+
+        Player player = event.getEntity() instanceof Player ? (Player) event.getEntity() : null;
+        UUID uniqueId = player != null ? player.getUniqueId() : null;
+
+        if (!this.fightManager.isInCombat(uniqueId)) {
+            return;
+        }
+
+        if (event.isGliding()) {
+            event.setCancelled(true);
+        }
+    }
+
+    @EventHandler
     void onOpenInventory(InventoryOpenEvent event) {
         if (!this.config.settings.shouldPreventInventoryOpening) {
             return;
@@ -101,5 +120,4 @@ public class FightActionBlockerController implements Listener {
             this.announcer.sendMessage(player, this.config.messages.commandDisabledDuringCombat);
         }
     }
-
 }
