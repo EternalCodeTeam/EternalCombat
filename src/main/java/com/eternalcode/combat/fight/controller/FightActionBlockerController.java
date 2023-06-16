@@ -67,8 +67,10 @@ public class FightActionBlockerController implements Listener {
             return;
         }
 
-        Player player = event.getEntity() instanceof Player ? (Player) event.getEntity() : null;
-        UUID uniqueId = player != null ? player.getUniqueId() : null;
+        if (!(event.getEntity() instanceof Player player)) {
+            return;
+        }
+        UUID uniqueId = player.getUniqueId();
 
         if (!this.fightManager.isInCombat(uniqueId)) {
             return;
