@@ -10,6 +10,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockPlaceEvent;
+import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.EntityToggleGlideEvent;
 import org.bukkit.event.inventory.InventoryOpenEvent;
 import org.bukkit.event.player.PlayerCommandPreprocessEvent;
@@ -78,6 +79,22 @@ public class FightActionBlockerController implements Listener {
 
         if (event.isGliding()) {
             event.setCancelled(true);
+        }
+    }
+
+    @EventHandler
+    public void onDamage(EntityDamageEvent event) {
+        if (!this.config.settings.shouldElytraDisableOnDamage) {
+            return;
+        }
+
+        if (!(event.getEntity() instanceof Player player)) {
+            return;
+        }
+        UUID uniqueId = player.getUniqueId();
+
+        if (this.fightManager.isInCombat(uniqueId) && player.isGliding()) {
+            player.setGliding(false);
         }
     }
 
