@@ -36,6 +36,9 @@ public class PluginConfig implements ReloadableConfig {
         @Description("# The duration of combat in seconds")
         public Duration combatDuration = Duration.ofSeconds(20);
 
+        @Description("# The duration of pearl delay")
+        public Duration pearlThrowDuration = Duration.ofSeconds(3);
+
         @Description("# List of worlds to ignore")
         public List<String> worldsToIgnore = List.of(
             "your_world"
@@ -57,6 +60,12 @@ public class PluginConfig implements ReloadableConfig {
             "spawn",
             "tp"
         );
+
+        @Description("# Block throwing pearls?")
+        public boolean shouldBlockThrowingPearls = false;
+
+        @Description("# Block throwing pearls with delay?")
+        public boolean shouldBlockThrowingPearlsWithDelay = true;
 
         @Description("# Block the opening of inventory?")
         public boolean shouldPreventInventoryOpening = true;
@@ -123,6 +132,12 @@ public class PluginConfig implements ReloadableConfig {
 
         @Description("# Message sent when player tries to use a command with invalid arguments")
         public String invalidCommandUsage = "&7Correct usage: &e{USAGE}";
+
+        @Description("# Message sent when player tries to throw ender pearl, but are disabled")
+        public String pearlThrowBlockedDuringCombat = "&cThrowing ender pearls is prohibited during combat!";
+
+        @Description("# Message sent when player tries to throw ender pearl, but has delay")
+        public String pearlThrowBlockedDelayDuringCombat = "&cYou must wait {TIME} before next throw!";
 
         @Description("# Message sent when player tries to open inventory, but the inventory open is blocked")
         public String inventoryBlockedDuringCombat = "&cYou cannot open this inventory during combat!";
