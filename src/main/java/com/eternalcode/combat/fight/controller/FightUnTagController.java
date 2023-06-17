@@ -23,7 +23,7 @@ public class FightUnTagController implements Listener {
     }
 
     @EventHandler
-    void onEntityDeath(PlayerDeathEvent event) {
+    void onPlayerDeath(PlayerDeathEvent event) {
         Player player = event.getEntity();
 
         if (!this.fightManager.isInCombat(player.getUniqueId())) {
