@@ -6,7 +6,7 @@ import com.eternalcode.combat.notification.NotificationAnnouncer;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
-import org.bukkit.event.entity.EntityDeathEvent;
+import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import panda.utilities.text.Formatter;
 
@@ -23,10 +23,8 @@ public class FightUnTagController implements Listener {
     }
 
     @EventHandler
-    void onEntityDeath(EntityDeathEvent event) {
-        if (!(event.getEntity() instanceof Player player)) {
-            return;
-        }
+    void onPlayerDeath(PlayerDeathEvent event) {
+        Player player = event.getEntity();
 
         if (!this.fightManager.isInCombat(player.getUniqueId())) {
             return;

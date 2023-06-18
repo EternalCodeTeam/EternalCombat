@@ -13,6 +13,8 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.block.BlockPlaceEvent;
+import org.bukkit.event.entity.EntityDamageEvent;
+import org.bukkit.event.entity.EntityToggleGlideEvent;
 import org.bukkit.event.inventory.InventoryOpenEvent;
 import org.bukkit.event.player.PlayerCommandPreprocessEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
@@ -65,6 +67,42 @@ public class FightActionBlockerController implements Listener {
         if (isBlockPlaceLevel && isBlockInDisabledList) {
             event.setCancelled(true);
             this.announcer.sendMessage(player, this.config.messages.blockPlacingBlockedDuringCombat);
+        }
+    }
+
+    @EventHandler
+    public void onToggleGlide(EntityToggleGlideEvent event) {
+        if (!this.config.settings.shouldPreventElytraUsage) {
+            return;
+        }
+
+        if (!(event.getEntity() instanceof Player player)) {
+            return;
+        }
+        UUID uniqueId = player.getUniqueId();
+
+        if (!this.fightManager.isInCombat(uniqueId)) {
+            return;
+        }
+
+        if (event.isGliding()) {
+            event.setCancelled(true);
+        }
+    }
+
+    @EventHandler
+    public void onDamage(EntityDamageEvent event) {
+        if (!this.config.settings.shouldElytraDisableOnDamage) {
+            return;
+        }
+
+        if (!(event.getEntity() instanceof Player player)) {
+            return;
+        }
+        UUID uniqueId = player.getUniqueId();
+
+        if (this.fightManager.isInCombat(uniqueId) && player.isGliding()) {
+            player.setGliding(false);
         }
     }
 
@@ -158,5 +196,4 @@ public class FightActionBlockerController implements Listener {
             this.announcer.sendMessage(player, this.config.messages.commandDisabledDuringCombat);
         }
     }
-
 }
