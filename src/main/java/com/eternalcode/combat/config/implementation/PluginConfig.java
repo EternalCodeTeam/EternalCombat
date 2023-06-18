@@ -58,6 +58,12 @@ public class PluginConfig implements ReloadableConfig {
             "tp"
         );
 
+        @Description("# Block the use of elytra?")
+        public boolean shouldPreventElytraUsage = true;
+
+        @Description("# Disable the use of elytra on damage?")
+        public boolean shouldElytraDisableOnDamage = true;
+
         @Description("# Block the opening of inventory?")
         public boolean shouldPreventInventoryOpening = true;
 
