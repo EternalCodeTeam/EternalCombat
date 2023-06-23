@@ -5,6 +5,7 @@ import com.sk89q.worldguard.WorldGuard;
 public class WorldGuardBridge {
 
     private boolean initialized;
+    private WorldGuard worldGuard;
 
     public void initialize() {
         if (this.initialized) {
@@ -12,6 +13,7 @@ public class WorldGuardBridge {
         }
 
         this.initialized = true;
+        this.worldGuard = WorldGuard.getInstance();
     }
 
     public boolean isInitialized() {
@@ -19,6 +21,6 @@ public class WorldGuardBridge {
     }
 
     public WorldGuard worldGuard() {
-        return WorldGuard.getInstance();
+        return this.worldGuard;
     }
 }
