@@ -4,4 +4,5 @@ package com.eternalcode.combat.bridge;
 public interface BridgeInitializer {
 
     void initialize();
+
 }
