@@ -10,6 +10,8 @@ import com.eternalcode.combat.fight.FightTask;
 import com.eternalcode.combat.fight.controller.FightActionBlockerController;
 import com.eternalcode.combat.fight.controller.FightTagController;
 import com.eternalcode.combat.fight.controller.FightUnTagController;
+import com.eternalcode.combat.fight.pearl.FightPearlController;
+import com.eternalcode.combat.fight.pearl.FightPearlManager;
 import com.eternalcode.combat.notification.NotificationAnnouncer;
 import com.eternalcode.combat.updater.UpdaterNotificationController;
 import com.eternalcode.combat.updater.UpdaterService;
@@ -35,6 +37,8 @@ import java.util.stream.Stream;
 public final class CombatPlugin extends JavaPlugin {
 
     private FightManager fightManager;
+    private FightPearlManager fightPearlManager;
+
     private AudienceProvider audienceProvider;
     private LiteCommands<CommandSender> liteCommands;
 
@@ -49,6 +53,8 @@ public final class CombatPlugin extends JavaPlugin {
         PluginConfig pluginConfig = configManager.load(new PluginConfig());
 
         this.fightManager = new FightManager();
+        this.fightPearlManager = new FightPearlManager(pluginConfig.settings);
+
         UpdaterService updaterService = new UpdaterService(this.getDescription());
 
         this.audienceProvider = BukkitAudiences.create(this);
@@ -77,6 +83,7 @@ public final class CombatPlugin extends JavaPlugin {
             new FightTagController(this.fightManager, pluginConfig, notificationAnnouncer),
             new FightUnTagController(this.fightManager, pluginConfig, notificationAnnouncer),
             new FightActionBlockerController(this.fightManager, notificationAnnouncer, pluginConfig),
+            new FightPearlController(pluginConfig, notificationAnnouncer, this.fightManager, this.fightPearlManager),
             new UpdaterNotificationController(updaterService, pluginConfig, this.audienceProvider, miniMessage)
         ).forEach(listener -> this.getServer().getPluginManager().registerEvents(listener, this));
 

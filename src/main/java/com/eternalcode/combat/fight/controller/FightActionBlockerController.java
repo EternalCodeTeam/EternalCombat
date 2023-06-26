@@ -3,26 +3,18 @@ package com.eternalcode.combat.fight.controller;
 import com.eternalcode.combat.config.implementation.PluginConfig;
 import com.eternalcode.combat.fight.FightCommandMode;
 import com.eternalcode.combat.fight.FightManager;
-import com.eternalcode.combat.fight.FightTag;
 import com.eternalcode.combat.notification.NotificationAnnouncer;
-import com.eternalcode.combat.util.DurationUtil;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
-import org.bukkit.event.block.Action;
 import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.EntityToggleGlideEvent;
 import org.bukkit.event.inventory.InventoryOpenEvent;
 import org.bukkit.event.player.PlayerCommandPreprocessEvent;
-import org.bukkit.event.player.PlayerInteractEvent;
-import org.bukkit.inventory.ItemStack;
-import panda.utilities.text.Formatter;
 
-import java.time.Duration;
-import java.time.Instant;
 import java.util.List;
 import java.util.UUID;
 
@@ -122,55 +114,6 @@ public class FightActionBlockerController implements Listener {
         event.setCancelled(true);
 
         this.announcer.sendMessage(player, this.config.messages.inventoryBlockedDuringCombat);
-    }
-
-    @EventHandler
-    void onInteract(PlayerInteractEvent event) {
-        Player player = event.getPlayer();
-        UUID uniqueId = player.getUniqueId();
-
-        if (!this.fightManager.isInCombat(uniqueId)) {
-            return;
-        }
-
-        ItemStack item = event.getItem();
-        if (item == null || item.getType() != Material.ENDER_PEARL) {
-            return;
-        }
-
-        Action action = event.getAction();
-        if (action != Action.RIGHT_CLICK_AIR && action != Action.RIGHT_CLICK_BLOCK) {
-            return;
-        }
-
-        if (this.config.settings.shouldBlockThrowingPearls) {
-            event.setCancelled(true);
-
-            this.announcer.sendMessage(player, this.config.messages.pearlThrowBlockedDuringCombat);
-        }
-        else if (this.config.settings.shouldBlockThrowingPearlsWithDelay) {
-            FightTag fightTag = this.fightManager.getFightTag(uniqueId);
-
-            if (!fightTag.isPearlDelayExpired()) {
-                event.setCancelled(true);
-
-                Duration remainingPearlDelay = fightTag.getRemainingPearlDelay();
-
-                Formatter formatter = new Formatter()
-                    .register("{TIME}", DurationUtil.format(remainingPearlDelay));
-
-                String format = formatter.format(this.config.messages.pearlThrowBlockedDelayDuringCombat);
-                this.announcer.sendMessage(player, format);
-                return;
-            }
-
-            Duration pearlThrowDuration = this.config.settings.pearlThrowDuration;
-
-            Instant now = Instant.now();
-            Instant endOfPearlDelay = now.plus(pearlThrowDuration);
-
-            fightTag.setEndOfPearlDelay(endOfPearlDelay);
-        }
     }
 
     @EventHandler

@@ -2,6 +2,7 @@ package com.eternalcode.combat.config.implementation;
 
 import com.eternalcode.combat.config.ReloadableConfig;
 import com.eternalcode.combat.fight.FightCommandMode;
+import com.eternalcode.combat.fight.pearl.FightPearlSettings;
 import com.eternalcode.combat.notification.NotificationType;
 import net.dzikoysk.cdn.entity.Contextual;
 import net.dzikoysk.cdn.entity.Description;
@@ -28,7 +29,7 @@ public class PluginConfig implements ReloadableConfig {
     }
 
     @Contextual
-    public static class Settings {
+    public static class Settings implements FightPearlSettings {
 
         @Description("# Whether the player should receive information about new plugin updates upon joining the server")
         public boolean shouldReceivePluginUpdates = true;
@@ -104,6 +105,21 @@ public class PluginConfig implements ReloadableConfig {
             EntityDamageEvent.DamageCause.FIRE,
             EntityDamageEvent.DamageCause.FIRE_TICK
         );
+
+        @Override
+        public Duration pearlThrowDuration() {
+            return this.pearlThrowDuration;
+        }
+
+        @Override
+        public boolean shouldBlockThrowingPearls() {
+            return this.shouldBlockThrowingPearls;
+        }
+
+        @Override
+        public boolean shouldBlockThrowingPearlsWithDelay() {
+            return this.shouldBlockThrowingPearlsWithDelay;
+        }
     }
 
     @Contextual

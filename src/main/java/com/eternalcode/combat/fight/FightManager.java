@@ -40,10 +40,6 @@ public class FightManager {
         this.fights.put(target, fightTag);
     }
 
-    public FightTag getFightTag(UUID uuid) {
-        return this.fights.get(uuid);
-    }
-
     public Collection<FightTag> getFights() {
         return Collections.unmodifiableCollection(this.fights.values());
     }
