@@ -6,41 +6,27 @@ public class DefaultRegionProvider implements RegionProvider {
 
     private final int radius;
 
-    private Location firstCorner;
-    private Location secondCorner;
-
     public DefaultRegionProvider(int radius) {
         this.radius = radius;
     }
 
     @Override
     public boolean isInRegion(Location location) {
-        if (this.firstCorner == null || this.secondCorner == null) {
-            this.initializeCorners(location);
-        }
+        Location spawnLocation = location.getWorld().getSpawnLocation();
+        double x = spawnLocation.getX();
+        double z = spawnLocation.getZ();
 
-        int lowerX = Math.min(this.firstCorner.getBlockX(), this.secondCorner.getBlockX());
-        int upperX = Math.max(this.secondCorner.getBlockX(), this.firstCorner.getBlockX());
+        Point min = new Point(x - this.radius, z - this.radius);
+        Point max = new Point(x + this.radius, z + this.radius);
 
-        int lowerZ = Math.min(this.firstCorner.getBlockZ(), this.secondCorner.getBlockZ());
-        int upperZ = Math.max(this.secondCorner.getBlockZ(), this.firstCorner.getBlockZ());
-
-        if (location.getBlockX() > lowerX && location.getBlockX() < upperX) {
-            return location.getBlockZ() > lowerZ && location.getBlockZ() < upperZ;
-        }
-
-        return false;
+        return this.contains(min, max, location.getX(), location.getZ());
     }
 
-    void initializeCorners(Location location) {
-        Location center = location.getWorld().getSpawnLocation();
-
-        int lx = center.getBlockX() + this.radius;
-        int lz = center.getBlockZ() + this.radius;
-        this.firstCorner = new Location(location.getWorld(), lx, 0, lz);
-
-        int px = center.getBlockX() - this.radius;
-        int pz = center.getBlockZ() - this.radius;
-        this.secondCorner = new Location(location.getWorld(), px, 0, pz);
+    public boolean contains(Point min, Point max, double x, double z) {
+        return x >= min.x() && x < max.x()
+            && z >= min.z() && z < max.z();
     }
+
+    public record Point(double x, double z) {}
+
 }
