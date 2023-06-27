@@ -4,7 +4,6 @@ import com.eternalcode.combat.config.implementation.PluginConfig;
 import com.eternalcode.combat.region.DefaultRegionProvider;
 import com.eternalcode.combat.region.RegionProvider;
 import com.eternalcode.combat.region.WorldGuardRegionProvider;
-import com.sk89q.worldguard.WorldGuard;
 import org.bukkit.plugin.PluginManager;
 
 import java.util.logging.Logger;
