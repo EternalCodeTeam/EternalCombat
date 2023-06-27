@@ -25,7 +25,7 @@ public class BridgeService {
 
     public void init() {
         this.initialize("WorldGuard",
-            () -> this.regionProvider = new WorldGuardRegionProvider(WorldGuard.getInstance(), this.pluginConfig.settings.blockedRegions),
+            () -> this.regionProvider = new WorldGuardRegionProvider(this.pluginConfig.settings.blockedRegions),
             () -> {
             this.regionProvider = new DefaultRegionProvider(this.pluginConfig.settings.blockedRegionRadius);
 

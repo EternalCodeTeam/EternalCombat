@@ -11,11 +11,9 @@ import java.util.List;
 
 public class WorldGuardRegionProvider implements RegionProvider {
 
-    private final WorldGuard worldGuard;
     private final List<String> regions;
 
-    public WorldGuardRegionProvider(WorldGuard worldGuard, List<String> regions) {
-        this.worldGuard = worldGuard;
+    public WorldGuardRegionProvider(List<String> regions) {
         this.regions = regions;
     }
 
@@ -25,7 +23,7 @@ public class WorldGuardRegionProvider implements RegionProvider {
     }
 
     private boolean isInCombatRegion(Location location, String regionName) {
-        RegionContainer regionContainer = this.worldGuard.getPlatform().getRegionContainer();
+        RegionContainer regionContainer = WorldGuard.getInstance().getPlatform().getRegionContainer();
         RegionQuery regionQuery = regionContainer.createQuery();
         ApplicableRegionSet applicableRegions = regionQuery.getApplicableRegions(BukkitAdapter.adapt(location));
 
