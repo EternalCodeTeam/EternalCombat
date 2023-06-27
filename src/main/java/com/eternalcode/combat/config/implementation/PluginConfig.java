@@ -50,7 +50,7 @@ public class PluginConfig implements ReloadableConfig {
         public double blockedRegionMultiplier = 1.2;
 
         @Description("# Set the radius of the blocked region if you aren't using WorldGuard!")
-        public int blockedRegionRadius = 40;
+        public int blockedRegionRadius = 10;
 
         @Description("# Combat log notification type, available types: ACTION_BAR, CHAT, TITLE, SUBTITLE")
         public NotificationType notificationType = NotificationType.ACTION_BAR;
