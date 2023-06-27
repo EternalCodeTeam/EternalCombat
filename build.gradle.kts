@@ -25,10 +25,11 @@ repositories {
     mavenCentral()
     mavenLocal()
 
-    maven { url = uri("https://repo.eternalcode.pl/releases") }
     maven { url = uri("https://hub.spigotmc.org/nexus/content/repositories/snapshots/") }
-    maven { url = uri("https://repo.panda-lang.org/releases") }
     maven { url = uri("https://papermc.io/repo/repository/maven-public/") }
+    maven { url = uri("https://repo.eternalcode.pl/releases") }
+    maven { url = uri("https://repo.panda-lang.org/releases") }
+    maven { url = uri("https://maven.enginehub.org/repo/") }
 }
 
 dependencies {
@@ -56,6 +57,9 @@ dependencies {
     // bstats
     implementation("org.bstats:bstats-bukkit:3.0.2")
 
+    // worldguard
+    compileOnly("com.sk89q.worldguard:worldguard-bukkit:7.0.0")
+
     // tests
     testImplementation("org.spigotmc:spigot-api:1.19.3-R0.1-SNAPSHOT")
     testImplementation("org.junit.jupiter:junit-jupiter-api:5.9.3")
@@ -69,6 +73,7 @@ bukkit {
     apiVersion = "1.13"
     prefix = "EternalCombat"
     name = "EternalCombat"
+    softDepend = listOf("WorldGuard")
     version = "${project.version}"
 }
 
