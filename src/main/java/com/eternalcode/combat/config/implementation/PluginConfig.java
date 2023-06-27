@@ -7,6 +7,7 @@ import net.dzikoysk.cdn.entity.Contextual;
 import net.dzikoysk.cdn.entity.Description;
 import net.dzikoysk.cdn.source.Resource;
 import net.dzikoysk.cdn.source.Source;
+import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.event.entity.EntityDamageEvent;
 
@@ -46,7 +47,10 @@ public class PluginConfig implements ReloadableConfig {
         public List<String> blockedRegions = Collections.singletonList("your_region");
 
         @Description("# Set the knock multiplier for the blocked region")
-        public double blockedRegionMultiply = 1.2;
+        public double blockedRegionMultiplier = 1.2;
+
+        @Description("# Set the radius of the blocked region if you aren't using WorldGuard!")
+        public int blockedRegionRadius = 40;
 
         @Description("# Combat log notification type, available types: ACTION_BAR, CHAT, TITLE, SUBTITLE")
         public NotificationType notificationType = NotificationType.ACTION_BAR;

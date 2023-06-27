@@ -13,13 +13,13 @@ import org.bukkit.util.Vector;
 public class RegionController implements Listener {
 
     private final NotificationAnnouncer announcer;
-    private final RegionService regionService;
+    private final RegionProvider regionProvider;
     private final FightManager fightManager;
     private final PluginConfig pluginConfig;
 
-    public RegionController(NotificationAnnouncer announcer, RegionService regionService, FightManager fightManager, PluginConfig pluginConfig) {
+    public RegionController(NotificationAnnouncer announcer, RegionProvider regionProvider, FightManager fightManager, PluginConfig pluginConfig) {
         this.announcer = announcer;
-        this.regionService = regionService;
+        this.regionProvider = regionProvider;
         this.fightManager = fightManager;
         this.pluginConfig = pluginConfig;
     }
@@ -43,13 +43,13 @@ public class RegionController implements Listener {
         int zFrom = locationFrom.getBlockZ();
 
         if (xTo != xFrom || yTo != yFrom || zTo != zFrom) {
-            if (!this.regionService.isInCombatRegion(locationTo, this.pluginConfig.settings.blockedRegions)) {
+            if (!this.regionProvider.isInRegion(locationTo)) {
                 return;
             }
 
             Location playerLocation = player.getLocation().subtract(player.getWorld().getSpawnLocation());
             double distance = playerLocation.distance(player.getWorld().getSpawnLocation());
-            Vector knockback = new Vector(0, 3, 0).multiply(this.pluginConfig.settings.blockedRegionMultiply / distance);
+            Vector knockback = new Vector(0, 3, 0).multiply(this.pluginConfig.settings.blockedRegionMultiplier / distance);
             Vector vector = playerLocation.toVector().add(knockback);
 
             player.setVelocity(vector);
