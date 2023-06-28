@@ -1,5 +1,6 @@
 package com.eternalcode.combat;
 
+import com.eternalcode.combat.bridge.BridgeService;
 import com.eternalcode.combat.command.InvalidUsage;
 import com.eternalcode.combat.command.PermissionMessage;
 import com.eternalcode.combat.config.ConfigBackupService;
@@ -13,6 +14,7 @@ import com.eternalcode.combat.fight.controller.FightUnTagController;
 import com.eternalcode.combat.fight.pearl.FightPearlController;
 import com.eternalcode.combat.fight.pearl.FightPearlManager;
 import com.eternalcode.combat.notification.NotificationAnnouncer;
+import com.eternalcode.combat.region.RegionController;
 import com.eternalcode.combat.updater.UpdaterNotificationController;
 import com.eternalcode.combat.updater.UpdaterService;
 import com.eternalcode.combat.util.legacy.LegacyColorProcessor;
@@ -62,6 +64,9 @@ public final class CombatPlugin extends JavaPlugin {
             .postProcessor(new LegacyColorProcessor())
             .build();
 
+        BridgeService bridgeService = new BridgeService(pluginConfig, server.getPluginManager(), this.getLogger());
+        bridgeService.init();
+
         NotificationAnnouncer notificationAnnouncer = new NotificationAnnouncer(this.audienceProvider, miniMessage);
         this.liteCommands = LiteBukkitAdventurePlatformFactory.builder(server, "eternalcombat", this.audienceProvider)
             .argument(Player.class, new BukkitPlayerArgument<>(this.getServer(), pluginConfig.messages.playerNotFound))
@@ -85,6 +90,8 @@ public final class CombatPlugin extends JavaPlugin {
             new FightActionBlockerController(this.fightManager, notificationAnnouncer, pluginConfig),
             new FightPearlController(pluginConfig, notificationAnnouncer, this.fightManager, this.fightPearlManager),
             new UpdaterNotificationController(updaterService, pluginConfig, this.audienceProvider, miniMessage)
+            new UpdaterNotificationController(updaterService, pluginConfig, this.audienceProvider, miniMessage),
+            new RegionController(notificationAnnouncer, bridgeService.getRegionProvider(), this.fightManager, pluginConfig)
         ).forEach(listener -> this.getServer().getPluginManager().registerEvents(listener, this));
 
         long millis = started.elapsed(TimeUnit.MILLISECONDS);

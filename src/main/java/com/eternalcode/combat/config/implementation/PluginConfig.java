@@ -8,11 +8,13 @@ import net.dzikoysk.cdn.entity.Contextual;
 import net.dzikoysk.cdn.entity.Description;
 import net.dzikoysk.cdn.source.Resource;
 import net.dzikoysk.cdn.source.Source;
+import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.event.entity.EntityDamageEvent;
 
 import java.io.File;
 import java.time.Duration;
+import java.util.Collections;
 import java.util.List;
 
 public class PluginConfig implements ReloadableConfig {
@@ -44,6 +46,15 @@ public class PluginConfig implements ReloadableConfig {
         public List<String> worldsToIgnore = List.of(
             "your_world"
         );
+
+        @Description("# List of regions to block")
+        public List<String> blockedRegions = Collections.singletonList("your_region");
+
+        @Description("# Set the knock multiplier for the blocked region")
+        public double blockedRegionMultiplier = 1.2;
+
+        @Description("# Set the radius of the blocked region if you aren't using WorldGuard!")
+        public int blockedRegionRadius = 10;
 
         @Description("# Combat log notification type, available types: ACTION_BAR, CHAT, TITLE, SUBTITLE")
         public NotificationType notificationType = NotificationType.ACTION_BAR;
@@ -166,6 +177,9 @@ public class PluginConfig implements ReloadableConfig {
 
         @Description("# Message sent when player tries to place a block, but the block place is blocked")
         public String blockPlacingBlockedDuringCombat = "&cYou cannot place below 40Y coordinate during combat!";
+
+        @Description("# Message sent when player tries to enter a region")
+        public String cantEnterOnRegion = "&cYou can't enter on this region during combat!";
 
         @Contextual
         public static class AdminMessages {
