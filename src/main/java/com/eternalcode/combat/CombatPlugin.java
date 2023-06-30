@@ -89,7 +89,6 @@ public final class CombatPlugin extends JavaPlugin {
             new FightUnTagController(this.fightManager, pluginConfig, notificationAnnouncer),
             new FightActionBlockerController(this.fightManager, notificationAnnouncer, pluginConfig),
             new FightPearlController(pluginConfig, notificationAnnouncer, this.fightManager, this.fightPearlManager),
-            new UpdaterNotificationController(updaterService, pluginConfig, this.audienceProvider, miniMessage)
             new UpdaterNotificationController(updaterService, pluginConfig, this.audienceProvider, miniMessage),
             new RegionController(notificationAnnouncer, bridgeService.getRegionProvider(), this.fightManager, pluginConfig)
         ).forEach(listener -> this.getServer().getPluginManager().registerEvents(listener, this));
