@@ -8,6 +8,7 @@ import java.time.Duration;
 @Contextual
 public class FightPearlSettings {
 
+    @Description("# If you want to completely disable this option, set this to false")
     public boolean enabled = true;
 
     @Description({
