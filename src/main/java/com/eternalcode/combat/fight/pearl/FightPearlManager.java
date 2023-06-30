@@ -15,12 +15,12 @@ public class FightPearlManager {
     public FightPearlManager(FightPearlSettings pearlSettings) {
         this.pearlSettings = pearlSettings;
         this.pearlDelays = CacheBuilder.newBuilder()
-            .expireAfterWrite(pearlSettings.pearlThrowDuration())
+            .expireAfterWrite(pearlSettings.delay)
             .build();
     }
 
     public void markDelay(UUID uuid) {
-        this.pearlDelays.put(uuid, Instant.now().plus(this.pearlSettings.pearlThrowDuration()));
+        this.pearlDelays.put(uuid, Instant.now().plus(this.pearlSettings.delay));
     }
 
     public boolean hasDelay(UUID uuid) {

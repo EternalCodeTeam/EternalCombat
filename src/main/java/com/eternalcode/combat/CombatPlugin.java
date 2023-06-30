@@ -55,7 +55,7 @@ public final class CombatPlugin extends JavaPlugin {
         PluginConfig pluginConfig = configManager.load(new PluginConfig());
 
         this.fightManager = new FightManager();
-        this.fightPearlManager = new FightPearlManager(pluginConfig.settings);
+        this.fightPearlManager = new FightPearlManager(pluginConfig.pearl);
 
         UpdaterService updaterService = new UpdaterService(this.getDescription());
 
@@ -88,7 +88,7 @@ public final class CombatPlugin extends JavaPlugin {
             new FightTagController(this.fightManager, pluginConfig, notificationAnnouncer),
             new FightUnTagController(this.fightManager, pluginConfig, notificationAnnouncer),
             new FightActionBlockerController(this.fightManager, notificationAnnouncer, pluginConfig),
-            new FightPearlController(pluginConfig, notificationAnnouncer, this.fightManager, this.fightPearlManager),
+            new FightPearlController(pluginConfig.pearl, notificationAnnouncer, this.fightManager, this.fightPearlManager),
             new UpdaterNotificationController(updaterService, pluginConfig, this.audienceProvider, miniMessage),
             new RegionController(notificationAnnouncer, bridgeService.getRegionProvider(), this.fightManager, pluginConfig)
         ).forEach(listener -> this.getServer().getPluginManager().registerEvents(listener, this));

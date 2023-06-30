@@ -8,7 +8,6 @@ import net.dzikoysk.cdn.entity.Contextual;
 import net.dzikoysk.cdn.entity.Description;
 import net.dzikoysk.cdn.source.Resource;
 import net.dzikoysk.cdn.source.Source;
-import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.event.entity.EntityDamageEvent;
 
@@ -22,25 +21,17 @@ public class PluginConfig implements ReloadableConfig {
     @Description("# Do you want to change the plugin settings?")
     public Settings settings = new Settings();
 
-    @Description({ " ", "# Do you want to change the plugin messages?" })
-    public Messages messages = new Messages();
-
-    @Override
-    public Resource resource(File folder) {
-        return Source.of(folder, "config.yml");
-    }
+    @Description({" ", "# Block the use of ender pearls"})
+    public FightPearlSettings pearl = new FightPearlSettings();
 
     @Contextual
-    public static class Settings implements FightPearlSettings {
+    public static class Settings {
 
         @Description("# Whether the player should receive information about new plugin updates upon joining the server")
         public boolean shouldReceivePluginUpdates = true;
 
         @Description("# The duration of combat in seconds")
         public Duration combatDuration = Duration.ofSeconds(20);
-
-        @Description("# The duration of pearl delay")
-        public Duration pearlThrowDuration = Duration.ofSeconds(3);
 
         @Description("# List of worlds to ignore")
         public List<String> worldsToIgnore = List.of(
@@ -72,12 +63,6 @@ public class PluginConfig implements ReloadableConfig {
             "spawn",
             "tp"
         );
-
-        @Description("# Block throwing pearls?")
-        public boolean shouldBlockThrowingPearls = false;
-
-        @Description("# Block throwing pearls with delay?")
-        public boolean shouldBlockThrowingPearlsWithDelay = true;
 
         @Description("# Block the use of elytra?")
         public boolean shouldPreventElytraUsage = true;
@@ -117,21 +102,10 @@ public class PluginConfig implements ReloadableConfig {
             EntityDamageEvent.DamageCause.FIRE_TICK
         );
 
-        @Override
-        public Duration pearlThrowDuration() {
-            return this.pearlThrowDuration;
-        }
-
-        @Override
-        public boolean shouldBlockThrowingPearls() {
-            return this.shouldBlockThrowingPearls;
-        }
-
-        @Override
-        public boolean shouldBlockThrowingPearlsWithDelay() {
-            return this.shouldBlockThrowingPearlsWithDelay;
-        }
     }
+
+    @Description({ " ", "# Do you want to change the plugin messages?" })
+    public Messages messages = new Messages();
 
     @Contextual
     public static class Messages {
@@ -165,12 +139,6 @@ public class PluginConfig implements ReloadableConfig {
 
         @Description("# Message sent when player tries to use a command with invalid arguments")
         public String invalidCommandUsage = "&7Correct usage: &e{USAGE}";
-
-        @Description("# Message sent when player tries to throw ender pearl, but are disabled")
-        public String pearlThrowBlockedDuringCombat = "&cThrowing ender pearls is prohibited during combat!";
-
-        @Description("# Message sent when player tries to throw ender pearl, but has delay")
-        public String pearlThrowBlockedDelayDuringCombat = "&cYou must wait {TIME} before next throw!";
 
         @Description("# Message sent when player tries to open inventory, but the inventory open is blocked")
         public String inventoryBlockedDuringCombat = "&cYou cannot open this inventory during combat!";
@@ -210,6 +178,11 @@ public class PluginConfig implements ReloadableConfig {
             @Description("# Message sent when an admin tries to tag themselves")
             public String adminCannotTagSelf = "&cYou cannot tag yourself!";
         }
+    }
+
+    @Override
+    public Resource resource(File folder) {
+        return Source.of(folder, "config.yml");
     }
 
 }

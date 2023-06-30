@@ -1,6 +1,5 @@
 package com.eternalcode.combat.fight.pearl;
 
-import com.eternalcode.combat.config.implementation.PluginConfig;
 import com.eternalcode.combat.fight.FightManager;
 import com.eternalcode.combat.notification.NotificationAnnouncer;
 import com.eternalcode.combat.util.DurationUtil;
@@ -18,13 +17,13 @@ import java.util.UUID;
 
 public class FightPearlController implements Listener {
 
-    private final PluginConfig config;
+    private final FightPearlSettings settings;
     private final NotificationAnnouncer announcer;
     private final FightManager fightManager;
     private final FightPearlManager fightPearlManager;
 
-    public FightPearlController(PluginConfig config, NotificationAnnouncer announcer, FightManager fightManager, FightPearlManager fightPearlManager) {
-        this.config = config;
+    public FightPearlController(FightPearlSettings settings, NotificationAnnouncer announcer, FightManager fightManager, FightPearlManager fightPearlManager) {
+        this.settings = settings;
         this.announcer = announcer;
         this.fightManager = fightManager;
         this.fightPearlManager = fightPearlManager;
@@ -49,26 +48,29 @@ public class FightPearlController implements Listener {
             return;
         }
 
-        if (this.config.settings.shouldBlockThrowingPearls) {
+        if (!this.settings.enabled) {
+            return;
+        }
+
+        if (this.settings.delay.isZero()) {
+            event.setCancelled(true);
+            this.announcer.sendMessage(player, this.settings.pearlThrowBlockedDuringCombat);
+            return;
+        }
+
+        if (this.fightPearlManager.hasDelay(uniqueId)) {
             event.setCancelled(true);
 
-            this.announcer.sendMessage(player, this.config.messages.pearlThrowBlockedDuringCombat);
+            Duration remainingPearlDelay = this.fightPearlManager.getRemainingDelay(uniqueId);
+
+            Formatter formatter = new Formatter()
+                .register("{TIME}", DurationUtil.format(remainingPearlDelay));
+
+            String format = formatter.format(this.settings.pearlThrowBlockedDelayDuringCombat);
+            this.announcer.sendMessage(player, format);
+            return;
         }
-        else if (this.config.settings.shouldBlockThrowingPearlsWithDelay) {
-            if (this.fightPearlManager.hasDelay(uniqueId)) {
-                event.setCancelled(true);
 
-                Duration remainingPearlDelay = this.fightPearlManager.getRemainingDelay(uniqueId);
-
-                Formatter formatter = new Formatter()
-                    .register("{TIME}", DurationUtil.format(remainingPearlDelay));
-
-                String format = formatter.format(this.config.messages.pearlThrowBlockedDelayDuringCombat);
-                this.announcer.sendMessage(player, format);
-                return;
-            }
-
-            this.fightPearlManager.markDelay(uniqueId);
-        }
+        this.fightPearlManager.markDelay(uniqueId);
     }
 }
