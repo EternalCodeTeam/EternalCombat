@@ -23,8 +23,6 @@ jobs:
           distribution: 'temurin'
       - name: Make gradlew executable
         run: chmod +x gradlew
-      - name: Run checkstyle
-        run: ./gradlew checkstyleMain
       - name: Build with Gradle
         uses: gradle/gradle-build-action@1b2daf58338ede8c62b0fa54355d1f515f659ad8
         with:
