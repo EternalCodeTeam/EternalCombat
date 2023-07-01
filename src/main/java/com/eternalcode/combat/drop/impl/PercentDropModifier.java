@@ -29,6 +29,10 @@ public class PercentDropModifier implements DropModifier {
         long amountItemsToDelete = MathUtil.calculateRoundedPercentageValue(dropItemPercent, totalItemsSize);
 
         for (int i = 0; i < amountItemsToDelete; i++) {
+            if (droppedItems.isEmpty()) {
+                return droppedItems;
+            }
+
             int index = random.nextInt(droppedItems.size());
 
             ItemStack item = droppedItems.get(index);
