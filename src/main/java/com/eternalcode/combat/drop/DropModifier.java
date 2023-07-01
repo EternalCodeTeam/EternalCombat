@@ -9,6 +9,6 @@ public interface DropModifier {
 
     DropType getDropType();
 
-    List<ItemStack> modifyDrop(DropInfo info, PluginConfig config);
+    void modifyDrop(DropInfo info, PluginConfig config);
 
 }

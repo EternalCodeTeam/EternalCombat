@@ -21,13 +21,14 @@ public class DropManager {
         if (dropType == DropType.UNCHANGED) {
             throw new RuntimeException("You cannot register DropModifier for this type '%s'".formatted(dropType.name()));
         }
+
         this.modifiers.put(dropType, dropModifier);
     }
 
-    public List<ItemStack> modify(DropType dropType, DropInfo drop, PluginConfig config) {
+    public void modify(DropType dropType, DropInfo drop, PluginConfig config) {
         if (!this.modifiers.containsKey(dropType)) {
             throw new RuntimeException("No drop modifier found for type '%s'".formatted(dropType.name()));
         }
-        return this.modifiers.get(dropType).modifyDrop(drop, config);
+        this.modifiers.get(dropType).modifyDrop(drop, config);
     }
 }

@@ -5,9 +5,6 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.PlayerDeathEvent;
-import org.bukkit.inventory.ItemStack;
-
-import java.util.List;
 
 public class DropController implements Listener {
 
@@ -29,15 +26,22 @@ public class DropController implements Listener {
 
         Player player = event.getEntity();
 
+        System.out.println(event.getDroppedExp());
+
         DropInfo info = DropInfo.builder()
             .player(player)
             .killer(player.getKiller())
             .droppedItems(event.getDrops())
+            .droppedExp(player.getTotalExperience())
             .build();
 
-        List<ItemStack> modifiedDrop = this.dropManager.modify(dropType, info, this.config);
+        this.dropManager.modify(dropType, info, this.config);
 
         event.getDrops().clear();
-        event.getDrops().addAll(modifiedDrop);
+        event.getDrops().addAll(info.getDroppedItems());
+
+        if (this.config.settings.affectExperience) {
+            event.setDroppedExp(info.getDroppedExp());
+        }
     }
 }

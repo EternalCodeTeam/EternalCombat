@@ -113,6 +113,9 @@ public class PluginConfig implements ReloadableConfig {
 
         @Description("# What percentage of items should drop from the player? (Only if Drop Type is set to PERCENT)")
         public int dropItemPercent = 100;
+
+        @Description("# Does the drop modification affect the experience drop?")
+        public boolean affectExperience = false;
     }
 
     @Description({ " ", "# Do you want to change the plugin messages?" })

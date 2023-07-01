@@ -18,19 +18,21 @@ public class PercentDropModifier implements DropModifier {
     }
 
     @Override
-    public List<ItemStack> modifyDrop(DropInfo info, PluginConfig config) {
+    public void modifyDrop(DropInfo info, PluginConfig config) {
         Random random = new Random();
 
         int dropItemPercent = config.settings.dropItemPercent;
 
         List<ItemStack> droppedItems = info.getDroppedItems();
 
-        int totalItemsSize = droppedItems.stream().mapToInt(ItemStack::getAmount).sum();
-        long amountItemsToDelete = MathUtil.calculateRoundedPercentageValue(dropItemPercent, totalItemsSize);
+        int totalItemsAmmount = MathUtil.sum(droppedItems, ItemStack::getAmount);
+        int ammountItemsToDelete = MathUtil.getRoundedPercentage(dropItemPercent, totalItemsAmmount);
 
-        for (int i = 0; i < amountItemsToDelete; i++) {
+        int droppedExp = MathUtil.getRoundedPercentage(dropItemPercent, info.getDroppedExp());
+
+        for (int i = 0; i < ammountItemsToDelete; i++) {
             if (droppedItems.isEmpty()) {
-                return droppedItems;
+                return;
             }
 
             int index = random.nextInt(droppedItems.size());
@@ -46,6 +48,7 @@ public class PercentDropModifier implements DropModifier {
             item.setAmount(newAmount);
         }
 
-        return droppedItems;
+        info.setDroppedItems(droppedItems);
+        info.setDroppedExp(droppedExp);
     }
 }

@@ -10,18 +10,26 @@ import java.util.List;
 
 public class DropInfo {
 
-    private final List<ItemStack> droppedItems;
     private final Player player;
     private final Player killer;
 
-    private DropInfo(List<ItemStack> droppedItems, Player player, Player killer) {
-        this.droppedItems = droppedItems;
+    private List<ItemStack> droppedItems;
+    private int droppedExp;
+
+    private DropInfo(Player player, Player killer, List<ItemStack> droppedItems, int droppedExp) {
         this.player = player;
         this.killer = killer;
+
+        this.droppedItems = droppedItems;
+        this.droppedExp = droppedExp;
     }
 
     public List<ItemStack> getDroppedItems() {
         return new ArrayList<>(this.droppedItems);
+    }
+
+    public void setDroppedItems(List<ItemStack> droppedItems) {
+        this.droppedItems = droppedItems;
     }
 
     public Player getPlayer() {
@@ -36,20 +44,24 @@ public class DropInfo {
         return this.killer != null;
     }
 
+    public int getDroppedExp() {
+        return this.droppedExp;
+    }
+
+    public void setDroppedExp(int droppedExp) {
+        this.droppedExp = droppedExp;
+    }
+
     public static Builder builder() {
         return new Builder();
     }
 
     public static class Builder {
 
-        private List<ItemStack> droppedItems;
         private Player player;
         private Player killer;
-
-        public Builder droppedItems(@NotNull List<ItemStack> droppedItems) {
-            this.droppedItems = droppedItems;
-            return this;
-        }
+        private List<ItemStack> droppedItems;
+        private int droppedExp;
 
         public Builder player(@NotNull Player player) {
             this.player = player;
@@ -61,11 +73,22 @@ public class DropInfo {
             return this;
         }
 
+        public Builder droppedItems(@NotNull List<ItemStack> droppedItems) {
+            this.droppedItems = droppedItems;
+            return this;
+        }
+
+        public Builder droppedExp(int droppedExp) {
+            this.droppedExp = droppedExp;
+            return this;
+        }
+
         public DropInfo build() {
             return new DropInfo(
-                this.droppedItems,
-                this.player,
-                this.killer
+              this.player,
+              this.killer,
+              this.droppedItems,
+              this.droppedExp
             );
         }
     }
