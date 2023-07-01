@@ -1,10 +1,8 @@
 package com.eternalcode.combat.drop;
 
 import com.eternalcode.combat.config.implementation.PluginConfig;
-import org.bukkit.inventory.ItemStack;
 
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 public class DropManager {
@@ -17,6 +15,10 @@ public class DropManager {
 
     public void registerModifier(DropModifier dropModifier) {
         DropType dropType = dropModifier.getDropType();
+
+        if (dropType == null) {
+            throw new RuntimeException("Drop Type cannot be null!");
+        }
 
         if (dropType == DropType.UNCHANGED) {
             throw new RuntimeException("You cannot register DropModifier for this type '%s'".formatted(dropType.name()));

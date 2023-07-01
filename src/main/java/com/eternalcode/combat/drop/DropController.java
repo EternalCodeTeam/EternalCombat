@@ -26,8 +26,6 @@ public class DropController implements Listener {
 
         Player player = event.getEntity();
 
-        System.out.println(event.getDroppedExp());
-
         DropInfo info = DropInfo.builder()
             .player(player)
             .killer(player.getKiller())
