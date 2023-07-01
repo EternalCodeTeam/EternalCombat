@@ -33,7 +33,7 @@ jobs:
       - name: Make gradlew executable
         run: chmod +x gradlew
       - name: Build with Gradle
-        uses: gradle/gradle-build-action@1b2daf58338ede8c62b0fa54355d1f515f659ad8
+        uses: gradle/gradle-build-action@bde650d6f1426615a60165575bc9cdad3e54d975
         with:
           arguments: shadowJar
       - name: Upload a Build Artifact
