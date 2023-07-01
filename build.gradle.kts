@@ -10,7 +10,7 @@ plugins {
 }
 
 group = "com.eternalcode"
-version = "1.0.3"
+version = "1.1.0"
 
 checkstyle {
     toolVersion = "10.12.1"
@@ -98,7 +98,7 @@ tasks {
 }
 
 tasks.withType<ShadowJar> {
-    archiveFileName.set("EternalCombat v${project.version} (MC 1.8.8-1.19x).jar")
+    archiveFileName.set("EternalCombat v${project.version}.jar")
 
     dependsOn("checkstyleMain")
     dependsOn("checkstyleTest")

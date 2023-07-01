@@ -15,7 +15,7 @@
 
 ### Information
 
-EternalCombat has been tested on Minecraft versions 1.17.1 to 1.19.3, but it should work on most other versions. If you
+EternalCombat has been tested on Minecraft versions 1.17.1 to 1.20.1, but it should work on most other versions. If you
 encounter any compatibility issues, please report them in the
 [Issues tab](https://github.com/EternalCodeTeam/EternalCombat/issues). The plugin requires Java 17 or later, so please
 make sure it is installed on your server.

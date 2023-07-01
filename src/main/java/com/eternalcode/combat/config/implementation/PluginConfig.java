@@ -43,9 +43,9 @@ public class PluginConfig implements ReloadableConfig {
         public List<String> blockedRegions = Collections.singletonList("your_region");
 
         @Description("# Set the knock multiplier for the blocked region")
-        public double blockedRegionMultiplier = 1.2;
+        public double blockedRegionKnockMultiplier = 1.2;
 
-        @Description("# Set the radius of the blocked region if you aren't using WorldGuard!")
+        @Description("# Set the radius of the blocked region if you aren't using WorldGuard basen on default spawn region!")
         public int blockedRegionRadius = 10;
 
         @Description("# Combat log notification type, available types: ACTION_BAR, CHAT, TITLE, SUBTITLE")
