@@ -5,6 +5,7 @@ import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class DropInfo {
@@ -20,7 +21,7 @@ public class DropInfo {
     }
 
     public List<ItemStack> getDroppedItems() {
-        return this.droppedItems;
+        return new ArrayList<>(this.droppedItems);
     }
 
     public Player getPlayer() {

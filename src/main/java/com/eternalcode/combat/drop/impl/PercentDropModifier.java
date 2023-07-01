@@ -7,7 +7,6 @@ import com.eternalcode.combat.drop.DropType;
 import com.eternalcode.combat.util.MathUtil;
 import org.bukkit.inventory.ItemStack;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
@@ -19,37 +18,30 @@ public class PercentDropModifier implements DropModifier {
     }
 
     @Override
-    public List<ItemStack> modifyDrop(DropInfo record, PluginConfig config) {
+    public List<ItemStack> modifyDrop(DropInfo info, PluginConfig config) {
         Random random = new Random();
 
-        int percent = config.settings.dropItemPercent;
+        int dropItemPercent = config.settings.dropItemPercent;
 
-        List<ItemStack> originalDrop = record.getDroppedItems();
+        List<ItemStack> droppedItems = info.getDroppedItems();
 
-        int originalSize = originalDrop.stream()
-            .mapToInt(ItemStack::getAmount)
-            .sum();
+        int totalItemsSize = droppedItems.stream().mapToInt(ItemStack::getAmount).sum();
+        long amountItemsToDelete = MathUtil.calculateRoundedPercentageValue(dropItemPercent, totalItemsSize);
 
-        long modifiedSize = MathUtil.getRoundedFromPercent(percent, originalSize);
+        for (int i = 0; i < amountItemsToDelete; i++) {
+            int index = random.nextInt(droppedItems.size());
 
-        List<ItemStack> modifiedDrop = new ArrayList<>(List.copyOf(originalDrop));
+            ItemStack item = droppedItems.get(index);
+            int newAmount = item.getAmount() - 1;
 
-        for (int i = 0; i < modifiedSize; i++) {
-            int randomIndex = random.nextInt(originalDrop.size());
-
-            ItemStack item = modifiedDrop.get(randomIndex).clone();
-            int ammount = item.getAmount();
-
-            item.setAmount(ammount - 1);
-
-            if (ammount <= 0) {
-                modifiedDrop.remove(randomIndex);
+            if (newAmount <= 0) {
+                droppedItems.remove(index);
                 continue;
             }
 
-            modifiedDrop.set(randomIndex, item);
+            item.setAmount(newAmount);
         }
 
-        return modifiedDrop;
+        return droppedItems;
     }
 }
