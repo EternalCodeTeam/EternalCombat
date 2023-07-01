@@ -20,4 +20,8 @@ public class MathUtil {
     public static <T> int sum(Collection<T> collection, ToIntFunction<? super T> mapper) {
         return collection.stream().mapToInt(mapper).sum();
     }
+
+    public static int clamp(int value, int min, int max) {
+        return Math.max(min, Math.min(max, value));
+    }
 }

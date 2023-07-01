@@ -21,16 +21,14 @@ public class PercentDropModifier implements DropModifier {
     public void modifyDrop(DropInfo info, PluginConfig config) {
         Random random = new Random();
 
-        int dropItemPercent = config.settings.dropItemPercent;
+        int dropItemPercent = 100 - MathUtil.clamp(config.settings.dropItemPercent, 0, 100);
 
         List<ItemStack> droppedItems = info.getDroppedItems();
 
-        int totalItemsAmmount = MathUtil.sum(droppedItems, ItemStack::getAmount);
-        int ammountItemsToDelete = MathUtil.getRoundedPercentage(dropItemPercent, totalItemsAmmount);
+        int itemsToDelete = this.calculateItemsToDelete(dropItemPercent, droppedItems);
+        int droppedExp = this.calculateDroppedExp(dropItemPercent, info.getDroppedExp());
 
-        int droppedExp = MathUtil.getRoundedPercentage(dropItemPercent, info.getDroppedExp());
-
-        for (int i = 0; i < ammountItemsToDelete; i++) {
+        for (int i = 0; i < itemsToDelete; i++) {
             if (droppedItems.isEmpty()) {
                 return;
             }
@@ -50,5 +48,14 @@ public class PercentDropModifier implements DropModifier {
 
         info.setDroppedItems(droppedItems);
         info.setDroppedExp(droppedExp);
+    }
+
+    private int calculateItemsToDelete(int percent, List<ItemStack> droppedItems) {
+        int total = MathUtil.sum(droppedItems, ItemStack::getAmount);
+        return MathUtil.getRoundedPercentage(percent, total);
+    }
+
+    private int calculateDroppedExp(int percent, int exp) {
+        return MathUtil.getRoundedPercentage(percent, exp);
     }
 }
