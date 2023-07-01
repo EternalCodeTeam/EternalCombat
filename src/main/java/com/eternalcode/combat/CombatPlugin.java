@@ -6,6 +6,9 @@ import com.eternalcode.combat.command.PermissionMessage;
 import com.eternalcode.combat.config.ConfigBackupService;
 import com.eternalcode.combat.config.ConfigManager;
 import com.eternalcode.combat.config.implementation.PluginConfig;
+import com.eternalcode.combat.drop.DropController;
+import com.eternalcode.combat.drop.DropManager;
+import com.eternalcode.combat.drop.impl.PercentDropModifier;
 import com.eternalcode.combat.fight.FightManager;
 import com.eternalcode.combat.fight.FightTask;
 import com.eternalcode.combat.fight.controller.FightActionBlockerController;
@@ -84,13 +87,20 @@ public final class CombatPlugin extends JavaPlugin {
 
         new Metrics(this, 17803);
 
+        DropManager dropManager = new DropManager();
+
+        Stream.of(
+            new PercentDropModifier()
+        ).forEach(dropManager::registerModifier);
+
         Stream.of(
             new FightTagController(this.fightManager, pluginConfig, notificationAnnouncer),
             new FightUnTagController(this.fightManager, pluginConfig, notificationAnnouncer),
             new FightActionBlockerController(this.fightManager, notificationAnnouncer, pluginConfig),
             new FightPearlController(pluginConfig.pearl, notificationAnnouncer, this.fightManager, this.fightPearlManager),
             new UpdaterNotificationController(updaterService, pluginConfig, this.audienceProvider, miniMessage),
-            new RegionController(notificationAnnouncer, bridgeService.getRegionProvider(), this.fightManager, pluginConfig)
+            new RegionController(notificationAnnouncer, bridgeService.getRegionProvider(), this.fightManager, pluginConfig),
+            new DropController(dropManager, pluginConfig)
         ).forEach(listener -> this.getServer().getPluginManager().registerEvents(listener, this));
 
         long millis = started.elapsed(TimeUnit.MILLISECONDS);

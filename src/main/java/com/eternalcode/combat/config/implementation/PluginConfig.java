@@ -1,6 +1,7 @@
 package com.eternalcode.combat.config.implementation;
 
 import com.eternalcode.combat.config.ReloadableConfig;
+import com.eternalcode.combat.drop.DropType;
 import com.eternalcode.combat.fight.FightCommandMode;
 import com.eternalcode.combat.fight.pearl.FightPearlSettings;
 import com.eternalcode.combat.notification.NotificationType;
@@ -102,6 +103,16 @@ public class PluginConfig implements ReloadableConfig {
             EntityDamageEvent.DamageCause.FIRE_TICK
         );
 
+        @Description({
+            "# Set a custom way for a player's items to drop on death (if in combat)",
+            "#",
+            "# UNCHANGED - The default way of item drop defined by the engine",
+            "# PERCENT - Drops a fixed percentage of items",
+        })
+        public DropType dropType = DropType.UNCHANGED;
+
+        @Description("# What percentage of items should drop from the player? (Only if Drop Type is set to PERCENT)")
+        public int dropItemPercent = 100;
     }
 
     @Description({ " ", "# Do you want to change the plugin messages?" })
