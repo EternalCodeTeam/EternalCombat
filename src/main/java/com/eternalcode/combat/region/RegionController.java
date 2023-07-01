@@ -49,7 +49,7 @@ public class RegionController implements Listener {
 
             Location playerLocation = player.getLocation().subtract(player.getWorld().getSpawnLocation());
             double distance = playerLocation.distance(player.getWorld().getSpawnLocation());
-            Vector knockback = new Vector(0, 3, 0).multiply(this.pluginConfig.settings.blockedRegionMultiplier / distance);
+            Vector knockback = new Vector(0, 3, 0).multiply(this.pluginConfig.settings.blockedRegionKnockMultiplier / distance);
             Vector vector = playerLocation.toVector().add(knockback);
 
             player.setVelocity(vector);
