@@ -58,7 +58,7 @@ dependencies {
     implementation("org.bstats:bstats-bukkit:3.0.2")
 
     // worldguard
-    compileOnly("com.sk89q.worldguard:worldguard-bukkit:7.0.0")
+    compileOnly("com.sk89q.worldguard:worldguard-bukkit:7.0.8")
 
     // tests
     testImplementation("org.spigotmc:spigot-api:1.19.3-R0.1-SNAPSHOT")
