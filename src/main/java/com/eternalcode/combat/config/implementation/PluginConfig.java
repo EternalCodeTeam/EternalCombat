@@ -2,12 +2,12 @@ package com.eternalcode.combat.config.implementation;
 
 import com.eternalcode.combat.config.ReloadableConfig;
 import com.eternalcode.combat.fight.FightCommandMode;
+import com.eternalcode.combat.fight.pearl.FightPearlSettings;
 import com.eternalcode.combat.notification.NotificationType;
 import net.dzikoysk.cdn.entity.Contextual;
 import net.dzikoysk.cdn.entity.Description;
 import net.dzikoysk.cdn.source.Resource;
 import net.dzikoysk.cdn.source.Source;
-import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.event.entity.EntityDamageEvent;
 
@@ -21,13 +21,8 @@ public class PluginConfig implements ReloadableConfig {
     @Description("# Do you want to change the plugin settings?")
     public Settings settings = new Settings();
 
-    @Description({ " ", "# Do you want to change the plugin messages?" })
-    public Messages messages = new Messages();
-
-    @Override
-    public Resource resource(File folder) {
-        return Source.of(folder, "config.yml");
-    }
+    @Description({" ", "# Block the use of ender pearls"})
+    public FightPearlSettings pearl = new FightPearlSettings();
 
     @Contextual
     public static class Settings {
@@ -106,7 +101,11 @@ public class PluginConfig implements ReloadableConfig {
             EntityDamageEvent.DamageCause.FIRE,
             EntityDamageEvent.DamageCause.FIRE_TICK
         );
+
     }
+
+    @Description({ " ", "# Do you want to change the plugin messages?" })
+    public Messages messages = new Messages();
 
     @Contextual
     public static class Messages {
@@ -179,6 +178,11 @@ public class PluginConfig implements ReloadableConfig {
             @Description("# Message sent when an admin tries to tag themselves")
             public String adminCannotTagSelf = "&cYou cannot tag yourself!";
         }
+    }
+
+    @Override
+    public Resource resource(File folder) {
+        return Source.of(folder, "config.yml");
     }
 
 }

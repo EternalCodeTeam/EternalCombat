@@ -7,7 +7,6 @@ import java.util.UUID;
 public class FightTag {
 
     private final UUID taggedPlayer;
-
     private final Instant endOfCombatLog;
 
     FightTag(UUID personToAddCombat, Instant endOfCombatLog) {
@@ -32,5 +31,4 @@ public class FightTag {
 
         return between;
     }
-
 }
