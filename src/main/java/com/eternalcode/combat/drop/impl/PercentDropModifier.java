@@ -27,7 +27,7 @@ public class PercentDropModifier implements DropModifier {
 
     @Override
     public void modifyDrop(Drop drop) {
-        int dropItemPercent = 100 - MathUtil.clamp(config.dropSettings.dropItemPercent, 0, 100);
+        int dropItemPercent = 100 - MathUtil.clamp(this.config.dropSettings.dropItemPercent, 0, 100);
 
         List<ItemStack> droppedItems = drop.getDroppedItems();
 
