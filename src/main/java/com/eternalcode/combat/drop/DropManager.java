@@ -17,7 +17,7 @@ public class DropManager {
         DropType dropType = dropModifier.getDropType();
 
         if (dropType == null) {
-            throw new RuntimeException("Drop Type cannot be null! '%s'".formatted(dropModifier.getClass().getSimpleName()));
+            throw new RuntimeException("Drop type cannot be null! '%s'".formatted(dropModifier.getClass().getSimpleName()));
         }
 
         if (dropType == DropType.UNCHANGED) {
