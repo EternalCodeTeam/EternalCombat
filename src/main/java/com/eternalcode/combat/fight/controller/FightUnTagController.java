@@ -47,9 +47,9 @@ public class FightUnTagController implements Listener {
 
         String format = formatter.format(this.config.messages.playerLoggedOutDuringCombat);
 
-        this.fightManager.untag(player.getUniqueId());
         this.announcer.broadcast(player, format);
-        player.setHealth(0.0);
+
+        player.setHealth(0.0); // Untagged in PlayerDeathEvent TODO: move to feature controller (this is not untag action)
     }
 
 }
