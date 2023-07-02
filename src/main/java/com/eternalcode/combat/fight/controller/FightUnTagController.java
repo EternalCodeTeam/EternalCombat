@@ -49,7 +49,7 @@ public class FightUnTagController implements Listener {
 
         this.announcer.broadcast(player, format);
 
-        player.setHealth(0.0); // Untagged in PlayerDeathEvent
+        player.setHealth(0.0); // Untagged in PlayerDeathEvent TODO: move to feature controller (this is not untag action)
     }
 
 }
