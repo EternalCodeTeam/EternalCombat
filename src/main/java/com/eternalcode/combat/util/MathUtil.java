@@ -9,8 +9,8 @@ public class MathUtil {
         throw new UnsupportedOperationException("This is a utility class and cannot be instantiated");
     }
 
-    public static double getPercentage(int percentage, int baseNumber) {
-        return (percentage / 100f) * baseNumber;
+    public static double getCountFromPercentage(int percentage, int totalCount) {
+        return (percentage / 100D) * totalCount;
     }
 
     public static int getRoundedPercentage(int percentage, int baseNumber) {
