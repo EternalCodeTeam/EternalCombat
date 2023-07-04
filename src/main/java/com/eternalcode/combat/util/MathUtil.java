@@ -10,7 +10,7 @@ public class MathUtil {
     }
 
     public static double getCountFromPercentage(int percentage, int totalCount) {
-        return (percentage / 100D) * totalCount;
+        return percentage / 100D * totalCount;
     }
 
     public static int getRoundedCountFromPercentage(int percentage, int baseNumber) {
