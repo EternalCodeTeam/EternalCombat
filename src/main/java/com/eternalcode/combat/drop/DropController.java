@@ -1,6 +1,5 @@
 package com.eternalcode.combat.drop;
 
-import com.eternalcode.combat.config.implementation.PluginConfig;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -9,16 +8,16 @@ import org.bukkit.event.entity.PlayerDeathEvent;
 public class DropController implements Listener {
 
     private final DropManager dropManager;
-    private final PluginConfig config;
+    private final DropSettings dropSettings;
 
-    public DropController(DropManager dropManager, PluginConfig config) {
+    public DropController(DropManager dropManager, DropSettings dropSettings) {
         this.dropManager = dropManager;
-        this.config = config;
+        this.dropSettings = dropSettings;
     }
 
     @EventHandler
     void onPlayerDeath(PlayerDeathEvent event) {
-        DropType dropType = this.config.dropSettings.dropType;
+        DropType dropType = this.dropSettings.dropType;
 
         if (dropType == DropType.UNCHANGED) {
             return;
@@ -38,7 +37,7 @@ public class DropController implements Listener {
         event.getDrops().clear();
         event.getDrops().addAll(drop.getDroppedItems());
 
-        if (this.config.dropSettings.affectExperience) {
+        if (this.dropSettings.affectExperience) {
             event.setDroppedExp(drop.getDroppedExp());
         }
     }
