@@ -1,6 +1,7 @@
 package com.eternalcode.combat.config.implementation;
 
 import com.eternalcode.combat.config.ReloadableConfig;
+import com.eternalcode.combat.drop.DropSettings;
 import com.eternalcode.combat.fight.FightCommandMode;
 import com.eternalcode.combat.fight.pearl.FightPearlSettings;
 import com.eternalcode.combat.notification.NotificationType;
@@ -23,6 +24,9 @@ public class PluginConfig implements ReloadableConfig {
 
     @Description({" ", "# Block the use of ender pearls"})
     public FightPearlSettings pearl = new FightPearlSettings();
+
+    @Description({ " ", "# Set a custom way for a player's items to drop on death (if in combat)" })
+    public DropSettings dropSettings = new DropSettings();
 
     @Contextual
     public static class Settings {
@@ -101,7 +105,6 @@ public class PluginConfig implements ReloadableConfig {
             EntityDamageEvent.DamageCause.FIRE,
             EntityDamageEvent.DamageCause.FIRE_TICK
         );
-
     }
 
     @Description({ " ", "# Do you want to change the plugin messages?" })
