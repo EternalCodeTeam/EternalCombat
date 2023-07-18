@@ -20,6 +20,11 @@ encounter any compatibility issues, please report them in the
 [Issues tab](https://github.com/EternalCodeTeam/EternalCombat/issues). The plugin requires Java 17 or later, so please
 make sure it is installed on your server.
 
+## Building
+Build EternalCombat using:
+
+./gradlew shadowJar && ./gradlew build
+
 ### Permissions for EternalCombat
 
 - `eternalcombat.status` - Allows to check if the player is in combat `/combatlog status <player>`
