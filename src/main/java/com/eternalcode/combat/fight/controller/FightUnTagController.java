@@ -5,7 +5,9 @@ import com.eternalcode.combat.fight.FightManager;
 import com.eternalcode.combat.notification.NotificationAnnouncer;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
+import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import panda.utilities.text.Formatter;
@@ -32,6 +34,27 @@ public class FightUnTagController implements Listener {
 
         this.announcer.sendMessage(player, this.config.messages.playerUntagged);
         this.fightManager.untag(player.getUniqueId());
+    }
+
+    @EventHandler(priority = EventPriority.MONITOR)
+    void onEntityDamgeByEntity(EntityDamageByEntityEvent event) {
+        if (!(event.getEntity() instanceof Player victim)) {
+            return;
+        }
+
+        if (!(event.getDamager() instanceof Player damager)) {
+            return;
+        }
+
+        if (victim.getHealth() > event.getFinalDamage()) {
+            return;
+        }
+
+        if (!this.fightManager.isInCombat(damager.getUniqueId())) {
+            return;
+        }
+
+        this.fightManager.untag(damager.getUniqueId());
     }
 
     @EventHandler
