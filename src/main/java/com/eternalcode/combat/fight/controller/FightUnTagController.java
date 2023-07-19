@@ -54,6 +54,7 @@ public class FightUnTagController implements Listener {
             return;
         }
 
+        this.announcer.sendMessage(damager, this.config.messages.playerUntagged);
         this.fightManager.untag(damager.getUniqueId());
     }
 
