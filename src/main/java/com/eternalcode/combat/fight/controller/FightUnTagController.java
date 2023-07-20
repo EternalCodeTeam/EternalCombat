@@ -10,6 +10,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
+import org.jetbrains.annotations.Nullable;
 import panda.utilities.text.Formatter;
 
 public class FightUnTagController implements Listener {
@@ -27,35 +28,10 @@ public class FightUnTagController implements Listener {
     @EventHandler
     void onPlayerDeath(PlayerDeathEvent event) {
         Player player = event.getEntity();
+        Player killer = player.getKiller();
 
-        if (!this.fightManager.isInCombat(player.getUniqueId())) {
-            return;
-        }
-
-        this.announcer.sendMessage(player, this.config.messages.playerUntagged);
-        this.fightManager.untag(player.getUniqueId());
-    }
-
-    @EventHandler(priority = EventPriority.MONITOR)
-    void onEntityDamgeByEntity(EntityDamageByEntityEvent event) {
-        if (!(event.getEntity() instanceof Player victim)) {
-            return;
-        }
-
-        if (!(event.getDamager() instanceof Player damager)) {
-            return;
-        }
-
-        if (victim.getHealth() > event.getFinalDamage()) {
-            return;
-        }
-
-        if (!this.fightManager.isInCombat(damager.getUniqueId())) {
-            return;
-        }
-
-        this.announcer.sendMessage(damager, this.config.messages.playerUntagged);
-        this.fightManager.untag(damager.getUniqueId());
+        this.untagPlayer(player);
+        this.untagPlayer(killer);
     }
 
     @EventHandler
@@ -76,4 +52,12 @@ public class FightUnTagController implements Listener {
         player.setHealth(0.0); // Untagged in PlayerDeathEvent TODO: move to feature controller (this is not untag action)
     }
 
+    private void untagPlayer(@Nullable Player player) {
+        if (player == null || !this.fightManager.isInCombat(player.getUniqueId())) {
+            return;
+        }
+
+        this.announcer.sendMessage(player, this.config.messages.playerUntagged);
+        this.fightManager.untag(player.getUniqueId());
+    }
 }
