@@ -32,7 +32,7 @@ public class FightUnTagController implements Listener {
 
         this.untagPlayer(player);
 
-        if (this.config.settings.shouldReleaseAttacker) {
+        if (killer != null && this.config.settings.shouldReleaseAttacker) {
             this.untagPlayer(killer);
         }
     }
@@ -55,8 +55,8 @@ public class FightUnTagController implements Listener {
         player.setHealth(0.0); // Untagged in PlayerDeathEvent TODO: move to feature controller (this is not untag action)
     }
 
-    private void untagPlayer(@Nullable Player player) {
-        if (player == null || !this.fightManager.isInCombat(player.getUniqueId())) {
+    private void untagPlayer(Player player) {
+        if (!this.fightManager.isInCombat(player.getUniqueId())) {
             return;
         }
 
