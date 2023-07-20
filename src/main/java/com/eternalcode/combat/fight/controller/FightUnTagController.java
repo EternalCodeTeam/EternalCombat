@@ -31,7 +31,10 @@ public class FightUnTagController implements Listener {
         Player killer = player.getKiller();
 
         this.untagPlayer(player);
-        this.untagPlayer(killer);
+
+        if (this.config.settings.shouldReleaseAttacker) {
+            this.untagPlayer(killer);
+        }
     }
 
     @EventHandler
