@@ -23,7 +23,7 @@ make sure it is installed on your server.
 ## Building
 Build EternalCombat using:
 
-./gradlew shadowJar && ./gradlew build
+`./gradlew shadowJar`
 
 ### Permissions for EternalCombat
 
