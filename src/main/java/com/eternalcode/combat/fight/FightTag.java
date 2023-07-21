@@ -9,9 +9,12 @@ public class FightTag {
     private final UUID taggedPlayer;
     private final Instant endOfCombatLog;
 
+    private double healthBeforeDie;
+
     FightTag(UUID personToAddCombat, Instant endOfCombatLog) {
         this.taggedPlayer = personToAddCombat;
         this.endOfCombatLog = endOfCombatLog;
+        this.healthBeforeDie = 0;
     }
 
     public UUID getTaggedPlayer() {
@@ -30,5 +33,13 @@ public class FightTag {
         }
 
         return between;
+    }
+
+    public double getHealthBeforeDie() {
+        return this.healthBeforeDie;
+    }
+
+    public void setHealthBeforeDie(double health) {
+        this.healthBeforeDie = health;
     }
 }

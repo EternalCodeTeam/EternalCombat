@@ -13,6 +13,14 @@ public class MathUtil {
         return percentage / 100D * totalCount;
     }
 
+    public static double getCountPercentage(double value, double base) {
+        return value / base * 100;
+    }
+
+    public static int getRoundedCountPercentage(double value, double base) {
+        return (int) Math.round(getCountPercentage(value, base));
+    }
+
     public static int getRoundedCountFromPercentage(int percentage, int baseNumber) {
         return (int) Math.round(getCountFromPercentage(percentage, baseNumber));
     }

@@ -2,12 +2,15 @@ package com.eternalcode.combat.fight.controller;
 
 import com.eternalcode.combat.config.implementation.PluginConfig;
 import com.eternalcode.combat.fight.FightManager;
+import com.eternalcode.combat.fight.FightTag;
 import com.eternalcode.combat.notification.NotificationAnnouncer;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerQuitEvent;
 import panda.utilities.text.Formatter;
+
+import java.util.Optional;
 
 public class FightEscapeController implements Listener {
 
@@ -35,6 +38,9 @@ public class FightEscapeController implements Listener {
         String format = formatter.format(this.config.messages.playerLoggedOutDuringCombat);
 
         this.announcer.broadcast(player, format);
+
+        Optional<FightTag> fightTag = this.fightManager.getTag(player.getUniqueId());
+        fightTag.ifPresent(tag -> tag.setHealthBeforeDie(player.getHealth()));
 
         player.setHealth(0.0); // Untagged in PlayerDeathEvent
     }

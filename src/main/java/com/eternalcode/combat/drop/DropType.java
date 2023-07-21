@@ -4,5 +4,6 @@ public enum DropType {
 
     UNCHANGED,
     PERCENT,
+    PLAYERS_HEALTH
 
 }

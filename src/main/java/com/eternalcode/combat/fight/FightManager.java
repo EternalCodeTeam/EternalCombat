@@ -6,6 +6,7 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.Map;
 import java.util.UUID;
+import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
 
 public class FightManager {
@@ -42,6 +43,10 @@ public class FightManager {
 
     public Collection<FightTag> getFights() {
         return Collections.unmodifiableCollection(this.fights.values());
+    }
+
+    public Optional<FightTag> getTag(UUID target) {
+        return Optional.ofNullable(this.fights.get(target));
     }
 
     public void untagAll() {
