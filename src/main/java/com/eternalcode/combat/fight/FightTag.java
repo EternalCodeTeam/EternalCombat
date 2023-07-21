@@ -9,12 +9,15 @@ public class FightTag {
     private final UUID taggedPlayer;
     private final Instant endOfCombatLog;
 
-    private double healthBeforeDie;
+    private double healthBeforeDeath;
+    private FightDeathCasue deathCasue;
 
     FightTag(UUID personToAddCombat, Instant endOfCombatLog) {
         this.taggedPlayer = personToAddCombat;
         this.endOfCombatLog = endOfCombatLog;
-        this.healthBeforeDie = 0;
+
+        this.healthBeforeDeath = 0;
+        this.deathCasue = FightDeathCasue.UNKNOWN;
     }
 
     public UUID getTaggedPlayer() {
@@ -35,11 +38,19 @@ public class FightTag {
         return between;
     }
 
-    public double getHealthBeforeDie() {
-        return this.healthBeforeDie;
+    public double getHealthBeforeDeath() {
+        return this.healthBeforeDeath;
     }
 
-    public void setHealthBeforeDie(double health) {
-        this.healthBeforeDie = health;
+    public void setHealthBeforeDeath(double health) {
+        this.healthBeforeDeath = health;
+    }
+
+    public FightDeathCasue getDeathCasue() {
+        return this.deathCasue;
+    }
+
+    public void setDeathCasue(FightDeathCasue deathCasue) {
+        this.deathCasue = deathCasue;
     }
 }

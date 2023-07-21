@@ -1,5 +1,6 @@
 package com.eternalcode.combat.drop;
 
+import com.eternalcode.combat.fight.FightDeathCasue;
 import com.eternalcode.combat.fight.FightTag;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
@@ -14,14 +15,16 @@ public class Drop {
     private final Player player;
     private final Player killer;
     private final FightTag fightTag;
+    private final FightDeathCasue deathCasue;
 
     private List<ItemStack> droppedItems;
     private int droppedExp;
 
-    private Drop(Player player, Player killer, FightTag fightTag, List<ItemStack> droppedItems, int droppedExp) {
+    private Drop(Player player, Player killer, FightTag fightTag, FightDeathCasue deathCasue, List<ItemStack> droppedItems, int droppedExp) {
         this.player = player;
         this.killer = killer;
         this.fightTag = fightTag;
+        this.deathCasue = deathCasue;
 
         this.droppedItems = droppedItems;
         this.droppedExp = droppedExp;
@@ -47,6 +50,10 @@ public class Drop {
         return this.fightTag;
     }
 
+    public FightDeathCasue getDeathCasue() {
+        return this.deathCasue;
+    }
+
     public boolean hasKiller() {
         return this.killer != null;
     }
@@ -68,6 +75,7 @@ public class Drop {
         private Player player;
         private Player killer;
         private FightTag fightTag;
+        private FightDeathCasue deathCasue;
         private List<ItemStack> droppedItems;
         private int droppedExp;
 
@@ -86,6 +94,11 @@ public class Drop {
             return this;
         }
 
+        public Builder deathCasue(@NotNull FightDeathCasue deathCasue) {
+            this.deathCasue = deathCasue;
+            return this;
+        }
+
         public Builder droppedItems(@NotNull List<ItemStack> droppedItems) {
             this.droppedItems = new ArrayList<>(droppedItems);
             return this;
@@ -101,6 +114,7 @@ public class Drop {
               this.player,
               this.killer,
               this.fightTag,
+              this.deathCasue,
               this.droppedItems,
               this.droppedExp
             );

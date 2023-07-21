@@ -5,6 +5,7 @@ import com.eternalcode.combat.drop.Drop;
 import com.eternalcode.combat.drop.DropModifier;
 import com.eternalcode.combat.drop.DropSettings;
 import com.eternalcode.combat.drop.DropType;
+import com.eternalcode.combat.fight.FightDeathCasue;
 import com.eternalcode.combat.fight.FightTag;
 import com.eternalcode.combat.util.CollectionsUtil;
 import com.eternalcode.combat.util.MathUtil;
@@ -29,13 +30,17 @@ public class PlayersHealthDropModifier implements DropModifier {
 
     @Override
     public void modifyDrop(Drop drop) {
+        if (drop.getDeathCasue() != FightDeathCasue.ESCAPE) {
+            return;
+        }
+
         Player player = drop.getPlayer();
         FightTag fightTag = drop.getFightTag();
 
         List<ItemStack> droppedItems = drop.getDroppedItems();
 
         double maxHealth = player.getAttribute(Attribute.GENERIC_MAX_HEALTH).getBaseValue();
-        double health = fightTag.getHealthBeforeDie();
+        double health = fightTag.getHealthBeforeDeath();
 
         int percentHealth = MathUtil.getRoundedCountPercentage(health, maxHealth);
         int reversedPercent = MathUtil.clamp(100 - percentHealth, this.settings.playersHealthPercentClamp, 100);

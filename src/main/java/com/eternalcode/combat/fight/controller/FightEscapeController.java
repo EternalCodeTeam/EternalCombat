@@ -1,6 +1,7 @@
 package com.eternalcode.combat.fight.controller;
 
 import com.eternalcode.combat.config.implementation.PluginConfig;
+import com.eternalcode.combat.fight.FightDeathCasue;
 import com.eternalcode.combat.fight.FightManager;
 import com.eternalcode.combat.fight.FightTag;
 import com.eternalcode.combat.notification.NotificationAnnouncer;
@@ -39,8 +40,8 @@ public class FightEscapeController implements Listener {
 
         this.announcer.broadcast(player, format);
 
-        Optional<FightTag> fightTag = this.fightManager.getTag(player.getUniqueId());
-        fightTag.ifPresent(tag -> tag.setHealthBeforeDie(player.getHealth()));
+        FightTag fightTag = this.fightManager.getTag(player.getUniqueId());
+        fightTag.setHealthBeforeDeath(player.getHealth());
 
         player.setHealth(0.0); // Untagged in PlayerDeathEvent
     }

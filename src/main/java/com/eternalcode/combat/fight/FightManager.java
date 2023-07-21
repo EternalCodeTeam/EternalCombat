@@ -45,12 +45,11 @@ public class FightManager {
         return Collections.unmodifiableCollection(this.fights.values());
     }
 
-    public Optional<FightTag> getTag(UUID target) {
-        return Optional.ofNullable(this.fights.get(target));
+    public FightTag getTag(UUID target) {
+        return this.fights.get(target);
     }
 
     public void untagAll() {
         this.fights.clear();
     }
-
 }

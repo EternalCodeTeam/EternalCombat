@@ -12,10 +12,7 @@ import com.eternalcode.combat.drop.impl.PercentDropModifier;
 import com.eternalcode.combat.drop.impl.PlayersHealthDropModifier;
 import com.eternalcode.combat.fight.FightManager;
 import com.eternalcode.combat.fight.FightTask;
-import com.eternalcode.combat.fight.controller.FightActionBlockerController;
-import com.eternalcode.combat.fight.controller.FightEscapeController;
-import com.eternalcode.combat.fight.controller.FightTagController;
-import com.eternalcode.combat.fight.controller.FightUnTagController;
+import com.eternalcode.combat.fight.controller.*;
 import com.eternalcode.combat.fight.pearl.FightPearlController;
 import com.eternalcode.combat.fight.pearl.FightPearlManager;
 import com.eternalcode.combat.notification.NotificationAnnouncer;
@@ -97,6 +94,7 @@ public final class CombatPlugin extends JavaPlugin {
         ).forEach(dropManager::registerModifier);
 
         Stream.of(
+            new FightDeathCasueController(this.fightManager),
             new DropController(dropManager, pluginConfig.dropSettings, this.fightManager),
             new FightTagController(this.fightManager, pluginConfig, notificationAnnouncer),
             new FightUnTagController(this.fightManager, pluginConfig, notificationAnnouncer),

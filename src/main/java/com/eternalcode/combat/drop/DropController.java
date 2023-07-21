@@ -29,13 +29,13 @@ public class DropController implements Listener {
             return;
         }
 
-        FightTag fightTag = this.fightManager.getTag(player.getUniqueId())
-            .orElseThrow(() -> new RuntimeException("FightTag cannot be null!"));
+        FightTag fightTag = this.fightManager.getTag(player.getUniqueId());
 
         Drop drop = Drop.builder()
             .player(player)
             .killer(player.getKiller())
             .fightTag(fightTag)
+            .deathCasue(fightTag.getDeathCasue())
             .droppedItems(event.getDrops())
             .droppedExp(player.getTotalExperience())
             .build();
