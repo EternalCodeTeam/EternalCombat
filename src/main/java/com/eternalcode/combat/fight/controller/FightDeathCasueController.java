@@ -3,6 +3,7 @@ package com.eternalcode.combat.fight.controller;
 import com.eternalcode.combat.fight.FightDeathCasue;
 import com.eternalcode.combat.fight.FightManager;
 import com.eternalcode.combat.fight.FightTag;
+import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -19,7 +20,10 @@ public class FightDeathCasueController implements Listener {
 
     @EventHandler
     public void onEntityDamage(EntityDamageByEntityEvent event) {
-        if (!(event.getEntity() instanceof Player victim)) {
+        Entity victimEntity = event.getEntity();
+        Entity damagerEntity = event.getDamager();
+
+        if (!(victimEntity instanceof Player victim)) {
             return;
         }
 
@@ -31,9 +35,9 @@ public class FightDeathCasueController implements Listener {
             return;
         }
 
-        FightTag fightTag = this.fightManager.getTag(victim.getUniqueId());
+        FightTag fightTag = this.fightManager.getTag(damagerEntity.getUniqueId());
 
-        if (event.getDamager() instanceof Player) {
+        if (damagerEntity instanceof Player) {
             fightTag.setDeathCasue(FightDeathCasue.KILLED_BY_PLAYER);
             return;
         }
