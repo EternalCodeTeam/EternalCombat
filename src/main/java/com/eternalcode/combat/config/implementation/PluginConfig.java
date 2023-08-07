@@ -22,7 +22,7 @@ public class PluginConfig implements ReloadableConfig {
     @Description("# Do you want to change the plugin settings?")
     public Settings settings = new Settings();
 
-    @Description({" ", "# Block the use of ender pearls"})
+    @Description({" ", "# Ender pearl settings"})
     public FightPearlSettings pearl = new FightPearlSettings();
 
     @Description({ " ", "# Set a custom way for a player's items to drop on death (if in combat)" })

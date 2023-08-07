@@ -4,10 +4,14 @@ import com.eternalcode.combat.fight.FightManager;
 import com.eternalcode.combat.notification.NotificationAnnouncer;
 import com.eternalcode.combat.util.DurationUtil;
 import org.bukkit.Material;
+import org.bukkit.entity.EnderPearl;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
+import org.bukkit.event.entity.EntityDamageByEntityEvent;
+import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
 import panda.utilities.text.Formatter;
@@ -48,11 +52,11 @@ public class FightPearlController implements Listener {
             return;
         }
 
-        if (!this.settings.enabled) {
+        if (!this.settings.pearlThrowControlEnabled) {
             return;
         }
 
-        if (this.settings.delay.isZero()) {
+        if (this.settings.pearlThrowDelay.isZero()) {
             event.setCancelled(true);
             this.announcer.sendMessage(player, this.settings.pearlThrowBlockedDuringCombat);
             return;
@@ -72,5 +76,48 @@ public class FightPearlController implements Listener {
         }
 
         this.fightPearlManager.markDelay(uniqueId);
+    }
+
+    @EventHandler(priority = EventPriority.LOW)
+    void onEntityDamage(EntityDamageByEntityEvent event) {
+        if (!this.settings.pearlThrowControlEnabled) {
+            return;
+        }
+
+        if (!(event.getEntity() instanceof Player player)) {
+            return;
+        }
+
+        UUID playerUniqueId = player.getUniqueId();
+
+        if (!(event.getDamager() instanceof EnderPearl)) {
+            return;
+        }
+
+        if (event.getCause() != EntityDamageEvent.DamageCause.FALL) {
+            return;
+        }
+
+        if (!this.settings.pearlThrowMarksCombat) {
+            event.setCancelled(true);
+        }
+
+        if (this.settings.pearlThrowDamageEnabled) {
+            this.damagePlayerIfEventIsCancelled(event, player);
+        }
+        else {
+            if (this.settings.pearlThrowDamageEnabledInCombat && this.fightManager.isInCombat(playerUniqueId)) {
+                this.damagePlayerIfEventIsCancelled(event, player);
+            }
+            else {
+                event.setDamage(0.0D);
+            }
+        }
+    }
+
+    private void damagePlayerIfEventIsCancelled(EntityDamageByEntityEvent event, Player player) {
+        if (event.isCancelled()) {
+            player.damage(event.getFinalDamage());
+        }
     }
 }
