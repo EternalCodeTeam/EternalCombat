@@ -78,17 +78,19 @@ public class FightPearlController implements Listener {
         this.fightPearlManager.markDelay(uniqueId);
     }
 
-    @EventHandler(priority = EventPriority.LOW)
+    @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
     void onEntityDamage(EntityDamageByEntityEvent event) {
         if (!this.settings.pearlThrowControlEnabled) {
             return;
         }
 
-        if (!(event.getEntity() instanceof Player player)) {
+        if (this.settings.pearlThrowDamageEnabled) {
             return;
         }
 
-        UUID playerUniqueId = player.getUniqueId();
+        if (!(event.getEntity() instanceof Player)) {
+            return;
+        }
 
         if (!(event.getDamager() instanceof EnderPearl)) {
             return;
@@ -98,26 +100,6 @@ public class FightPearlController implements Listener {
             return;
         }
 
-        if (!this.settings.pearlThrowMarksCombat) {
-            event.setCancelled(true);
-        }
-
-        if (this.settings.pearlThrowDamageEnabled) {
-            this.damagePlayerIfEventIsCancelled(event, player);
-        }
-        else {
-            if (this.settings.pearlThrowDamageEnabledInCombat && this.fightManager.isInCombat(playerUniqueId)) {
-                this.damagePlayerIfEventIsCancelled(event, player);
-            }
-            else {
-                event.setDamage(0.0D);
-            }
-        }
-    }
-
-    private void damagePlayerIfEventIsCancelled(EntityDamageByEntityEvent event, Player player) {
-        if (event.isCancelled()) {
-            player.damage(event.getFinalDamage());
-        }
+        event.setDamage(0.0D);
     }
 }

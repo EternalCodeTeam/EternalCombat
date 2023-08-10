@@ -10,6 +10,7 @@ import net.dzikoysk.cdn.entity.Description;
 import net.dzikoysk.cdn.source.Resource;
 import net.dzikoysk.cdn.source.Source;
 import org.bukkit.Material;
+import org.bukkit.entity.EntityType;
 import org.bukkit.event.entity.EntityDamageEvent;
 
 import java.io.File;
@@ -104,6 +105,16 @@ public class PluginConfig implements ReloadableConfig {
             EntityDamageEvent.DamageCause.CONTACT,
             EntityDamageEvent.DamageCause.FIRE,
             EntityDamageEvent.DamageCause.FIRE_TICK
+        );
+
+        @Description({
+            "# After what type of entity damage should the player get a combat log?",
+            "# You can find a list of all entity types here: https://hub.spigotmc.org/javadocs/bukkit/org/bukkit/entity/EntityType.html",
+            "# If you don't want the combat log to be given to players for a certain entity type, simply remove it from this list"
+        })
+        public List<EntityType> entityTypesToLog = List.of(
+            EntityType.PLAYER,
+            EntityType.ENDER_PEARL
         );
     }
 

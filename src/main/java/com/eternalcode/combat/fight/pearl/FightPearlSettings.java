@@ -11,14 +11,8 @@ public class FightPearlSettings {
     @Description("# If you want to completely disable the plugin's pearl throw control, set this to false")
     public boolean pearlThrowControlEnabled = true;
 
-    @Description("# Ender pearl throw marks player as in combat?")
-    public boolean pearlThrowMarksCombat = true;
-
     @Description({ "# Is pearl damage to be enabled?", "# This will work globally" })
     public boolean pearlThrowDamageEnabled = true;
-
-    @Description({ "# Is pearl damage to be enabled only in combat?", "# This will work only when player is in combat" })
-    public boolean pearlThrowDamageEnabledInCombat = false;
 
     @Description({
         "# Block throwing pearls with delay?",
