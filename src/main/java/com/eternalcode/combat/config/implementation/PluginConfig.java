@@ -108,12 +108,9 @@ public class PluginConfig implements ReloadableConfig {
         );
 
         @Description({
-            "# After what type of entity damage should the player get a combat log?",
-            "# You can find a list of all entity types here: https://hub.spigotmc.org/javadocs/bukkit/org/bukkit/entity/EntityType.html",
-            "# If you don't want the combat log to be given to players for a certain entity type, simply remove it from this list"
-        })
-        public List<EntityType> entityTypesToLog = List.of(
-            EntityType.PLAYER,
+            "# After what type of projectile entity should not tag the player as fighter?",
+            "# You can find a list of all entity types here: https://hub.spigotmc.org/javadocs/bukkit/org/bukkit/entity/EntityType.html"
+        public List<EntityType> disabledProjectileEntites = List.of(
             EntityType.ENDER_PEARL
         );
     }
