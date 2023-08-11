@@ -35,9 +35,9 @@ public class FightTagController implements Listener {
             return;
         }
 
-        List<EntityType> disabledProjectileEntites = this.config.settings.disabledProjectileEntites;
+        List<EntityType> disabledProjectileEntities = this.config.settings.disabledProjectileEntities;
         
-        if (event.getDamager() instanceof Projectile projectile && disabledProjectileEntites.contains(projectile.getType())) {
+        if (event.getDamager() instanceof Projectile projectile && disabledProjectileEntities.contains(projectile.getType())) {
             return;
         }
 

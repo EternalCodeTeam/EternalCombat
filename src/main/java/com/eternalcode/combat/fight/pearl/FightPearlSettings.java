@@ -8,11 +8,11 @@ import java.time.Duration;
 @Contextual
 public class FightPearlSettings {
 
-    @Description("# If you want to completely disable the plugin's pearl throw control, set this to false")
-    public boolean pearlThrowControlEnabled = true;
-
     @Description({ "# Is pearl damage to be enabled?", "# This will work globally" })
     public boolean pearlThrowDamageEnabled = true;
+
+    @Description("# Set true, If you want to lock pearls during the combat")
+    public boolean pearlThrowBlocked = false;
 
     @Description({
         "# Block throwing pearls with delay?",

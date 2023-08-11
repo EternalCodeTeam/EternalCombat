@@ -38,6 +38,10 @@ public class FightPearlController implements Listener {
         Player player = event.getPlayer();
         UUID uniqueId = player.getUniqueId();
 
+        if (!this.settings.pearlThrowBlocked) {
+            return;
+        }
+
         if (!this.fightManager.isInCombat(uniqueId)) {
             return;
         }
@@ -49,10 +53,6 @@ public class FightPearlController implements Listener {
 
         Action action = event.getAction();
         if (action != Action.RIGHT_CLICK_AIR && action != Action.RIGHT_CLICK_BLOCK) {
-            return;
-        }
-
-        if (!this.settings.pearlThrowControlEnabled) {
             return;
         }
 
@@ -80,10 +80,6 @@ public class FightPearlController implements Listener {
 
     @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
     void onEntityDamage(EntityDamageByEntityEvent event) {
-        if (!this.settings.pearlThrowControlEnabled) {
-            return;
-        }
-
         if (this.settings.pearlThrowDamageEnabled) {
             return;
         }

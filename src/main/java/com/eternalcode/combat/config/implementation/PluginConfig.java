@@ -110,7 +110,8 @@ public class PluginConfig implements ReloadableConfig {
         @Description({
             "# After what type of projectile entity should not tag the player as fighter?",
             "# You can find a list of all entity types here: https://hub.spigotmc.org/javadocs/bukkit/org/bukkit/entity/EntityType.html"
-        public List<EntityType> disabledProjectileEntites = List.of(
+        })
+        public List<EntityType> disabledProjectileEntities = List.of(
             EntityType.ENDER_PEARL
         );
     }
