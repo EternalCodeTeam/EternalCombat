@@ -94,6 +94,9 @@ public class PluginConfig implements ReloadableConfig {
         @Description("# Should the option below be enabled?")
         public boolean shouldEnableDamageCauses = true;
 
+        @Description("# Do You want to enable combat log for specific damage causes? - Set to true to blacklist")
+        public boolean shouldBlacklistDamageCauses = false;
+
         @Description({
             "# After what type of damage the player should get a combat log?",
             "# You can find a list of all causes here: https://hub.spigotmc.org/javadocs/spigot/org/bukkit/event/entity/EntityDamageEvent.DamageCause.html",

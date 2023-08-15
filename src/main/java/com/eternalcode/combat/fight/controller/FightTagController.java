@@ -80,7 +80,17 @@ public class FightTagController implements Listener {
         UUID uuid = player.getUniqueId();
 
         List<EntityDamageEvent.DamageCause> damageCauses = this.config.settings.damageCausesToLog;
+        boolean blacklistMode = this.config.settings.shouldBlacklistDamageCauses;
+
         EntityDamageEvent.DamageCause cause = event.getCause();
+
+        if (!blacklistMode && !damageCauses.contains(cause)) {
+            return;
+        }
+
+        if (blacklistMode && damageCauses.contains(cause)) {
+            return;
+        }
 
         if (!damageCauses.contains(cause)) {
             return;
