@@ -91,16 +91,17 @@ public class PluginConfig implements ReloadableConfig {
         })
         public List<Material> specificBlocksToPreventPlacing = List.of();
 
-        @Description("# Should the option below be enabled?")
+        @Description("# Do You want to enable combat log for non-player causes of damage? - Set to false to disable")
         public boolean shouldEnableDamageCauses = true;
 
-        @Description("# Do You want to enable combat log for specific damage causes? - Set to true to blacklist")
+        @Description("# Do You want to blacklist damage causes? - Set to false to use whitelist mode.")
         public boolean shouldBlacklistDamageCauses = false;
 
         @Description({
-            "# After what type of damage the player should get a combat log?",
+            "# After what type of damage the player should or shouldn't get a combat log?",
             "# You can find a list of all causes here: https://hub.spigotmc.org/javadocs/spigot/org/bukkit/event/entity/EntityDamageEvent.DamageCause.html",
-            "# If you don't want the combat log to be given to players for a certain damage type, simply remove it from this list"
+            "# While using Whitelist mode (false above) the player will get a combat log after the damage from the list below",
+            "# While using Blacklist mode (true above) the player will get a combat log after any damage non-listed below",
         })
         public List<EntityDamageEvent.DamageCause> damageCausesToLog = List.of(
             EntityDamageEvent.DamageCause.LAVA,
