@@ -92,10 +92,6 @@ public class FightTagController implements Listener {
             return;
         }
 
-        if (!damageCauses.contains(cause)) {
-            return;
-        }
-
         if (!this.fightManager.isInCombat(uuid)) {
             this.announcer.sendMessage(player, this.config.messages.playerTagged);
         }
