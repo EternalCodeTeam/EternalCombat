@@ -25,13 +25,13 @@ public class FightUnTagController implements Listener {
     @EventHandler
     void onPlayerDeath(PlayerDeathEvent event) {
         Player player = event.getEntity();
+        Player killer = player.getKiller();
 
-        if (!this.fightManager.isInCombat(player.getUniqueId())) {
-            return;
+        this.untagPlayer(player);
+
+        if (killer != null && this.config.settings.shouldReleaseAttacker) {
+            this.untagPlayer(killer);
         }
-
-        this.announcer.sendMessage(player, this.config.messages.playerUntagged);
-        this.fightManager.untag(player.getUniqueId());
     }
 
     @EventHandler
@@ -52,4 +52,12 @@ public class FightUnTagController implements Listener {
         player.setHealth(0.0); // Untagged in PlayerDeathEvent TODO: move to feature controller (this is not untag action)
     }
 
+    private void untagPlayer(Player player) {
+        if (!this.fightManager.isInCombat(player.getUniqueId())) {
+            return;
+        }
+
+        this.announcer.sendMessage(player, this.config.messages.playerUntagged);
+        this.fightManager.untag(player.getUniqueId());
+    }
 }

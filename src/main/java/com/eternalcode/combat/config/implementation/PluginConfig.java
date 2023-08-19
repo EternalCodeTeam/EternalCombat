@@ -52,6 +52,9 @@ public class PluginConfig implements ReloadableConfig {
         @Description("# Set the radius of the blocked region if you aren't using WorldGuard basen on default spawn region!")
         public int blockedRegionRadius = 10;
 
+        @Description("# Release attacker after victim dies?")
+        public boolean shouldReleaseAttacker = true;
+
         @Description("# Combat log notification type, available types: ACTION_BAR, CHAT, TITLE, SUBTITLE")
         public NotificationType notificationType = NotificationType.ACTION_BAR;
 
