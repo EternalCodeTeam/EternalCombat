@@ -10,6 +10,7 @@ import net.dzikoysk.cdn.entity.Description;
 import net.dzikoysk.cdn.source.Resource;
 import net.dzikoysk.cdn.source.Source;
 import org.bukkit.Material;
+import org.bukkit.entity.EntityType;
 import org.bukkit.event.entity.EntityDamageEvent;
 
 import java.io.File;
@@ -22,7 +23,7 @@ public class PluginConfig implements ReloadableConfig {
     @Description("# Do you want to change the plugin settings?")
     public Settings settings = new Settings();
 
-    @Description({" ", "# Block the use of ender pearls"})
+    @Description({" ", "# Ender pearl settings"})
     public FightPearlSettings pearl = new FightPearlSettings();
 
     @Description({ " ", "# Set a custom way for a player's items to drop on death (if in combat)" })
@@ -104,6 +105,14 @@ public class PluginConfig implements ReloadableConfig {
             EntityDamageEvent.DamageCause.CONTACT,
             EntityDamageEvent.DamageCause.FIRE,
             EntityDamageEvent.DamageCause.FIRE_TICK
+        );
+
+        @Description({
+            "# After what type of projectile entity should not tag the player as fighter?",
+            "# You can find a list of all entity types here: https://hub.spigotmc.org/javadocs/bukkit/org/bukkit/entity/EntityType.html"
+        })
+        public List<EntityType> disabledProjectileEntities = List.of(
+            EntityType.ENDER_PEARL
         );
     }
 

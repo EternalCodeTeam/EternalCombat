@@ -3,6 +3,7 @@ package com.eternalcode.combat.fight.controller;
 import com.eternalcode.combat.config.implementation.PluginConfig;
 import com.eternalcode.combat.fight.FightManager;
 import com.eternalcode.combat.notification.NotificationAnnouncer;
+import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Projectile;
 import org.bukkit.event.EventHandler;
@@ -31,6 +32,12 @@ public class FightTagController implements Listener {
     @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
     void onEntityDamageByEntity(EntityDamageByEntityEvent event) {
         if (!(event.getEntity() instanceof Player attackedPlayerByPerson)) {
+            return;
+        }
+
+        List<EntityType> disabledProjectileEntities = this.config.settings.disabledProjectileEntities;
+        
+        if (event.getDamager() instanceof Projectile projectile && disabledProjectileEntities.contains(projectile.getType())) {
             return;
         }
 

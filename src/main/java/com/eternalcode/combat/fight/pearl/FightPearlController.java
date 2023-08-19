@@ -4,10 +4,14 @@ import com.eternalcode.combat.fight.FightManager;
 import com.eternalcode.combat.notification.NotificationAnnouncer;
 import com.eternalcode.combat.util.DurationUtil;
 import org.bukkit.Material;
+import org.bukkit.entity.EnderPearl;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
+import org.bukkit.event.entity.EntityDamageByEntityEvent;
+import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
 import panda.utilities.text.Formatter;
@@ -34,6 +38,10 @@ public class FightPearlController implements Listener {
         Player player = event.getPlayer();
         UUID uniqueId = player.getUniqueId();
 
+        if (!this.settings.pearlThrowBlocked) {
+            return;
+        }
+
         if (!this.fightManager.isInCombat(uniqueId)) {
             return;
         }
@@ -48,11 +56,7 @@ public class FightPearlController implements Listener {
             return;
         }
 
-        if (!this.settings.enabled) {
-            return;
-        }
-
-        if (this.settings.delay.isZero()) {
+        if (this.settings.pearlThrowDelay.isZero()) {
             event.setCancelled(true);
             this.announcer.sendMessage(player, this.settings.pearlThrowBlockedDuringCombat);
             return;
@@ -72,5 +76,26 @@ public class FightPearlController implements Listener {
         }
 
         this.fightPearlManager.markDelay(uniqueId);
+    }
+
+    @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
+    void onEntityDamage(EntityDamageByEntityEvent event) {
+        if (this.settings.pearlThrowDamageEnabled) {
+            return;
+        }
+
+        if (!(event.getEntity() instanceof Player)) {
+            return;
+        }
+
+        if (!(event.getDamager() instanceof EnderPearl)) {
+            return;
+        }
+
+        if (event.getCause() != EntityDamageEvent.DamageCause.FALL) {
+            return;
+        }
+
+        event.setDamage(0.0D);
     }
 }
