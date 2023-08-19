@@ -13,7 +13,7 @@ group = "com.eternalcode"
 version = "1.1.0"
 
 checkstyle {
-    toolVersion = "10.12.1"
+    toolVersion = "10.12.2"
 
     configFile = file("${rootDir}/config/checkstyle/checkstyle.xml")
 
@@ -41,7 +41,7 @@ dependencies {
     implementation("net.kyori:adventure-text-minimessage:4.14.0")
 
     // litecommands
-    implementation("dev.rollczi.litecommands:bukkit-adventure:2.8.8")
+    implementation("dev.rollczi.litecommands:bukkit-adventure:2.8.9")
 
     // cdn configs
     implementation("net.dzikoysk:cdn:1.14.4") {
@@ -58,13 +58,13 @@ dependencies {
     implementation("org.bstats:bstats-bukkit:3.0.2")
 
     // worldguard
-    compileOnly("com.sk89q.worldguard:worldguard-bukkit:7.0.8")
+    compileOnly("com.sk89q.worldguard:worldguard-bukkit:7.0.9")
 
     // tests
     testImplementation("org.spigotmc:spigot-api:1.19.3-R0.1-SNAPSHOT")
-    testImplementation("org.junit.jupiter:junit-jupiter-api:5.9.3")
-    testImplementation("org.junit.jupiter:junit-jupiter-params:5.9.3")
-    testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:5.9.3")
+    testImplementation("org.junit.jupiter:junit-jupiter-api:5.10.0")
+    testImplementation("org.junit.jupiter:junit-jupiter-params:5.10.0")
+    testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:5.10.0")
 }
 
 bukkit {
