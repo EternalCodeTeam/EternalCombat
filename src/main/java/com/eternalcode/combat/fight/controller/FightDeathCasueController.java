@@ -10,7 +10,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 
-public class FightDeathCasueController implements Listener {
+public class FightDeathCauseController implements Listener {
 
     private final FightManager fightManager;
 
