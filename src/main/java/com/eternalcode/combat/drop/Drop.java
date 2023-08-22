@@ -1,5 +1,7 @@
 package com.eternalcode.combat.drop;
 
+import com.eternalcode.combat.fight.FightDeathCause;
+import com.eternalcode.combat.fight.FightTag;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
@@ -12,13 +14,17 @@ public class Drop {
 
     private final Player player;
     private final Player killer;
+    private final FightTag fightTag;
+    private final FightDeathCause deathCause;
 
     private List<ItemStack> droppedItems;
     private int droppedExp;
 
-    private Drop(Player player, Player killer, List<ItemStack> droppedItems, int droppedExp) {
+    private Drop(Player player, Player killer, FightTag fightTag, FightDeathCause deathCause, List<ItemStack> droppedItems, int droppedExp) {
         this.player = player;
         this.killer = killer;
+        this.fightTag = fightTag;
+        this.deathCause = deathCause;
 
         this.droppedItems = droppedItems;
         this.droppedExp = droppedExp;
@@ -38,6 +44,14 @@ public class Drop {
 
     public @Nullable Player getKiller() {
         return this.killer;
+    }
+
+    public FightTag getFightTag() {
+        return this.fightTag;
+    }
+
+    public FightDeathCause getDeathCause() {
+        return this.deathCause;
     }
 
     public boolean hasKiller() {
@@ -60,6 +74,8 @@ public class Drop {
 
         private Player player;
         private Player killer;
+        private FightTag fightTag;
+        private FightDeathCause deathCause;
         private List<ItemStack> droppedItems;
         private int droppedExp;
 
@@ -70,6 +86,16 @@ public class Drop {
 
         public Builder killer(@Nullable Player killer) {
             this.killer = killer;
+            return this;
+        }
+
+        public Builder fightTag(@NotNull FightTag fightTag) {
+            this.fightTag = fightTag;
+            return this;
+        }
+
+        public Builder deathCause(@NotNull FightDeathCause deathCause) {
+            this.deathCause = deathCause;
             return this;
         }
 
@@ -87,6 +113,8 @@ public class Drop {
             return new Drop(
               this.player,
               this.killer,
+              this.fightTag,
+              this.deathCause,
               this.droppedItems,
               this.droppedExp
             );

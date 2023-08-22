@@ -44,8 +44,11 @@ public class FightManager {
         return Collections.unmodifiableCollection(this.fights.values());
     }
 
+    public FightTag getTag(UUID target) {
+        return this.fights.get(target);
+    }
+
     public void untagAll() {
         this.fights.clear();
     }
-
 }

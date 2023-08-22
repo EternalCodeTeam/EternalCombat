@@ -7,8 +7,6 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.PlayerDeathEvent;
-import org.bukkit.event.player.PlayerQuitEvent;
-import panda.utilities.text.Formatter;
 
 public class FightUnTagController implements Listener {
 
@@ -25,34 +23,7 @@ public class FightUnTagController implements Listener {
     @EventHandler
     void onPlayerDeath(PlayerDeathEvent event) {
         Player player = event.getEntity();
-        Player killer = player.getKiller();
 
-        this.untagPlayer(player);
-
-        if (killer != null && this.config.settings.shouldReleaseAttacker) {
-            this.untagPlayer(killer);
-        }
-    }
-
-    @EventHandler
-    void onPlayerQuit(PlayerQuitEvent event) {
-        Player player = event.getPlayer();
-
-        if (!this.fightManager.isInCombat(player.getUniqueId())) {
-            return;
-        }
-
-        Formatter formatter = new Formatter()
-            .register("{PLAYER}", player.getName());
-
-        String format = formatter.format(this.config.messages.playerLoggedOutDuringCombat);
-
-        this.announcer.broadcast(player, format);
-
-        player.setHealth(0.0); // Untagged in PlayerDeathEvent TODO: move to feature controller (this is not untag action)
-    }
-
-    private void untagPlayer(Player player) {
         if (!this.fightManager.isInCombat(player.getUniqueId())) {
             return;
         }
