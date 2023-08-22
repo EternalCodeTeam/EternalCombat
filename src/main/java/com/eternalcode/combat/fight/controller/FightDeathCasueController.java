@@ -42,7 +42,7 @@ public class FightDeathCauseController implements Listener {
             return;
         }
 
-        fightTag.setDeathCasue(FightDeathCasue.KILLED_BY_ENTITY);
+        fightTag.setDeathCause(FightDeathCause.KILLED_BY_ENTITY);
     }
 
     @EventHandler
