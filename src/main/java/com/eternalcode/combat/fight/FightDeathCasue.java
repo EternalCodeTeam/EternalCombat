@@ -1,6 +1,6 @@
 package com.eternalcode.combat.fight;
 
-public enum FightDeathCasue {
+public enum FightDeathCause {
 
     UNKNOWN,
     ESCAPE,
