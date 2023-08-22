@@ -51,6 +51,6 @@ public class FightTag {
     }
 
     public void setDeathCause(FightDeathCause deathCause) {
-        this.deathCasue = deathCasue;
+        this.deathCause = deathCause;
     }
 }
