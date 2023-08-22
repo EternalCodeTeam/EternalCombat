@@ -1,5 +1,6 @@
 package com.eternalcode.combat.fight.controller;
 
+import com.eternalcode.combat.WhitelistBlacklistMode;
 import com.eternalcode.combat.config.implementation.PluginConfig;
 import com.eternalcode.combat.fight.FightManager;
 import com.eternalcode.combat.notification.NotificationAnnouncer;
@@ -80,15 +81,13 @@ public class FightTagController implements Listener {
         UUID uuid = player.getUniqueId();
 
         List<EntityDamageEvent.DamageCause> damageCauses = this.config.settings.damageCausesToLog;
-        boolean blacklistMode = this.config.settings.shouldBlacklistDamageCauses;
+        WhitelistBlacklistMode mode = this.config.settings.damageCausesMode;
 
         EntityDamageEvent.DamageCause cause = event.getCause();
 
-        if (!blacklistMode && !damageCauses.contains(cause)) {
-            return;
-        }
+        boolean shouldLog = mode.shouldBlock(damageCauses.contains(cause));
 
-        if (blacklistMode && damageCauses.contains(cause)) {
+        if (shouldLog) {
             return;
         }
 

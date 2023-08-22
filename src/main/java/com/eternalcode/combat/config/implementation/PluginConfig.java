@@ -2,7 +2,7 @@ package com.eternalcode.combat.config.implementation;
 
 import com.eternalcode.combat.config.ReloadableConfig;
 import com.eternalcode.combat.drop.DropSettings;
-import com.eternalcode.combat.fight.FightCommandMode;
+import com.eternalcode.combat.WhitelistBlacklistMode;
 import com.eternalcode.combat.fight.pearl.FightPearlSettings;
 import com.eternalcode.combat.notification.NotificationType;
 import net.dzikoysk.cdn.entity.Contextual;
@@ -55,7 +55,7 @@ public class PluginConfig implements ReloadableConfig {
         public NotificationType notificationType = NotificationType.ACTION_BAR;
 
         @Description("# Command blocking mode, available modes: WHITELIST, BLACKLIST")
-        public FightCommandMode commandBlockingMode = FightCommandMode.BLACKLIST;
+        public WhitelistBlacklistMode commandBlockingMode = WhitelistBlacklistMode.BLACKLIST;
 
         @Description({
             "# List of commands based on the mode above",
@@ -92,16 +92,16 @@ public class PluginConfig implements ReloadableConfig {
         public List<Material> specificBlocksToPreventPlacing = List.of();
 
         @Description("# Do You want to enable combat log for non-player causes of damage? - Set to false to disable")
-        public boolean shouldEnableDamageCauses = true;
+        public boolean shouldEnableDamageCauses = false;
 
-        @Description("# Do You want to blacklist damage causes? - Set to false to use whitelist mode.")
-        public boolean shouldBlacklistDamageCauses = false;
+        @Description("# Select the mode for damage causes, available modes: WHITELIST, BLACKLIST")
+        public WhitelistBlacklistMode damageCausesMode = WhitelistBlacklistMode.WHITELIST;
 
         @Description({
-            "# After what type of damage the player should or shouldn't get a combat log?",
+            "# After selecting the mode above, select the causes of damage to be logged",
             "# You can find a list of all causes here: https://hub.spigotmc.org/javadocs/spigot/org/bukkit/event/entity/EntityDamageEvent.DamageCause.html",
-            "# While using Whitelist mode (false above) the player will get a combat log after the damage from the list below",
-            "# While using Blacklist mode (true above) the player will get a combat log after any damage non-listed below",
+            "# While using Whitelist mode the player will get a combat log after the damage from the list below",
+            "# While using Blacklist mode the player will get a combat log after any damage non-listed below",
         })
         public List<EntityDamageEvent.DamageCause> damageCausesToLog = List.of(
             EntityDamageEvent.DamageCause.LAVA,

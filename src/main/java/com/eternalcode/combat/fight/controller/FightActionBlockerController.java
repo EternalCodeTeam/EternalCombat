@@ -1,7 +1,7 @@
 package com.eternalcode.combat.fight.controller;
 
 import com.eternalcode.combat.config.implementation.PluginConfig;
-import com.eternalcode.combat.fight.FightCommandMode;
+import com.eternalcode.combat.WhitelistBlacklistMode;
 import com.eternalcode.combat.fight.FightManager;
 import com.eternalcode.combat.notification.NotificationAnnouncer;
 import org.bukkit.Material;
@@ -130,7 +130,7 @@ public class FightActionBlockerController implements Listener {
         boolean isMatchCommand = this.config.settings.blockedCommands.stream()
             .anyMatch(command::startsWith);
 
-        FightCommandMode mode = this.config.settings.commandBlockingMode;
+        WhitelistBlacklistMode mode = this.config.settings.commandBlockingMode;
 
         boolean shouldCancel = mode.shouldBlock(isMatchCommand);
 
