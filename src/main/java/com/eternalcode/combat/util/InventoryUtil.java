@@ -7,11 +7,11 @@ import java.util.List;
 import java.util.Random;
 import java.util.function.ToIntFunction;
 
-public class CollectionsUtil {
+public class InventoryUtil {
 
     private static final Random RANDOM = new Random();
 
-    private CollectionsUtil() {
+    private InventoryUtil() {
         throw new UnsupportedOperationException("This is a utility class and cannot be instantiated");
     }
 

@@ -35,7 +35,7 @@ public class DropController implements Listener {
             .player(player)
             .killer(player.getKiller())
             .fightTag(fightTag)
-            .deathCasue(fightTag.getDeathCasue())
+            .deathCause(fightTag.getDeathCause())
             .droppedItems(event.getDrops())
             .droppedExp(player.getTotalExperience())
             .build();

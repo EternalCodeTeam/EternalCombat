@@ -1,7 +1,6 @@
 package com.eternalcode.combat.fight.controller;
 
 import com.eternalcode.combat.config.implementation.PluginConfig;
-import com.eternalcode.combat.fight.FightDeathCasue;
 import com.eternalcode.combat.fight.FightManager;
 import com.eternalcode.combat.fight.FightTag;
 import com.eternalcode.combat.notification.NotificationAnnouncer;
@@ -10,8 +9,6 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerQuitEvent;
 import panda.utilities.text.Formatter;
-
-import java.util.Optional;
 
 public class FightEscapeController implements Listener {
 

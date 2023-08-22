@@ -1,11 +1,10 @@
 package com.eternalcode.combat.drop.impl;
 
-import com.eternalcode.combat.config.implementation.PluginConfig;
 import com.eternalcode.combat.drop.DropModifier;
 import com.eternalcode.combat.drop.Drop;
 import com.eternalcode.combat.drop.DropSettings;
 import com.eternalcode.combat.drop.DropType;
-import com.eternalcode.combat.util.CollectionsUtil;
+import com.eternalcode.combat.util.InventoryUtil;
 import com.eternalcode.combat.util.MathUtil;
 import org.bukkit.inventory.ItemStack;
 
@@ -30,10 +29,10 @@ public class PercentDropModifier implements DropModifier {
 
         List<ItemStack> droppedItems = drop.getDroppedItems();
 
-        int itemsToDelete = CollectionsUtil.calculateItemsToDelete(dropItemPercent, droppedItems, ItemStack::getAmount);
+        int itemsToDelete = InventoryUtil.calculateItemsToDelete(dropItemPercent, droppedItems, ItemStack::getAmount);
         int droppedExp = MathUtil.getRoundedCountFromPercentage(dropItemPercent, drop.getDroppedExp());
 
-        CollectionsUtil.removeRandomItems(droppedItems, itemsToDelete);
+        InventoryUtil.removeRandomItems(droppedItems, itemsToDelete);
 
         drop.setDroppedItems(droppedItems);
         drop.setDroppedExp(droppedExp);

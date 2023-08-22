@@ -1,6 +1,6 @@
 package com.eternalcode.combat.fight.controller;
 
-import com.eternalcode.combat.fight.FightDeathCasue;
+import com.eternalcode.combat.fight.FightDeathCause;
 import com.eternalcode.combat.fight.FightManager;
 import com.eternalcode.combat.fight.FightTag;
 import org.bukkit.entity.Entity;
@@ -54,6 +54,6 @@ public class FightDeathCauseController implements Listener {
         }
 
         FightTag fightTag = this.fightManager.getTag(player.getUniqueId());
-        fightTag.setDeathCause(FightDeathCasue.ESCAPE);
+        fightTag.setDeathCause(FightDeathCause.ESCAPE);
     }
 }

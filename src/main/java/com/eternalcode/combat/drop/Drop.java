@@ -1,6 +1,6 @@
 package com.eternalcode.combat.drop;
 
-import com.eternalcode.combat.fight.FightDeathCasue;
+import com.eternalcode.combat.fight.FightDeathCause;
 import com.eternalcode.combat.fight.FightTag;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
@@ -20,11 +20,11 @@ public class Drop {
     private List<ItemStack> droppedItems;
     private int droppedExp;
 
-    private Drop(Player player, Player killer, FightTag fightTag, FightDeathCasue deathCasue, List<ItemStack> droppedItems, int droppedExp) {
+    private Drop(Player player, Player killer, FightTag fightTag, FightDeathCause deathCause, List<ItemStack> droppedItems, int droppedExp) {
         this.player = player;
         this.killer = killer;
         this.fightTag = fightTag;
-        this.deathCasue = deathCasue;
+        this.deathCause = deathCause;
 
         this.droppedItems = droppedItems;
         this.droppedExp = droppedExp;
@@ -50,7 +50,7 @@ public class Drop {
         return this.fightTag;
     }
 
-    public FightDeathCasue getDeathCause() {
+    public FightDeathCause getDeathCause() {
         return this.deathCause;
     }
 
@@ -75,7 +75,7 @@ public class Drop {
         private Player player;
         private Player killer;
         private FightTag fightTag;
-        private FightDeathCasue deathCasue;
+        private FightDeathCause deathCause;
         private List<ItemStack> droppedItems;
         private int droppedExp;
 
@@ -94,8 +94,8 @@ public class Drop {
             return this;
         }
 
-        public Builder deathCasue(@NotNull FightDeathCasue deathCasue) {
-            this.deathCasue = deathCasue;
+        public Builder deathCause(@NotNull FightDeathCause deathCause) {
+            this.deathCause = deathCause;
             return this;
         }
 
@@ -114,7 +114,7 @@ public class Drop {
               this.player,
               this.killer,
               this.fightTag,
-              this.deathCasue,
+              this.deathCause,
               this.droppedItems,
               this.droppedExp
             );
