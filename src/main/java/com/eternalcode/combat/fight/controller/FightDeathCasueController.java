@@ -14,7 +14,7 @@ public class FightDeathCasueController implements Listener {
 
     private final FightManager fightManager;
 
-    public FightDeathCasueController(FightManager fightManager) {
+    public FightDeathCauseController(FightManager fightManager) {
         this.fightManager = fightManager;
     }
 
