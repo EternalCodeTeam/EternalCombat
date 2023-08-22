@@ -54,6 +54,6 @@ public class FightDeathCauseController implements Listener {
         }
 
         FightTag fightTag = this.fightManager.getTag(player.getUniqueId());
-        fightTag.setDeathCasue(FightDeathCasue.ESCAPE);
+        fightTag.setDeathCause(FightDeathCasue.ESCAPE);
     }
 }
