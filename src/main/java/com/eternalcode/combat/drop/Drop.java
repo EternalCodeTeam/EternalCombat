@@ -50,8 +50,8 @@ public class Drop {
         return this.fightTag;
     }
 
-    public FightDeathCasue getDeathCasue() {
-        return this.deathCasue;
+    public FightDeathCasue getDeathCause() {
+        return this.deathCause;
     }
 
     public boolean hasKiller() {
