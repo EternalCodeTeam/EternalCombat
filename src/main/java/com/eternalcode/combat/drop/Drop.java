@@ -15,7 +15,7 @@ public class Drop {
     private final Player player;
     private final Player killer;
     private final FightTag fightTag;
-    private final FightDeathCasue deathCasue;
+    private final FightDeathCause deathCause;
 
     private List<ItemStack> droppedItems;
     private int droppedExp;
