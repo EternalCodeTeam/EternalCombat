@@ -1,6 +1,6 @@
-package com.eternalcode.combat.fight;
+package com.eternalcode.combat;
 
-public enum FightCommandMode {
+public enum WhitelistBlacklistMode {
     WHITELIST,
     BLACKLIST;
 
