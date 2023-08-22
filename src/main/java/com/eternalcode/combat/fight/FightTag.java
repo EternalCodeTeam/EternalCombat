@@ -10,7 +10,7 @@ public class FightTag {
     private final Instant endOfCombatLog;
 
     private double healthBeforeDeath;
-    private FightDeathCasue deathCasue;
+    private FightDeathCasue deathCause;
 
     FightTag(UUID personToAddCombat, Instant endOfCombatLog) {
         this.taggedPlayer = personToAddCombat;
