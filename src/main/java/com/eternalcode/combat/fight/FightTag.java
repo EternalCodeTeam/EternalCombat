@@ -50,7 +50,7 @@ public class FightTag {
         return this.deathCasue;
     }
 
-    public void setDeathCasue(FightDeathCasue deathCasue) {
+    public void setDeathCause(FightDeathCause deathCause) {
         this.deathCasue = deathCasue;
     }
 }
