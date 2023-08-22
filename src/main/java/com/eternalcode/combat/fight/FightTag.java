@@ -46,7 +46,7 @@ public class FightTag {
         this.healthBeforeDeath = health;
     }
 
-    public FightDeathCasue getDeathCasue() {
+    public FightDeathCasue getDeathCause() {
         return this.deathCasue;
     }
 
