@@ -34,6 +34,7 @@ public class FightUnTagController implements Listener {
 
         if (killer != null && this.config.settings.shouldReleaseAttacker) {
             this.fightManager.untag(killer.getUniqueId());
+            this.announcer.sendMessage(killer, this.config.messages.playerUntagged);
         }
     }
 }
