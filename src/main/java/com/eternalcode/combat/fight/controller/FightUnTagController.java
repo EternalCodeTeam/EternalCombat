@@ -23,6 +23,7 @@ public class FightUnTagController implements Listener {
     @EventHandler
     void onPlayerDeath(PlayerDeathEvent event) {
         Player player = event.getEntity();
+        Player killer = player.getKiller();
 
         if (!this.fightManager.isInCombat(player.getUniqueId())) {
             return;
@@ -30,5 +31,9 @@ public class FightUnTagController implements Listener {
 
         this.announcer.sendMessage(player, this.config.messages.playerUntagged);
         this.fightManager.untag(player.getUniqueId());
+
+        if (killer != null && this.config.settings.shouldReleaseAttacker) {
+            this.fightManager.untag(killer.getUniqueId());
+        }
     }
 }
