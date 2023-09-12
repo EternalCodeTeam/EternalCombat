@@ -7,16 +7,17 @@ import com.eternalcode.combat.config.ConfigBackupService;
 import com.eternalcode.combat.config.ConfigManager;
 import com.eternalcode.combat.config.implementation.PluginConfig;
 import com.eternalcode.combat.drop.DropController;
+import com.eternalcode.combat.drop.DropKeepInventoryManager;
 import com.eternalcode.combat.drop.DropManager;
 import com.eternalcode.combat.drop.impl.PercentDropModifier;
 import com.eternalcode.combat.drop.impl.PlayersHealthDropModifier;
 import com.eternalcode.combat.fight.FightManager;
 import com.eternalcode.combat.fight.FightTask;
+import com.eternalcode.combat.fight.controller.FightActionBlockerController;
 import com.eternalcode.combat.fight.controller.FightDeathCauseController;
 import com.eternalcode.combat.fight.controller.FightEscapeController;
 import com.eternalcode.combat.fight.controller.FightTagController;
 import com.eternalcode.combat.fight.controller.FightUnTagController;
-import com.eternalcode.combat.fight.controller.FightActionBlockerController;
 import com.eternalcode.combat.fight.pearl.FightPearlController;
 import com.eternalcode.combat.fight.pearl.FightPearlManager;
 import com.eternalcode.combat.notification.NotificationAnnouncer;
@@ -91,6 +92,7 @@ public final class CombatPlugin extends JavaPlugin {
         new Metrics(this, 17803);
 
         DropManager dropManager = new DropManager();
+        DropKeepInventoryManager keepInventoryManager = new DropKeepInventoryManager();
 
         Stream.of(
             new PercentDropModifier(pluginConfig.dropSettings),
@@ -99,7 +101,7 @@ public final class CombatPlugin extends JavaPlugin {
 
         Stream.of(
             new FightDeathCauseController(this.fightManager),
-            new DropController(dropManager, pluginConfig.dropSettings, this.fightManager),
+            new DropController(dropManager, keepInventoryManager, pluginConfig.dropSettings, this.fightManager),
             new FightTagController(this.fightManager, pluginConfig, notificationAnnouncer),
             new FightUnTagController(this.fightManager, pluginConfig, notificationAnnouncer),
             new FightEscapeController(this.fightManager, pluginConfig, notificationAnnouncer),

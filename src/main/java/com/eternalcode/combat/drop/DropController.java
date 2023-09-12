@@ -6,15 +6,23 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.PlayerDeathEvent;
+import org.bukkit.event.player.PlayerRespawnEvent;
+import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.PlayerInventory;
+
+import java.util.List;
+import java.util.UUID;
 
 public class DropController implements Listener {
 
     private final DropManager dropManager;
+    private final DropKeepInventoryManager keepInventoryManager;
     private final DropSettings dropSettings;
     private final FightManager fightManager;
 
-    public DropController(DropManager dropManager, DropSettings dropSettings, FightManager fightManager) {
+    public DropController(DropManager dropManager, DropKeepInventoryManager keepInventoryManager, DropSettings dropSettings, FightManager fightManager) {
         this.dropManager = dropManager;
+        this.keepInventoryManager = keepInventoryManager;
         this.dropSettings = dropSettings;
         this.fightManager = fightManager;
     }
@@ -31,22 +39,42 @@ public class DropController implements Listener {
 
         FightTag fightTag = this.fightManager.getTag(player.getUniqueId());
 
+        List<ItemStack> drops = event.getDrops();
+
         Drop drop = Drop.builder()
             .player(player)
             .killer(player.getKiller())
             .fightTag(fightTag)
             .deathCause(fightTag.getDeathCause())
-            .droppedItems(event.getDrops())
+            .droppedItems(drops)
             .droppedExp(player.getTotalExperience())
             .build();
 
-        this.dropManager.modify(dropType, drop);
+        DropResult result = this.dropManager.modify(dropType, drop);
 
-        event.getDrops().clear();
-        event.getDrops().addAll(drop.getDroppedItems());
+        drops.clear();
+        drops.addAll(result.droppedItems());
+
+        this.keepInventoryManager.addItems(player.getUniqueId(), result.removedItems());
 
         if (this.dropSettings.affectExperience) {
             event.setDroppedExp(drop.getDroppedExp());
         }
     }
+
+    @EventHandler
+    void onPlayerRespawn(PlayerRespawnEvent event) {
+        Player player = event.getPlayer();
+        UUID playerUniqueId = player.getUniqueId();
+
+        if (this.keepInventoryManager.hasItems(playerUniqueId)) {
+            PlayerInventory playerInventory = player.getInventory();
+
+            ItemStack[] itemsToGive = this.keepInventoryManager.nextItems(playerUniqueId)
+                .toArray(new ItemStack[0]);
+
+            playerInventory.addItem(itemsToGive);
+        }
+    }
+
 }
