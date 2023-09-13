@@ -22,13 +22,12 @@ public class ConfigService {
     public <T extends OkaeriConfig> T create(Class<T> config, File file) {
         this.backupService.createBackup();
 
-        T configFile = ConfigManager.create(config, (it) -> {
-            it.withConfigurer(new YamlBukkitConfigurer(), new SerdesCommons());
-            it.withBindFile(file);
-            it.withRemoveOrphans(true);
-            it.saveDefaults();
-            it.load(true);
-        });
+        T configFile = ConfigManager.create(config);
+
+        configFile.withConfigurer(new YamlBukkitConfigurer(), new SerdesCommons());
+        configFile.withBindFile(file);
+        configFile.withRemoveOrphans(true);
+        configFile.load(true);
 
         this.configs.add(configFile);
 
