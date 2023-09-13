@@ -1,6 +1,6 @@
 package com.eternalcode.combat;
 
-import com.eternalcode.combat.config.ConfigManager;
+import com.eternalcode.combat.config.ConfigService;
 import com.eternalcode.combat.config.implementation.PluginConfig;
 import com.eternalcode.combat.fight.FightManager;
 import com.eternalcode.combat.notification.NotificationAnnouncer;
@@ -20,13 +20,13 @@ import java.util.UUID;
 public class CombatCommand {
 
     private final FightManager fightManager;
-    private final ConfigManager configManager;
+    private final ConfigService configService;
     private final NotificationAnnouncer announcer;
     private final PluginConfig config;
 
-    public CombatCommand(FightManager fightManager, ConfigManager configManager, NotificationAnnouncer announcer, PluginConfig config) {
+    public CombatCommand(FightManager fightManager, ConfigService configService, NotificationAnnouncer announcer, PluginConfig config) {
         this.fightManager = fightManager;
-        this.configManager = configManager;
+        this.configService = configService;
         this.announcer = announcer;
         this.config = config;
     }
@@ -114,7 +114,7 @@ public class CombatCommand {
     @Execute(route = "reload")
     @Permission("eternalcombat.reload")
     void execute(CommandSender player) {
-        this.configManager.reload();
+        this.configService.reload();
         this.announcer.sendMessage(player, this.config.messages.admin.reload);
     }
 }

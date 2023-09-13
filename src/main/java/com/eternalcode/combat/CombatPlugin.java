@@ -4,7 +4,7 @@ import com.eternalcode.combat.bridge.BridgeService;
 import com.eternalcode.combat.command.InvalidUsage;
 import com.eternalcode.combat.command.PermissionMessage;
 import com.eternalcode.combat.config.ConfigBackupService;
-import com.eternalcode.combat.config.ConfigManager;
+import com.eternalcode.combat.config.ConfigService;
 import com.eternalcode.combat.config.implementation.PluginConfig;
 import com.eternalcode.combat.drop.DropController;
 import com.eternalcode.combat.drop.DropManager;
@@ -12,11 +12,11 @@ import com.eternalcode.combat.drop.impl.PercentDropModifier;
 import com.eternalcode.combat.drop.impl.PlayersHealthDropModifier;
 import com.eternalcode.combat.fight.FightManager;
 import com.eternalcode.combat.fight.FightTask;
+import com.eternalcode.combat.fight.controller.FightActionBlockerController;
 import com.eternalcode.combat.fight.controller.FightDeathCauseController;
 import com.eternalcode.combat.fight.controller.FightEscapeController;
 import com.eternalcode.combat.fight.controller.FightTagController;
 import com.eternalcode.combat.fight.controller.FightUnTagController;
-import com.eternalcode.combat.fight.controller.FightActionBlockerController;
 import com.eternalcode.combat.fight.pearl.FightPearlController;
 import com.eternalcode.combat.fight.pearl.FightPearlManager;
 import com.eternalcode.combat.notification.NotificationAnnouncer;
@@ -56,9 +56,11 @@ public final class CombatPlugin extends JavaPlugin {
         Server server = this.getServer();
 
         File dataFolder = this.getDataFolder();
+
         ConfigBackupService backupService = new ConfigBackupService(dataFolder);
-        ConfigManager configManager = new ConfigManager(backupService, dataFolder);
-        PluginConfig pluginConfig = configManager.load(new PluginConfig());
+        ConfigService configService = new ConfigService(backupService);
+
+        PluginConfig pluginConfig = configService.create(PluginConfig.class, new File(dataFolder, "config.yml"));
 
         this.fightManager = new FightManager();
         this.fightPearlManager = new FightPearlManager(pluginConfig.pearl);
@@ -81,7 +83,7 @@ public final class CombatPlugin extends JavaPlugin {
             .invalidUsageHandler(new InvalidUsage(pluginConfig, notificationAnnouncer))
             .permissionHandler(new PermissionMessage(pluginConfig, notificationAnnouncer))
 
-            .commandInstance(new CombatCommand(this.fightManager, configManager, notificationAnnouncer, pluginConfig))
+            .commandInstance(new CombatCommand(this.fightManager, configService, notificationAnnouncer, pluginConfig))
 
             .register();
 
