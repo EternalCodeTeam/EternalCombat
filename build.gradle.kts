@@ -111,6 +111,7 @@ tasks.withType<ShadowJar> {
         "org/intellij/lang/annotations/**",
         "org/jetbrains/annotations/**",
         "META-INF/**",
+        "kotlin/**",
         "javax/**"
     )
 
@@ -119,7 +120,7 @@ tasks.withType<ShadowJar> {
         "panda.std",
         "panda.utilities",
         "org.panda-lang",
-        "net.dzikoysk",
+        "eu.okaeri",
         "net.kyori",
         "org.bstats",
         "dev.rollczi.litecommands",
