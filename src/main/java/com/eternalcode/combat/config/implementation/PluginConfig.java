@@ -3,7 +3,8 @@ package com.eternalcode.combat.config.implementation;
 import com.eternalcode.combat.WhitelistBlacklistMode;
 import com.eternalcode.combat.drop.DropSettings;
 import com.eternalcode.combat.fight.pearl.FightPearlSettings;
-import com.eternalcode.combat.notification.NotificationType;
+import com.eternalcode.combat.notification.Notification;
+import com.eternalcode.combat.notification.implementation.ActionBarNotification;
 import eu.okaeri.configs.OkaeriConfig;
 import eu.okaeri.configs.annotation.Comment;
 import org.bukkit.Material;
@@ -49,9 +50,6 @@ public class PluginConfig extends OkaeriConfig {
 
         @Comment("# Release attacker after victim dies?")
         public boolean shouldReleaseAttacker = true;
-
-        @Comment("# Combat log notification type, available types: ACTION_BAR, CHAT, TITLE, SUBTITLE")
-        public NotificationType notificationType = NotificationType.ACTION_BAR;
 
         @Comment("# Command blocking mode, available modes: WHITELIST, BLACKLIST")
         public WhitelistBlacklistMode commandBlockingMode = WhitelistBlacklistMode.BLACKLIST;
@@ -126,8 +124,13 @@ public class PluginConfig extends OkaeriConfig {
         @Comment("# Do you want to change the admin messages?")
         public AdminMessages admin = new AdminMessages();
 
-        @Comment({ " ", "# Combat log message format, e.g. on the actionbar (you can use {TIME} variable to display the time left in combat)" })
-        public String combatFormat = "&dCombat ends in: &f{TIME}";
+        @Comment({
+            " ",
+            "# Combat log notification",
+            "# You can use {TIME} variable to display the time left in combat" ,
+            "# Notification types: CHAT, ACTION_BAR, TITLE, SUB_TITLE, BOSS_BAR",
+        })
+        public Notification combatNotification = new ActionBarNotification("&dCombat ends in: &f{TIME}");
 
         @Comment("# Message sent when the player does not have permission to perform a command")
         public String noPermission = "&cYou don't have permission to perform this command!";
