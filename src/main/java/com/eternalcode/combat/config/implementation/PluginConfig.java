@@ -127,7 +127,7 @@ public class PluginConfig extends OkaeriConfig {
         @Comment({
             " ",
             "# Combat log notification",
-            "# You can use {TIME} variable to display the time left in combat" ,
+            "# You can use {TIME} variable to display the time left in combat",
             "# Notification types: CHAT, ACTION_BAR, TITLE, SUB_TITLE, BOSS_BAR",
         })
         public Notification combatNotification = new ActionBarNotification("&dCombat ends in: &f{TIME}");
