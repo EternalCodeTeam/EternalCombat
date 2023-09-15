@@ -126,7 +126,8 @@ tasks.withType<ShadowJar> {
         "dev.rollczi.litecommands",
         "com.eternalcode.gitcheck",
         "org.json.simple",
-        "commons-io"
+        "org.apache.commons",
+        "javassist"
     ).forEach { pack ->
         relocate(pack, "$prefix.$pack")
     }
