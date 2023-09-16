@@ -25,10 +25,12 @@ public class DropManager {
         this.modifiers.put(dropType, dropModifier);
     }
 
-    public void modify(DropType dropType, Drop drop) {
+    public DropResult modify(DropType dropType, Drop drop) {
         if (!this.modifiers.containsKey(dropType)) {
             throw new RuntimeException("No drop modifier found for type '%s'".formatted(dropType.name()));
         }
-        this.modifiers.get(dropType).modifyDrop(drop);
+
+        return this.modifiers.get(dropType).modifyDrop(drop);
     }
+
 }

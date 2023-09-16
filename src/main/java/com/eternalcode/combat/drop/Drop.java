@@ -8,6 +8,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 public class Drop {
@@ -17,8 +18,8 @@ public class Drop {
     private final FightTag fightTag;
     private final FightDeathCause deathCause;
 
-    private List<ItemStack> droppedItems;
-    private int droppedExp;
+    private final List<ItemStack> droppedItems;
+    private final int droppedExp;
 
     private Drop(Player player, Player killer, FightTag fightTag, FightDeathCause deathCause, List<ItemStack> droppedItems, int droppedExp) {
         this.player = player;
@@ -31,11 +32,7 @@ public class Drop {
     }
 
     public List<ItemStack> getDroppedItems() {
-        return this.droppedItems;
-    }
-
-    public void setDroppedItems(List<ItemStack> droppedItems) {
-        this.droppedItems = droppedItems;
+        return Collections.unmodifiableList(this.droppedItems);
     }
 
     public Player getPlayer() {
@@ -60,10 +57,6 @@ public class Drop {
 
     public int getDroppedExp() {
         return this.droppedExp;
-    }
-
-    public void setDroppedExp(int droppedExp) {
-        this.droppedExp = droppedExp;
     }
 
     public static Builder builder() {
