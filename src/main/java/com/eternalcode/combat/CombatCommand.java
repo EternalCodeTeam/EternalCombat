@@ -42,7 +42,7 @@ public class CombatCommand {
 
         this.announcer.sendMessage(player, this.fightManager.isInCombat(targetUniqueId)
             ? formatter.format(messages.admin.playerInCombat)
-            : formatter.format(messages.admin.adminPlayerNotInCombat));
+            : formatter.format(messages.admin.playerNotInCombat));
     }
 
     @Execute(route = "tag", required = 1)
