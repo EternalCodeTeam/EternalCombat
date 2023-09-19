@@ -5,7 +5,7 @@ import java.util.Optional;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 
-public class FightBossBarManager {
+public class FightBossBarRegistry {
 
     private final Map<UUID, FightBossBar> fightBossBars = new ConcurrentHashMap<>();
 

@@ -18,11 +18,11 @@ import java.util.UUID;
 public class FightBossBarService {
 
     private final PluginConfig pluginConfig;
-    private final FightBossBarManager bossBarManager;
+    private final FightBossBarRegistry bossBarManager;
     private final AudienceProvider audienceProvider;
     private final MiniMessage miniMessage;
 
-    public FightBossBarService(PluginConfig pluginConfig, FightBossBarManager bossBarManager, AudienceProvider audienceProvider, MiniMessage miniMessage) {
+    public FightBossBarService(PluginConfig pluginConfig, FightBossBarRegistry bossBarManager, AudienceProvider audienceProvider, MiniMessage miniMessage) {
         this.pluginConfig = pluginConfig;
         this.bossBarManager = bossBarManager;
         this.audienceProvider = audienceProvider;

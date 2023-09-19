@@ -1,7 +1,7 @@
 package com.eternalcode.combat.fight;
 
 import com.eternalcode.combat.config.implementation.PluginConfig;
-import com.eternalcode.combat.fight.bossbar.FightBossBarManager;
+import com.eternalcode.combat.fight.bossbar.FightBossBarRegistry;
 import com.eternalcode.combat.fight.bossbar.FightBossBarService;
 import com.eternalcode.combat.notification.Notification;
 import com.eternalcode.combat.notification.NotificationAnnouncer;
@@ -19,11 +19,11 @@ public class FightTask implements Runnable {
     private final Server server;
     private final PluginConfig config;
     private final FightManager fightManager;
-    private final FightBossBarManager bossBarManager;
+    private final FightBossBarRegistry bossBarManager;
     private final FightBossBarService bossBarService;
     private final NotificationAnnouncer announcer;
 
-    public FightTask(Server server, PluginConfig config, FightManager fightManager, FightBossBarManager bossBarManager, FightBossBarService bossBarService, NotificationAnnouncer announcer) {
+    public FightTask(Server server, PluginConfig config, FightManager fightManager, FightBossBarRegistry bossBarManager, FightBossBarService bossBarService, NotificationAnnouncer announcer) {
         this.server = server;
         this.config = config;
         this.fightManager = fightManager;

@@ -12,7 +12,7 @@ import com.eternalcode.combat.drop.impl.PercentDropModifier;
 import com.eternalcode.combat.drop.impl.PlayersHealthDropModifier;
 import com.eternalcode.combat.fight.FightManager;
 import com.eternalcode.combat.fight.FightTask;
-import com.eternalcode.combat.fight.bossbar.FightBossBarManager;
+import com.eternalcode.combat.fight.bossbar.FightBossBarRegistry;
 import com.eternalcode.combat.fight.bossbar.FightBossBarService;
 import com.eternalcode.combat.fight.controller.FightActionBlockerController;
 import com.eternalcode.combat.fight.controller.FightDeathCauseController;
@@ -49,7 +49,7 @@ public final class CombatPlugin extends JavaPlugin {
     private FightManager fightManager;
     private FightPearlManager fightPearlManager;
 
-    private FightBossBarManager fightBossBarManager;
+    private FightBossBarRegistry fightBossBarRegistry;
     private FightBossBarService fightBossBarService;
 
     private AudienceProvider audienceProvider;
@@ -77,8 +77,8 @@ public final class CombatPlugin extends JavaPlugin {
             .postProcessor(new LegacyColorProcessor())
             .build();
 
-        this.fightBossBarManager = new FightBossBarManager();
-        this.fightBossBarService = new FightBossBarService(pluginConfig, this.fightBossBarManager, this.audienceProvider, miniMessage);
+        this.fightBossBarRegistry = new FightBossBarRegistry();
+        this.fightBossBarService = new FightBossBarService(pluginConfig, this.fightBossBarRegistry, this.audienceProvider, miniMessage);
 
         BridgeService bridgeService = new BridgeService(pluginConfig, server.getPluginManager(), this.getLogger());
         bridgeService.init();
@@ -96,7 +96,7 @@ public final class CombatPlugin extends JavaPlugin {
 
             .register();
 
-        FightTask fightTask = new FightTask(server, pluginConfig, this.fightManager, this.fightBossBarManager, this.fightBossBarService, notificationAnnouncer);
+        FightTask fightTask = new FightTask(server, pluginConfig, this.fightManager, this.fightBossBarRegistry, this.fightBossBarService, notificationAnnouncer);
         this.getServer().getScheduler().runTaskTimerAsynchronously(this, fightTask, 20L, 20L);
 
         new Metrics(this, 17803);
