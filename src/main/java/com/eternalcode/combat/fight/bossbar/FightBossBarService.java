@@ -13,30 +13,20 @@ import panda.utilities.text.Formatter;
 
 import java.time.Duration;
 import java.time.Instant;
+import java.util.Optional;
 import java.util.UUID;
 
 public class FightBossBarService {
 
     private final PluginConfig pluginConfig;
-    private final FightBossBarRegistry bossBarManager;
+    private final FightBossBarRegistry bossBarRegistry = new FightBossBarRegistry();
     private final AudienceProvider audienceProvider;
     private final MiniMessage miniMessage;
 
-    public FightBossBarService(PluginConfig pluginConfig, FightBossBarRegistry bossBarManager, AudienceProvider audienceProvider, MiniMessage miniMessage) {
+    public FightBossBarService(PluginConfig pluginConfig, AudienceProvider audienceProvider, MiniMessage miniMessage) {
         this.pluginConfig = pluginConfig;
-        this.bossBarManager = bossBarManager;
         this.audienceProvider = audienceProvider;
         this.miniMessage = miniMessage;
-    }
-
-    public void show(Player player, FightBossBar fightBossBar) {
-        UUID playerUniqueId = player.getUniqueId();
-
-        Audience audience = this.audienceProvider.player(playerUniqueId);
-        BossBar bossBar = fightBossBar.bossBar();
-
-        audience.showBossBar(bossBar);
-        this.bossBarManager.add(playerUniqueId, fightBossBar);
     }
 
     public void hide(FightTag fightTag, FightBossBar fightBossBar) {
@@ -45,10 +35,39 @@ public class FightBossBarService {
         UUID taggedPlayer = fightTag.getTaggedPlayer();
 
         audience.hideBossBar(bossBar);
-        this.bossBarManager.remove(taggedPlayer);
+        this.bossBarRegistry.remove(taggedPlayer);
     }
 
-    public void update(FightTag fightTag, FightBossBar fightBossBar, String message) {
+    public void hide(UUID playerUuid) {
+        Optional<FightBossBar> bossBar = this.bossBarRegistry.getFightBossBar(playerUuid);
+
+        if (bossBar.isPresent()) {
+            FightBossBar fightBossBar = bossBar.get();
+            Audience audience = fightBossBar.audience();
+            BossBar bar = fightBossBar.bossBar();
+
+            audience.hideBossBar(bar);
+            this.bossBarRegistry.remove(playerUuid);
+        }
+    }
+
+    public void send(Player player, FightTag fightTag, BossBarNotification bossBarNotification, Formatter formatter) {
+        UUID playerUniqueId = player.getUniqueId();
+
+        FightBossBar fightBossBar = this.bossBarRegistry.getFightBossBar(playerUniqueId)
+            .orElseGet(() -> this.create(player, bossBarNotification, formatter));
+
+        if (!this.bossBarRegistry.hasFightBossBar(playerUniqueId)) {
+            this.show(player, fightBossBar);
+            return;
+        }
+
+        String message = formatter.format(bossBarNotification.message());
+
+        this.update(fightTag, fightBossBar, message);
+    }
+
+    private void update(FightTag fightTag, FightBossBar fightBossBar, String message) {
         BossBar bossBar = fightBossBar.bossBar();
 
         if (fightTag.isExpired()) {
@@ -71,23 +90,17 @@ public class FightBossBarService {
         bossBar.progress(progress);
     }
 
-    public void send(Player player, FightTag fightTag, BossBarNotification bossBarNotification, Formatter formatter) {
+    private void show(Player player, FightBossBar fightBossBar) {
         UUID playerUniqueId = player.getUniqueId();
 
-        FightBossBar fightBossBar = this.bossBarManager.getFightBossBar(playerUniqueId)
-            .orElseGet(() -> this.create(player, bossBarNotification, formatter));
+        Audience audience = this.audienceProvider.player(playerUniqueId);
+        BossBar bossBar = fightBossBar.bossBar();
 
-        if (!this.bossBarManager.hasFightBossBar(playerUniqueId)) {
-            this.show(player, fightBossBar);
-            return;
-        }
-
-        String message = formatter.format(bossBarNotification.message());
-
-        this.update(fightTag, fightBossBar, message);
+        audience.showBossBar(bossBar);
+        this.bossBarRegistry.add(playerUniqueId, fightBossBar);
     }
 
-    public FightBossBar create(Player player, BossBarNotification bossBarNotification, Formatter formatter) {
+    private FightBossBar create(Player player, BossBarNotification bossBarNotification, Formatter formatter) {
         Audience audience = this.audienceProvider.player(player.getUniqueId());
 
         Component name = this.miniMessage.deserialize(formatter.format(bossBarNotification.message()));
