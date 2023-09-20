@@ -8,7 +8,9 @@ import net.kyori.adventure.text.Component;
 public record BossBarNotification(String message, float progress, BossBar.Color color, BossBar.Overlay overlay) implements Notification {
 
     public BossBar create(Component name) {
-        return BossBar.bossBar(name, this.progress, this.color, this.overlay);
+        float replacedProgress = this.progress < 0.0F ? BossBar.MAX_PROGRESS : this.progress;
+
+        return BossBar.bossBar(name, replacedProgress, this.color, this.overlay);
     }
 
     @Override

@@ -5,5 +5,5 @@ import net.kyori.adventure.bossbar.BossBar;
 
 import java.time.Duration;
 
-public record FightBossBar(Audience audience, BossBar bossBar, Duration combatDuration) {
+public record FightBossBar(Audience audience, BossBar bossBar, float progress, Duration combatDuration) {
 }

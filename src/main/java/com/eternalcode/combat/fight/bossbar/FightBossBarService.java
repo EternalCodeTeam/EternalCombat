@@ -68,26 +68,31 @@ public class FightBossBarService {
     }
 
     private void update(FightTag fightTag, FightBossBar fightBossBar, String message) {
-        BossBar bossBar = fightBossBar.bossBar();
-
         if (fightTag.isExpired()) {
             this.hide(fightTag, fightBossBar);
             return;
         }
 
+        BossBar bossBar = fightBossBar.bossBar();
+        float fightBossBarProgress = fightBossBar.progress();
+
+        if (fightBossBarProgress < 0.0F) {
+            Instant now = Instant.now();
+
+            Instant endOfCombatLog = fightTag.getEndOfCombatLog();
+
+            Duration between = Duration.between(now, endOfCombatLog);
+            Duration combatDuration = fightBossBar.combatDuration();
+
+            float difference = (float) between.toMillis() / combatDuration.toMillis();
+            float progress = Math.max(0.0F, Math.min(1.0F, difference));
+
+            bossBar.progress(progress);
+        }
+
         Component name = this.miniMessage.deserialize(message);
 
-        Instant now = Instant.now();
-        Instant endOfCombatLog = fightTag.getEndOfCombatLog();
-
-        Duration between = Duration.between(now, endOfCombatLog);
-        Duration combatDuration = fightBossBar.combatDuration();
-
-        float difference = (float) between.toMillis() / combatDuration.toMillis();
-        float progress = Math.max(0.0F, Math.min(1.0F, difference));
-
         bossBar.name(name);
-        bossBar.progress(progress);
     }
 
     private void show(Player player, FightBossBar fightBossBar) {
@@ -106,8 +111,9 @@ public class FightBossBarService {
         Component name = this.miniMessage.deserialize(formatter.format(bossBarNotification.message()));
         BossBar bossBar = bossBarNotification.create(name);
 
+        float progress = bossBarNotification.progress();
         Duration combatDuration = this.pluginConfig.settings.combatDuration;
 
-        return new FightBossBar(audience, bossBar, combatDuration);
+        return new FightBossBar(audience, bossBar, progress, combatDuration);
     }
 }

@@ -129,6 +129,10 @@ public class PluginConfig extends OkaeriConfig {
             "# Combat log notification",
             "# You can use {TIME} variable to display the time left in combat",
             "# Notification types: CHAT, ACTION_BAR, TITLE, SUB_TITLE, BOSS_BAR",
+            " ",
+            "# BossBar progress: This is the value of the progress bar. Set it to -1.0 to show the remaining combat time",
+            "# BossBar colors: https://javadoc.io/static/net.kyori/adventure-api/4.14.0/net/kyori/adventure/bossbar/BossBar.Color.html",
+            "# BossBar overlays: https://javadoc.io/static/net.kyori/adventure-api/4.14.0/net/kyori/adventure/bossbar/BossBar.Overlay.html"
         })
         public Notification combatNotification = new ActionBarNotification("&dCombat ends in: &f{TIME}");
 
