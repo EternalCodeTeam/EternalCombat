@@ -89,7 +89,7 @@ public final class CombatPlugin extends JavaPlugin {
             .invalidUsageHandler(new InvalidUsage(pluginConfig, notificationAnnouncer))
             .permissionHandler(new PermissionMessage(pluginConfig, notificationAnnouncer))
 
-            .commandInstance(new CombatCommand(this.fightManager, configService, notificationAnnouncer, pluginConfig))
+            .commandInstance(new CombatCommand(this.fightManager, configService, this.fightBossBarService, notificationAnnouncer, pluginConfig))
 
             .register();
 
