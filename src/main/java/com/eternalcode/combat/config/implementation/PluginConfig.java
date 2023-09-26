@@ -12,6 +12,8 @@ import net.dzikoysk.cdn.source.Source;
 import org.bukkit.Material;
 import org.bukkit.entity.EntityType;
 import org.bukkit.event.entity.EntityDamageEvent;
+import org.bukkit.potion.PotionEffect;
+import org.bukkit.potion.PotionEffectType;
 
 import java.io.File;
 import java.time.Duration;
@@ -26,7 +28,7 @@ public class PluginConfig implements ReloadableConfig {
     @Description({" ", "# Ender pearl settings"})
     public FightPearlSettings pearl = new FightPearlSettings();
 
-    @Description({ " ", "# Set a custom way for a player's items to drop on death (if in combat)" })
+    @Description({" ", "# Set a custom way for a player's items to drop on death (if in combat)"})
     public DropSettings dropSettings = new DropSettings();
 
     @Contextual
@@ -121,9 +123,24 @@ public class PluginConfig implements ReloadableConfig {
         public List<EntityType> disabledProjectileEntities = List.of(
             EntityType.ENDER_PEARL
         );
+
+        @Description({"# Do you want to add effects to players in combat?"})
+        public boolean addInCombatEffects = true;
+
+        @Description({
+            "# If the option above is set to true, you can add effects to players in combat below",
+            "# You can find a list of all potion effects here: https://hub.spigotmc.org/javadocs/bukkit/org/bukkit/potion/PotionEffectType.html",
+            "# Correct format: 'EFFECT_TYPE:AMPLIFIER' Amplifier strength starts from 0, so level 1 gives effect strength 2",
+            "# List of effects to add to players in combat:",
+        })
+        public List<PotionEffect> inCombatEffects = List.of(
+            new PotionEffect(PotionEffectType.SPEED, 0, 0),
+            new PotionEffect(PotionEffectType.JUMP, 0, 0),
+            new PotionEffect(PotionEffectType.DAMAGE_RESISTANCE, 0, 0)
+        );
     }
 
-    @Description({ " ", "# Do you want to change the plugin messages?" })
+    @Description({" ", "# Do you want to change the plugin messages?"})
     public Messages messages = new Messages();
 
     @Contextual
@@ -132,7 +149,7 @@ public class PluginConfig implements ReloadableConfig {
         @Description("# Do you want to change the admin messages?")
         public AdminMessages admin = new AdminMessages();
 
-        @Description({ " ", "# Combat log message format, e.g. on the actionbar (you can use {TIME} variable to display the time left in combat)" })
+        @Description({" ", "# Combat log message format, e.g. on the actionbar (you can use {TIME} variable to display the time left in combat)"})
         public String combatFormat = "&dCombat ends in: &f{TIME}";
 
         @Description("# Message sent when the player does not have permission to perform a command")

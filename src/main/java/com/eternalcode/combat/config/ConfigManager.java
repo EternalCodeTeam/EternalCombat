@@ -1,8 +1,10 @@
 package com.eternalcode.combat.config;
 
 import com.eternalcode.combat.config.composer.DurationComposer;
+import com.eternalcode.combat.config.composer.PotionComposer;
 import net.dzikoysk.cdn.Cdn;
 import net.dzikoysk.cdn.CdnFactory;
+import org.bukkit.potion.PotionEffect;
 
 import java.io.File;
 import java.time.Duration;
@@ -17,6 +19,7 @@ public class ConfigManager {
         .createYamlLike()
         .getSettings()
         .withComposer(Duration.class, new DurationComposer())
+        .withComposer(PotionEffect.class, new PotionComposer())
         .build();
 
     private final Set<ReloadableConfig> configs = new HashSet<>();

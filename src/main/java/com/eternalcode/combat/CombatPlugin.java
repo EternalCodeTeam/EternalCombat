@@ -10,6 +10,8 @@ import com.eternalcode.combat.drop.DropController;
 import com.eternalcode.combat.drop.DropManager;
 import com.eternalcode.combat.drop.impl.PercentDropModifier;
 import com.eternalcode.combat.drop.impl.PlayersHealthDropModifier;
+import com.eternalcode.combat.fight.controller.EffectController;
+import com.eternalcode.combat.event.EventCaller;
 import com.eternalcode.combat.fight.FightManager;
 import com.eternalcode.combat.fight.FightTask;
 import com.eternalcode.combat.fight.controller.FightDeathCauseController;
@@ -17,6 +19,7 @@ import com.eternalcode.combat.fight.controller.FightEscapeController;
 import com.eternalcode.combat.fight.controller.FightTagController;
 import com.eternalcode.combat.fight.controller.FightUnTagController;
 import com.eternalcode.combat.fight.controller.FightActionBlockerController;
+import com.eternalcode.combat.fight.effect.EffectService;
 import com.eternalcode.combat.fight.pearl.FightPearlController;
 import com.eternalcode.combat.fight.pearl.FightPearlManager;
 import com.eternalcode.combat.notification.NotificationAnnouncer;
@@ -45,7 +48,6 @@ import java.util.stream.Stream;
 public final class CombatPlugin extends JavaPlugin {
 
     private FightManager fightManager;
-    private FightPearlManager fightPearlManager;
 
     private AudienceProvider audienceProvider;
     private LiteCommands<CommandSender> liteCommands;
@@ -54,14 +56,18 @@ public final class CombatPlugin extends JavaPlugin {
     public void onEnable() {
         Stopwatch started = Stopwatch.createStarted();
         Server server = this.getServer();
+        EventCaller eventCaller = new EventCaller(server);
 
         File dataFolder = this.getDataFolder();
         ConfigBackupService backupService = new ConfigBackupService(dataFolder);
         ConfigManager configManager = new ConfigManager(backupService, dataFolder);
+
+
         PluginConfig pluginConfig = configManager.load(new PluginConfig());
 
-        this.fightManager = new FightManager();
-        this.fightPearlManager = new FightPearlManager(pluginConfig.pearl);
+        this.fightManager = new FightManager(eventCaller);
+        FightPearlManager fightPearlManager = new FightPearlManager(pluginConfig.pearl);
+
 
         UpdaterService updaterService = new UpdaterService(this.getDescription());
 
@@ -86,11 +92,13 @@ public final class CombatPlugin extends JavaPlugin {
             .register();
 
         FightTask fightTask = new FightTask(this.fightManager, pluginConfig, server, notificationAnnouncer);
-        this.getServer().getScheduler().runTaskTimerAsynchronously(this, fightTask, 20L, 20L);
+        this.getServer().getScheduler().runTaskTimer(this, fightTask, 20L, 20L);
 
         new Metrics(this, 17803);
 
         DropManager dropManager = new DropManager();
+
+        EffectService effectService = new EffectService();
 
         Stream.of(
             new PercentDropModifier(pluginConfig.dropSettings),
@@ -101,12 +109,13 @@ public final class CombatPlugin extends JavaPlugin {
             new FightDeathCauseController(this.fightManager),
             new DropController(dropManager, pluginConfig.dropSettings, this.fightManager),
             new FightTagController(this.fightManager, pluginConfig, notificationAnnouncer),
-            new FightUnTagController(this.fightManager, pluginConfig, notificationAnnouncer),
+            new FightUnTagController(this.fightManager, pluginConfig, notificationAnnouncer, eventCaller),
             new FightEscapeController(this.fightManager, pluginConfig, notificationAnnouncer),
             new FightActionBlockerController(this.fightManager, notificationAnnouncer, pluginConfig),
-            new FightPearlController(pluginConfig.pearl, notificationAnnouncer, this.fightManager, this.fightPearlManager),
+            new FightPearlController(pluginConfig.pearl, notificationAnnouncer, this.fightManager, fightPearlManager),
             new UpdaterNotificationController(updaterService, pluginConfig, this.audienceProvider, miniMessage),
-            new RegionController(notificationAnnouncer, bridgeService.getRegionProvider(), this.fightManager, pluginConfig)
+            new RegionController(notificationAnnouncer, bridgeService.getRegionProvider(), this.fightManager, pluginConfig),
+            new EffectController(pluginConfig, effectService)
         ).forEach(listener -> this.getServer().getPluginManager().registerEvents(listener, this));
 
         long millis = started.elapsed(TimeUnit.MILLISECONDS);

@@ -1,5 +1,10 @@
 package com.eternalcode.combat.fight;
 
+import com.eternalcode.combat.event.EventCaller;
+import com.eternalcode.combat.fight.event.FightTagEvent;
+import com.eternalcode.combat.fight.event.FightUntagEvent;
+import org.bukkit.Bukkit;
+
 import java.time.Duration;
 import java.time.Instant;
 import java.util.Collection;
@@ -11,6 +16,11 @@ import java.util.concurrent.ConcurrentHashMap;
 public class FightManager {
 
     private final Map<UUID, FightTag> fights = new ConcurrentHashMap<>();
+    private final EventCaller eventCaller;
+
+    public FightManager(EventCaller eventCaller) {
+        this.eventCaller = eventCaller;
+    }
 
     public boolean isInCombat(UUID player) {
         if (!this.fights.containsKey(player)) {
@@ -19,19 +29,16 @@ public class FightManager {
 
         FightTag fightTag = this.fights.get(player);
 
-        if (fightTag.isExpired()) {
-            this.fights.remove(player);
-            return false;
-        }
-
-        return true;
+        return !fightTag.isExpired();
     }
 
     public void untag(UUID player) {
+        this.eventCaller.callEvent(new FightUntagEvent(Bukkit.getPlayer(player)));
         this.fights.remove(player);
     }
 
     public void tag(UUID target, Duration delay) {
+        this.eventCaller.callEvent(new FightTagEvent(Bukkit.getPlayer(target)));
         Instant now = Instant.now();
         Instant endOfCombatLog = now.plus(delay);
 
