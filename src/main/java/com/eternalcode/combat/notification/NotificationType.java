@@ -1,9 +1,9 @@
 package com.eternalcode.combat.notification;
 
 public enum NotificationType {
-    ACTION_BAR,
     CHAT,
+    ACTION_BAR,
     TITLE,
-    SUBTITLE,
+    SUB_TITLE,
     BOSS_BAR
 }

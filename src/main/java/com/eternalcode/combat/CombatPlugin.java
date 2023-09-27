@@ -13,6 +13,7 @@ import com.eternalcode.combat.drop.impl.PercentDropModifier;
 import com.eternalcode.combat.drop.impl.PlayersHealthDropModifier;
 import com.eternalcode.combat.fight.FightManager;
 import com.eternalcode.combat.fight.FightTask;
+import com.eternalcode.combat.fight.bossbar.FightBossBarService;
 import com.eternalcode.combat.fight.controller.FightActionBlockerController;
 import com.eternalcode.combat.fight.controller.FightDeathCauseController;
 import com.eternalcode.combat.fight.controller.FightEscapeController;
@@ -48,6 +49,8 @@ public final class CombatPlugin extends JavaPlugin {
     private FightManager fightManager;
     private FightPearlManager fightPearlManager;
 
+    private FightBossBarService fightBossBarService;
+
     private AudienceProvider audienceProvider;
     private LiteCommands<CommandSender> liteCommands;
 
@@ -73,10 +76,13 @@ public final class CombatPlugin extends JavaPlugin {
             .postProcessor(new LegacyColorProcessor())
             .build();
 
+        this.fightBossBarService = new FightBossBarService(pluginConfig, this.audienceProvider, miniMessage);
+
         BridgeService bridgeService = new BridgeService(pluginConfig, server.getPluginManager(), this.getLogger());
         bridgeService.init();
 
         NotificationAnnouncer notificationAnnouncer = new NotificationAnnouncer(this.audienceProvider, miniMessage);
+
         this.liteCommands = LiteBukkitAdventurePlatformFactory.builder(server, "eternalcombat", this.audienceProvider)
             .argument(Player.class, new BukkitPlayerArgument<>(this.getServer(), pluginConfig.messages.playerNotFound))
             .contextualBind(Player.class, new BukkitOnlyPlayerContextual<>(pluginConfig.messages.admin.onlyForPlayers))
@@ -84,11 +90,11 @@ public final class CombatPlugin extends JavaPlugin {
             .invalidUsageHandler(new InvalidUsage(pluginConfig, notificationAnnouncer))
             .permissionHandler(new PermissionMessage(pluginConfig, notificationAnnouncer))
 
-            .commandInstance(new CombatCommand(this.fightManager, configService, notificationAnnouncer, pluginConfig))
+            .commandInstance(new CombatCommand(this.fightManager, configService, this.fightBossBarService, notificationAnnouncer, pluginConfig))
 
             .register();
 
-        FightTask fightTask = new FightTask(this.fightManager, pluginConfig, server, notificationAnnouncer);
+        FightTask fightTask = new FightTask(server, pluginConfig, this.fightManager, this.fightBossBarService, notificationAnnouncer);
         this.getServer().getScheduler().runTaskTimerAsynchronously(this, fightTask, 20L, 20L);
 
         new Metrics(this, 17803);

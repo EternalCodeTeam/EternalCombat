@@ -24,6 +24,10 @@ public class FightTag {
         return this.taggedPlayer;
     }
 
+    public Instant getEndOfCombatLog() {
+        return this.endOfCombatLog;
+    }
+
     public boolean isExpired() {
         return Instant.now().isAfter(this.endOfCombatLog);
     }

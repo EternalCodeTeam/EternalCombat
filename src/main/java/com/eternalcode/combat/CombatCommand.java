@@ -3,6 +3,7 @@ package com.eternalcode.combat;
 import com.eternalcode.combat.config.ConfigService;
 import com.eternalcode.combat.config.implementation.PluginConfig;
 import com.eternalcode.combat.fight.FightManager;
+import com.eternalcode.combat.fight.bossbar.FightBossBarService;
 import com.eternalcode.combat.notification.NotificationAnnouncer;
 import dev.rollczi.litecommands.argument.Arg;
 import dev.rollczi.litecommands.command.async.Async;
@@ -21,12 +22,14 @@ public class CombatCommand {
 
     private final FightManager fightManager;
     private final ConfigService configService;
+    private final FightBossBarService bossBarService;
     private final NotificationAnnouncer announcer;
     private final PluginConfig config;
 
-    public CombatCommand(FightManager fightManager, ConfigService configService, NotificationAnnouncer announcer, PluginConfig config) {
+    public CombatCommand(FightManager fightManager, ConfigService configService, FightBossBarService bossBarService, NotificationAnnouncer announcer, PluginConfig config) {
         this.fightManager = fightManager;
         this.configService = configService;
+        this.bossBarService = bossBarService;
         this.announcer = announcer;
         this.config = config;
     }
@@ -100,7 +103,9 @@ public class CombatCommand {
         }
 
         this.announcer.sendMessage(target, this.config.messages.playerUntagged);
+
         this.fightManager.untag(targetUniqueId);
+        this.bossBarService.hide(targetUniqueId);
 
         Formatter formatter = new Formatter()
             .register("{PLAYER}", target.getName());

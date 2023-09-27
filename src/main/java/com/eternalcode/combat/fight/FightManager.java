@@ -19,12 +19,7 @@ public class FightManager {
 
         FightTag fightTag = this.fights.get(player);
 
-        if (fightTag.isExpired()) {
-            this.fights.remove(player);
-            return false;
-        }
-
-        return true;
+        return !fightTag.isExpired();
     }
 
     public void untag(UUID player) {

@@ -1,25 +1,31 @@
 package com.eternalcode.combat.fight;
 
 import com.eternalcode.combat.config.implementation.PluginConfig;
+import com.eternalcode.combat.fight.bossbar.FightBossBarService;
+import com.eternalcode.combat.notification.Notification;
 import com.eternalcode.combat.notification.NotificationAnnouncer;
+import com.eternalcode.combat.notification.implementation.BossBarNotification;
 import com.eternalcode.combat.util.DurationUtil;
 import org.bukkit.Server;
 import org.bukkit.entity.Player;
 import panda.utilities.text.Formatter;
 
 import java.time.Duration;
+import java.util.UUID;
 
 public class FightTask implements Runnable {
 
-    private final FightManager fightManager;
-    private final PluginConfig config;
     private final Server server;
+    private final PluginConfig config;
+    private final FightManager fightManager;
+    private final FightBossBarService bossBarService;
     private final NotificationAnnouncer announcer;
 
-    public FightTask(FightManager fightManager, PluginConfig config, Server server, NotificationAnnouncer announcer) {
-        this.fightManager = fightManager;
-        this.config = config;
+    public FightTask(Server server, PluginConfig config, FightManager fightManager, FightBossBarService bossBarService, NotificationAnnouncer announcer) {
         this.server = server;
+        this.config = config;
+        this.fightManager = fightManager;
+        this.bossBarService = bossBarService;
         this.announcer = announcer;
     }
 
@@ -32,20 +38,33 @@ public class FightTask implements Runnable {
                 return;
             }
 
+            UUID playerUniqueId = player.getUniqueId();
+
             if (!fightTag.isExpired()) {
                 Duration remaining = fightTag.getRemainingDuration();
 
                 Formatter formatter = new Formatter()
                     .register("{TIME}", DurationUtil.format(remaining));
 
-                String format = formatter.format(this.config.messages.combatFormat);
-                this.announcer.send(player, this.config.settings.notificationType, format);
+                Notification combatNotification = this.config.messages.combatNotification;
 
+                this.sendFightNotification(player, fightTag, combatNotification, formatter);
                 continue;
             }
 
-            this.fightManager.untag(fightTag.getTaggedPlayer());
-            this.announcer.send(player, this.config.settings.notificationType, this.config.messages.playerUntagged);
+            this.announcer.sendMessage(player, this.config.messages.playerUntagged);
+
+            this.fightManager.untag(playerUniqueId);
+            this.bossBarService.hide(playerUniqueId);
         }
+    }
+
+    private void sendFightNotification(Player player, FightTag fightTag, Notification notification, Formatter formatter) {
+        if (notification instanceof BossBarNotification bossBarNotification) {
+            this.bossBarService.send(player, fightTag, bossBarNotification, formatter);
+            return;
+        }
+
+        this.announcer.send(player, notification, formatter);
     }
 }

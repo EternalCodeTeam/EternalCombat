@@ -1,5 +1,6 @@
 package com.eternalcode.combat.config;
 
+import com.eternalcode.combat.notification.serializer.NotificationSerializer;
 import eu.okaeri.configs.ConfigManager;
 import eu.okaeri.configs.OkaeriConfig;
 import eu.okaeri.configs.serdes.commons.SerdesCommons;
@@ -25,6 +26,10 @@ public class ConfigService {
         T configFile = ConfigManager.create(config);
 
         configFile.withConfigurer(new YamlBukkitConfigurer(), new SerdesCommons());
+        configFile.withSerdesPack(registry -> {
+            registry.register(new NotificationSerializer());
+        });
+
         configFile.withBindFile(file);
         configFile.withRemoveOrphans(true);
         configFile.saveDefaults();
