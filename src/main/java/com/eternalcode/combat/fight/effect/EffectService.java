@@ -16,17 +16,23 @@ public class EffectService {
         this.activeEffects = new HashMap<>();
     }
 
-    public void addEffect(Player player, PotionEffect effect) {
+    public void storeActiveEffect(Player player, PotionEffect effect) {
+        List<PotionEffect> effects = this.activeEffects.computeIfAbsent(player, k -> new ArrayList<>());
+        effects.add(effect);
 
-        this.activeEffects.getOrDefault(player, new ArrayList<>()).add(effect);
-        List<PotionEffect> playerEffects = this.activeEffects.getOrDefault(player, new ArrayList<>());
-        playerEffects.add(effect);
-        this.activeEffects.remove(player);
-        this.activeEffects.put(player, playerEffects);
     }
 
+    public void restoreActiveEffects(Player player) {
+        List<PotionEffect> effectsFromService = this.getCurrentEffects(player);
 
-    public void removeAllEffects(Player player) {
+        for (PotionEffect effect : effectsFromService) {
+            player.addPotionEffect(effect);
+        }
+
+        this.clearStoredEffects(player);
+    }
+
+    public void clearStoredEffects(Player player) {
         List<PotionEffect> playerEffects = this.activeEffects.get(player);
         if (playerEffects != null) {
             this.activeEffects.remove(player);
@@ -34,12 +40,26 @@ public class EffectService {
 
     }
 
-
     public List<PotionEffect> getCurrentEffects(Player player) {
         return this.activeEffects.getOrDefault(player, new ArrayList<>());
     }
 
+    public void applyCustomEffect(Player player, PotionEffectType type, Integer amplifier) {
+        PotionEffect activeEffect = player.getPotionEffect(type);
 
+        if (activeEffect == null) {
+            player.addPotionEffect(new PotionEffect(type, -1, amplifier));
+            return;
+        }
+
+        if (activeEffect.getAmplifier() > amplifier) {
+            return;
+        }
+
+        this.storeActiveEffect(player, activeEffect);
+        player.addPotionEffect(new PotionEffect(type, -1, amplifier));
+
+    }
 
 
 

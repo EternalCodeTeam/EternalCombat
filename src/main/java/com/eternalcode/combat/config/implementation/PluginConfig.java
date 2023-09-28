@@ -16,6 +16,7 @@ import org.bukkit.potion.PotionEffectType;
 import java.time.Duration;
 import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 
 public class PluginConfig extends OkaeriConfig {
 
@@ -126,10 +127,11 @@ public class PluginConfig extends OkaeriConfig {
             "# Correct format: 'EFFECT_TYPE:AMPLIFIER' Amplifier strength starts from 0, so level 1 gives effect strength 2",
             "# List of effects to add to players in combat:",
         })
-        public List<PotionEffect> inCombatEffects = List.of(
-            new PotionEffect(PotionEffectType.SPEED, 0, 0),
-            new PotionEffect(PotionEffectType.JUMP, 0, 0),
-            new PotionEffect(PotionEffectType.DAMAGE_RESISTANCE, 0, 0)
+
+        public Map<PotionEffectType, Integer> customEffects = Map.of(
+            PotionEffectType.SPEED, 0,
+            PotionEffectType.JUMP, 0,
+            PotionEffectType.DAMAGE_RESISTANCE, 0
         );
     }
 
