@@ -1,8 +1,9 @@
 package com.eternalcode.combat;
 
-import com.eternalcode.combat.config.ConfigManager;
+import com.eternalcode.combat.config.ConfigService;
 import com.eternalcode.combat.config.implementation.PluginConfig;
 import com.eternalcode.combat.fight.FightManager;
+import com.eternalcode.combat.fight.bossbar.FightBossBarService;
 import com.eternalcode.combat.notification.NotificationAnnouncer;
 import dev.rollczi.litecommands.argument.Arg;
 import dev.rollczi.litecommands.command.async.Async;
@@ -20,13 +21,15 @@ import java.util.UUID;
 public class CombatCommand {
 
     private final FightManager fightManager;
-    private final ConfigManager configManager;
+    private final ConfigService configService;
+    private final FightBossBarService bossBarService;
     private final NotificationAnnouncer announcer;
     private final PluginConfig config;
 
-    public CombatCommand(FightManager fightManager, ConfigManager configManager, NotificationAnnouncer announcer, PluginConfig config) {
+    public CombatCommand(FightManager fightManager, ConfigService configService, FightBossBarService bossBarService, NotificationAnnouncer announcer, PluginConfig config) {
         this.fightManager = fightManager;
-        this.configManager = configManager;
+        this.configService = configService;
+        this.bossBarService = bossBarService;
         this.announcer = announcer;
         this.config = config;
     }
@@ -42,7 +45,7 @@ public class CombatCommand {
 
         this.announcer.sendMessage(player, this.fightManager.isInCombat(targetUniqueId)
             ? formatter.format(messages.admin.playerInCombat)
-            : formatter.format(messages.admin.adminPlayerNotInCombat));
+            : formatter.format(messages.admin.playerNotInCombat));
     }
 
     @Execute(route = "tag", required = 1)
@@ -100,7 +103,9 @@ public class CombatCommand {
         }
 
         this.announcer.sendMessage(target, this.config.messages.playerUntagged);
+
         this.fightManager.untag(targetUniqueId);
+        this.bossBarService.hide(targetUniqueId);
 
         Formatter formatter = new Formatter()
             .register("{PLAYER}", target.getName());
@@ -114,7 +119,7 @@ public class CombatCommand {
     @Execute(route = "reload")
     @Permission("eternalcombat.reload")
     void execute(CommandSender player) {
-        this.configManager.reload();
+        this.configService.reload();
         this.announcer.sendMessage(player, this.config.messages.admin.reload);
     }
 }

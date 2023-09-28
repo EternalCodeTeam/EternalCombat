@@ -4,6 +4,6 @@ public interface DropModifier {
 
     DropType getDropType();
 
-    void modifyDrop(Drop drop);
+    DropResult modifyDrop(Drop drop);
 
 }

@@ -28,6 +28,7 @@ repositories {
     maven { url = uri("https://hub.spigotmc.org/nexus/content/repositories/snapshots/") }
     maven { url = uri("https://papermc.io/repo/repository/maven-public/") }
     maven { url = uri("https://repo.eternalcode.pl/releases") }
+    maven { url = uri("https://storehouse.okaeri.eu/repository/maven-public/") }
     maven { url = uri("https://repo.panda-lang.org/releases") }
     maven { url = uri("https://maven.enginehub.org/repo/") }
 }
@@ -43,10 +44,12 @@ dependencies {
     // litecommands
     implementation("dev.rollczi.litecommands:bukkit-adventure:2.8.9")
 
-    // cdn configs
-    implementation("net.dzikoysk:cdn:1.14.4") {
-        exclude(group = "org.jetbrains.kotlin")
-    }
+    // Okaeri configs
+    implementation("eu.okaeri:okaeri-configs-yaml-bukkit:5.0.0-beta.5")
+    implementation("eu.okaeri:okaeri-configs-serdes-commons:5.0.0-beta.5")
+
+    // Panda utilities
+    implementation("org.panda-lang:panda-utilities:0.5.2-alpha")
 
     // GitCheck
     implementation("com.eternalcode:gitcheck:1.0.0")
@@ -108,6 +111,7 @@ tasks.withType<ShadowJar> {
         "org/intellij/lang/annotations/**",
         "org/jetbrains/annotations/**",
         "META-INF/**",
+        "kotlin/**",
         "javax/**"
     )
 
@@ -116,13 +120,14 @@ tasks.withType<ShadowJar> {
         "panda.std",
         "panda.utilities",
         "org.panda-lang",
-        "net.dzikoysk",
+        "eu.okaeri",
         "net.kyori",
         "org.bstats",
         "dev.rollczi.litecommands",
         "com.eternalcode.gitcheck",
         "org.json.simple",
-        "commons-io"
+        "org.apache.commons",
+        "javassist"
     ).forEach { pack ->
         relocate(pack, "$prefix.$pack")
     }

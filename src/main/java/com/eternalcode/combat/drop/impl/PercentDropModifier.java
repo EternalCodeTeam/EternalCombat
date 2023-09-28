@@ -1,11 +1,13 @@
 package com.eternalcode.combat.drop.impl;
 
-import com.eternalcode.combat.drop.DropModifier;
 import com.eternalcode.combat.drop.Drop;
+import com.eternalcode.combat.drop.DropModifier;
+import com.eternalcode.combat.drop.DropResult;
 import com.eternalcode.combat.drop.DropSettings;
 import com.eternalcode.combat.drop.DropType;
 import com.eternalcode.combat.util.InventoryUtil;
 import com.eternalcode.combat.util.MathUtil;
+import com.eternalcode.combat.util.RemoveItemResult;
 import org.bukkit.inventory.ItemStack;
 
 import java.util.List;
@@ -24,17 +26,15 @@ public class PercentDropModifier implements DropModifier {
     }
 
     @Override
-    public void modifyDrop(Drop drop) {
+    public DropResult modifyDrop(Drop drop) {
         int dropItemPercent = 100 - MathUtil.clamp(this.settings.dropItemPercent, 0, 100);
-
         List<ItemStack> droppedItems = drop.getDroppedItems();
 
         int itemsToDelete = InventoryUtil.calculateItemsToDelete(dropItemPercent, droppedItems, ItemStack::getAmount);
         int droppedExp = MathUtil.getRoundedCountFromPercentage(dropItemPercent, drop.getDroppedExp());
 
-        InventoryUtil.removeRandomItems(droppedItems, itemsToDelete);
+        RemoveItemResult result = InventoryUtil.removeRandomItems(droppedItems, itemsToDelete);
 
-        drop.setDroppedItems(droppedItems);
-        drop.setDroppedExp(droppedExp);
+        return new DropResult(result.restItems(), result.removedItems(), droppedExp);
     }
 }
