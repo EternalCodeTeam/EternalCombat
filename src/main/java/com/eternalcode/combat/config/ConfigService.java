@@ -5,6 +5,7 @@ import eu.okaeri.configs.ConfigManager;
 import eu.okaeri.configs.OkaeriConfig;
 import eu.okaeri.configs.serdes.commons.SerdesCommons;
 import eu.okaeri.configs.yaml.bukkit.YamlBukkitConfigurer;
+import eu.okaeri.configs.yaml.bukkit.serdes.SerdesBukkit;
 
 import java.io.File;
 import java.util.HashSet;
@@ -25,7 +26,7 @@ public class ConfigService {
 
         T configFile = ConfigManager.create(config);
 
-        configFile.withConfigurer(new YamlBukkitConfigurer(), new SerdesCommons());
+        configFile.withConfigurer(new YamlBukkitConfigurer(), new SerdesCommons(), new SerdesBukkit());
         configFile.withSerdesPack(registry -> {
             registry.register(new NotificationSerializer());
         });

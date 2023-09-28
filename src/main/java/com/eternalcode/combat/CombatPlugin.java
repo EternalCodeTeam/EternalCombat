@@ -67,7 +67,7 @@ public final class CombatPlugin extends JavaPlugin {
         ConfigBackupService backupService = new ConfigBackupService(dataFolder);
         ConfigService configService = new ConfigService(backupService);
 
-
+        EventCaller eventCaller = new EventCaller(server);
 
         PluginConfig pluginConfig = configService.create(PluginConfig.class, new File(dataFolder, "config.yml"));
 
