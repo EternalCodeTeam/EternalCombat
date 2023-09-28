@@ -4,36 +4,46 @@ import org.bukkit.entity.Player;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class EffectService {
-    private final Map<Player, Map<PotionEffectType, PotionEffect>> activeEffects;
+    private final Map<Player, List<PotionEffect>> activeEffects;
 
     public EffectService() {
         this.activeEffects = new HashMap<>();
     }
 
-    public void addEffect(Player player, PotionEffectType type, PotionEffect effect) {
-        Map<PotionEffectType, PotionEffect> playerEffects = this.activeEffects.getOrDefault(player, new HashMap<>());
-        playerEffects.put(type, effect);
+    public void addEffect(Player player, PotionEffect effect) {
+
+        this.activeEffects.getOrDefault(player, new ArrayList<>()).add(effect);
+        List<PotionEffect> playerEffects = this.activeEffects.getOrDefault(player, new ArrayList<>());
+        playerEffects.add(effect);
+        this.activeEffects.remove(player);
         this.activeEffects.put(player, playerEffects);
     }
 
 
     public void removeAllEffects(Player player) {
-        Map<PotionEffectType, PotionEffect> playerEffects = this.activeEffects.get(player);
+        List<PotionEffect> playerEffects = this.activeEffects.get(player);
         if (playerEffects != null) {
-            for (PotionEffectType type : playerEffects.keySet()) {
-                player.removePotionEffect(type);
-            }
             this.activeEffects.remove(player);
         }
+
     }
 
-    public Map<PotionEffectType, PotionEffect> getCurrentEffects(Player player) {
-        return this.activeEffects.getOrDefault(player, new HashMap<>());
+
+    public List<PotionEffect> getCurrentEffects(Player player) {
+        return this.activeEffects.getOrDefault(player, new ArrayList<>());
     }
+
+
+
+
+
+
 
     /*Additional methods:
 

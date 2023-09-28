@@ -40,12 +40,12 @@ public class EffectController implements Listener {
                 PotionEffectType type = effect.getType();
                 for (PotionEffect inCombatEffect : this.inCombatEffects) {
                     if (type.equals(inCombatEffect.getType())) {
-                        this.effectService.addEffect(player, type, effect);
+                        this.effectService.addEffect(player, effect);
+                        player.removePotionEffect(type);
                     }
                 }
             }
         }
-
 
         for (PotionEffect effect : this.inCombatEffects) {
             if (!activeEffects.contains(effect)) {
@@ -65,18 +65,23 @@ public class EffectController implements Listener {
             player.removePotionEffect(effect.getType());
         }
 
-
-        if (!this.effectService.getCurrentEffects(player).isEmpty()) {
-            for (PotionEffect effect : this.effectService.getCurrentEffects(player).values()) {
+        List<PotionEffect> effectsFromService = this.effectService.getCurrentEffects(player);
+        if (!effectsFromService.isEmpty()) {
+            for (PotionEffect effect : effectsFromService) {
                 player.addPotionEffect(effect);
             }
             this.effectService.removeAllEffects(player);
         }
+
     }
 
     @EventHandler
     public void onDeath(FightDeathEvent event) {
-        this.effectService.removeAllEffects(event.getPlayer());
+        if (!this.addInCombatEffects) {
+            return;
+        }
+        Player player = event.getPlayer();
+        this.effectService.removeAllEffects(player);
     }
 
 }
