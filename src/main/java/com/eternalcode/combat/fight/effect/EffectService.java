@@ -71,7 +71,6 @@ public class EffectService {
     public void removeCustomEffect(Player player, PotionEffectType type, Integer amplifier) {
         PotionEffect activeEffect = player.getPotionEffect(type);
 
-
         if (activeEffect == null) {
             return;
         }
