@@ -11,6 +11,7 @@ import java.util.List;
 import java.util.ArrayList;
 
 
+
 public class EffectService {
     private final Map<UUID, List<PotionEffect>> activeEffects;
 
@@ -58,8 +59,28 @@ public class EffectService {
             return;
         }
 
+        if (activeEffect.getDuration() == -1) {
+            return;
+        }
+
         this.storeActiveEffect(player, activeEffect);
         player.addPotionEffect(new PotionEffect(type, -1, amplifier));
+
+    }
+
+    public void removeCustomEffect(Player player, PotionEffectType type, Integer amplifier) {
+        PotionEffect activeEffect = player.getPotionEffect(type);
+
+
+        if (activeEffect == null) {
+            return;
+        }
+
+        if (activeEffect.getAmplifier() != amplifier) {
+            return;
+        }
+
+        player.removePotionEffect(type);
 
     }
 

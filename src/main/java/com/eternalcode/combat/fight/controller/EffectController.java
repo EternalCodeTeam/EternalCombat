@@ -13,8 +13,6 @@ import org.bukkit.event.entity.EntityPotionEffectEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.potion.PotionEffect;
 
-import java.util.Collection;
-
 
 public class EffectController implements Listener {
 
@@ -36,7 +34,9 @@ public class EffectController implements Listener {
         }
         Player player = event.getPlayer();
 
-        this.settings.customEffects.forEach((key, value) -> this.effectService.applyCustomEffect(player, key, value));
+        this.settings.customEffects.forEach((key, value) ->
+            this.effectService.applyCustomEffect(player, key, value));
+
     }
 
     @EventHandler
@@ -54,21 +54,8 @@ public class EffectController implements Listener {
             return;
         }
         Player player = event.getPlayer();
-        Collection<PotionEffect> activeEffects = player.getActivePotionEffects();
 
-        for (PotionEffect activeEffect : activeEffects) {
-            Integer customAmplifier = this.settings.customEffects.get(activeEffect.getType());
-
-            if (customAmplifier == null) {
-                continue;
-            }
-
-            if (activeEffect.getAmplifier() > customAmplifier) {
-                continue;
-            }
-
-            player.removePotionEffect(activeEffect.getType());
-        }
+        this.settings.customEffects.forEach((key, value) -> this.effectService.removeCustomEffect(player, key, value));
 
         this.effectService.restoreActiveEffects(player);
     }
