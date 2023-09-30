@@ -65,7 +65,6 @@ public class EffectService {
 
         this.storeActiveEffect(player, activeEffect);
         player.addPotionEffect(new PotionEffect(type, -1, amplifier));
-
     }
 
     public void removeCustomEffect(Player player, PotionEffectType type, Integer amplifier) {
