@@ -4,7 +4,6 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
 
-
 public class FightDeathEvent extends Event {
 
     private static final HandlerList handlers = new HandlerList();
