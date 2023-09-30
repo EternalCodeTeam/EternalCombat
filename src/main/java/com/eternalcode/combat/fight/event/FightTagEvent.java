@@ -10,7 +10,6 @@ public class FightTagEvent extends Event {
     private static final HandlerList handlers = new HandlerList();
     private final Player player;
 
-
     public FightTagEvent(Player player) {
         this.player = player;
     }
