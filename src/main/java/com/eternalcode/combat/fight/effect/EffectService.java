@@ -19,13 +19,14 @@ public class EffectService {
 
     public void storeActiveEffect(Player player, PotionEffect effect) {
         List<PotionEffect> effects = this.activeEffects.computeIfAbsent(player.getUniqueId(), k -> new ArrayList<>());
+
         effects.add(effect);
     }
 
     public void restoreActiveEffects(Player player) {
-        List<PotionEffect> effectsFromService = this.getCurrentEffects(player);
+        List<PotionEffect> currentEffects = this.getCurrentEffects(player);
 
-        for (PotionEffect effect : effectsFromService) {
+        for (PotionEffect effect : currentEffects) {
             player.addPotionEffect(effect);
         }
 
