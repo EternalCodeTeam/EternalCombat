@@ -10,7 +10,6 @@ public class FightDeathEvent extends Event {
     private static final HandlerList handlers = new HandlerList();
     private final Player player;
 
-
     public FightDeathEvent(Player player) {
         this.player = player;
     }
