@@ -36,7 +36,7 @@ public class EffectService {
     }
 
     public void clearStoredEffects(Player player) {
-        List<PotionEffect> playerEffects = this.activeEffects.get(player.getUniqueId());
+        this.activeEffects.remove(player.getUniqueId());
         if (playerEffects != null) {
             this.activeEffects.remove(player.getUniqueId());
         }
