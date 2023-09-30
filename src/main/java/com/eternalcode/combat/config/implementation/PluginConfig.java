@@ -119,7 +119,7 @@ public class PluginConfig extends OkaeriConfig {
         );
 
         @Comment({"# Do you want to add effects to players in combat?"})
-        public boolean addInCombatEffects = true;
+        public boolean addCustomEffectsInCombat = true;
 
         @Comment({
             "# If the option above is set to true, you can add effects to players in combat below",
