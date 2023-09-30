@@ -39,6 +39,7 @@ public class FightManager {
 
     public void tag(UUID target, Duration delay) {
         this.eventCaller.callEvent(new FightTagEvent(Bukkit.getPlayer(target)));
+        
         Instant now = Instant.now();
         Instant endOfCombatLog = now.plus(delay);
 
