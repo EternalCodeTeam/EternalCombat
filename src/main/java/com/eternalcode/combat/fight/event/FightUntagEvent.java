@@ -9,7 +9,6 @@ public class FightUntagEvent extends Event {
     private static final HandlerList handlers = new HandlerList();
     private final Player player;
 
-
     public FightUntagEvent(Player player) {
         this.player = player;
 
@@ -18,7 +17,6 @@ public class FightUntagEvent extends Event {
     public Player getPlayer() {
         return this.player;
     }
-
 
     @Override
     public HandlerList getHandlers() {

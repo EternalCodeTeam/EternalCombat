@@ -10,8 +10,6 @@ import java.util.UUID;
 import java.util.List;
 import java.util.ArrayList;
 
-
-
 public class EffectService {
     private final Map<UUID, List<PotionEffect>> activeEffects;
 
@@ -22,7 +20,6 @@ public class EffectService {
     public void storeActiveEffect(Player player, PotionEffect effect) {
         List<PotionEffect> effects = this.activeEffects.computeIfAbsent(player.getUniqueId(), k -> new ArrayList<>());
         effects.add(effect);
-
     }
 
     public void restoreActiveEffects(Player player) {
@@ -37,10 +34,6 @@ public class EffectService {
 
     public void clearStoredEffects(Player player) {
         this.activeEffects.remove(player.getUniqueId());
-        if (playerEffects != null) {
-            this.activeEffects.remove(player.getUniqueId());
-        }
-
     }
 
     public List<PotionEffect> getCurrentEffects(Player player) {
@@ -80,5 +73,4 @@ public class EffectService {
 
         player.removePotionEffect(type);
     }
-
 }

@@ -13,13 +13,11 @@ import org.bukkit.event.entity.EntityPotionEffectEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.potion.PotionEffect;
 
-
 public class EffectController implements Listener {
 
     private final EffectService effectService;
     private final FightManager fightManager;
     private final PluginConfig.Settings settings;
-
 
     public EffectController(PluginConfig config, EffectService effectService, FightManager fightManager) {
         this.settings = config.settings;
@@ -29,19 +27,18 @@ public class EffectController implements Listener {
 
     @EventHandler
     public void onTag(FightTagEvent event) {
-        if (!this.settings.addInCombatEffects) {
+        if (!this.settings.addCustomEffectsInCombat) {
             return;
         }
         Player player = event.getPlayer();
 
         this.settings.customEffects.forEach((key, value) ->
             this.effectService.applyCustomEffect(player, key, value));
-
     }
 
     @EventHandler
     public void onQuit(PlayerQuitEvent event) {
-        if (!this.settings.addInCombatEffects) {
+        if (!this.settings.addCustomEffectsInCombat) {
             return;
         }
         Player player = event.getPlayer();
@@ -50,7 +47,7 @@ public class EffectController implements Listener {
 
     @EventHandler
     public void onUntag(FightUntagEvent event) {
-        if (!this.settings.addInCombatEffects) {
+        if (!this.settings.addCustomEffectsInCombat) {
             return;
         }
         Player player = event.getPlayer();
@@ -62,7 +59,7 @@ public class EffectController implements Listener {
 
     @EventHandler
     public void onDeath(FightDeathEvent event) {
-        if (!this.settings.addInCombatEffects) {
+        if (!this.settings.addCustomEffectsInCombat) {
             return;
         }
         Player player = event.getPlayer();
@@ -71,7 +68,7 @@ public class EffectController implements Listener {
 
     @EventHandler
     public void onEffectChange(EntityPotionEffectEvent event) {
-        if (!this.settings.addInCombatEffects) {
+        if (!this.settings.addCustomEffectsInCombat) {
             return;
         }
 
@@ -97,7 +94,6 @@ public class EffectController implements Listener {
         }
 
         player.addPotionEffect(new PotionEffect(oldEffect.getType(), -1, customAmplifier));
-
     }
 
     private boolean isRemovedEffect(PotionEffect newEffect, PotionEffect oldEffect) {
