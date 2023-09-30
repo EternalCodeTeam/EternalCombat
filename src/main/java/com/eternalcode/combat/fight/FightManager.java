@@ -34,6 +34,7 @@ public class FightManager {
 
     public void untag(UUID player) {
         this.eventCaller.callEvent(new FightUntagEvent(Bukkit.getPlayer(player)));
+        
         this.fights.remove(player);
     }
 
