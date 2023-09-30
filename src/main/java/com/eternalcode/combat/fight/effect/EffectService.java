@@ -79,7 +79,6 @@ public class EffectService {
         }
 
         player.removePotionEffect(type);
-
     }
 
 }
