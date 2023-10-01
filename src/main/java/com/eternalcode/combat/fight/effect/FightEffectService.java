@@ -12,6 +12,7 @@ import java.util.ArrayList;
 
 public class FightEffectService {
     private final Map<UUID, List<PotionEffect>> activeEffects = new HashMap<>();
+    private static final int DURATION = -1;
 
     public void storeActiveEffect(Player player, PotionEffect effect) {
         List<PotionEffect> effects = this.activeEffects.computeIfAbsent(player.getUniqueId(), k -> new ArrayList<>());
@@ -41,7 +42,7 @@ public class FightEffectService {
         PotionEffect activeEffect = player.getPotionEffect(type);
 
         if (activeEffect == null) {
-            player.addPotionEffect(new PotionEffect(type, -1, amplifier));
+            player.addPotionEffect(new PotionEffect(type, DURATION, amplifier));
             return;
         }
 
@@ -54,7 +55,7 @@ public class FightEffectService {
         }
 
         this.storeActiveEffect(player, activeEffect);
-        player.addPotionEffect(new PotionEffect(type, -1, amplifier));
+        player.addPotionEffect(new PotionEffect(type, DURATION, amplifier));
     }
 
     public void removeCustomEffect(Player player, PotionEffectType type, Integer amplifier) {

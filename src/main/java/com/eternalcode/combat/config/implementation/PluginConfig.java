@@ -2,6 +2,7 @@ package com.eternalcode.combat.config.implementation;
 
 import com.eternalcode.combat.WhitelistBlacklistMode;
 import com.eternalcode.combat.drop.DropSettings;
+import com.eternalcode.combat.fight.effect.FightEffectSettings;
 import com.eternalcode.combat.fight.pearl.FightPearlSettings;
 import com.eternalcode.combat.notification.Notification;
 import com.eternalcode.combat.notification.implementation.ActionBarNotification;
@@ -10,12 +11,10 @@ import eu.okaeri.configs.annotation.Comment;
 import org.bukkit.Material;
 import org.bukkit.entity.EntityType;
 import org.bukkit.event.entity.EntityDamageEvent;
-import org.bukkit.potion.PotionEffectType;
 
 import java.time.Duration;
 import java.util.Collections;
 import java.util.List;
-import java.util.Map;
 
 public class PluginConfig extends OkaeriConfig {
 
@@ -24,6 +23,9 @@ public class PluginConfig extends OkaeriConfig {
 
     @Comment({" ", "# Ender pearl settings"})
     public FightPearlSettings pearl = new FightPearlSettings();
+
+    @Comment({" ", "# Custom effects settings"})
+    public FightEffectSettings effect = new FightEffectSettings();
 
     @Comment({" ", "# Set a custom way for a player's items to drop on death (if in combat)"})
     public DropSettings dropSettings = new DropSettings();
@@ -117,20 +119,6 @@ public class PluginConfig extends OkaeriConfig {
             EntityType.ENDER_PEARL
         );
 
-        @Comment({"# Do you want to add effects to players in combat?"})
-        public boolean addCustomEffectsInCombat = true;
-
-        @Comment({
-            "# If the option above is set to true, you can add effects to players in combat below",
-            "# You can find a list of all potion effects here: https://hub.spigotmc.org/javadocs/bukkit/org/bukkit/potion/PotionEffectType.html",
-            "# Correct format: 'EFFECT_TYPE:AMPLIFIER' Amplifier strength starts from 0, so level 1 gives effect strength 2",
-            "# Example: SPEED:1, DAMAGE_RESISTANCE:0",
-        })
-
-        public Map<PotionEffectType, Integer> customEffects = Map.of(
-            PotionEffectType.SPEED, 1,
-            PotionEffectType.DAMAGE_RESISTANCE, 0
-        );
     }
 
     @Comment({" ", "# Do you want to change the plugin messages?"})

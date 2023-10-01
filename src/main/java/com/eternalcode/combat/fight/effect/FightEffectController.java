@@ -1,10 +1,9 @@
 package com.eternalcode.combat.fight.effect;
 
-import com.eternalcode.combat.config.implementation.PluginConfig;
 import com.eternalcode.combat.fight.FightManager;
 import com.eternalcode.combat.fight.event.FightTagEvent;
 import com.eternalcode.combat.fight.event.FightUntagEvent;
-import org.bukkit.Bukkit;
+import org.bukkit.Server;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -16,33 +15,35 @@ import org.bukkit.potion.PotionEffect;
 public class FightEffectController implements Listener {
 
     private final FightEffectService effectService;
+    private final FightEffectSettings effectSettings;
     private final FightManager fightManager;
-    private final PluginConfig.Settings settings;
+    private final Server server;
 
-    public FightEffectController(PluginConfig config, FightEffectService effectService, FightManager fightManager) {
-        this.settings = config.settings;
+    public FightEffectController(FightEffectSettings settings, FightEffectService effectService, FightManager fightManager, Server server) {
+        this.effectSettings = settings;
         this.effectService = effectService;
         this.fightManager = fightManager;
+        this.server = server;
     }
 
     @EventHandler
     public void onTag(FightTagEvent event) {
-        if (!this.settings.addCustomEffectsInCombat) {
+        if (!this.effectSettings.effectCustomEffectsEnable) {
             return;
         }
-        Player player = Bukkit.getPlayer(event.getPlayer());
+        Player player = this.server.getPlayer(event.getPlayer());
 
         if (player == null) {
             return;
         }
 
-        this.settings.customEffects.forEach((key, value) ->
+        this.effectSettings.effectCustomEffectsList.forEach((key, value) ->
             this.effectService.applyCustomEffect(player, key, value));
     }
 
     @EventHandler
     public void onQuit(PlayerQuitEvent event) {
-        if (!this.settings.addCustomEffectsInCombat) {
+        if (!this.effectSettings.effectCustomEffectsEnable) {
             return;
         }
         Player player = event.getPlayer();
@@ -51,24 +52,24 @@ public class FightEffectController implements Listener {
 
     @EventHandler
     public void onUntag(FightUntagEvent event) {
-        if (!this.settings.addCustomEffectsInCombat) {
+        if (!this.effectSettings.effectCustomEffectsEnable) {
             return;
         }
-        Player player = Bukkit.getPlayer(event.getPlayer());
+        Player player = this.server.getPlayer(event.getPlayer());
 
         if (player == null) {
             return;
         }
 
 
-        this.settings.customEffects.forEach((key, value) -> this.effectService.removeCustomEffect(player, key, value));
+        this.effectSettings.effectCustomEffectsList.forEach((key, value) -> this.effectService.removeCustomEffect(player, key, value));
 
         this.effectService.restoreActiveEffects(player);
     }
 
     @EventHandler
     public void onDeath(PlayerDeathEvent event) {
-        if (!this.settings.addCustomEffectsInCombat) {
+        if (!this.effectSettings.effectCustomEffectsEnable) {
             return;
         }
         Player player = event.getEntity();
@@ -77,7 +78,7 @@ public class FightEffectController implements Listener {
 
     @EventHandler
     public void onEffectChange(EntityPotionEffectEvent event) {
-        if (!this.settings.addCustomEffectsInCombat) {
+        if (!this.effectSettings.effectCustomEffectsEnable) {
             return;
         }
 
@@ -96,7 +97,7 @@ public class FightEffectController implements Listener {
             return;
         }
 
-        Integer customAmplifier = this.settings.customEffects.get(oldEffect.getType());
+        Integer customAmplifier = this.effectSettings.effectCustomEffectsList.get(oldEffect.getType());
 
         if (customAmplifier == null) {
             return;

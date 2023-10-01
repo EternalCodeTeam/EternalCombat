@@ -124,7 +124,7 @@ public final class CombatPlugin extends JavaPlugin {
             new FightPearlController(pluginConfig.pearl, notificationAnnouncer, this.fightManager, fightPearlManager),
             new UpdaterNotificationController(updaterService, pluginConfig, this.audienceProvider, miniMessage),
             new RegionController(notificationAnnouncer, bridgeService.getRegionProvider(), this.fightManager, pluginConfig),
-            new FightEffectController(pluginConfig, effectService, this.fightManager)
+            new FightEffectController(pluginConfig.effect, effectService, this.fightManager, this.getServer())
         ).forEach(listener -> this.getServer().getPluginManager().registerEvents(listener, this));
 
         long millis = started.elapsed(TimeUnit.MILLISECONDS);
