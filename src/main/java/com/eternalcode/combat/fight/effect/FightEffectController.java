@@ -28,57 +28,60 @@ public class FightEffectController implements Listener {
 
     @EventHandler
     public void onTag(FightTagEvent event) {
-        if (!this.effectSettings.effectCustomEffectsEnable) {
+        if (!this.effectSettings.customEffectsEnabled) {
             return;
         }
+
         Player player = this.server.getPlayer(event.getPlayer());
 
         if (player == null) {
             return;
         }
 
-        this.effectSettings.effectCustomEffectsList.forEach((key, value) ->
+        this.effectSettings.customEffectsList.forEach((key, value) ->
             this.effectService.applyCustomEffect(player, key, value));
     }
 
     @EventHandler
     public void onQuit(PlayerQuitEvent event) {
-        if (!this.effectSettings.effectCustomEffectsEnable) {
+        if (!this.effectSettings.customEffectsEnabled) {
             return;
         }
+
         Player player = event.getPlayer();
         this.effectService.restoreActiveEffects(player);
     }
 
     @EventHandler
     public void onUntag(FightUntagEvent event) {
-        if (!this.effectSettings.effectCustomEffectsEnable) {
+        if (!this.effectSettings.customEffectsEnabled) {
             return;
         }
+
         Player player = this.server.getPlayer(event.getPlayer());
 
         if (player == null) {
             return;
         }
 
-
-        this.effectSettings.effectCustomEffectsList.forEach((key, value) -> this.effectService.removeCustomEffect(player, key, value));
+        this.effectSettings.customEffectsList.forEach((key, value) -> this.effectService.removeCustomEffect(player, key, value));
 
         this.effectService.restoreActiveEffects(player);
     }
 
     @EventHandler
     public void onDeath(PlayerDeathEvent event) {
-        if (!this.effectSettings.effectCustomEffectsEnable) {
+        if (!this.effectSettings.customEffectsEnabled) {
             return;
         }
+
         Player player = event.getEntity();
         this.effectService.clearStoredEffects(player);
     }
 
     @EventHandler
     public void onEffectChange(EntityPotionEffectEvent event) {
-        if (!this.effectSettings.effectCustomEffectsEnable) {
+        if (!this.effectSettings.customEffectsEnabled) {
             return;
         }
 
@@ -97,7 +100,7 @@ public class FightEffectController implements Listener {
             return;
         }
 
-        Integer customAmplifier = this.effectSettings.effectCustomEffectsList.get(oldEffect.getType());
+        Integer customAmplifier = this.effectSettings.customEffectsList.get(oldEffect.getType());
 
         if (customAmplifier == null) {
             return;

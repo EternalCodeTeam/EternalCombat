@@ -73,7 +73,6 @@ public final class CombatPlugin extends JavaPlugin {
         this.fightManager = new FightManager(eventCaller);
         FightPearlManager fightPearlManager = new FightPearlManager(pluginConfig.pearl);
 
-
         UpdaterService updaterService = new UpdaterService(this.getDescription());
 
         this.audienceProvider = BukkitAudiences.create(this);

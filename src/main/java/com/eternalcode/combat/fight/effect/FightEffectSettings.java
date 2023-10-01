@@ -10,7 +10,7 @@ import java.util.Map;
 public class FightEffectSettings extends OkaeriConfig {
 
     @Comment({"# Do you want to add effects to players in combat?"})
-    public boolean effectCustomEffectsEnable = true;
+    public boolean customEffectsEnabled = true;
 
     @Comment({
         "# If the option above is set to true, you can add effects to players in combat below",
@@ -18,7 +18,7 @@ public class FightEffectSettings extends OkaeriConfig {
         "# Correct format: 'EFFECT_TYPE:AMPLIFIER' Amplifier strength starts from 0, so level 1 gives effect strength 2",
         "# Example: SPEED:1, DAMAGE_RESISTANCE:0",
     })
-    public Map<PotionEffectType, Integer> effectCustomEffectsList = Map.of(
+    public Map<PotionEffectType, Integer> customEffectsList = Map.of(
         PotionEffectType.SPEED, 1,
         PotionEffectType.DAMAGE_RESISTANCE, 0
     );
