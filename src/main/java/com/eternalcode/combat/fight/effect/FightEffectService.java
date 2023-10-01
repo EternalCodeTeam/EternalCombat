@@ -10,12 +10,8 @@ import java.util.UUID;
 import java.util.List;
 import java.util.ArrayList;
 
-public class EffectService {
-    private final Map<UUID, List<PotionEffect>> activeEffects;
-
-    public EffectService() {
-        this.activeEffects = new HashMap<>();
-    }
+public class FightEffectService {
+    private final Map<UUID, List<PotionEffect>> activeEffects = new HashMap<>();
 
     public void storeActiveEffect(Player player, PotionEffect effect) {
         List<PotionEffect> effects = this.activeEffects.computeIfAbsent(player.getUniqueId(), k -> new ArrayList<>());

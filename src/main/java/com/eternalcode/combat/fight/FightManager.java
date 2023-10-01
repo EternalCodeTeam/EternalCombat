@@ -3,7 +3,6 @@ package com.eternalcode.combat.fight;
 import com.eternalcode.combat.event.EventCaller;
 import com.eternalcode.combat.fight.event.FightTagEvent;
 import com.eternalcode.combat.fight.event.FightUntagEvent;
-import org.bukkit.Bukkit;
 
 import java.time.Duration;
 import java.time.Instant;
@@ -11,11 +10,11 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.Map;
 import java.util.UUID;
-import java.util.concurrent.ConcurrentHashMap;
+import java.util.HashMap;
 
 public class FightManager {
 
-    private final Map<UUID, FightTag> fights = new ConcurrentHashMap<>();
+    private final Map<UUID, FightTag> fights = new HashMap<>();
     private final EventCaller eventCaller;
 
     public FightManager(EventCaller eventCaller) {
@@ -33,13 +32,13 @@ public class FightManager {
     }
 
     public void untag(UUID player) {
-        this.eventCaller.callEvent(new FightUntagEvent(Bukkit.getPlayer(player)));
+        this.eventCaller.callEvent(new FightUntagEvent(player));
         
         this.fights.remove(player);
     }
 
     public void tag(UUID target, Duration delay) {
-        this.eventCaller.callEvent(new FightTagEvent(Bukkit.getPlayer(target)));
+        this.eventCaller.callEvent(new FightTagEvent(target));
         
         Instant now = Instant.now();
         Instant endOfCombatLog = now.plus(delay);

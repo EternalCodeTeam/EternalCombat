@@ -11,7 +11,7 @@ import com.eternalcode.combat.drop.DropKeepInventoryManager;
 import com.eternalcode.combat.drop.DropManager;
 import com.eternalcode.combat.drop.impl.PercentDropModifier;
 import com.eternalcode.combat.drop.impl.PlayersHealthDropModifier;
-import com.eternalcode.combat.fight.controller.EffectController;
+import com.eternalcode.combat.fight.effect.FightEffectController;
 import com.eternalcode.combat.event.EventCaller;
 import com.eternalcode.combat.fight.FightManager;
 import com.eternalcode.combat.fight.FightTask;
@@ -21,7 +21,7 @@ import com.eternalcode.combat.fight.controller.FightDeathCauseController;
 import com.eternalcode.combat.fight.controller.FightEscapeController;
 import com.eternalcode.combat.fight.controller.FightTagController;
 import com.eternalcode.combat.fight.controller.FightUnTagController;
-import com.eternalcode.combat.fight.effect.EffectService;
+import com.eternalcode.combat.fight.effect.FightEffectService;
 import com.eternalcode.combat.fight.pearl.FightPearlController;
 import com.eternalcode.combat.fight.pearl.FightPearlManager;
 import com.eternalcode.combat.notification.NotificationAnnouncer;
@@ -107,7 +107,7 @@ public final class CombatPlugin extends JavaPlugin {
         DropManager dropManager = new DropManager();
         DropKeepInventoryManager keepInventoryManager = new DropKeepInventoryManager();
 
-        EffectService effectService = new EffectService();
+        FightEffectService effectService = new FightEffectService();
 
         Stream.of(
             new PercentDropModifier(pluginConfig.dropSettings),
@@ -118,13 +118,13 @@ public final class CombatPlugin extends JavaPlugin {
             new FightDeathCauseController(this.fightManager),
             new DropController(dropManager, keepInventoryManager, pluginConfig.dropSettings, this.fightManager),
             new FightTagController(this.fightManager, pluginConfig, notificationAnnouncer),
-            new FightUnTagController(this.fightManager, pluginConfig, notificationAnnouncer, eventCaller),
+            new FightUnTagController(this.fightManager, pluginConfig, notificationAnnouncer),
             new FightEscapeController(this.fightManager, pluginConfig, notificationAnnouncer),
             new FightActionBlockerController(this.fightManager, notificationAnnouncer, pluginConfig),
             new FightPearlController(pluginConfig.pearl, notificationAnnouncer, this.fightManager, fightPearlManager),
             new UpdaterNotificationController(updaterService, pluginConfig, this.audienceProvider, miniMessage),
             new RegionController(notificationAnnouncer, bridgeService.getRegionProvider(), this.fightManager, pluginConfig),
-            new EffectController(pluginConfig, effectService, this.fightManager)
+            new FightEffectController(pluginConfig, effectService, this.fightManager)
         ).forEach(listener -> this.getServer().getPluginManager().registerEvents(listener, this));
 
         long millis = started.elapsed(TimeUnit.MILLISECONDS);
