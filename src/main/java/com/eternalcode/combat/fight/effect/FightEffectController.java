@@ -32,7 +32,9 @@ public class FightEffectController implements Listener {
         }
         Player player = Bukkit.getPlayer(event.getPlayer());
 
-        if (player == null) return;
+        if (player == null) {
+            return;
+        }
 
         this.settings.customEffects.forEach((key, value) ->
             this.effectService.applyCustomEffect(player, key, value));
@@ -54,7 +56,9 @@ public class FightEffectController implements Listener {
         }
         Player player = Bukkit.getPlayer(event.getPlayer());
 
-        if (player == null) return;
+        if (player == null) {
+            return;
+        }
 
 
         this.settings.customEffects.forEach((key, value) -> this.effectService.removeCustomEffect(player, key, value));
