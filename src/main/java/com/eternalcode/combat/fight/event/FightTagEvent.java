@@ -9,13 +9,22 @@ public class FightTagEvent extends Event {
 
     private static final HandlerList handlers = new HandlerList();
     private final UUID player;
+    private final CauseOfTag cause;
 
-    public FightTagEvent(UUID player) {
+
+    public FightTagEvent(UUID player, CauseOfTag cause) {
         this.player = player;
+        this.cause = cause;
     }
 
+    // Gives back UUID of tagged player
     public UUID getPlayer() {
         return this.player;
+    }
+
+    // Gives back cause of tag
+    public CauseOfTag getCause() {
+        return this.cause;
     }
 
     @Override
@@ -27,3 +36,5 @@ public class FightTagEvent extends Event {
         return handlers;
     }
 }
+
+

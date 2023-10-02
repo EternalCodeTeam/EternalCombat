@@ -1,6 +1,7 @@
 package com.eternalcode.combat.fight.controller;
 
 import com.eternalcode.combat.WhitelistBlacklistMode;
+import com.eternalcode.combat.fight.event.CauseOfTag;
 import com.eternalcode.combat.config.implementation.PluginConfig;
 import com.eternalcode.combat.fight.FightManager;
 import com.eternalcode.combat.notification.NotificationAnnouncer;
@@ -65,8 +66,8 @@ public class FightTagController implements Listener {
             this.announcer.sendMessage(attackedPlayerByPerson, this.config.messages.playerTagged);
         }
 
-        this.fightManager.tag(attackedUniqueId, combatTime);
-        this.fightManager.tag(personToAddCombatTimeUniqueId, combatTime);
+        this.fightManager.tag(attackedUniqueId, combatTime, CauseOfTag.PLAYER);
+        this.fightManager.tag(personToAddCombatTimeUniqueId, combatTime, CauseOfTag.PLAYER);
     }
 
     @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
@@ -102,7 +103,7 @@ public class FightTagController implements Listener {
             this.announcer.sendMessage(player, this.config.messages.playerTagged);
         }
 
-        this.fightManager.tag(uuid, combatTime);
+        this.fightManager.tag(uuid, combatTime, CauseOfTag.NON_PLAYER);
     }
 
     @Nullable

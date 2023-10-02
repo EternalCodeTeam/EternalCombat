@@ -1,5 +1,7 @@
 package com.eternalcode.combat;
 
+import com.eternalcode.combat.fight.event.CauseOfTag;
+import com.eternalcode.combat.fight.event.CauseOfUnTag;
 import com.eternalcode.combat.config.ConfigService;
 import com.eternalcode.combat.config.implementation.PluginConfig;
 import com.eternalcode.combat.fight.FightManager;
@@ -57,7 +59,7 @@ public class CombatCommand {
         Formatter formatter = new Formatter()
             .register("{PLAYER}", target.getName());
 
-        this.fightManager.tag(targetUniqueId, time);
+        this.fightManager.tag(targetUniqueId, time, CauseOfTag.COMMAND);
 
         String format = formatter.format(this.config.messages.admin.adminTagPlayer);
         this.announcer.sendMessage(player, format);
@@ -78,8 +80,8 @@ public class CombatCommand {
             return;
         }
 
-        this.fightManager.tag(firstTargetUniqueId, combatTime);
-        this.fightManager.tag(secondTargetUniqueId, combatTime);
+        this.fightManager.tag(firstTargetUniqueId, combatTime, CauseOfTag.COMMAND);
+        this.fightManager.tag(secondTargetUniqueId, combatTime, CauseOfTag.COMMAND);
 
         Formatter formatter = new Formatter()
             .register("{FIRST_PLAYER}", firstTarget.getName())
@@ -104,7 +106,7 @@ public class CombatCommand {
 
         this.announcer.sendMessage(target, this.config.messages.playerUntagged);
 
-        this.fightManager.untag(targetUniqueId);
+        this.fightManager.untag(targetUniqueId, CauseOfUnTag.COMMAND);
         this.bossBarService.hide(targetUniqueId);
 
         Formatter formatter = new Formatter()

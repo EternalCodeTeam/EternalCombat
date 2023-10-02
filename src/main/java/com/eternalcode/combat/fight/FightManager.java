@@ -1,8 +1,10 @@
 package com.eternalcode.combat.fight;
 
-import com.eternalcode.combat.event.EventCaller;
+import com.eternalcode.combat.fight.event.CauseOfTag;
+import com.eternalcode.combat.fight.event.CauseOfUnTag;
 import com.eternalcode.combat.fight.event.FightTagEvent;
 import com.eternalcode.combat.fight.event.FightUntagEvent;
+import com.eternalcode.combat.event.EventCaller;
 
 import java.time.Duration;
 import java.time.Instant;
@@ -31,14 +33,14 @@ public class FightManager {
         return !fightTag.isExpired();
     }
 
-    public void untag(UUID player) {
-        this.eventCaller.callEvent(new FightUntagEvent(player));
+    public void untag(UUID player, CauseOfUnTag causeOfUnTag) {
+        this.eventCaller.callEvent(new FightUntagEvent(player, causeOfUnTag));
         
         this.fights.remove(player);
     }
 
-    public void tag(UUID target, Duration delay) {
-        this.eventCaller.callEvent(new FightTagEvent(target));
+    public void tag(UUID target, Duration delay, CauseOfTag causeOfTag) {
+        this.eventCaller.callEvent(new FightTagEvent(target, causeOfTag));
         
         Instant now = Instant.now();
         Instant endOfCombatLog = now.plus(delay);

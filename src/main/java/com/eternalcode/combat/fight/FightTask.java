@@ -1,5 +1,6 @@
 package com.eternalcode.combat.fight;
 
+import com.eternalcode.combat.fight.event.CauseOfUnTag;
 import com.eternalcode.combat.config.implementation.PluginConfig;
 import com.eternalcode.combat.fight.bossbar.FightBossBarService;
 import com.eternalcode.combat.notification.Notification;
@@ -54,7 +55,7 @@ public class FightTask implements Runnable {
 
             this.announcer.sendMessage(player, this.config.messages.playerUntagged);
 
-            this.fightManager.untag(playerUniqueId);
+            this.fightManager.untag(playerUniqueId, CauseOfUnTag.TIME_EXPIRED);
             this.bossBarService.hide(playerUniqueId);
         }
     }

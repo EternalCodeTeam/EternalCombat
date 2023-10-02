@@ -1,5 +1,6 @@
 package com.eternalcode.combat.fight.controller;
 
+import com.eternalcode.combat.fight.event.CauseOfUnTag;
 import com.eternalcode.combat.config.implementation.PluginConfig;
 import com.eternalcode.combat.fight.FightManager;
 import com.eternalcode.combat.notification.NotificationAnnouncer;
@@ -30,10 +31,15 @@ public class FightUnTagController implements Listener {
         }
 
         this.announcer.sendMessage(player, this.config.messages.playerUntagged);
-        this.fightManager.untag(player.getUniqueId());
+
+        if (killer == null) {
+            this.fightManager.untag(player.getUniqueId(), CauseOfUnTag.NON_PLAYER_DEATH);
+        }
+        else {
+            this.fightManager.untag(player.getUniqueId(), CauseOfUnTag.PLAYER_DEATH);
+        }
 
         if (killer != null && this.config.settings.shouldReleaseAttacker) {
-            this.fightManager.untag(killer.getUniqueId());
             this.announcer.sendMessage(killer, this.config.messages.playerUntagged);
         }
     }
