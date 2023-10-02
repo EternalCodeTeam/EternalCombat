@@ -2,6 +2,7 @@ package com.eternalcode.combat.config.implementation;
 
 import com.eternalcode.combat.WhitelistBlacklistMode;
 import com.eternalcode.combat.drop.DropSettings;
+import com.eternalcode.combat.fight.effect.FightEffectSettings;
 import com.eternalcode.combat.fight.pearl.FightPearlSettings;
 import com.eternalcode.combat.notification.Notification;
 import com.eternalcode.combat.notification.implementation.ActionBarNotification;
@@ -23,7 +24,10 @@ public class PluginConfig extends OkaeriConfig {
     @Comment({" ", "# Ender pearl settings"})
     public FightPearlSettings pearl = new FightPearlSettings();
 
-    @Comment({ " ", "# Set a custom way for a player's items to drop on death (if in combat)" })
+    @Comment({" ", "# Custom effects settings"})
+    public FightEffectSettings effect = new FightEffectSettings();
+
+    @Comment({" ", "# Set a custom way for a player's items to drop on death (if in combat)"})
     public DropSettings dropSettings = new DropSettings();
 
     public static class Settings extends OkaeriConfig {
@@ -114,9 +118,10 @@ public class PluginConfig extends OkaeriConfig {
         public List<EntityType> disabledProjectileEntities = List.of(
             EntityType.ENDER_PEARL
         );
+
     }
 
-    @Comment({ " ", "# Do you want to change the plugin messages?" })
+    @Comment({" ", "# Do you want to change the plugin messages?"})
     public Messages messages = new Messages();
 
     public static class Messages extends OkaeriConfig {

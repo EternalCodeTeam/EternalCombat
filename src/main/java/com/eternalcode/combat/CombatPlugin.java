@@ -11,6 +11,8 @@ import com.eternalcode.combat.drop.DropKeepInventoryManager;
 import com.eternalcode.combat.drop.DropManager;
 import com.eternalcode.combat.drop.impl.PercentDropModifier;
 import com.eternalcode.combat.drop.impl.PlayersHealthDropModifier;
+import com.eternalcode.combat.fight.effect.FightEffectController;
+import com.eternalcode.combat.event.EventCaller;
 import com.eternalcode.combat.fight.FightManager;
 import com.eternalcode.combat.fight.FightTask;
 import com.eternalcode.combat.fight.bossbar.FightBossBarService;
@@ -19,6 +21,7 @@ import com.eternalcode.combat.fight.controller.FightDeathCauseController;
 import com.eternalcode.combat.fight.controller.FightEscapeController;
 import com.eternalcode.combat.fight.controller.FightTagController;
 import com.eternalcode.combat.fight.controller.FightUnTagController;
+import com.eternalcode.combat.fight.effect.FightEffectService;
 import com.eternalcode.combat.fight.pearl.FightPearlController;
 import com.eternalcode.combat.fight.pearl.FightPearlManager;
 import com.eternalcode.combat.notification.NotificationAnnouncer;
@@ -47,7 +50,6 @@ import java.util.stream.Stream;
 public final class CombatPlugin extends JavaPlugin {
 
     private FightManager fightManager;
-    private FightPearlManager fightPearlManager;
 
     private FightBossBarService fightBossBarService;
 
@@ -64,10 +66,12 @@ public final class CombatPlugin extends JavaPlugin {
         ConfigBackupService backupService = new ConfigBackupService(dataFolder);
         ConfigService configService = new ConfigService(backupService);
 
+        EventCaller eventCaller = new EventCaller(server);
+
         PluginConfig pluginConfig = configService.create(PluginConfig.class, new File(dataFolder, "config.yml"));
 
-        this.fightManager = new FightManager();
-        this.fightPearlManager = new FightPearlManager(pluginConfig.pearl);
+        this.fightManager = new FightManager(eventCaller);
+        FightPearlManager fightPearlManager = new FightPearlManager(pluginConfig.pearl);
 
         UpdaterService updaterService = new UpdaterService(this.getDescription());
 
@@ -95,12 +99,14 @@ public final class CombatPlugin extends JavaPlugin {
             .register();
 
         FightTask fightTask = new FightTask(server, pluginConfig, this.fightManager, this.fightBossBarService, notificationAnnouncer);
-        this.getServer().getScheduler().runTaskTimerAsynchronously(this, fightTask, 20L, 20L);
+        this.getServer().getScheduler().runTaskTimer(this, fightTask, 20L, 20L);
 
         new Metrics(this, 17803);
 
         DropManager dropManager = new DropManager();
         DropKeepInventoryManager keepInventoryManager = new DropKeepInventoryManager();
+
+        FightEffectService effectService = new FightEffectService();
 
         Stream.of(
             new PercentDropModifier(pluginConfig.dropSettings),
@@ -114,9 +120,10 @@ public final class CombatPlugin extends JavaPlugin {
             new FightUnTagController(this.fightManager, pluginConfig, notificationAnnouncer),
             new FightEscapeController(this.fightManager, pluginConfig, notificationAnnouncer),
             new FightActionBlockerController(this.fightManager, notificationAnnouncer, pluginConfig),
-            new FightPearlController(pluginConfig.pearl, notificationAnnouncer, this.fightManager, this.fightPearlManager),
+            new FightPearlController(pluginConfig.pearl, notificationAnnouncer, this.fightManager, fightPearlManager),
             new UpdaterNotificationController(updaterService, pluginConfig, this.audienceProvider, miniMessage),
-            new RegionController(notificationAnnouncer, bridgeService.getRegionProvider(), this.fightManager, pluginConfig)
+            new RegionController(notificationAnnouncer, bridgeService.getRegionProvider(), this.fightManager, pluginConfig),
+            new FightEffectController(pluginConfig.effect, effectService, this.fightManager, this.getServer())
         ).forEach(listener -> this.getServer().getPluginManager().registerEvents(listener, this));
 
         long millis = started.elapsed(TimeUnit.MILLISECONDS);
