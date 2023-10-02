@@ -38,7 +38,7 @@ public class FightEffectController implements Listener {
             return;
         }
 
-        this.effectSettings.customEffectsList.forEach((key, value) ->
+        this.effectSettings.customEffects.forEach((key, value) ->
             this.effectService.applyCustomEffect(player, key, value));
     }
 
@@ -64,7 +64,7 @@ public class FightEffectController implements Listener {
             return;
         }
 
-        this.effectSettings.customEffectsList.forEach((key, value) -> this.effectService.removeCustomEffect(player, key, value));
+        this.effectSettings.customEffects.forEach((key, value) -> this.effectService.removeCustomEffect(player, key, value));
 
         this.effectService.restoreActiveEffects(player);
     }
@@ -100,7 +100,7 @@ public class FightEffectController implements Listener {
             return;
         }
 
-        Integer customAmplifier = this.effectSettings.customEffectsList.get(oldEffect.getType());
+        Integer customAmplifier = this.effectSettings.customEffects.get(oldEffect.getType());
 
         if (customAmplifier == null) {
             return;
