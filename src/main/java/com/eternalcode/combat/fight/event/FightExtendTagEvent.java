@@ -30,12 +30,12 @@ public class FightExtendTagEvent extends Event implements Cancellable {
 
     @Override
     public boolean isCancelled() {
-        return isCancelled;
+        return this.isCancelled;
     }
 
     @Override
     public void setCancelled(boolean cancelled) {
-        isCancelled = cancelled;
+        this.isCancelled = cancelled;
     }
 
     @Override
