@@ -1,15 +1,15 @@
 package com.eternalcode.combat.fight.effect;
 
 import com.eternalcode.combat.fight.FightManager;
+import com.eternalcode.combat.fight.event.CauseOfUnTag;
 import com.eternalcode.combat.fight.event.FightTagEvent;
 import com.eternalcode.combat.fight.event.FightUntagEvent;
+import org.bukkit.Bukkit;
 import org.bukkit.Server;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityPotionEffectEvent;
-import org.bukkit.event.entity.PlayerDeathEvent;
-import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.potion.PotionEffect;
 
 public class FightEffectController implements Listener {
@@ -43,13 +43,15 @@ public class FightEffectController implements Listener {
     }
 
     @EventHandler
-    public void onQuit(PlayerQuitEvent event) {
+    public void onQuit(FightUntagEvent event) {
         if (!this.effectSettings.customEffectsEnabled) {
             return;
         }
+        if (event.getCause() == CauseOfUnTag.LOGOUT) {
+            Player player = Bukkit.getPlayer(event.getPlayer());
 
-        Player player = event.getPlayer();
-        this.effectService.restoreActiveEffects(player);
+            this.effectService.restoreActiveEffects(player);
+        }
     }
 
     @EventHandler
@@ -70,13 +72,16 @@ public class FightEffectController implements Listener {
     }
 
     @EventHandler
-    public void onDeath(PlayerDeathEvent event) {
+    public void onDeath(FightUntagEvent event) {
         if (!this.effectSettings.customEffectsEnabled) {
             return;
         }
+        if (event.getCause() == CauseOfUnTag.PLAYER_DEATH || event.getCause() == CauseOfUnTag.NON_PLAYER_DEATH) {
+            Player player = Bukkit.getPlayer(event.getPlayer());
 
-        Player player = event.getEntity();
-        this.effectService.clearStoredEffects(player);
+            assert player != null;
+            this.effectService.clearStoredEffects(player);
+        }
     }
 
     @EventHandler
