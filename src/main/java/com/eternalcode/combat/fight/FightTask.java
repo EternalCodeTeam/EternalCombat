@@ -36,7 +36,7 @@ public class FightTask implements Runnable {
             Player player = this.server.getPlayer(fightTag.getTaggedPlayer());
 
             if (player == null) {
-                return;
+                continue;
             }
 
             UUID playerUniqueId = player.getUniqueId();

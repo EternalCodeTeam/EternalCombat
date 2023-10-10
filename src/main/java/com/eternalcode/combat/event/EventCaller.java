@@ -11,7 +11,7 @@ public class EventCaller {
         this.server = server;
     }
 
-    public <T extends Event> T callEvent(T event) {
+    public <T extends Event> T publishEvent(T event) {
         this.server.getPluginManager().callEvent(event);
 
         return event;

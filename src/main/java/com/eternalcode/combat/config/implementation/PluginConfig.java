@@ -187,6 +187,9 @@ public class PluginConfig extends OkaeriConfig {
             @Comment("# Message sent when a player is tagged by an admin")
             public String adminTagMultiplePlayers = "&7You have tagged &e{FIRST_PLAYER}&7 and &e{SECOND_PLAYER}&7.";
 
+            @Comment("# Message sent when a player is untaggable by the command due to tagOut system")
+            public String cannotTagPlayer = "&cYou cannot tag this player due to tagOut system!";
+
             @Comment("# Message sent to admin when they remove a player from combat")
             public String adminUntagPlayer = "&7You have removed &e{PLAYER}&7 from the fight.";
 
@@ -201,6 +204,15 @@ public class PluginConfig extends OkaeriConfig {
 
             @Comment("# Message sent when an admin tries to tag themselves")
             public String adminCannotTagSelf = "&cYou cannot tag yourself!";
+
+            @Comment("# Message sent when an admin disables the ability to get tagged for some time")
+            public String  adminDisableTagSelf = "&7Successfully disabled tag for Yourself! You will be taggable after &e{TIME} seconds";
+
+            @Comment("# Message sent when an admin disables the ability to get tagged for some time for other player")
+            public String adminDisableTag = "&7Successfully disabled tag for &e{PLAYER}! They will be taggable after &e{TIME} seconds";
+
+            @Comment("# Message sent to the player whom the ability to get tagged for some time has been disabled")
+            public String playerDisableTag = "&7You will be taggable in &e{TIME} seconds!";
         }
     }
 }

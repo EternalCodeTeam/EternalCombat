@@ -57,17 +57,21 @@ public class FightTagController implements Listener {
 
         UUID attackedUniqueId = attackedPlayerByPerson.getUniqueId();
         UUID personToAddCombatTimeUniqueId = personToAddCombatTime.getUniqueId();
+        boolean isTaggedAttacker = this.fightManager.tag(attackedUniqueId, combatTime, CauseOfTag.PLAYER);
+        boolean isTaggedPerson = this.fightManager.tag(personToAddCombatTimeUniqueId, combatTime, CauseOfTag.PLAYER);
 
-        if (!this.fightManager.isInCombat(attackedUniqueId)) {
-            this.announcer.sendMessage(personToAddCombatTime, this.config.messages.playerTagged);
+
+        if (isTaggedAttacker) {
+            if (!this.fightManager.isInCombat(attackedUniqueId)) {
+                this.announcer.sendMessage(personToAddCombatTime, this.config.messages.playerTagged);
+            }
         }
 
-        if (!this.fightManager.isInCombat(personToAddCombatTimeUniqueId)) {
-            this.announcer.sendMessage(attackedPlayerByPerson, this.config.messages.playerTagged);
+        if (isTaggedPerson) {
+            if (!this.fightManager.isInCombat(personToAddCombatTimeUniqueId)) {
+                this.announcer.sendMessage(attackedPlayerByPerson, this.config.messages.playerTagged);
+            }
         }
-
-        this.fightManager.tag(attackedUniqueId, combatTime, CauseOfTag.PLAYER);
-        this.fightManager.tag(personToAddCombatTimeUniqueId, combatTime, CauseOfTag.PLAYER);
     }
 
     @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
@@ -99,11 +103,11 @@ public class FightTagController implements Listener {
             return;
         }
 
-        if (!this.fightManager.isInCombat(uuid)) {
+        boolean isTagged = this.fightManager.tag(uuid, combatTime, CauseOfTag.NON_PLAYER);
+        if (!this.fightManager.isInCombat(uuid) && isTagged) {
             this.announcer.sendMessage(player, this.config.messages.playerTagged);
         }
 
-        this.fightManager.tag(uuid, combatTime, CauseOfTag.NON_PLAYER);
     }
 
     @Nullable
