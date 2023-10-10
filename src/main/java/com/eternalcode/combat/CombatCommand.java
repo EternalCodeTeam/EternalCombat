@@ -158,7 +158,7 @@ public class CombatCommand {
 
     @Execute(route = "tagout", required = 2)
     @Permission("eternalcombat.tagout")
-    void tagout(Player sender, @Arg Player target, @Arg Duration time) { //
+    void tagout(Player sender, @Arg Player target, @Arg Duration time) {
         UUID targetUniqueId = target.getUniqueId();
 
         Instant now = Instant.now();
@@ -174,6 +174,23 @@ public class CombatCommand {
         this.announcer.sendMessage(sender, format1);
 
         String format2 = formatter.format(this.config.messages.admin.playerTagOut);
+        this.announcer.sendMessage(target, format2);
+    }
+
+    @Execute(route = "untagout", required = 1)
+    @Permission("eternalcombat.tagout")
+    void untagout(CommandSender sender, @Arg Player target) {
+        UUID targetUniqueId = target.getUniqueId();
+
+        this.fightTagOutService.unTagOut(targetUniqueId);
+
+        Formatter formatter = new Formatter()
+            .register("{PLAYER}", target.getName());
+
+        String format1 = formatter.format(this.config.messages.admin.adminUntagOut);
+        this.announcer.sendMessage(sender, format1);
+
+        String format2 = formatter.format(this.config.messages.admin.playerUntagOut);
         this.announcer.sendMessage(target, format2);
     }
 }

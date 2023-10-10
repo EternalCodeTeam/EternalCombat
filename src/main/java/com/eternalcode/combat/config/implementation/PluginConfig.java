@@ -213,6 +213,12 @@ public class PluginConfig extends OkaeriConfig {
 
             @Comment("# Message sent to the player whom the ability to get tagged for some time has been disabled")
             public String playerTagOut = "&7You will be taggable in &e{TIME} !";
+
+            @Comment("# Message sent when an admin reenables the ability to get tagged for the player")
+            public String adminUntagOut = "&7Successfully enabled tag for &e{PLAYER}!";
+
+            @Comment("# Message sent to the player whom the ability to get tagged has been reenabled")
+            public String playerUntagOut = "&7You are now taggable!";
         }
     }
 }
