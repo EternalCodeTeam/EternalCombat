@@ -9,6 +9,10 @@ import org.bukkit.event.Listener;
 public class FightTagOutController implements Listener {
     FightTagOutService tagOutService;
 
+    public FightTagOutController(FightTagOutService tagOutService) {
+        this.tagOutService = tagOutService;
+    }
+
     @EventHandler(priority = EventPriority.NORMAL)
     void onTagOut(FightTagEvent event) {
         if (this.tagOutService.isTaggedOut(event.getPlayer())) {
@@ -20,7 +24,4 @@ public class FightTagOutController implements Listener {
     void onTagOut(FightUntagEvent event) {
 
     }
-
-
-
 }

@@ -206,13 +206,13 @@ public class PluginConfig extends OkaeriConfig {
             public String adminCannotTagSelf = "&cYou cannot tag yourself!";
 
             @Comment("# Message sent when an admin disables the ability to get tagged for some time")
-            public String  adminDisableTagSelf = "&7Successfully disabled tag for Yourself! You will be taggable after &e{TIME} seconds";
+            public String adminTagOutSelf = "&7Successfully disabled tag for Yourself! You will be taggable after &e{TIME} ";
 
             @Comment("# Message sent when an admin disables the ability to get tagged for some time for other player")
-            public String adminDisableTag = "&7Successfully disabled tag for &e{PLAYER}! They will be taggable after &e{TIME} seconds";
+            public String adminTagOut = "&7Successfully disabled tag for &e{PLAYER}! They will be taggable after &e{TIME} ";
 
             @Comment("# Message sent to the player whom the ability to get tagged for some time has been disabled")
-            public String playerDisableTag = "&7You will be taggable in &e{TIME} seconds!";
+            public String playerTagOut = "&7You will be taggable in &e{TIME} !";
         }
     }
 }

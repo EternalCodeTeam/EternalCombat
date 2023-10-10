@@ -12,6 +12,7 @@ public class FightTagOutService {
 
     public void tagOut(UUID player, Duration duration) {
         Instant endTime = Instant.now().plus(duration);
+
         this.tagOutService.put(player, endTime);
     }
 
@@ -26,7 +27,7 @@ public class FightTagOutService {
 
         Instant endTime = this.tagOutService.get(player);
 
-        return !endTime.isBefore(Instant.now());
+        return Instant.now().isBefore(endTime);
     }
 
 }

@@ -8,6 +8,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.Server;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityPotionEffectEvent;
 import org.bukkit.potion.PotionEffect;
@@ -26,7 +27,7 @@ public class FightEffectController implements Listener {
         this.server = server;
     }
 
-    @EventHandler
+    @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
     public void onTag(FightTagEvent event) {
         if (!this.effectSettings.customEffectsEnabled) {
             return;
@@ -42,11 +43,12 @@ public class FightEffectController implements Listener {
             this.effectService.applyCustomEffect(player, key, value));
     }
 
-    @EventHandler
+    @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
     public void onQuit(FightUntagEvent event) {
         if (!this.effectSettings.customEffectsEnabled) {
             return;
         }
+
         if (event.getCause() == CauseOfUnTag.LOGOUT) {
             Player player = Bukkit.getPlayer(event.getPlayer());
 
@@ -54,7 +56,7 @@ public class FightEffectController implements Listener {
         }
     }
 
-    @EventHandler
+    @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
     public void onUntag(FightUntagEvent event) {
         if (!this.effectSettings.customEffectsEnabled) {
             return;
