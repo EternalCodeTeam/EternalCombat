@@ -12,6 +12,8 @@ import org.bukkit.entity.Player;
 import panda.utilities.text.Formatter;
 
 import java.time.Duration;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
 public class FightTask implements Runnable {
@@ -31,8 +33,11 @@ public class FightTask implements Runnable {
     }
 
     @Override
+
+
     public void run() {
-        for (FightTag fightTag : this.fightManager.getFights()) {
+        List<FightTag> fights = new ArrayList<>(this.fightManager.getFights());
+        for (FightTag fightTag : fights) {
             Player player = this.server.getPlayer(fightTag.getTaggedPlayer());
 
             if (player == null) {
