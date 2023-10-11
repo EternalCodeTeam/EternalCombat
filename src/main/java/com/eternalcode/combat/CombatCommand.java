@@ -6,9 +6,7 @@ import com.eternalcode.combat.fight.FightManager;
 import com.eternalcode.combat.fight.bossbar.FightBossBarService;
 import com.eternalcode.combat.fight.event.CauseOfTag;
 import com.eternalcode.combat.fight.event.CauseOfUnTag;
-import com.eternalcode.combat.fight.tagout.FightTagOutService;
 import com.eternalcode.combat.notification.NotificationAnnouncer;
-import com.eternalcode.combat.util.DurationUtil;
 import dev.rollczi.litecommands.argument.Arg;
 import dev.rollczi.litecommands.command.async.Async;
 import dev.rollczi.litecommands.command.execute.Execute;
@@ -19,7 +17,6 @@ import org.bukkit.entity.Player;
 import panda.utilities.text.Formatter;
 
 import java.time.Duration;
-import java.time.Instant;
 import java.util.UUID;
 
 @Route(name = "combatlog", aliases = "combat")
@@ -30,15 +27,13 @@ public class CombatCommand {
     private final FightBossBarService bossBarService;
     private final NotificationAnnouncer announcer;
     private final PluginConfig config;
-    private final FightTagOutService fightTagOutService;
 
-    public CombatCommand(FightManager fightManager, ConfigService configService, FightBossBarService bossBarService, NotificationAnnouncer announcer, PluginConfig config, FightTagOutService tagOutService) {
+    public CombatCommand(FightManager fightManager, ConfigService configService, FightBossBarService bossBarService, NotificationAnnouncer announcer, PluginConfig config) {
         this.fightManager = fightManager;
         this.configService = configService;
         this.bossBarService = bossBarService;
         this.announcer = announcer;
         this.config = config;
-        this.fightTagOutService = tagOutService;
     }
 
     @Execute(route = "status", required = 1)
@@ -140,58 +135,5 @@ public class CombatCommand {
         String format = formatter.format(this.config.messages.admin.adminUntagPlayer);
 
         this.announcer.sendMessage(sender, format);
-    }
-
-    @Execute(route = "tagout", required = 1)
-    @Permission("eternalcombat.tagout")
-    void tagout(Player sender, @Arg Duration time) {
-        UUID targetUniqueId = sender.getUniqueId();
-
-        Formatter formatter = new Formatter()
-            .register("{PLAYER}", sender.getName())
-            .register("{TIME}", DurationUtil.format(time));
-
-        this.fightTagOutService.tagOut(targetUniqueId, time);
-
-        String format = formatter.format(this.config.messages.admin.adminTagOutSelf);
-        this.announcer.sendMessage(sender, format);
-    }
-
-    @Execute(route = "tagout", required = 2)
-    @Permission("eternalcombat.tagout")
-    void tagout(Player sender, @Arg Player target, @Arg Duration time) {
-        UUID targetUniqueId = target.getUniqueId();
-
-        Instant now = Instant.now();
-        Duration remaining = Duration.between(now, now.plus(time));
-
-        Formatter formatter = new Formatter()
-            .register("{PLAYER}", target.getName())
-            .register("{TIME}", DurationUtil.format(remaining));
-
-        this.fightTagOutService.tagOut(targetUniqueId, time);
-
-        String adminTagOutFormat = formatter.format(this.config.messages.admin.adminTagOut);
-        this.announcer.sendMessage(sender, adminTagOutFormat);
-
-        String playerTagOutFormat = formatter.format(this.config.messages.admin.playerTagOut);
-        this.announcer.sendMessage(target, playerTagOutFormat);
-    }
-
-    @Execute(route = "untagout", required = 1)
-    @Permission("eternalcombat.tagout")
-    void untagout(CommandSender sender, @Arg Player target) {
-        UUID targetUniqueId = target.getUniqueId();
-
-        this.fightTagOutService.unTagOut(targetUniqueId);
-
-        Formatter formatter = new Formatter()
-            .register("{PLAYER}", target.getName());
-
-        String adminUnTagOutFormat = formatter.format(this.config.messages.admin.adminUntagOut);
-        this.announcer.sendMessage(sender, adminUnTagOutFormat);
-
-        String playerUnTagOutFormat = formatter.format(this.config.messages.admin.playerUntagOut);
-        this.announcer.sendMessage(target, playerUnTagOutFormat);
     }
 }

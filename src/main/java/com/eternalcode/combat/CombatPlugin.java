@@ -26,6 +26,7 @@ import com.eternalcode.combat.fight.pearl.FightPearlController;
 import com.eternalcode.combat.fight.pearl.FightPearlManager;
 import com.eternalcode.combat.fight.tagout.FightTagOutController;
 import com.eternalcode.combat.fight.tagout.FightTagOutService;
+import com.eternalcode.combat.fight.tagout.TagOutCommand;
 import com.eternalcode.combat.notification.NotificationAnnouncer;
 import com.eternalcode.combat.region.RegionController;
 import com.eternalcode.combat.updater.UpdaterNotificationController;
@@ -97,7 +98,8 @@ public final class CombatPlugin extends JavaPlugin {
             .invalidUsageHandler(new InvalidUsage(pluginConfig, notificationAnnouncer))
             .permissionHandler(new PermissionMessage(pluginConfig, notificationAnnouncer))
 
-            .commandInstance(new CombatCommand(this.fightManager, configService, this.fightBossBarService, notificationAnnouncer, pluginConfig, fightTagOutService))
+            .commandInstance(new CombatCommand(this.fightManager, configService, this.fightBossBarService, notificationAnnouncer, pluginConfig))
+            .commandInstance(new TagOutCommand(fightTagOutService, notificationAnnouncer, pluginConfig))
 
             .register();
 
