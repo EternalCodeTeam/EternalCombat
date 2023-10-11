@@ -18,12 +18,10 @@ public class FightUntagEvent extends Event implements Cancellable {
         this.cause = cause;
     }
 
-    // Gives back UUID of untagged player
     public UUID getPlayer() {
         return this.player;
     }
-
-    // Gives back cause of untag
+    
     public CauseOfUnTag getCause() {
         return this.cause;
     }

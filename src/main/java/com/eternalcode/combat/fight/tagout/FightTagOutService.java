@@ -8,26 +8,27 @@ import java.util.UUID;
 
 public class FightTagOutService {
 
-    private Map<UUID, Instant> tagOutService = new HashMap<>();
+    private final Map<UUID, Instant> tagOuts = new HashMap<>();
 
     public void tagOut(UUID player, Duration duration) {
         Instant endTime = Instant.now().plus(duration);
 
-        this.tagOutService.put(player, endTime);
+        this.tagOuts.put(player, endTime);
     }
 
     public void unTagOut(UUID player) {
-        this.tagOutService.remove(player);
+        this.tagOuts.remove(player);
     }
 
     public boolean isTaggedOut(UUID player) {
-        if (!this.tagOutService.containsKey(player)) {
+        Instant endTime = this.tagOuts.get(player);
+
+        if (endTime == null) {
             return false;
         }
+        Instant now = Instant.now();
 
-        Instant endTime = this.tagOutService.get(player);
-
-        return Instant.now().isBefore(endTime);
+        return now.isBefore(endTime);
     }
 
 }

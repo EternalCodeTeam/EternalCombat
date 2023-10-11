@@ -126,11 +126,12 @@ public class CombatCommand {
             return;
         }
 
-        this.announcer.sendMessage(target, this.config.messages.playerUntagged);
-
         if (!this.fightManager.untag(targetUniqueId, CauseOfUnTag.COMMAND)) {
+            this.announcer.sendMessage(target, this.config.messages.admin.cannotTagPlayer);
             return;
         }
+
+        this.announcer.sendMessage(target, this.config.messages.playerUntagged);
         this.bossBarService.hide(targetUniqueId);
 
         Formatter formatter = new Formatter()
@@ -170,11 +171,11 @@ public class CombatCommand {
 
         this.fightTagOutService.tagOut(targetUniqueId, time);
 
-        String format1 = formatter.format(this.config.messages.admin.adminTagOut);
-        this.announcer.sendMessage(sender, format1);
+        String adminTagOutFormat = formatter.format(this.config.messages.admin.adminTagOut);
+        this.announcer.sendMessage(sender, adminTagOutFormat);
 
-        String format2 = formatter.format(this.config.messages.admin.playerTagOut);
-        this.announcer.sendMessage(target, format2);
+        String playerTagOutFormat = formatter.format(this.config.messages.admin.playerTagOut);
+        this.announcer.sendMessage(target, playerTagOutFormat);
     }
 
     @Execute(route = "untagout", required = 1)
@@ -187,10 +188,10 @@ public class CombatCommand {
         Formatter formatter = new Formatter()
             .register("{PLAYER}", target.getName());
 
-        String format1 = formatter.format(this.config.messages.admin.adminUntagOut);
-        this.announcer.sendMessage(sender, format1);
+        String adminUnTagOutFormat = formatter.format(this.config.messages.admin.adminUntagOut);
+        this.announcer.sendMessage(sender, adminUnTagOutFormat);
 
-        String format2 = formatter.format(this.config.messages.admin.playerUntagOut);
-        this.announcer.sendMessage(target, format2);
+        String playerUnTagOutFormat = formatter.format(this.config.messages.admin.playerUntagOut);
+        this.announcer.sendMessage(target, playerUnTagOutFormat);
     }
 }

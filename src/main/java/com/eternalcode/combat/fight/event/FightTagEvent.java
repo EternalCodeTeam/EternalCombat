@@ -18,12 +18,10 @@ public class FightTagEvent extends Event implements Cancellable {
         this.cause = cause;
     }
 
-    // Gives back UUID of tagged player
     public UUID getPlayer() {
         return this.player;
     }
 
-    // Gives back cause of tag
     public CauseOfTag getCause() {
         return this.cause;
     }

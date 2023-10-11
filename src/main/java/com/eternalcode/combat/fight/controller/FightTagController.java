@@ -62,15 +62,11 @@ public class FightTagController implements Listener {
 
 
         if (isTaggedAttacker) {
-            if (!this.fightManager.isInCombat(attackedUniqueId)) {
-                this.announcer.sendMessage(personToAddCombatTime, this.config.messages.playerTagged);
-            }
+            this.announcer.sendMessage(personToAddCombatTime, this.config.messages.playerTagged);
         }
 
         if (isTaggedPerson) {
-            if (!this.fightManager.isInCombat(personToAddCombatTimeUniqueId)) {
-                this.announcer.sendMessage(attackedPlayerByPerson, this.config.messages.playerTagged);
-            }
+            this.announcer.sendMessage(attackedPlayerByPerson, this.config.messages.playerTagged);
         }
     }
 
@@ -104,7 +100,7 @@ public class FightTagController implements Listener {
         }
 
         boolean isTagged = this.fightManager.tag(uuid, combatTime, CauseOfTag.NON_PLAYER);
-        if (!this.fightManager.isInCombat(uuid) && isTagged) {
+        if (isTagged) {
             this.announcer.sendMessage(player, this.config.messages.playerTagged);
         }
 

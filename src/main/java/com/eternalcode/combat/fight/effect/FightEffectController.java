@@ -52,7 +52,8 @@ public class FightEffectController implements Listener {
         if (event.getCause() == CauseOfUnTag.LOGOUT) {
             Player player = Bukkit.getPlayer(event.getPlayer());
 
-            this.effectService.restoreActiveEffects(player);
+            assert player != null;
+            this.effectService.clearStoredEffects(player);
         }
     }
 

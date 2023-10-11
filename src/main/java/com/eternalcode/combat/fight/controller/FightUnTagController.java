@@ -32,14 +32,12 @@ public class FightUnTagController implements Listener {
 
         this.announcer.sendMessage(player, this.config.messages.playerUntagged);
 
-        if (killer == null) {
-            this.fightManager.untag(player.getUniqueId(), CauseOfUnTag.NON_PLAYER_DEATH);
-        }
-        else {
-            this.fightManager.untag(player.getUniqueId(), CauseOfUnTag.PLAYER_DEATH);
-        }
+        CauseOfUnTag causeOfUnTag = (killer == null ? CauseOfUnTag.PLAYER_DEATH : CauseOfUnTag.NON_PLAYER_DEATH);
+
+        this.fightManager.untag(player.getUniqueId(), causeOfUnTag);
 
         if (killer != null && this.config.settings.shouldReleaseAttacker) {
+            this.fightManager.untag(killer.getUniqueId(), CauseOfUnTag.ATTACKER_RELEASE);
             this.announcer.sendMessage(killer, this.config.messages.playerUntagged);
         }
     }
