@@ -33,21 +33,21 @@ public class FightManager {
         return !fightTag.isExpired();
     }
 
-    public boolean untag(UUID player, CauseOfUnTag causeOfUnTag) {
+    public FightUntagEvent untag(UUID player, CauseOfUnTag causeOfUnTag) {
         FightUntagEvent event = this.eventCaller.publishEvent(new FightUntagEvent(player, causeOfUnTag));
         if (event.isCancelled()) {
-            return false;
+            return event;
         }
 
         this.fights.remove(player);
-        return true;
+        return event;
     }
 
-    public boolean tag(UUID target, Duration delay, CauseOfTag causeOfTag) {
+    public FightTagEvent tag(UUID target, Duration delay, CauseOfTag causeOfTag) {
         FightTagEvent event = this.eventCaller.publishEvent(new FightTagEvent(target, causeOfTag));
 
         if (event.isCancelled()) {
-            return false;
+            return event;
         }
         Instant now = Instant.now();
         Instant endOfCombatLog = now.plus(delay);
@@ -55,7 +55,7 @@ public class FightManager {
         FightTag fightTag = new FightTag(target, endOfCombatLog);
 
         this.fights.put(target, fightTag);
-        return true;
+        return event;
     }
 
     public Collection<FightTag> getFights() {

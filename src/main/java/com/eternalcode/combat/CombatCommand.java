@@ -3,9 +3,10 @@ package com.eternalcode.combat;
 import com.eternalcode.combat.config.ConfigService;
 import com.eternalcode.combat.config.implementation.PluginConfig;
 import com.eternalcode.combat.fight.FightManager;
-import com.eternalcode.combat.fight.bossbar.FightBossBarService;
 import com.eternalcode.combat.fight.event.CauseOfTag;
 import com.eternalcode.combat.fight.event.CauseOfUnTag;
+import com.eternalcode.combat.fight.event.FightTagEvent;
+import com.eternalcode.combat.fight.event.FightUntagEvent;
 import com.eternalcode.combat.notification.NotificationAnnouncer;
 import dev.rollczi.litecommands.argument.Arg;
 import dev.rollczi.litecommands.command.async.Async;
@@ -24,14 +25,12 @@ public class CombatCommand {
 
     private final FightManager fightManager;
     private final ConfigService configService;
-    private final FightBossBarService bossBarService;
     private final NotificationAnnouncer announcer;
     private final PluginConfig config;
 
-    public CombatCommand(FightManager fightManager, ConfigService configService, FightBossBarService bossBarService, NotificationAnnouncer announcer, PluginConfig config) {
+    public CombatCommand(FightManager fightManager, ConfigService configService, NotificationAnnouncer announcer, PluginConfig config) {
         this.fightManager = fightManager;
         this.configService = configService;
-        this.bossBarService = bossBarService;
         this.announcer = announcer;
         this.config = config;
     }
@@ -59,7 +58,12 @@ public class CombatCommand {
         Formatter formatter = new Formatter()
             .register("{PLAYER}", target.getName());
 
-        this.fightManager.tag(targetUniqueId, time, CauseOfTag.COMMAND);
+        FightTagEvent event = this.fightManager.tag(targetUniqueId, time, CauseOfTag.COMMAND);
+
+        if (event.isCancelled()) {
+            this.announcer.sendMessage(sender, event.getCancelMessage());
+            return;
+        }
 
         String format = formatter.format(this.config.messages.admin.adminTagPlayer);
         this.announcer.sendMessage(sender, format);
@@ -75,9 +79,9 @@ public class CombatCommand {
             this.announcer.sendMessage(sender, messages.admin.adminCannotTagSelf);
             return;
         }
-        
-        boolean isTaggedFirst = this.fightManager.tag(firstTarget.getUniqueId(), combatTime, CauseOfTag.COMMAND);
-        boolean isTaggedSecond = this.fightManager.tag(secondTarget.getUniqueId(), combatTime, CauseOfTag.COMMAND);
+
+        FightTagEvent firstTagEvent = this.fightManager.tag(firstTarget.getUniqueId(), combatTime, CauseOfTag.COMMAND);
+        FightTagEvent secondTagEvent = this.fightManager.tag(secondTarget.getUniqueId(), combatTime, CauseOfTag.COMMAND);
 
         Formatter formatter = new Formatter()
             .register("{FIRST_PLAYER}", firstTarget.getName())
@@ -85,23 +89,19 @@ public class CombatCommand {
 
         String format = formatter.format(messages.admin.adminTagMultiplePlayers);
 
-        if (isTaggedFirst) {
-            this.announcer.sendMessage(firstTarget, messages.playerTagged);
-        }
-        else {
-            this.announcer.sendMessage(sender, messages.admin.cannotTagPlayer);
+        if (firstTagEvent.isCancelled()) {
+            this.announcer.sendMessage(sender, firstTagEvent.getCancelMessage());
         }
 
-        if (isTaggedSecond) {
-            this.announcer.sendMessage(secondTarget, messages.playerTagged);
-        }
-        else {
-            this.announcer.sendMessage(sender, messages.admin.cannotTagPlayer);
+        if (secondTagEvent.isCancelled()) {
+            this.announcer.sendMessage(sender, firstTagEvent.getCancelMessage());
         }
 
-        if (isTaggedFirst || isTaggedSecond) {
-            this.announcer.sendMessage(sender, format);
+        if (firstTagEvent.isCancelled() && secondTagEvent.isCancelled()) {
+            return;
         }
+
+        this.announcer.sendMessage(sender, format);
     }
 
     @Async
@@ -122,13 +122,10 @@ public class CombatCommand {
             return;
         }
 
-        if (!this.fightManager.untag(targetUniqueId, CauseOfUnTag.COMMAND)) {
-            this.announcer.sendMessage(target, this.config.messages.admin.cannotTagPlayer);
+        FightUntagEvent event = this.fightManager.untag(targetUniqueId, CauseOfUnTag.COMMAND);
+        if (event.isCancelled()) {
             return;
         }
-
-        this.announcer.sendMessage(target, this.config.messages.playerUntagged);
-        this.bossBarService.hide(targetUniqueId);
 
         Formatter formatter = new Formatter()
             .register("{PLAYER}", target.getName());

@@ -18,7 +18,7 @@ public class FightTagOutController implements Listener {
         UUID uniqueId = event.getPlayer();
 
         if (this.tagOutService.isTaggedOut(uniqueId)) {
-            event.setCancelled(true);
+            event.cancel("Tag-out system prevents tag!");
         }
     }
 }

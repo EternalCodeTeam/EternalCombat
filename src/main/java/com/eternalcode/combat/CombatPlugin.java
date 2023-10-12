@@ -11,16 +11,12 @@ import com.eternalcode.combat.drop.DropKeepInventoryManager;
 import com.eternalcode.combat.drop.DropManager;
 import com.eternalcode.combat.drop.impl.PercentDropModifier;
 import com.eternalcode.combat.drop.impl.PlayersHealthDropModifier;
+import com.eternalcode.combat.fight.controller.*;
 import com.eternalcode.combat.fight.effect.FightEffectController;
 import com.eternalcode.combat.event.EventCaller;
 import com.eternalcode.combat.fight.FightManager;
 import com.eternalcode.combat.fight.FightTask;
 import com.eternalcode.combat.fight.bossbar.FightBossBarService;
-import com.eternalcode.combat.fight.controller.FightActionBlockerController;
-import com.eternalcode.combat.fight.controller.FightDeathCauseController;
-import com.eternalcode.combat.fight.controller.FightEscapeController;
-import com.eternalcode.combat.fight.controller.FightTagController;
-import com.eternalcode.combat.fight.controller.FightUnTagController;
 import com.eternalcode.combat.fight.effect.FightEffectService;
 import com.eternalcode.combat.fight.pearl.FightPearlController;
 import com.eternalcode.combat.fight.pearl.FightPearlManager;
@@ -98,7 +94,7 @@ public final class CombatPlugin extends JavaPlugin {
             .invalidUsageHandler(new InvalidUsage(pluginConfig, notificationAnnouncer))
             .permissionHandler(new PermissionMessage(pluginConfig, notificationAnnouncer))
 
-            .commandInstance(new CombatCommand(this.fightManager, configService, this.fightBossBarService, notificationAnnouncer, pluginConfig))
+            .commandInstance(new CombatCommand(this.fightManager, configService, notificationAnnouncer, pluginConfig))
             .commandInstance(new TagOutCommand(fightTagOutService, notificationAnnouncer, pluginConfig))
 
             .register();
@@ -122,14 +118,15 @@ public final class CombatPlugin extends JavaPlugin {
             new FightDeathCauseController(this.fightManager),
             new DropController(dropManager, keepInventoryManager, pluginConfig.dropSettings, this.fightManager),
             new FightTagController(this.fightManager, pluginConfig, notificationAnnouncer),
-            new FightUnTagController(this.fightManager, pluginConfig, notificationAnnouncer),
+            new FightUnTagController(this.fightManager, pluginConfig),
             new FightEscapeController(this.fightManager, pluginConfig, notificationAnnouncer),
             new FightActionBlockerController(this.fightManager, notificationAnnouncer, pluginConfig),
             new FightPearlController(pluginConfig.pearl, notificationAnnouncer, this.fightManager, fightPearlManager),
             new UpdaterNotificationController(updaterService, pluginConfig, this.audienceProvider, miniMessage),
             new RegionController(notificationAnnouncer, bridgeService.getRegionProvider(), this.fightManager, pluginConfig),
             new FightEffectController(pluginConfig.effect, effectService, this.fightManager, this.getServer()),
-            new FightTagOutController(fightTagOutService)
+            new FightTagOutController(fightTagOutService),
+            new FightMessageController(this.fightManager, notificationAnnouncer, this.fightBossBarService, pluginConfig, this.getServer())
         ).forEach(listener -> this.getServer().getPluginManager().registerEvents(listener, this));
 
         long millis = started.elapsed(TimeUnit.MILLISECONDS);

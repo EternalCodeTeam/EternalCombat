@@ -57,17 +57,9 @@ public class FightTagController implements Listener {
 
         UUID attackedUniqueId = attackedPlayerByPerson.getUniqueId();
         UUID personToAddCombatTimeUniqueId = personToAddCombatTime.getUniqueId();
-        boolean isTaggedAttacker = this.fightManager.tag(attackedUniqueId, combatTime, CauseOfTag.PLAYER);
-        boolean isTaggedPerson = this.fightManager.tag(personToAddCombatTimeUniqueId, combatTime, CauseOfTag.PLAYER);
 
-
-        if (isTaggedAttacker) {
-            this.announcer.sendMessage(personToAddCombatTime, this.config.messages.playerTagged);
-        }
-
-        if (isTaggedPerson) {
-            this.announcer.sendMessage(attackedPlayerByPerson, this.config.messages.playerTagged);
-        }
+        this.fightManager.tag(attackedUniqueId, combatTime, CauseOfTag.PLAYER);
+        this.fightManager.tag(personToAddCombatTimeUniqueId, combatTime, CauseOfTag.PLAYER);
     }
 
     @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
@@ -99,11 +91,7 @@ public class FightTagController implements Listener {
             return;
         }
 
-        boolean isTagged = this.fightManager.tag(uuid, combatTime, CauseOfTag.NON_PLAYER);
-        if (isTagged) {
-            this.announcer.sendMessage(player, this.config.messages.playerTagged);
-        }
-
+        this.fightManager.tag(uuid, combatTime, CauseOfTag.NON_PLAYER);
     }
 
     @Nullable

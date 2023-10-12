@@ -55,10 +55,7 @@ public class FightTask implements Runnable {
                 continue;
             }
 
-            this.announcer.sendMessage(player, this.config.messages.playerUntagged);
-
             this.fightManager.untag(playerUniqueId, CauseOfUnTag.TIME_EXPIRED);
-            this.bossBarService.hide(playerUniqueId);
         }
     }
 

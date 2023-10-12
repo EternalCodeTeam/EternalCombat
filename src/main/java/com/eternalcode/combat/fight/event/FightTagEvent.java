@@ -12,6 +12,7 @@ public class FightTagEvent extends Event implements Cancellable {
     private final UUID player;
     private final CauseOfTag cause;
     private boolean isCancelled = false;
+    private String cancelMessage = "";
 
     public FightTagEvent(UUID player, CauseOfTag cause) {
         this.player = player;
@@ -33,7 +34,21 @@ public class FightTagEvent extends Event implements Cancellable {
 
     @Override
     public void setCancelled(boolean cancelled) {
-        this.isCancelled = cancelled;
+        throw new UnsupportedOperationException("Use #cancel(String) instead");
+    }
+
+    public void cancel(String cancelMessage) {
+        this.isCancelled = true;
+        this.cancelMessage = cancelMessage;
+    }
+
+    public void allow() {
+        this.isCancelled = false;
+        this.cancelMessage = "";
+    }
+
+    public String getCancelMessage() {
+        return this.cancelMessage;
     }
 
     @Override

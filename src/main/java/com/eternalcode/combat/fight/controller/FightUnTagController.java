@@ -3,7 +3,6 @@ package com.eternalcode.combat.fight.controller;
 import com.eternalcode.combat.fight.event.CauseOfUnTag;
 import com.eternalcode.combat.config.implementation.PluginConfig;
 import com.eternalcode.combat.fight.FightManager;
-import com.eternalcode.combat.notification.NotificationAnnouncer;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -13,12 +12,10 @@ public class FightUnTagController implements Listener {
 
     private final FightManager fightManager;
     private final PluginConfig config;
-    private final NotificationAnnouncer announcer;
 
-    public FightUnTagController(FightManager fightManager, PluginConfig config, NotificationAnnouncer announcer) {
+    public FightUnTagController(FightManager fightManager, PluginConfig config) {
         this.fightManager = fightManager;
         this.config = config;
-        this.announcer = announcer;
     }
 
     @EventHandler
@@ -30,15 +27,12 @@ public class FightUnTagController implements Listener {
             return;
         }
 
-        this.announcer.sendMessage(player, this.config.messages.playerUntagged);
-
         CauseOfUnTag causeOfUnTag = (killer == null ? CauseOfUnTag.PLAYER_DEATH : CauseOfUnTag.NON_PLAYER_DEATH);
 
         this.fightManager.untag(player.getUniqueId(), causeOfUnTag);
 
         if (killer != null && this.config.settings.shouldReleaseAttacker) {
             this.fightManager.untag(killer.getUniqueId(), CauseOfUnTag.ATTACKER_RELEASE);
-            this.announcer.sendMessage(killer, this.config.messages.playerUntagged);
         }
     }
 }

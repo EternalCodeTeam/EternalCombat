@@ -187,9 +187,6 @@ public class PluginConfig extends OkaeriConfig {
             @Comment("# Message sent when a player is tagged by an admin")
             public String adminTagMultiplePlayers = "&7You have tagged &e{FIRST_PLAYER}&7 and &e{SECOND_PLAYER}&7.";
 
-            @Comment("# Message sent when a player is untaggable by the command due to tagOut system")
-            public String cannotTagPlayer = "&cYou cannot tag this player due to tagOut system!";
-
             @Comment("# Message sent to admin when they remove a player from combat")
             public String adminUntagPlayer = "&7You have removed &e{PLAYER}&7 from the fight.";
 
