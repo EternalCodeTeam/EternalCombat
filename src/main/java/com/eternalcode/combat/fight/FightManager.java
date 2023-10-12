@@ -15,7 +15,7 @@ import java.util.concurrent.ConcurrentHashMap;
 
 public class FightManager {
 
-    private final ConcurrentHashMap<UUID, FightTag> fights = new ConcurrentHashMap<>();
+    private final Map<UUID, FightTag> fights = new ConcurrentHashMap<>();
     private final EventCaller eventCaller;
 
     public FightManager(EventCaller eventCaller) {
