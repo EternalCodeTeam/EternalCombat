@@ -1,20 +1,25 @@
 package com.eternalcode.combat.fight.tagout;
 
 import com.eternalcode.combat.fight.event.FightTagEvent;
+import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 
+import java.util.UUID;
+
 public class FightTagOutController implements Listener {
-    FightTagOutService tagOutService;
+    private final FightTagOutService tagOutService;
 
     public FightTagOutController(FightTagOutService tagOutService) {
         this.tagOutService = tagOutService;
     }
 
-    @EventHandler(priority = EventPriority.NORMAL)
+    @EventHandler
     void onTagOut(FightTagEvent event) {
-        if (this.tagOutService.isTaggedOut(event.getPlayer())) {
+        UUID uniqueId = event.getPlayer();
+
+        if (this.tagOutService.isTaggedOut(uniqueId)) {
             event.setCancelled(true);
         }
     }

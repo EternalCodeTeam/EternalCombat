@@ -60,6 +60,7 @@ public class CombatCommand {
             .register("{PLAYER}", target.getName());
 
         this.fightManager.tag(targetUniqueId, time, CauseOfTag.COMMAND);
+
         String format = formatter.format(this.config.messages.admin.adminTagPlayer);
         this.announcer.sendMessage(sender, format);
     }
