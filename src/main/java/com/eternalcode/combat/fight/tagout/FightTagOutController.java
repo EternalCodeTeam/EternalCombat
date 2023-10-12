@@ -1,9 +1,7 @@
 package com.eternalcode.combat.fight.tagout;
 
 import com.eternalcode.combat.fight.event.FightTagEvent;
-import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
-import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 
 import java.util.UUID;
