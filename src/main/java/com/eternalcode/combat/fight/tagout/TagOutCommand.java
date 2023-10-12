@@ -78,8 +78,7 @@ public class TagOutCommand {
             this.announcer.sendMessage(sender, adminUnTagOutFormat);
         }
 
-        String playerUnTagOutFormat = formatter.format(this.config.messages.admin.playerUntagOut);
-        this.announcer.sendMessage(target, playerUnTagOutFormat);
+        this.announcer.sendMessage(target, this.config.messages.admin.playerUntagOut);
     }
 
     @Execute(route = "remove", required = 0)
@@ -88,10 +87,8 @@ public class TagOutCommand {
         UUID senderUniqueId = sender.getUniqueId();
 
         this.fightTagOutService.unTagOut(senderUniqueId);
-        Formatter formatter = new Formatter();
 
-        String playerUnTagOutFormat = formatter.format(this.config.messages.admin.playerUntagOut);
-        this.announcer.sendMessage(sender, playerUnTagOutFormat);
+        this.announcer.sendMessage(sender, this.config.messages.admin.playerUntagOut);
     }
 }
 
