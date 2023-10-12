@@ -35,7 +35,7 @@ public class FightEffectController implements Listener {
 
         Player player = this.server.getPlayer(event.getPlayer());
 
-        if(player == null) {
+        if (player == null) {
             return;
         }
 
