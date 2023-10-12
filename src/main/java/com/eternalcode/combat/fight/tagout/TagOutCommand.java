@@ -73,7 +73,7 @@ public class TagOutCommand {
         Formatter formatter = new Formatter()
             .register("{PLAYER}", target.getName());
 
-        if (targetUniqueId != sender.getUniqueId()) {
+        if (!targetUniqueId.equals(sender.getUniqueId())) {
             String adminUnTagOutFormat = formatter.format(this.config.messages.admin.adminUntagOut);
             this.announcer.sendMessage(sender, adminUnTagOutFormat);
         }
