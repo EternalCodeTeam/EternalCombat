@@ -79,7 +79,7 @@ public class FightEffectController implements Listener {
         if (!this.effectSettings.customEffectsEnabled) {
             return;
         }
-        if (event.getCause() == CauseOfUnTag.PLAYER_DEATH || event.getCause() == CauseOfUnTag.NON_PLAYER_DEATH) {
+        if (event.getCause() == CauseOfUnTag.DEATH_BY_PLAYER || event.getCause() == CauseOfUnTag.DEATH) {
             Player player = Bukkit.getPlayer(event.getPlayer());
 
             assert player != null;

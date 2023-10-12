@@ -2,9 +2,9 @@ package com.eternalcode.combat.fight.event;
 
 public enum CauseOfUnTag {
     TIME_EXPIRED,
-    PLAYER_DEATH,
+    DEATH,
+    DEATH_BY_PLAYER,
     LOGOUT,
-    NON_PLAYER_DEATH,
     COMMAND,
     ATTACKER_RELEASE
 }

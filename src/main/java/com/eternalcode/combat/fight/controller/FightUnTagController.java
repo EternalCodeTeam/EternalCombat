@@ -27,7 +27,7 @@ public class FightUnTagController implements Listener {
             return;
         }
 
-        CauseOfUnTag causeOfUnTag = (killer == null ? CauseOfUnTag.PLAYER_DEATH : CauseOfUnTag.NON_PLAYER_DEATH);
+        CauseOfUnTag causeOfUnTag = (killer == null ? CauseOfUnTag.DEATH_BY_PLAYER : CauseOfUnTag.DEATH);
 
         this.fightManager.untag(player.getUniqueId(), causeOfUnTag);
 

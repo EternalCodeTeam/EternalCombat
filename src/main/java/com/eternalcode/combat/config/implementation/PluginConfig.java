@@ -169,7 +169,7 @@ public class PluginConfig extends OkaeriConfig {
         public String inventoryBlockedDuringCombat = "&cYou cannot open this inventory during combat!";
 
         @Comment("# Message sent when player tries to place a block, but the block place is blocked")
-        public String blockPlacingBlockedDuringCombat = "&cYou cannot place below 40Y coordinate during combat!";
+        public String blockPlacingBlockedDuringCombat = "&cYou cannot place above 40Y coordinate during combat!";
 
         @Comment("# Message sent when player tries to enter a region")
         public String cantEnterOnRegion = "&cYou can't enter on this region during combat!";
