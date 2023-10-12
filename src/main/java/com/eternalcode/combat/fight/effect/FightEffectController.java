@@ -35,7 +35,9 @@ public class FightEffectController implements Listener {
 
         Player player = this.server.getPlayer(event.getPlayer());
 
-        assert player != null;
+        if(player == null) {
+            return;
+        }
 
         this.effectSettings.customEffects.forEach((key, value) ->
             this.effectService.applyCustomEffect(player, key, value));
@@ -63,7 +65,9 @@ public class FightEffectController implements Listener {
 
         Player player = this.server.getPlayer(event.getPlayer());
 
-        assert player != null;
+        if (player == null) {
+            return;
+        }
 
         this.effectSettings.customEffects.forEach((key, value) -> this.effectService.removeCustomEffect(player, key, value));
 
