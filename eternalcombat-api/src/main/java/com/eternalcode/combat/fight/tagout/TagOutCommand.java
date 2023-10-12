@@ -14,7 +14,7 @@ import java.time.Duration;
 import java.time.Instant;
 import java.util.UUID;
 
-@Route(name = "tagout", aliases = "tag")
+@Route(name = "tagout", aliases = "tagimmunity")
 public class TagOutCommand {
 
     private final FightTagOutService fightTagOutService;
