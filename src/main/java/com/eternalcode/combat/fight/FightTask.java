@@ -31,8 +31,6 @@ public class FightTask implements Runnable {
     }
 
     @Override
-
-
     public void run() {
         for (FightTag fightTag : this.fightManager.getFights()) {
             Player player = this.server.getPlayer(fightTag.getTaggedPlayer());
@@ -43,19 +41,18 @@ public class FightTask implements Runnable {
 
             UUID playerUniqueId = player.getUniqueId();
 
-            if (!fightTag.isExpired()) {
-                Duration remaining = fightTag.getRemainingDuration();
-
-                Formatter formatter = new Formatter()
-                    .register("{TIME}", DurationUtil.format(remaining));
-
-                Notification combatNotification = this.config.messages.combatNotification;
-
-                this.sendFightNotification(player, fightTag, combatNotification, formatter);
-                continue;
+            if (fightTag.isExpired()) {
+                this.fightManager.untag(playerUniqueId, CauseOfUnTag.TIME_EXPIRED);
+                return;
             }
 
-            this.fightManager.untag(playerUniqueId, CauseOfUnTag.TIME_EXPIRED);
+            Duration remaining = fightTag.getRemainingDuration();
+            Formatter formatter = new Formatter()
+                    .register("{TIME}", DurationUtil.format(remaining));
+
+            Notification combatNotification = this.config.messages.combatNotification;
+
+            this.sendFightNotification(player, fightTag, combatNotification, formatter);
         }
     }
 

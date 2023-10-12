@@ -11,7 +11,12 @@ import com.eternalcode.combat.drop.DropKeepInventoryManager;
 import com.eternalcode.combat.drop.DropManager;
 import com.eternalcode.combat.drop.impl.PercentDropModifier;
 import com.eternalcode.combat.drop.impl.PlayersHealthDropModifier;
-import com.eternalcode.combat.fight.controller.*;
+import com.eternalcode.combat.fight.controller.FightActionBlockerController;
+import com.eternalcode.combat.fight.controller.FightDeathCauseController;
+import com.eternalcode.combat.fight.controller.FightEscapeController;
+import com.eternalcode.combat.fight.controller.FightMessageController;
+import com.eternalcode.combat.fight.controller.FightTagController;
+import com.eternalcode.combat.fight.controller.FightUnTagController;
 import com.eternalcode.combat.fight.effect.FightEffectController;
 import com.eternalcode.combat.event.EventCaller;
 import com.eternalcode.combat.fight.FightManager;
@@ -125,7 +130,7 @@ public final class CombatPlugin extends JavaPlugin {
             new UpdaterNotificationController(updaterService, pluginConfig, this.audienceProvider, miniMessage),
             new RegionController(notificationAnnouncer, bridgeService.getRegionProvider(), this.fightManager, pluginConfig),
             new FightEffectController(pluginConfig.effect, effectService, this.fightManager, this.getServer()),
-            new FightTagOutController(fightTagOutService),
+            new FightTagOutController(fightTagOutService, pluginConfig),
             new FightMessageController(this.fightManager, notificationAnnouncer, this.fightBossBarService, pluginConfig, this.getServer())
         ).forEach(listener -> this.getServer().getPluginManager().registerEvents(listener, this));
 

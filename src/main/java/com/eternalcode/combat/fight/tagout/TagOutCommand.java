@@ -74,11 +74,11 @@ public class TagOutCommand {
             .register("{PLAYER}", target.getName());
 
         if (!targetUniqueId.equals(sender.getUniqueId())) {
-            String adminUnTagOutFormat = formatter.format(this.config.messages.admin.adminUntagOut);
+            String adminUnTagOutFormat = formatter.format(this.config.messages.admin.adminTagOutOff);
             this.announcer.sendMessage(sender, adminUnTagOutFormat);
         }
 
-        this.announcer.sendMessage(target, this.config.messages.admin.playerUntagOut);
+        this.announcer.sendMessage(target, this.config.messages.admin.playerTagOutOff);
     }
 
     @Execute(route = "remove", required = 0)
@@ -88,7 +88,7 @@ public class TagOutCommand {
 
         this.fightTagOutService.unTagOut(senderUniqueId);
 
-        this.announcer.sendMessage(sender, this.config.messages.admin.playerUntagOut);
+        this.announcer.sendMessage(sender, this.config.messages.admin.playerTagOutOff);
     }
 }
 
