@@ -1,6 +1,6 @@
 name: Publish EternalCombat API
 on:
-  push:
+  release:
     branches: [ master ]
 jobs:
   publish:
