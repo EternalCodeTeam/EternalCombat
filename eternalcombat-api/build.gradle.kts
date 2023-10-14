@@ -9,7 +9,7 @@ group = "com.eternalcode"
 version = "1.1.1"
 
 checkstyle {
-    toolVersion = "10.12.2"
+    toolVersion = "10.12.4"
 
     configFile = file("${rootDir}/config/checkstyle/checkstyle.xml")
 
@@ -33,7 +33,7 @@ dependencies {
     compileOnlyApi("org.spigotmc:spigot-api:1.19.3-R0.1-SNAPSHOT")
 
     // kyori
-    api("net.kyori:adventure-platform-bukkit:4.3.0")
+    api("net.kyori:adventure-platform-bukkit:4.3.1")
     api("net.kyori:adventure-text-minimessage:4.14.0")
 
     // litecommands
@@ -51,7 +51,7 @@ dependencies {
     api("com.eternalcode:gitcheck:1.0.0")
 
     // commons
-    api("commons-io:commons-io:2.13.0")
+    api("commons-io:commons-io:2.14.0")
 
     // bstats
     api("org.bstats:bstats-bukkit:3.0.2")

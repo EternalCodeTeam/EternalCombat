@@ -16,14 +16,14 @@ jobs:
 
     steps:
       - name: Checkout 
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
       - name: Set up JDK 17
         uses: actions/setup-java@v3
         with:
           java-version: '17'
           distribution: 'temurin'
       - name: Cache Gradle
-        uses: actions/cache@v3.3.1
+        uses: actions/cache@v3.3.2
         with:
           path: ~/.gradle/caches
           key: >-
@@ -33,11 +33,11 @@ jobs:
       - name: Make gradlew executable
         run: chmod +x gradlew
       - name: Build with Gradle
-        uses: gradle/gradle-build-action@e3426b1f20c7262e0fed7b855aae1325633af3b4
+        uses: gradle/gradle-build-action@0bfe00a136db5e61ba3416b372542a65863a9fee
         with:
           arguments: shadowJar
       - name: Upload a Build Artifact
-        uses: actions/upload-artifact@v3.1.2
+        uses: actions/upload-artifact@v3.1.3
         with:
           name: 'Successfully build EternalCombat'
           path: build/libs/*.jar
