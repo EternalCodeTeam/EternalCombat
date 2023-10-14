@@ -1,0 +1,27 @@
+name: Publish EternalCombat API
+on:
+  release:
+    types: [published]
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    environment: deployment
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up JDK
+        uses: actions/setup-java@v3
+        with:
+          distribution: 'temurin'
+          java-version: 17
+          cache: 'gradle'
+
+      - name: Grant execute permission for gradlew
+        run: chmod +x gradlew
+
+      - name: Publish with Gradle
+        run: ./gradlew clean build eternalcombat-api:publish
+        env:
+          ETERNAL_CODE_MAVEN_USERNAME: ${{ secrets.ETERNAL_CODE_MAVEN_USERNAME }}
+          ETERNAL_CODE_MAVEN_PASSWORD: ${{ secrets.ETERNAL_CODE_MAVEN_PASSWORD }}
