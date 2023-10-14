@@ -1,7 +1,8 @@
 name: Publish EternalCombat API
 on:
   release:
-    types: [published]
+    branches: [ master ]
+    types: [ published ]
 jobs:
   publish:
     runs-on: ubuntu-latest
