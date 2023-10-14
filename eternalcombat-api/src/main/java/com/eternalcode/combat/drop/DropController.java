@@ -52,6 +52,10 @@ public class DropController implements Listener {
 
         DropResult result = this.dropManager.modify(dropType, drop);
 
+        if (result == null) {
+            return;
+        }
+
         drops.clear();
         drops.addAll(result.droppedItems());
 
