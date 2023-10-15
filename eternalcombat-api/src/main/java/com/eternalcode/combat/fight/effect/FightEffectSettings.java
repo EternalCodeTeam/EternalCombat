@@ -10,7 +10,7 @@ import java.util.Map;
 public class FightEffectSettings extends OkaeriConfig {
 
     @Comment({"# Do you want to add effects to players in combat?"})
-    public boolean customEffectsEnabled = true;
+    public boolean customEffectsEnabled = false;
 
     @Comment({
         "# If the option above is set to true, you can add effects to players in combat below",
