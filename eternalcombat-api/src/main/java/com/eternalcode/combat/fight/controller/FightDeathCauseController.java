@@ -35,7 +35,7 @@ public class FightDeathCauseController implements Listener {
             return;
         }
 
-        FightTag fightTag = this.fightManager.getTag(damagerEntity.getUniqueId());
+        FightTag fightTag = this.fightManager.getTag(victim.getUniqueId());
 
         if (damagerEntity instanceof Player) {
             fightTag.setDeathCause(FightDeathCause.KILLED_BY_PLAYER);
