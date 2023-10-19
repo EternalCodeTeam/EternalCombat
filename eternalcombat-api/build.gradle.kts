@@ -6,7 +6,7 @@ dependencies {
     // Spigot api
     compileOnlyApi(libs.spigotApi)
 
-    // kp.
+    // kyori
     api(libs.adventurePlatformBukkit)
     api(libs.adventureTextMinimessage)
 
