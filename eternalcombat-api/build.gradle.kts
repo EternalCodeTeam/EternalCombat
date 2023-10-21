@@ -1,4 +1,6 @@
 plugins {
+    id("eternalcombat.java")
+
     `maven-publish`
 }
 

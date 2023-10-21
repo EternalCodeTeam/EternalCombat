@@ -1,7 +1,9 @@
 plugins {
-    alias(libs.plugins.pluginyml)
-    alias(libs.plugins.shadow)
-    alias(libs.plugins.runpaper)
+    id("eternalcombat.java")
+
+    id("net.minecrell.plugin-yml.bukkit")
+    id("com.github.johnrengelman.shadow")
+    id("xyz.jpenilla.run-paper")
 }
 
 dependencies {
