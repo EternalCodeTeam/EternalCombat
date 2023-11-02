@@ -54,7 +54,7 @@ public class RegionController implements Listener {
 
             player.setVelocity(vector);
 
-            this.announcer.sendMessage(player, this.pluginConfig.messages.cantEnterOnRegion);
+            this.announcer.send(player, this.pluginConfig.messages.cantEnterOnRegion);
         }
     }
 }

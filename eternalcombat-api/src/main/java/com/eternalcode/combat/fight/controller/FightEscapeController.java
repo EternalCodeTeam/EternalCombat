@@ -33,9 +33,7 @@ public class FightEscapeController implements Listener {
         Formatter formatter = new Formatter()
             .register("{PLAYER}", player.getName());
 
-        String format = formatter.format(this.config.messages.playerLoggedOutDuringCombat);
-
-        this.announcer.broadcast(format);
+        this.announcer.broadcast(this.config.messages.playerLoggedOutDuringCombat, formatter);
 
         FightTag fightTag = this.fightManager.getTag(player.getUniqueId());
         fightTag.setHealthBeforeDeath(player.getHealth());

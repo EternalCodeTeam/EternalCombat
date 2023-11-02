@@ -11,6 +11,10 @@ import com.eternalcode.combat.drop.DropKeepInventoryManager;
 import com.eternalcode.combat.drop.DropManager;
 import com.eternalcode.combat.drop.impl.PercentDropModifier;
 import com.eternalcode.combat.drop.impl.PlayersHealthDropModifier;
+import com.eternalcode.combat.event.EventCaller;
+import com.eternalcode.combat.fight.FightManager;
+import com.eternalcode.combat.fight.FightTask;
+import com.eternalcode.combat.fight.bossbar.FightBossBarService;
 import com.eternalcode.combat.fight.controller.FightActionBlockerController;
 import com.eternalcode.combat.fight.controller.FightDeathCauseController;
 import com.eternalcode.combat.fight.controller.FightEscapeController;
@@ -18,10 +22,6 @@ import com.eternalcode.combat.fight.controller.FightMessageController;
 import com.eternalcode.combat.fight.controller.FightTagController;
 import com.eternalcode.combat.fight.controller.FightUnTagController;
 import com.eternalcode.combat.fight.effect.FightEffectController;
-import com.eternalcode.combat.event.EventCaller;
-import com.eternalcode.combat.fight.FightManager;
-import com.eternalcode.combat.fight.FightTask;
-import com.eternalcode.combat.fight.bossbar.FightBossBarService;
 import com.eternalcode.combat.fight.effect.FightEffectService;
 import com.eternalcode.combat.fight.pearl.FightPearlController;
 import com.eternalcode.combat.fight.pearl.FightPearlManager;
@@ -31,6 +31,8 @@ import com.eternalcode.combat.fight.tagout.TagOutCommand;
 import com.eternalcode.combat.notification.NotificationAnnouncer;
 import com.eternalcode.combat.region.RegionController;
 import com.eternalcode.combat.region.RegionProvider;
+import com.eternalcode.combat.scheduler.BukkitSchedulerImpl;
+import com.eternalcode.combat.scheduler.Scheduler;
 import com.eternalcode.combat.updater.UpdaterNotificationController;
 import com.eternalcode.combat.updater.UpdaterService;
 import com.eternalcode.combat.util.legacy.LegacyColorProcessor;
@@ -49,6 +51,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.io.File;
+import java.time.Duration;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Stream;
 
@@ -88,20 +91,23 @@ public final class CombatPlugin extends JavaPlugin implements EternalCombatApi {
         this.dropManager = new DropManager();
         this.dropKeepInventoryManager = new DropKeepInventoryManager();
 
-        UpdaterService updaterService = new UpdaterService(this.getDescription());
-
         this.audienceProvider = BukkitAudiences.create(this);
         MiniMessage miniMessage = MiniMessage.builder()
             .postProcessor(new LegacyColorProcessor())
             .build();
 
+        UpdaterService updaterService = new UpdaterService(this.getDescription());
+
         FightBossBarService fightBossBarService = new FightBossBarService(this.pluginConfig, this.audienceProvider, miniMessage);
 
         BridgeService bridgeService = new BridgeService(this.pluginConfig, server.getPluginManager(), this.getLogger());
         bridgeService.init();
+
         this.regionProvider = bridgeService.getRegionProvider();
 
-        NotificationAnnouncer notificationAnnouncer = new NotificationAnnouncer(this.audienceProvider, miniMessage);
+        Scheduler scheduler = new BukkitSchedulerImpl(this, server.getScheduler());
+
+        NotificationAnnouncer notificationAnnouncer = new NotificationAnnouncer(this.audienceProvider, miniMessage, scheduler);
 
         this.liteCommands = LiteBukkitAdventurePlatformFactory.builder(server, "eternalcombat", this.audienceProvider)
             .argument(Player.class, new BukkitPlayerArgument<>(this.getServer(), this.pluginConfig.messages.playerNotFound))
@@ -116,7 +122,7 @@ public final class CombatPlugin extends JavaPlugin implements EternalCombatApi {
             .register();
 
         FightTask fightTask = new FightTask(server, this.pluginConfig, this.fightManager, fightBossBarService, notificationAnnouncer);
-        this.getServer().getScheduler().runTaskTimer(this, fightTask, 20L, 20L);
+        scheduler.timerSync(fightTask, Duration.ofSeconds(1L), Duration.ofSeconds(1L));
 
         new Metrics(this, 17803);
 
@@ -128,7 +134,7 @@ public final class CombatPlugin extends JavaPlugin implements EternalCombatApi {
         Stream.of(
             new FightDeathCauseController(this.fightManager),
             new DropController(this.dropManager, this.dropKeepInventoryManager, this.pluginConfig.dropSettings, this.fightManager),
-            new FightTagController(this.fightManager, this.pluginConfig, notificationAnnouncer),
+            new FightTagController(this.fightManager, this.pluginConfig),
             new FightUnTagController(this.fightManager, this.pluginConfig),
             new FightEscapeController(this.fightManager, this.pluginConfig, notificationAnnouncer),
             new FightActionBlockerController(this.fightManager, notificationAnnouncer, this.pluginConfig),

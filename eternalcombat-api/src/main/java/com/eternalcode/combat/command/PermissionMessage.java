@@ -28,7 +28,7 @@ public class PermissionMessage implements PermissionHandler<CommandSender> {
         Formatter formatter = new Formatter()
             .register("{PERMISSION}", value);
 
-        this.announcer.sendMessage(commandSender, formatter.format(this.config.messages.noPermission));
+        this.announcer.send(commandSender, this.config.messages.noPermission, formatter);
     }
 
 }

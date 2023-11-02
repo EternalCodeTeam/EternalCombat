@@ -38,8 +38,7 @@ public class TagOutCommand {
 
         this.fightTagOutService.tagOut(targetUniqueId, time);
 
-        String format = formatter.format(this.config.messages.admin.adminTagOutSelf);
-        this.announcer.sendMessage(sender, format);
+        this.announcer.send(sender, this.config.messages.admin.adminTagOutSelf, formatter);
     }
 
     @Execute(required = 2)
@@ -56,11 +55,8 @@ public class TagOutCommand {
 
         this.fightTagOutService.tagOut(targetUniqueId, time);
 
-        String adminTagOutFormat = formatter.format(this.config.messages.admin.adminTagOut);
-        this.announcer.sendMessage(sender, adminTagOutFormat);
-
-        String playerTagOutFormat = formatter.format(this.config.messages.admin.playerTagOut);
-        this.announcer.sendMessage(target, playerTagOutFormat);
+        this.announcer.send(sender, this.config.messages.admin.adminTagOut, formatter);
+        this.announcer.send(target, this.config.messages.admin.playerTagOut, formatter);
     }
 
     @Execute(route = "remove", required = 1)
@@ -74,11 +70,10 @@ public class TagOutCommand {
             .register("{PLAYER}", target.getName());
 
         if (!targetUniqueId.equals(sender.getUniqueId())) {
-            String adminUnTagOutFormat = formatter.format(this.config.messages.admin.adminTagOutOff);
-            this.announcer.sendMessage(sender, adminUnTagOutFormat);
+            this.announcer.send(sender, this.config.messages.admin.adminTagOutOff, formatter);
         }
 
-        this.announcer.sendMessage(target, this.config.messages.admin.playerTagOutOff);
+        this.announcer.send(target, this.config.messages.admin.playerTagOutOff);
     }
 
     @Execute(route = "remove", required = 0)
@@ -88,7 +83,7 @@ public class TagOutCommand {
 
         this.fightTagOutService.unTagOut(senderUniqueId);
 
-        this.announcer.sendMessage(sender, this.config.messages.admin.playerTagOutOff);
+        this.announcer.send(sender, this.config.messages.admin.playerTagOutOff);
     }
 }
 

@@ -39,7 +39,7 @@ public class FightMessageController implements Listener {
             return;
         }
 
-        this.announcer.sendMessage(player, this.config.messages.playerTagged);
+        this.announcer.send(player, this.config.messages.playerTagged);
     }
 
     @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
@@ -54,7 +54,7 @@ public class FightMessageController implements Listener {
             return;
         }
 
-        this.announcer.sendMessage(player, this.config.messages.playerUntagged);
+        this.announcer.send(player, this.config.messages.playerUntagged);
         this.bossBarService.hide(event.getPlayer());
     }
 

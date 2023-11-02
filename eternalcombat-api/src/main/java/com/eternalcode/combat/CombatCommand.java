@@ -7,6 +7,7 @@ import com.eternalcode.combat.fight.event.CauseOfTag;
 import com.eternalcode.combat.fight.event.CauseOfUnTag;
 import com.eternalcode.combat.fight.event.FightTagEvent;
 import com.eternalcode.combat.fight.event.FightUntagEvent;
+import com.eternalcode.combat.notification.Notification;
 import com.eternalcode.combat.notification.NotificationAnnouncer;
 import dev.rollczi.litecommands.argument.Arg;
 import dev.rollczi.litecommands.command.async.Async;
@@ -44,9 +45,11 @@ public class CombatCommand {
         Formatter formatter = new Formatter()
             .register("{PLAYER}", target.getName());
 
-        this.announcer.sendMessage(sender, this.fightManager.isInCombat(targetUniqueId)
-            ? formatter.format(messages.admin.playerInCombat)
-            : formatter.format(messages.admin.playerNotInCombat));
+        Notification notification = this.fightManager.isInCombat(targetUniqueId)
+            ? messages.admin.playerInCombat
+            : messages.admin.playerNotInCombat;
+
+        this.announcer.send(sender, notification, formatter);
     }
 
     @Execute(route = "tag", required = 1)
@@ -65,8 +68,7 @@ public class CombatCommand {
             return;
         }
 
-        String format = formatter.format(this.config.messages.admin.adminTagPlayer);
-        this.announcer.sendMessage(sender, format);
+        this.announcer.send(sender, this.config.messages.admin.adminTagPlayer, formatter);
     }
 
     @Execute(route = "tag", required = 2)
@@ -76,18 +78,12 @@ public class CombatCommand {
         PluginConfig.Messages messages = this.config.messages;
         
         if (sender.equals(firstTarget) || sender.equals(secondTarget)) {
-            this.announcer.sendMessage(sender, messages.admin.adminCannotTagSelf);
+            this.announcer.send(sender, messages.admin.adminCannotTagSelf);
             return;
         }
 
         FightTagEvent firstTagEvent = this.fightManager.tag(firstTarget.getUniqueId(), combatTime, CauseOfTag.COMMAND);
         FightTagEvent secondTagEvent = this.fightManager.tag(secondTarget.getUniqueId(), combatTime, CauseOfTag.COMMAND);
-
-        Formatter formatter = new Formatter()
-            .register("{FIRST_PLAYER}", firstTarget.getName())
-            .register("{SECOND_PLAYER}", secondTarget.getName());
-
-        String format = formatter.format(messages.admin.adminTagMultiplePlayers);
 
         if (firstTagEvent.isCancelled()) {
             this.announcer.sendMessage(sender, firstTagEvent.getCancelMessage());
@@ -101,7 +97,11 @@ public class CombatCommand {
             return;
         }
 
-        this.announcer.sendMessage(sender, format);
+        Formatter formatter = new Formatter()
+            .register("{FIRST_PLAYER}", firstTarget.getName())
+            .register("{SECOND_PLAYER}", secondTarget.getName());
+
+        this.announcer.send(sender, messages.admin.adminTagMultiplePlayers, formatter);
     }
 
     @Async
@@ -109,7 +109,7 @@ public class CombatCommand {
     @Permission("eternalcombat.reload")
     void execute(CommandSender player) {
         this.configService.reload();
-        this.announcer.sendMessage(player, this.config.messages.admin.reload);
+        this.announcer.send(player, this.config.messages.admin.reload);
     }
 
     @Execute(route = "untag", required = 1)
@@ -118,7 +118,7 @@ public class CombatCommand {
         UUID targetUniqueId = target.getUniqueId();
 
         if (!this.fightManager.isInCombat(targetUniqueId)) {
-            this.announcer.sendMessage(sender, this.config.messages.admin.adminPlayerNotInCombat);
+            this.announcer.send(sender, this.config.messages.admin.adminPlayerNotInCombat);
             return;
         }
 
@@ -130,8 +130,6 @@ public class CombatCommand {
         Formatter formatter = new Formatter()
             .register("{PLAYER}", target.getName());
 
-        String format = formatter.format(this.config.messages.admin.adminUntagPlayer);
-
-        this.announcer.sendMessage(sender, format);
+        this.announcer.send(sender, this.config.messages.admin.adminUntagPlayer, formatter);
     }
 }

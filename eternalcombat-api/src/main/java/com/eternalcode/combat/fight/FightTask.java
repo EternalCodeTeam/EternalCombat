@@ -1,8 +1,8 @@
 package com.eternalcode.combat.fight;
 
-import com.eternalcode.combat.fight.event.CauseOfUnTag;
 import com.eternalcode.combat.config.implementation.PluginConfig;
 import com.eternalcode.combat.fight.bossbar.FightBossBarService;
+import com.eternalcode.combat.fight.event.CauseOfUnTag;
 import com.eternalcode.combat.notification.Notification;
 import com.eternalcode.combat.notification.NotificationAnnouncer;
 import com.eternalcode.combat.notification.implementation.BossBarNotification;
@@ -50,9 +50,9 @@ public class FightTask implements Runnable {
             Formatter formatter = new Formatter()
                     .register("{TIME}", DurationUtil.format(remaining));
 
-            Notification combatNotification = this.config.messages.combatNotification;
+            Notification combatLog = this.config.messages.combatLog;
 
-            this.sendFightNotification(player, fightTag, combatNotification, formatter);
+            this.sendFightNotification(player, fightTag, combatLog, formatter);
         }
     }
 

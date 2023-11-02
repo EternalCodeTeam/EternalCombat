@@ -51,14 +51,14 @@ public class FightActionBlockerController implements Listener {
         boolean isBlockPlaceLevel = level > this.config.settings.minBlockPlacingLevel;
         if (isBlockPlaceLevel && specificBlocksToPreventPlacing.isEmpty()) {
             event.setCancelled(true);
-            this.announcer.sendMessage(player, this.config.messages.blockPlacingBlockedDuringCombat);
+            this.announcer.send(player, this.config.messages.blockPlacingBlockedDuringCombat);
         }
 
         Material blockMaterial = block.getType();
         boolean isBlockInDisabledList = specificBlocksToPreventPlacing.contains(blockMaterial);
         if (isBlockPlaceLevel && isBlockInDisabledList) {
             event.setCancelled(true);
-            this.announcer.sendMessage(player, this.config.messages.blockPlacingBlockedDuringCombat);
+            this.announcer.send(player, this.config.messages.blockPlacingBlockedDuringCombat);
         }
     }
 
@@ -113,7 +113,7 @@ public class FightActionBlockerController implements Listener {
 
         event.setCancelled(true);
 
-        this.announcer.sendMessage(player, this.config.messages.inventoryBlockedDuringCombat);
+        this.announcer.send(player, this.config.messages.inventoryBlockedDuringCombat);
     }
 
     @EventHandler
@@ -136,7 +136,7 @@ public class FightActionBlockerController implements Listener {
 
         if (shouldCancel) {
             event.setCancelled(true);
-            this.announcer.sendMessage(player, this.config.messages.commandDisabledDuringCombat);
+            this.announcer.send(player, this.config.messages.commandDisabledDuringCombat);
         }
     }
 }

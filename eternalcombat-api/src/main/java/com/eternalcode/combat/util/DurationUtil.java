@@ -22,4 +22,8 @@ public final class DurationUtil {
             .replaceAll("(\\d[HMS])(?!$)", "$1 ")
             .toLowerCase();
     }
+
+    public static long toTicks(Duration duration) {
+        return duration.toMillis() / 50L;
+    }
 }

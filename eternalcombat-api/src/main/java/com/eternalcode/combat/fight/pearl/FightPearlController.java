@@ -58,7 +58,7 @@ public class FightPearlController implements Listener {
 
         if (this.settings.pearlThrowDelay.isZero()) {
             event.setCancelled(true);
-            this.announcer.sendMessage(player, this.settings.pearlThrowBlockedDuringCombat);
+            this.announcer.send(player, this.settings.pearlThrowBlockedDuringCombat);
             return;
         }
 
@@ -70,8 +70,7 @@ public class FightPearlController implements Listener {
             Formatter formatter = new Formatter()
                 .register("{TIME}", DurationUtil.format(remainingPearlDelay));
 
-            String format = formatter.format(this.settings.pearlThrowBlockedDelayDuringCombat);
-            this.announcer.sendMessage(player, format);
+            this.announcer.send(player, this.settings.pearlThrowBlockedDelayDuringCombat, formatter);
             return;
         }
 

@@ -1,10 +1,9 @@
 package com.eternalcode.combat.fight.controller;
 
 import com.eternalcode.combat.WhitelistBlacklistMode;
-import com.eternalcode.combat.fight.event.CauseOfTag;
 import com.eternalcode.combat.config.implementation.PluginConfig;
 import com.eternalcode.combat.fight.FightManager;
-import com.eternalcode.combat.notification.NotificationAnnouncer;
+import com.eternalcode.combat.fight.event.CauseOfTag;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Projectile;
@@ -23,12 +22,10 @@ public class FightTagController implements Listener {
 
     private final FightManager fightManager;
     private final PluginConfig config;
-    private final NotificationAnnouncer announcer;
 
-    public FightTagController(FightManager fightManager, PluginConfig config, NotificationAnnouncer announcer) {
+    public FightTagController(FightManager fightManager, PluginConfig config) {
         this.fightManager = fightManager;
         this.config = config;
-        this.announcer = announcer;
     }
 
     @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)

@@ -1,6 +1,7 @@
 package com.eternalcode.combat.config;
 
 import com.eternalcode.combat.notification.serializer.NotificationSerializer;
+import com.eternalcode.combat.notification.implementation.title.serializer.TitleTimesSerializer;
 import eu.okaeri.configs.ConfigManager;
 import eu.okaeri.configs.OkaeriConfig;
 import eu.okaeri.configs.serdes.commons.SerdesCommons;
@@ -29,6 +30,7 @@ public class ConfigService {
         configFile.withConfigurer(new YamlBukkitConfigurer(), new SerdesCommons(), new SerdesBukkit());
         configFile.withSerdesPack(registry -> {
             registry.register(new NotificationSerializer());
+            registry.register(new TitleTimesSerializer());
         });
 
         configFile.withBindFile(file);

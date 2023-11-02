@@ -5,9 +5,13 @@ import com.eternalcode.combat.drop.DropSettings;
 import com.eternalcode.combat.fight.effect.FightEffectSettings;
 import com.eternalcode.combat.fight.pearl.FightPearlSettings;
 import com.eternalcode.combat.notification.Notification;
-import com.eternalcode.combat.notification.implementation.ActionBarNotification;
+import com.eternalcode.combat.notification.implementation.BossBarNotification;
+import com.eternalcode.combat.notification.implementation.ChatNotification;
+import com.eternalcode.combat.notification.implementation.title.TitleNotification;
 import eu.okaeri.configs.OkaeriConfig;
 import eu.okaeri.configs.annotation.Comment;
+import net.kyori.adventure.bossbar.BossBar;
+import net.kyori.adventure.title.Title;
 import org.bukkit.Material;
 import org.bukkit.entity.EntityType;
 import org.bukkit.event.entity.EntityDamageEvent;
@@ -121,7 +125,15 @@ public class PluginConfig extends OkaeriConfig {
 
     }
 
-    @Comment({" ", "# Do you want to change the plugin messages?"})
+    @Comment({
+        " ",
+        "# Do you want to change the plugin messages?",
+        "# Message types: CHAT, ACTION_BAR, TITLE, SUB_TITLE, BOSS_BAR",
+        " ",
+        "# BossBar progress: This is the value of the progress bar",
+        "# BossBar colors: https://javadoc.io/static/net.kyori/adventure-api/4.14.0/net/kyori/adventure/bossbar/BossBar.Color.html",
+        "# BossBar overlays: https://javadoc.io/static/net.kyori/adventure-api/4.14.0/net/kyori/adventure/bossbar/BossBar.Overlay.html"
+    })
     public Messages messages = new Messages();
 
     public static class Messages extends OkaeriConfig {
@@ -131,94 +143,91 @@ public class PluginConfig extends OkaeriConfig {
 
         @Comment({
             " ",
-            "# Combat log notification",
-            "# You can use {TIME} variable to display the time left in combat",
-            "# Notification types: CHAT, ACTION_BAR, TITLE, SUB_TITLE, BOSS_BAR",
+            "# Combat log message",
+            "# Use {TIME} to display the remaining fight time",
             " ",
-            "# BossBar progress: This is the value of the progress bar. Set it to -1.0 to show the remaining combat time",
-            "# BossBar colors: https://javadoc.io/static/net.kyori/adventure-api/4.14.0/net/kyori/adventure/bossbar/BossBar.Color.html",
-            "# BossBar overlays: https://javadoc.io/static/net.kyori/adventure-api/4.14.0/net/kyori/adventure/bossbar/BossBar.Overlay.html"
+            "# BossBar progress: Set to -1.0 to have the bossbar progress show the remaining fight time"
         })
-        public Notification combatNotification = new ActionBarNotification("&dCombat ends in: &f{TIME}");
+        public Notification combatLog = new BossBarNotification(-1.0F, BossBar.Color.RED, BossBar.Overlay.NOTCHED_6, "&dCombat ends in: &f{TIME}");
 
         @Comment("# Message sent when the player does not have permission to perform a command")
-        public String noPermission = "&cYou don't have permission to perform this command!";
+        public Notification noPermission = new TitleNotification(Title.DEFAULT_TIMES, "&cYou don't have permission to perform this command!");
 
         @Comment("# Message sent when the specified player could not be found")
-        public String playerNotFound = "&cThe specified player could not be found!";
+        public Notification playerNotFound = new ChatNotification("&cThe specified player could not be found!");
 
         @Comment("# Message sent when the player enters combat")
-        public String playerTagged = "&cYou are in combat, do not leave the server!";
+        public Notification playerTagged = new ChatNotification("&cYou are in combat, do not leave the server!");
 
         @Comment("# Message sent when the player leaves combat")
-        public String playerUntagged = "&aYou are no longer in combat! You can safely leave the server.";
+        public Notification playerUntagged = new ChatNotification("&aYou are no longer in combat! You can safely leave the server.");
 
         @Comment("# This is broadcast when the player is in combat and logs out")
-        public String playerLoggedOutDuringCombat = "&c{PLAYER} logged off during the fight!";
+        public Notification playerLoggedOutDuringCombat = new ChatNotification("&c{PLAYER} logged off during the fight!");
 
         @Comment({
             "# Message sent when the player is in combat and tries to use a disabled command",
             "# you can configure the list of disabled commands in the blockedCommands section of the config.yml file"
         })
-        public String commandDisabledDuringCombat = "&cUsing this command during combat is prohibited!";
+        public Notification commandDisabledDuringCombat = new ChatNotification("&cUsing this command during combat is prohibited!");
 
         @Comment("# Message sent when player tries to use a command with invalid arguments")
-        public String invalidCommandUsage = "&7Correct usage: &e{USAGE}";
+        public Notification invalidCommandUsage = new ChatNotification("&7Correct usage: &e{USAGE}");
 
         @Comment("# Message sent when player tries to open inventory, but the inventory open is blocked")
-        public String inventoryBlockedDuringCombat = "&cYou cannot open this inventory during combat!";
+        public Notification inventoryBlockedDuringCombat = new ChatNotification("&cYou cannot open this inventory during combat!");
 
         @Comment("# Message sent when player tries to place a block, but the block place is blocked")
-        public String blockPlacingBlockedDuringCombat = "&cYou cannot place above 40Y coordinate during combat!";
+        public Notification blockPlacingBlockedDuringCombat = new ChatNotification("&cYou cannot place above 40Y coordinate during combat!");
 
         @Comment("# Message sent when player tries to enter a region")
-        public String cantEnterOnRegion = "&cYou can't enter on this region during combat!";
+        public Notification cantEnterOnRegion = new ChatNotification("&cYou can't enter on this region during combat!");
 
         public static class AdminMessages extends OkaeriConfig {
             @Comment("# Message sent when the configuration is reloaded")
-            public String reload = "&aConfiguration has been successfully reloaded!";
+            public Notification reload = new ChatNotification("&aConfiguration has been successfully reloaded!");
 
             @Comment("# Message sent when console tries to use a command that is only for players")
-            public String onlyForPlayers = "&cThis command is only available to players!";
+            public Notification onlyForPlayers = new ChatNotification("&cThis command is only available to players!");
 
             @Comment("# Message sent to admin when they tag a player")
-            public String adminTagPlayer = "&7You have tagged &e{PLAYER}";
+            public Notification adminTagPlayer = new ChatNotification("&7You have tagged &e{PLAYER}");
 
             @Comment("# Message sent when a player is tagged by an admin")
-            public String adminTagMultiplePlayers = "&7You have tagged &e{FIRST_PLAYER}&7 and &e{SECOND_PLAYER}&7.";
+            public Notification adminTagMultiplePlayers = new ChatNotification("&7You have tagged &e{FIRST_PLAYER}&7 and &e{SECOND_PLAYER}&7.");
 
             @Comment("# Message sent to admin when they remove a player from combat")
-            public String adminUntagPlayer = "&7You have removed &e{PLAYER}&7 from the fight.";
+            public Notification adminUntagPlayer = new ChatNotification("&7You have removed &e{PLAYER}&7 from the fight.");
 
             @Comment("# Message sent when the player is not in combat")
-            public String adminPlayerNotInCombat = "&cThis player is not in combat!";
+            public Notification adminPlayerNotInCombat = new ChatNotification("&cThis player is not in combat!");
 
             @Comment("# Message sent when the player is in combat")
-            public String playerInCombat = "&c{PLAYER} is currently in combat!";
+            public Notification playerInCombat = new ChatNotification("&c{PLAYER} is currently in combat!");
 
             @Comment("# Message sent when a player is not in combat")
-            public String playerNotInCombat = "&a{PLAYER} is not currently in combat.";
+            public Notification playerNotInCombat = new ChatNotification("&a{PLAYER} is not currently in combat.");
 
             @Comment("# Message sent when an admin tries to tag themselves")
-            public String adminCannotTagSelf = "&cYou cannot tag yourself!";
+            public Notification adminCannotTagSelf = new ChatNotification("&cYou cannot tag yourself!");
 
             @Comment("# Message sent when an admin disables the ability to get tagged for some time")
-            public String adminTagOutSelf = "&7Successfully disabled tag for Yourself! You will be taggable after &e{TIME} ";
+            public Notification adminTagOutSelf = new ChatNotification("&7Successfully disabled tag for Yourself! You will be taggable after &e{TIME}");
 
             @Comment("# Message sent when an admin disables the ability to get tagged for some time for other player")
-            public String adminTagOut = "&7Successfully disabled tag for &e{PLAYER}! They will be taggable after &e{TIME} ";
+            public Notification adminTagOut = new ChatNotification("&7Successfully disabled tag for &e{PLAYER}! They will be taggable after &e{TIME}");
 
             @Comment("# Message sent to the player whom the ability to get tagged for some time has been disabled")
-            public String playerTagOut = "&7You will be taggable in &e{TIME} !";
+            public Notification playerTagOut = new ChatNotification("&7You will be taggable in &e{TIME}!");
 
             @Comment("# Message sent when an admin reenables the ability to get tagged for the player")
-            public String adminTagOutOff = "&7Successfully enabled tag for &e{PLAYER}!";
+            public Notification adminTagOutOff = new ChatNotification("&7Successfully enabled tag for &e{PLAYER}!");
 
             @Comment("# Message sent to the player whom the ability to get tagged has been reenabled")
-            public String playerTagOutOff = "&7You are now taggable!";
+            public Notification playerTagOutOff = new ChatNotification("&7You are now taggable!");
 
             @Comment("# Message sent when player cannot be tagged because they have enabled tag-out")
-            public String adminTagOutCanceled = "&cCannot tag this player due to tag-out!";
+            public Notification adminTagOutCanceled = new ChatNotification("&cCannot tag this player due to tag-out!");
         }
     }
 }

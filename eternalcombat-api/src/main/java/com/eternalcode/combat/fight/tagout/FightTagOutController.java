@@ -22,7 +22,7 @@ public class FightTagOutController implements Listener {
         UUID uniqueId = event.getPlayer();
 
         if (this.tagOutService.isTaggedOut(uniqueId)) {
-            event.cancel(this.config.messages.admin.adminTagOutCanceled);
+            event.cancel(this.config.messages.admin.adminTagOutCanceled.message());
         }
     }
 
