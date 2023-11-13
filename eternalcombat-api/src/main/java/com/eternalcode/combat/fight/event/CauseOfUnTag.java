@@ -6,5 +6,6 @@ public enum CauseOfUnTag {
     DEATH_BY_PLAYER,
     LOGOUT,
     COMMAND,
-    ATTACKER_RELEASE
+    ATTACKER_RELEASE,
+    CUSTOM
 }

@@ -1,9 +1,10 @@
 package com.eternalcode.combat.drop;
 
 import com.eternalcode.combat.fight.FightManager;
-import com.eternalcode.combat.fight.FightTag;
+import com.eternalcode.combat.fight.logout.LogoutService;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.player.PlayerRespawnEvent;
@@ -19,15 +20,17 @@ public class DropController implements Listener {
     private final DropKeepInventoryManager keepInventoryManager;
     private final DropSettings dropSettings;
     private final FightManager fightManager;
+    private final LogoutService logoutManager;
 
-    public DropController(DropManager dropManager, DropKeepInventoryManager keepInventoryManager, DropSettings dropSettings, FightManager fightManager) {
+    public DropController(DropManager dropManager, DropKeepInventoryManager keepInventoryManager, DropSettings dropSettings, FightManager fightManager, LogoutService logoutManager) {
         this.dropManager = dropManager;
         this.keepInventoryManager = keepInventoryManager;
         this.dropSettings = dropSettings;
         this.fightManager = fightManager;
+        this.logoutManager = logoutManager;
     }
 
-    @EventHandler
+    @EventHandler(priority = EventPriority.LOW)
     void onPlayerDeath(PlayerDeathEvent event) {
         Player player = event.getEntity();
 
@@ -36,16 +39,11 @@ public class DropController implements Listener {
         if (dropType == DropType.UNCHANGED || !this.fightManager.isInCombat(player.getUniqueId())) {
             return;
         }
-
-        FightTag fightTag = this.fightManager.getTag(player.getUniqueId());
-
         List<ItemStack> drops = event.getDrops();
 
         Drop drop = Drop.builder()
             .player(player)
             .killer(player.getKiller())
-            .fightTag(fightTag)
-            .deathCause(fightTag.getDeathCause())
             .droppedItems(drops)
             .droppedExp(player.getTotalExperience())
             .build();

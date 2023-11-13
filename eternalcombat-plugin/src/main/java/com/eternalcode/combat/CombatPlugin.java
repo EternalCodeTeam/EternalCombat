@@ -12,8 +12,6 @@ import com.eternalcode.combat.drop.DropManager;
 import com.eternalcode.combat.drop.impl.PercentDropModifier;
 import com.eternalcode.combat.drop.impl.PlayersHealthDropModifier;
 import com.eternalcode.combat.fight.controller.FightActionBlockerController;
-import com.eternalcode.combat.fight.controller.FightDeathCauseController;
-import com.eternalcode.combat.fight.controller.FightEscapeController;
 import com.eternalcode.combat.fight.controller.FightMessageController;
 import com.eternalcode.combat.fight.controller.FightTagController;
 import com.eternalcode.combat.fight.controller.FightUnTagController;
@@ -23,6 +21,8 @@ import com.eternalcode.combat.fight.FightManager;
 import com.eternalcode.combat.fight.FightTask;
 import com.eternalcode.combat.fight.bossbar.FightBossBarService;
 import com.eternalcode.combat.fight.effect.FightEffectService;
+import com.eternalcode.combat.fight.logout.LogoutController;
+import com.eternalcode.combat.fight.logout.LogoutService;
 import com.eternalcode.combat.fight.pearl.FightPearlController;
 import com.eternalcode.combat.fight.pearl.FightPearlManager;
 import com.eternalcode.combat.fight.tagout.FightTagOutController;
@@ -58,6 +58,7 @@ public final class CombatPlugin extends JavaPlugin implements EternalCombatApi {
     private FightPearlManager fightPearlManager;
     private FightTagOutService fightTagOutService;
     private FightEffectService fightEffectService;
+    private LogoutService logoutService;
     private DropManager dropManager;
     private DropKeepInventoryManager dropKeepInventoryManager;
     private RegionProvider regionProvider;
@@ -85,6 +86,7 @@ public final class CombatPlugin extends JavaPlugin implements EternalCombatApi {
         this.fightPearlManager = new FightPearlManager(this.pluginConfig.pearl);
         this.fightTagOutService = new FightTagOutService();
         this.fightEffectService = new FightEffectService();
+        this.logoutService = new LogoutService();
         this.dropManager = new DropManager();
         this.dropKeepInventoryManager = new DropKeepInventoryManager();
 
@@ -122,15 +124,14 @@ public final class CombatPlugin extends JavaPlugin implements EternalCombatApi {
 
         Stream.of(
             new PercentDropModifier(this.pluginConfig.dropSettings),
-            new PlayersHealthDropModifier(this.pluginConfig.dropSettings)
+            new PlayersHealthDropModifier(this.pluginConfig.dropSettings, this.logoutService)
         ).forEach(this.dropManager::registerModifier);
 
         Stream.of(
-            new FightDeathCauseController(this.fightManager),
-            new DropController(this.dropManager, this.dropKeepInventoryManager, this.pluginConfig.dropSettings, this.fightManager),
+            new DropController(this.dropManager, this.dropKeepInventoryManager, this.pluginConfig.dropSettings, this.fightManager, this.logoutService),
             new FightTagController(this.fightManager, this.pluginConfig, notificationAnnouncer),
-            new FightUnTagController(this.fightManager, this.pluginConfig),
-            new FightEscapeController(this.fightManager, this.pluginConfig, notificationAnnouncer),
+            new LogoutController(this.fightManager, this.logoutService),
+            new FightUnTagController(this.fightManager, this.pluginConfig, this.logoutService),
             new FightActionBlockerController(this.fightManager, notificationAnnouncer, this.pluginConfig),
             new FightPearlController(this.pluginConfig.pearl, notificationAnnouncer, this.fightManager, this.fightPearlManager),
             new UpdaterNotificationController(updaterService, this.pluginConfig, this.audienceProvider, miniMessage),
