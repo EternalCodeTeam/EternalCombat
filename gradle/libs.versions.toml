@@ -12,14 +12,14 @@ okaeriConfigsSerdesBukkit = "5.0.0-beta.5"
 
 pandaUtilities = "0.5.2-alpha"
 gitCheck = "1.0.0"
-apacheCommons = "2.14.0"
+apacheCommons = "2.15.0"
 
 bStatsBukkit = "3.0.2"
 worldGuardBukkit = "7.0.9"
 
-junitJupiterApi = "5.10.0"
-junitJupiterParams = "5.10.0"
-junitJupiterEngine = "5.10.0"
+junitJupiterApi = "5.10.1"
+junitJupiterParams = "5.10.1"
+junitJupiterEngine = "5.10.1"
 
 [libraries]
 spigotApi = { group = "org.spigotmc", name = "spigot-api", version.ref = "spigotApi" }
