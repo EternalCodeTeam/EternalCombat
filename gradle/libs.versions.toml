@@ -1,5 +1,5 @@
 [versions]
-spigotApi = "1.20.2-R0.1-SNAPSHOT"
+spigotApi = "1.20.2-experimental-SNAPSHOT"
 
 adventurePlatformBukkit = "4.3.1"
 adventureTextMinimessage = "4.14.0"
