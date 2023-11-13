@@ -15,6 +15,13 @@
             "matchPackagePatterns": [
                 "*"
             ]
+        },
+        {
+            "groupName": "spigot dependencies",
+            "groupSlug": "spigotmc",
+            "matchPackagePatterns": [
+                "org.spigotmc*"
+            ]
         }
     ],
     "separateMajorMinor": true,
