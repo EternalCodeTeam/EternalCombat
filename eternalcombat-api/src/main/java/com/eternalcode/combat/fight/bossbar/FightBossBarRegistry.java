@@ -1,5 +1,6 @@
 package com.eternalcode.combat.fight.bossbar;
 
+import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
@@ -7,7 +8,7 @@ import java.util.concurrent.ConcurrentHashMap;
 
 class FightBossBarRegistry {
 
-    private final Map<UUID, FightBossBar> fightBossBars = new ConcurrentHashMap<>();
+    private final Map<UUID, FightBossBar> fightBossBars = new HashMap<>();
 
     void add(UUID uuid, FightBossBar fightBossBar) {
         this.fightBossBars.put(uuid, fightBossBar);

@@ -10,13 +10,13 @@ import java.time.Duration;
 import java.time.Instant;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
-import java.util.concurrent.ConcurrentHashMap;
 
 public class FightManager {
 
-    private final Map<UUID, FightTag> fights = new ConcurrentHashMap<>();
+    private final Map<UUID, FightTag> fights = new HashMap<>();
     private final EventCaller eventCaller;
 
     public FightManager(EventCaller eventCaller) {
