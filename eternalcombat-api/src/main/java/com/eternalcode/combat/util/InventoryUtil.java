@@ -21,29 +21,26 @@ public class InventoryUtil {
     }
 
     public static RemoveItemResult removeRandomItems(List<ItemStack> list, int itemsToDelete) {
-
         List<ItemStack> currentItems = new ArrayList<>(list);
         List<ItemStack> removedItems = new ArrayList<>();
 
         int currentItemsToDelete = itemsToDelete;
         while (currentItemsToDelete > 0) {
             int randomIndex = RANDOM.nextInt(list.size());
+            ItemStack currentItem = currentItems.get(randomIndex);
 
-            ItemStack item = currentItems.get(randomIndex);
-
-            int amount = item.getAmount();
+            int amount = currentItem.getAmount();
             int randomAmount = RANDOM.nextInt(0, Math.min(currentItemsToDelete, amount) + 1);
 
             if (amount <= 0 || randomAmount <= 0) {
                 continue;
             }
 
-            ItemStack clone = item.clone();
-            item.setAmount(amount - randomAmount);
+            ItemStack removedItem = currentItem.clone();
+            removedItem.setAmount(randomAmount);
+            removedItems.add(removedItem);
 
-            clone.setAmount(randomAmount);
-
-            removedItems.add(clone);
+            currentItem.setAmount(amount - randomAmount);
 
             currentItemsToDelete -= randomAmount;
         }
