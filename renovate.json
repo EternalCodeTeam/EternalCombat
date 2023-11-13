@@ -17,5 +17,6 @@
             ]
         }
     ],
-    "separateMajorMinor": false
+    "separateMajorMinor": true,
+    "pruneStaleBranches": true
 }
