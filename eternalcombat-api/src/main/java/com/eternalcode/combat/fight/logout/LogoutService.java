@@ -33,6 +33,6 @@ public class LogoutService {
     }
 
     public boolean hasLoggedOut(UUID player) {
-        return this.logouts.getIfPresent(player) != null;
+        return this.logouts.asMap().containsKey(player);
     }
 }
