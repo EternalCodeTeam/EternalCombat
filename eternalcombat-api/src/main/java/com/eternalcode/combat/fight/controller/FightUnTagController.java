@@ -15,7 +15,7 @@ public class FightUnTagController implements Listener {
     private final PluginConfig config;
     private final LogoutService logoutManager;
 
-    public FightUnTagController(FightManager fightManager, PluginConfig config, LogoutService logoutManager) {
+    public FightUnTagController(FightManager fightManager, PluginConfig config, LogoutService logoutService) {
         this.fightManager = fightManager;
         this.config = config;
         this.logoutManager = logoutManager;
