@@ -18,7 +18,6 @@ public class LogoutService {
         UUID uniqueId = player.getUniqueId();
 
         this.logouts.put(uniqueId, new Logout(uniqueId, player.getHealth()));
-
     }
 
     public Optional<Logout> nextLogoutFor(UUID player) {
