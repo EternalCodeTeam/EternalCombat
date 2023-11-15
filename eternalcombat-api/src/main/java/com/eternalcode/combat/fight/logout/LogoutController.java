@@ -12,7 +12,7 @@ public class LogoutController implements Listener {
     private final FightManager fightManager;
     private final LogoutService logoutManager;
 
-    public LogoutController(FightManager fightManager, LogoutService logoutManager) {
+    public LogoutController(FightManager fightManager, LogoutService logoutService) {
         this.fightManager = fightManager;
         this.logoutManager = logoutManager;
     }
