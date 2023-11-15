@@ -35,6 +35,43 @@ Build EternalCombat using:
 - `eternalcombat.receiveupdates` - Allows you to receive notifications about the new version of the plugin when
   attaching
 
+### Developer API
+
+#### 1. Add repository:
+
+with Gradle:
+```kts
+maven {
+    url = uri("https://repo.eternalcode.pl/releases")
+}
+```
+
+with Maven:
+```xml
+<repository>
+  <id>eternalcode-reposilite-releases</id>
+  <name>EternalCode Repository</name>
+  <url>https://repo.eternalcode.pl/releases</url>
+</repository>
+```
+
+#### 2. Add dependency:
+
+with Gradle:
+```kts
+compileOnly("com.eternalcode:eternalcombat-api:1.1.1")
+```
+
+with Maven:
+```xml
+<dependency>
+  <groupId>com.eternalcode</groupId>
+  <artifactId>eternalcombat-api</artifactId>
+  <version>1.1.1</version>
+  <scope>provided</scope>
+</dependency>
+```
+
 ### Contributing
 
 We welcome all contributions to the EternalCombat project! Please check out [contributing](.github/CONTRIBUTING.md) for
