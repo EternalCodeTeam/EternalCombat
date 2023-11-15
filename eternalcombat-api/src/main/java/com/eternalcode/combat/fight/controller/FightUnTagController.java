@@ -13,12 +13,12 @@ public class FightUnTagController implements Listener {
 
     private final FightManager fightManager;
     private final PluginConfig config;
-    private final LogoutService logoutManager;
+    private final LogoutService logoutService;
 
-    public FightUnTagController(FightManager fightManager, PluginConfig config, LogoutService logoutManager) {
+    public FightUnTagController(FightManager fightManager, PluginConfig config, LogoutService logoutService) {
         this.fightManager = fightManager;
         this.config = config;
-        this.logoutManager = logoutManager;
+        this.logoutService = logoutService;
     }
 
     @EventHandler
@@ -40,7 +40,7 @@ public class FightUnTagController implements Listener {
     }
 
     private CauseOfUnTag getDeathCause(Player player, Player killer) {
-        if (logoutManager.hasLoggedOut(player.getUniqueId())) {
+        if (logoutService.hasLoggedOut(player.getUniqueId())) {
             return CauseOfUnTag.LOGOUT;
         }
 

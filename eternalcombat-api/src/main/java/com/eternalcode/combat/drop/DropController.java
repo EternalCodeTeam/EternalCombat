@@ -1,7 +1,6 @@
 package com.eternalcode.combat.drop;
 
 import com.eternalcode.combat.fight.FightManager;
-import com.eternalcode.combat.fight.logout.LogoutService;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -20,14 +19,12 @@ public class DropController implements Listener {
     private final DropKeepInventoryManager keepInventoryManager;
     private final DropSettings dropSettings;
     private final FightManager fightManager;
-    private final LogoutService logoutManager;
 
-    public DropController(DropManager dropManager, DropKeepInventoryManager keepInventoryManager, DropSettings dropSettings, FightManager fightManager, LogoutService logoutManager) {
+    public DropController(DropManager dropManager, DropKeepInventoryManager keepInventoryManager, DropSettings dropSettings, FightManager fightManager) {
         this.dropManager = dropManager;
         this.keepInventoryManager = keepInventoryManager;
         this.dropSettings = dropSettings;
         this.fightManager = fightManager;
-        this.logoutManager = logoutManager;
     }
 
     @EventHandler(priority = EventPriority.LOW)

@@ -10,11 +10,11 @@ import org.bukkit.event.player.PlayerQuitEvent;
 public class LogoutController implements Listener {
 
     private final FightManager fightManager;
-    private final LogoutService logoutManager;
+    private final LogoutService logoutService;
 
     public LogoutController(FightManager fightManager, LogoutService logoutService) {
         this.fightManager = fightManager;
-        this.logoutManager = logoutService;
+        this.logoutService = logoutService;
     }
 
     @EventHandler(priority = EventPriority.HIGH)
@@ -25,7 +25,7 @@ public class LogoutController implements Listener {
             return;
         }
 
-        logoutManager.punishForLogout(player);
+        logoutService.punishForLogout(player);
         player.setHealth(0.0);
     }
 
