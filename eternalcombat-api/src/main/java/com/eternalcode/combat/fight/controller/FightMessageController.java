@@ -59,13 +59,5 @@ public class FightMessageController implements Listener {
 
         this.announcer.sendMessage(player, this.config.messages.playerUntagged);
         this.bossBarService.hide(event.getPlayer());
-
-        if (event.getCause() == CauseOfUnTag.LOGOUT) {
-            Formatter formatter = new Formatter()
-                    .register("{PLAYER}", player.getName());
-
-            String format = formatter.format(this.config.messages.playerLoggedOutDuringCombat);
-            this.announcer.broadcast(format);
-        }
     }
 }
