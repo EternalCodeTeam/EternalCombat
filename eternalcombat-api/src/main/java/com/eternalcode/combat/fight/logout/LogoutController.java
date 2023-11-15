@@ -14,7 +14,7 @@ public class LogoutController implements Listener {
 
     public LogoutController(FightManager fightManager, LogoutService logoutService) {
         this.fightManager = fightManager;
-        this.logoutManager = logoutManager;
+        this.logoutManager = logoutService;
     }
 
     @EventHandler(priority = EventPriority.HIGH)
