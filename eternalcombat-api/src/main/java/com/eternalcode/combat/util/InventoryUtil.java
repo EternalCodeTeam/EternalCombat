@@ -4,9 +4,7 @@ import org.bukkit.inventory.ItemStack;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.Random;
 import java.util.function.ToIntFunction;
 
@@ -23,49 +21,31 @@ public class InventoryUtil {
     }
 
     public static RemoveItemResult removeRandomItems(List<ItemStack> list, int itemsToDelete) {
-        List<ItemStack> restItems = new ArrayList<>(list);
-        Map<Integer, ItemStack> removedItems = new HashMap<>();
+        List<ItemStack> currentItems = new ArrayList<>(list);
+        List<ItemStack> removedItems = new ArrayList<>();
 
-        for (int i = 0; i < itemsToDelete; i++) {
-            if (restItems.isEmpty()) {
-                break;
-            }
+        int currentItemsToDelete = itemsToDelete;
+        while (currentItemsToDelete > 0) {
+            int randomIndex = RANDOM.nextInt(list.size());
+            ItemStack currentItem = currentItems.get(randomIndex);
 
-            int randomIndex = RANDOM.nextInt(restItems.size());
+            int amount = currentItem.getAmount();
+            int randomAmount = RANDOM.nextInt(0, Math.min(currentItemsToDelete, amount) + 1);
 
-            ItemStack item = restItems.get(randomIndex);
-            int newAmount = item.getAmount() - 1;
-
-            if (newAmount <= 0) {
-                restItems.remove(randomIndex);
-                incrementItem(removedItems, randomIndex, item);
+            if (amount <= 0 || randomAmount <= 0) {
                 continue;
             }
 
-            item.setAmount(newAmount);
-            incrementItem(removedItems, randomIndex, item);
+            ItemStack removedItem = currentItem.clone();
+            removedItem.setAmount(randomAmount);
+            removedItems.add(removedItem);
+
+            currentItem.setAmount(amount - randomAmount);
+
+            currentItemsToDelete -= randomAmount;
         }
 
-        return new RemoveItemResult(restItems, new ArrayList<>(removedItems.values()));
-    }
-
-    // TODO: kinda shitty, but no time for a proper solution now
-    private static void incrementItem(Map<Integer, ItemStack> items, int index, ItemStack itemStack) {
-        ItemStack itemInList = items.get(index);
-
-        if (itemInList == null) {
-            ItemStack cloned = itemStack.clone();
-
-            cloned.setAmount(1);
-            items.put(index, cloned);
-            return;
-        }
-
-        if (!itemInList.isSimilar(itemStack)) {
-            throw new IllegalStateException("Items are not similar!");
-        }
-
-        itemInList.setAmount(itemInList.getAmount() + 1);
+        return new RemoveItemResult(currentItems, removedItems);
     }
 
 }
