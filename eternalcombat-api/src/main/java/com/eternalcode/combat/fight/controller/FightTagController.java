@@ -52,13 +52,14 @@ public class FightTagController implements Listener {
 
         Duration combatTime = this.config.settings.combatDuration;
         UUID attackedUniqueId = attackedPlayerByPerson.getUniqueId();
+        UUID attackerUniqueId = attacker.getUniqueId();
+
+        if (attackedPlayerByPerson.isOp() && this.config.settings.excludeAdminFromCombat) {
+            return;
+        }
 
         this.fightManager.tag(attackedUniqueId, combatTime, CauseOfTag.PLAYER);
-
-        if (!attacker.isOp() && this.config.settings.excludeAdminFromCombat) {
-            UUID attackerUniqueId = attacker.getUniqueId();
-            this.fightManager.tag(attackerUniqueId, combatTime, CauseOfTag.PLAYER);
-        }
+        this.fightManager.tag(attackerUniqueId, combatTime, CauseOfTag.PLAYER);
     }
 
     @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
