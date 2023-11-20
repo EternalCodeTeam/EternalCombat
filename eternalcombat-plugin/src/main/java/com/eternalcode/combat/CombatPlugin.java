@@ -129,7 +129,7 @@ public final class CombatPlugin extends JavaPlugin implements EternalCombatApi {
 
         Stream.of(
             new DropController(this.dropManager, this.dropKeepInventoryManager, this.pluginConfig.dropSettings, this.fightManager),
-            new FightTagController(this.fightManager, this.pluginConfig, notificationAnnouncer),
+            new FightTagController(this.fightManager, this.pluginConfig),
             new LogoutController(this.fightManager, this.logoutService, notificationAnnouncer, this.pluginConfig),
             new FightUnTagController(this.fightManager, this.pluginConfig, this.logoutService),
             new FightActionBlockerController(this.fightManager, notificationAnnouncer, this.pluginConfig),

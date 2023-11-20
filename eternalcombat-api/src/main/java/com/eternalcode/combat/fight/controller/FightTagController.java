@@ -1,10 +1,9 @@
 package com.eternalcode.combat.fight.controller;
 
 import com.eternalcode.combat.WhitelistBlacklistMode;
-import com.eternalcode.combat.fight.event.CauseOfTag;
 import com.eternalcode.combat.config.implementation.PluginConfig;
 import com.eternalcode.combat.fight.FightManager;
-import com.eternalcode.combat.notification.NotificationAnnouncer;
+import com.eternalcode.combat.fight.event.CauseOfTag;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Projectile;
@@ -23,12 +22,10 @@ public class FightTagController implements Listener {
 
     private final FightManager fightManager;
     private final PluginConfig config;
-    private final NotificationAnnouncer announcer;
 
-    public FightTagController(FightManager fightManager, PluginConfig config, NotificationAnnouncer announcer) {
+    public FightTagController(FightManager fightManager, PluginConfig config) {
         this.fightManager = fightManager;
         this.config = config;
-        this.announcer = announcer;
     }
 
     @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
@@ -38,7 +35,7 @@ public class FightTagController implements Listener {
         }
 
         List<EntityType> disabledProjectileEntities = this.config.settings.disabledProjectileEntities;
-        
+
         if (event.getDamager() instanceof Projectile projectile && disabledProjectileEntities.contains(projectile.getType())) {
             return;
         }
@@ -47,19 +44,22 @@ public class FightTagController implements Listener {
             return;
         }
 
-        Player personToAddCombatTime = this.getDamager(event);
+        Player attacker = this.getDamager(event);
 
-        if (personToAddCombatTime == null) {
+        if (attacker == null) {
             return;
         }
 
         Duration combatTime = this.config.settings.combatDuration;
-
         UUID attackedUniqueId = attackedPlayerByPerson.getUniqueId();
-        UUID personToAddCombatTimeUniqueId = personToAddCombatTime.getUniqueId();
+        UUID attackerUniqueId = attacker.getUniqueId();
+
+        if (attackedPlayerByPerson.isOp() && this.config.settings.excludeAdminFromCombat) {
+            return;
+        }
 
         this.fightManager.tag(attackedUniqueId, combatTime, CauseOfTag.PLAYER);
-        this.fightManager.tag(personToAddCombatTimeUniqueId, combatTime, CauseOfTag.PLAYER);
+        this.fightManager.tag(attackerUniqueId, combatTime, CauseOfTag.PLAYER);
     }
 
     @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)

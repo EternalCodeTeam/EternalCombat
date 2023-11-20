@@ -55,6 +55,9 @@ public class PluginConfig extends OkaeriConfig {
         @Comment("# Release attacker after victim dies?")
         public boolean shouldReleaseAttacker = true;
 
+        @Comment("# If you want to exclude admins from combat, set this to true")
+        public boolean excludeAdminFromCombat = true;
+
         @Comment("# Command blocking mode, available modes: WHITELIST, BLACKLIST")
         public WhitelistBlacklistMode commandBlockingMode = WhitelistBlacklistMode.BLACKLIST;
 
