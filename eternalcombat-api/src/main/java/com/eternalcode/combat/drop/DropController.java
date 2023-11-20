@@ -1,9 +1,9 @@
 package com.eternalcode.combat.drop;
 
 import com.eternalcode.combat.fight.FightManager;
-import com.eternalcode.combat.fight.FightTag;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.player.PlayerRespawnEvent;
@@ -27,7 +27,7 @@ public class DropController implements Listener {
         this.fightManager = fightManager;
     }
 
-    @EventHandler
+    @EventHandler(priority = EventPriority.LOW)
     void onPlayerDeath(PlayerDeathEvent event) {
         Player player = event.getEntity();
 
@@ -36,16 +36,11 @@ public class DropController implements Listener {
         if (dropType == DropType.UNCHANGED || !this.fightManager.isInCombat(player.getUniqueId())) {
             return;
         }
-
-        FightTag fightTag = this.fightManager.getTag(player.getUniqueId());
-
         List<ItemStack> drops = event.getDrops();
 
         Drop drop = Drop.builder()
             .player(player)
             .killer(player.getKiller())
-            .fightTag(fightTag)
-            .deathCause(fightTag.getDeathCause())
             .droppedItems(drops)
             .droppedExp(player.getTotalExperience())
             .build();

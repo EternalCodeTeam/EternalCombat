@@ -1,45 +1,47 @@
-package com.eternalcode.combat.fight.controller;
+package com.eternalcode.combat.fight.logout;
 
 import com.eternalcode.combat.config.implementation.PluginConfig;
 import com.eternalcode.combat.fight.FightManager;
-import com.eternalcode.combat.fight.FightTag;
 import com.eternalcode.combat.notification.NotificationAnnouncer;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerQuitEvent;
 import panda.utilities.text.Formatter;
 
-public class FightEscapeController implements Listener {
+public class LogoutController implements Listener {
 
     private final FightManager fightManager;
-    private final PluginConfig config;
+    private final LogoutService logoutService;
     private final NotificationAnnouncer announcer;
+    private final PluginConfig config;
 
-    public FightEscapeController(FightManager fightManager, PluginConfig config, NotificationAnnouncer announcer) {
+
+    public LogoutController(FightManager fightManager, LogoutService logoutService, NotificationAnnouncer announcer, PluginConfig config) {
         this.fightManager = fightManager;
-        this.config = config;
+        this.logoutService = logoutService;
         this.announcer = announcer;
+        this.config = config;
     }
 
-    @EventHandler
-    void onPlayerQuit(PlayerQuitEvent event) {
+    @EventHandler(priority = EventPriority.HIGH)
+    void onQuit(PlayerQuitEvent event) {
         Player player = event.getPlayer();
 
         if (!this.fightManager.isInCombat(player.getUniqueId())) {
             return;
         }
 
+        logoutService.punishForLogout(player);
+        player.setHealth(0.0);
+
         Formatter formatter = new Formatter()
-            .register("{PLAYER}", player.getName());
+                .register("{PLAYER}", player.getName());
 
         String format = formatter.format(this.config.messages.playerLoggedOutDuringCombat);
-
         this.announcer.broadcast(format);
 
-        FightTag fightTag = this.fightManager.getTag(player.getUniqueId());
-        fightTag.setHealthBeforeDeath(player.getHealth());
-
-        player.setHealth(0.0); // Untagged in PlayerDeathEvent
     }
+
 }

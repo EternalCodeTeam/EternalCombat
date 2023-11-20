@@ -5,8 +5,8 @@ import com.eternalcode.combat.drop.DropModifier;
 import com.eternalcode.combat.drop.DropResult;
 import com.eternalcode.combat.drop.DropSettings;
 import com.eternalcode.combat.drop.DropType;
-import com.eternalcode.combat.fight.FightDeathCause;
-import com.eternalcode.combat.fight.FightTag;
+import com.eternalcode.combat.fight.logout.Logout;
+import com.eternalcode.combat.fight.logout.LogoutService;
 import com.eternalcode.combat.util.InventoryUtil;
 import com.eternalcode.combat.util.MathUtil;
 import com.eternalcode.combat.util.RemoveItemResult;
@@ -15,13 +15,16 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
 import java.util.List;
+import java.util.Optional;
 
 public class PlayersHealthDropModifier implements DropModifier {
 
     private final DropSettings settings;
+    private final LogoutService logoutService;
 
-    public PlayersHealthDropModifier(DropSettings settings) {
+    public PlayersHealthDropModifier(DropSettings settings, LogoutService logoutService) {
         this.settings = settings;
+        this.logoutService = logoutService;
     }
 
     @Override
@@ -31,17 +34,20 @@ public class PlayersHealthDropModifier implements DropModifier {
 
     @Override
     public DropResult modifyDrop(Drop drop) {
-        if (drop.getDeathCause() != FightDeathCause.ESCAPE) {
+        Optional<Logout> logoutOptional = logoutService.nextLogoutFor(drop.getPlayer().getUniqueId());
+
+        if (logoutOptional.isEmpty()) {
             return null;
         }
 
+
+        Logout logout = logoutOptional.get();
         Player player = drop.getPlayer();
-        FightTag fightTag = drop.getFightTag();
 
         List<ItemStack> droppedItems = drop.getDroppedItems();
 
         double maxHealth = player.getAttribute(Attribute.GENERIC_MAX_HEALTH).getBaseValue();
-        double health = fightTag.getHealthBeforeDeath();
+        double health = logout.health();
 
         int percentHealth = MathUtil.getRoundedCountPercentage(health, maxHealth);
         int reversedPercent = MathUtil.clamp(100 - percentHealth, this.settings.playersHealthPercentClamp, 100);
