@@ -14,6 +14,7 @@ import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.EntityToggleGlideEvent;
 import org.bukkit.event.inventory.InventoryOpenEvent;
 import org.bukkit.event.player.PlayerCommandPreprocessEvent;
+import org.bukkit.event.player.PlayerToggleFlightEvent;
 
 import java.util.List;
 import java.util.UUID;
@@ -63,7 +64,7 @@ public class FightActionBlockerController implements Listener {
     }
 
     @EventHandler
-    public void onToggleGlide(EntityToggleGlideEvent event) {
+    void onToggleGlide(EntityToggleGlideEvent event) {
         if (!this.config.settings.shouldPreventElytraUsage) {
             return;
         }
@@ -83,7 +84,25 @@ public class FightActionBlockerController implements Listener {
     }
 
     @EventHandler
-    public void onDamage(EntityDamageEvent event) {
+    void onFly(PlayerToggleFlightEvent event) {
+        if (!this.config.settings.shouldPreventFlying) {
+            return;
+        }
+
+        Player player = event.getPlayer();
+        UUID uniqueId = player.getUniqueId();
+
+        if (!this.fightManager.isInCombat(uniqueId)) {
+            return;
+        }
+
+        if (event.isFlying()) {
+            event.setCancelled(true);
+        }
+    }
+
+    @EventHandler
+    void onDamage(EntityDamageEvent event) {
         if (!this.config.settings.shouldElytraDisableOnDamage) {
             return;
         }
@@ -117,7 +136,7 @@ public class FightActionBlockerController implements Listener {
     }
 
     @EventHandler
-    public void onPlayerCommandPreprocess(PlayerCommandPreprocessEvent event) {
+    void onPlayerCommandPreprocess(PlayerCommandPreprocessEvent event) {
         Player player = event.getPlayer();
         UUID playerUniqueId = player.getUniqueId();
 

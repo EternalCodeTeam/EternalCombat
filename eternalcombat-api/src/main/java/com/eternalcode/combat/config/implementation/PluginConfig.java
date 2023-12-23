@@ -75,6 +75,9 @@ public class PluginConfig extends OkaeriConfig {
         @Comment("# Block the use of elytra?")
         public boolean shouldPreventElytraUsage = true;
 
+        @Comment("# Block flying? (flying players will fall to the ground)")
+        public boolean shouldPreventFlying = true;
+
         @Comment("# Disable the use of elytra on damage?")
         public boolean shouldElytraDisableOnDamage = true;
 
