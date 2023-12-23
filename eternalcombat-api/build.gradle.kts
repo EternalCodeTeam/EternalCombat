@@ -1,78 +1,23 @@
 plugins {
     id("eternalcombat.java")
-
-    `maven-publish`
+    id("com.github.johnrengelman.shadow")
 }
-
 dependencies {
-    // Spigot api
-    compileOnlyApi(libs.spigotApi)
-
-    // kyori
-    api(libs.adventurePlatformBukkit)
-    api(libs.adventureTextMinimessage)
-
-    // litecommands
-    api(libs.liteCommands)
-
-    // Okaeri configs
-    api(libs.okaeriConfigsYamlBukkit)
-    api(libs.okaeriConfigsSerdesCommons)
-    api(libs.okaeriConfigsSerdesBukkit)
-
-    // Panda utilities
-    api(libs.pandaUtilities)
-
-    // GitCheck
-    api(libs.gitCheck)
-
-    // commons
-    api(libs.apacheCommons)
-
-    // bstats
-    api(libs.bStatsBukkit)
-
-    // worldguard
-    compileOnly(libs.worldGuardBukkit)
-
-    // tests
-    testImplementation(libs.spigotApi)
-    testImplementation(libs.jUnitJupiterApi)
-    testImplementation(libs.jUnitJupiterParams)
-    testRuntimeOnly(libs.jUnitJupiterEngine)
+    implementation(project(":eternalcombat-api"))
 }
 
-java {
-    sourceCompatibility = JavaVersion.VERSION_17
-    targetCompatibility = JavaVersion.VERSION_17
-}
+tasks.shadowJar {
+    archiveFileName.set("EternalCombat v${project.version}.jar")
 
-tasks.getByName<Test>("test") {
-    useJUnitPlatform()
-}
+    dependsOn("checkstyleMain")
+    dependsOn("checkstyleTest")
+    dependsOn("test")
 
-java {
-    withSourcesJar()
-    withJavadocJar()
-}
-
-publishing {
-    publications {
-        create<MavenPublication>("maven") {
-            artifactId = "eternalcombat-api"
-            from(project.components["java"])
-        }
-    }
-
-    repositories {
-        mavenLocal()
-        maven {
-            name = "eternalcodeReleases"
-            url = uri("https://repo.eternalcode.pl/releases")
-            credentials {
-                username = System.getenv("ETERNAL_CODE_MAVEN_USERNAME")
-                password = System.getenv("ETERNAL_CODE_MAVEN_PASSWORD")
-            }
-        }
-    }
+    exclude(
+        "org/intellij/lang/annotations/**",
+        "org/jetbrains/annotations/**",
+        "META-INF/**",
+        "kotlin/**",
+        "javax/**"
+    )
 }
