@@ -1,7 +1,9 @@
 plugins {
     id("eternalcombat.java")
 
-    `maven-publish`
+    id("net.minecrell.plugin-yml.bukkit")
+    id("com.github.johnrengelman.shadow")
+    id("xyz.jpenilla.run-paper")
 }
 
 dependencies {
@@ -51,28 +53,51 @@ tasks.getByName<Test>("test") {
     useJUnitPlatform()
 }
 
-java {
-    withSourcesJar()
-    withJavadocJar()
+bukkit {
+    main = "com.eternalcode.combat.CombatPlugin"
+    author = "EternalCodeTeam"
+    apiVersion = "1.13"
+    prefix = "EternalCombat"
+    name = "EternalCombat"
+    softDepend = listOf("WorldGuard")
+    version = "${project.version}"
 }
 
-publishing {
-    publications {
-        create<MavenPublication>("maven") {
-            artifactId = "eternalcombat-api"
-            from(project.components["java"])
-        }
+tasks {
+    runServer {
+        minecraftVersion("1.19.4")
     }
+}
 
-    repositories {
-        mavenLocal()
-        maven {
-            name = "eternalcodeReleases"
-            url = uri("https://repo.eternalcode.pl/releases")
-            credentials {
-                username = System.getenv("ETERNAL_CODE_MAVEN_USERNAME")
-                password = System.getenv("ETERNAL_CODE_MAVEN_PASSWORD")
-            }
-        }
+tasks.shadowJar {
+    archiveFileName.set("EternalCombat v${project.version}.jar")
+
+    dependsOn("checkstyleMain")
+    dependsOn("checkstyleTest")
+    dependsOn("test")
+
+    exclude(
+        "org/intellij/lang/annotations/**",
+        "org/jetbrains/annotations/**",
+        "META-INF/**",
+        "kotlin/**",
+        "javax/**"
+    )
+
+    val prefix = "com.eternalcode.combat.libs"
+    listOf(
+        "panda.std",
+        "panda.utilities",
+        "org.panda-lang",
+        "eu.okaeri",
+        "net.kyori",
+        "org.bstats",
+        "dev.rollczi.litecommands",
+        "com.eternalcode.gitcheck",
+        "org.json.simple",
+        "org.apache.commons",
+        "javassist"
+    ).forEach { pack ->
+        relocate(pack, "$prefix.$pack")
     }
 }

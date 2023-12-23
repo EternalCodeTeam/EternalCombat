@@ -40,7 +40,7 @@ public class FightUnTagController implements Listener {
     }
 
     private CauseOfUnTag getDeathCause(Player player, Player killer) {
-        if (logoutService.hasLoggedOut(player.getUniqueId())) {
+        if (this.logoutService.hasLoggedOut(player.getUniqueId())) {
             return CauseOfUnTag.LOGOUT;
         }
 

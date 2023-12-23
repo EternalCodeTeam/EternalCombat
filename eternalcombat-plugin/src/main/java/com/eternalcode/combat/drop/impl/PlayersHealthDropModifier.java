@@ -34,12 +34,11 @@ public class PlayersHealthDropModifier implements DropModifier {
 
     @Override
     public DropResult modifyDrop(Drop drop) {
-        Optional<Logout> logoutOptional = logoutService.nextLogoutFor(drop.getPlayer().getUniqueId());
+        Optional<Logout> logoutOptional = this.logoutService.nextLogoutFor(drop.getPlayer().getUniqueId());
 
         if (logoutOptional.isEmpty()) {
             return null;
         }
-
 
         Logout logout = logoutOptional.get();
         Player player = drop.getPlayer();
