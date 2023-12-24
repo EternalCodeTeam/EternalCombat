@@ -1,8 +1,8 @@
 [versions]
 spigotApi = "1.20.2-R0.1-SNAPSHOT"
 
-adventurePlatformBukkit = "4.3.1"
-adventureTextMinimessage = "4.14.0"
+adventurePlatformBukkit = "4.3.2"
+adventureTextMinimessage = "4.15.0"
 
 liteCommands = "2.8.9"
 
@@ -12,7 +12,7 @@ okaeriConfigsSerdesBukkit = "5.0.0-beta.5"
 
 pandaUtilities = "0.5.2-alpha"
 gitCheck = "1.0.0"
-apacheCommons = "2.15.0"
+apacheCommons = "2.15.1"
 
 caffeine = "3.0.4"
 
