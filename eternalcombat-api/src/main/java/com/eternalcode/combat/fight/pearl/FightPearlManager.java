@@ -1,7 +1,7 @@
 package com.eternalcode.combat.fight.pearl;
 
-import com.google.common.cache.Cache;
-import com.google.common.cache.CacheBuilder;
+import com.github.benmanes.caffeine.cache.Cache;
+import com.github.benmanes.caffeine.cache.Caffeine;
 
 import java.time.Duration;
 import java.time.Instant;
@@ -14,7 +14,7 @@ public class FightPearlManager {
 
     public FightPearlManager(FightPearlSettings pearlSettings) {
         this.pearlSettings = pearlSettings;
-        this.pearlDelays = CacheBuilder.newBuilder()
+        this.pearlDelays = Caffeine.newBuilder()
             .expireAfterWrite(pearlSettings.pearlThrowDelay)
             .build();
     }

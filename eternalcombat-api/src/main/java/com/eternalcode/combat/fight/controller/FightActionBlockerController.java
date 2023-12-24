@@ -97,6 +97,8 @@ public class FightActionBlockerController implements Listener {
         }
 
         if (event.isFlying()) {
+            player.setAllowFlight(false);
+
             event.setCancelled(true);
         }
     }

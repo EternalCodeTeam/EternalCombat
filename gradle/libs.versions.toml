@@ -14,6 +14,8 @@ pandaUtilities = "0.5.2-alpha"
 gitCheck = "1.0.0"
 apacheCommons = "2.15.0"
 
+caffeine = "3.0.4"
+
 bStatsBukkit = "3.0.2"
 worldGuardBukkit = "7.0.9"
 
@@ -42,6 +44,8 @@ apacheCommons = { group = "commons-io", name = "commons-io", version.ref = "apac
 bStatsBukkit = { group = "org.bstats", name = "bstats-bukkit", version.ref = "bStatsBukkit" }
 
 worldGuardBukkit = { group = "com.sk89q.worldguard", name = "worldguard-bukkit", version.ref = "worldGuardBukkit" }
+
+caffeine = { group = "com.github.ben-manes.caffeine", name = "caffeine", version.ref = "caffeine" }
 
 jUnitJupiterApi = { group = "org.junit.jupiter", name = "junit-jupiter-api", version.ref = "junitJupiterApi" }
 jUnitJupiterParams = { group = "org.junit.jupiter", name = "junit-jupiter-params", version.ref = "junitJupiterParams" }

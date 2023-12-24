@@ -58,6 +58,18 @@ public class FightTagController implements Listener {
             return;
         }
 
+        if (this.config.settings.shouldPreventFlying) {
+            if (attackedPlayerByPerson.isFlying()) {
+                attackedPlayerByPerson.setFlying(false);
+                attackedPlayerByPerson.setAllowFlight(false);
+            }
+
+            if (attacker.isFlying()) {
+                attacker.setFlying(false);
+                attacker.setAllowFlight(false);
+            }
+        }
+
         this.fightManager.tag(attackedUniqueId, combatTime, CauseOfTag.PLAYER);
         this.fightManager.tag(attackerUniqueId, combatTime, CauseOfTag.PLAYER);
     }
