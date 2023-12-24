@@ -32,6 +32,9 @@ dependencies {
     // bstats
     api(libs.bStatsBukkit)
 
+    // caffeine
+    api(libs.caffeine)
+
     // worldguard
     compileOnly(libs.worldGuardBukkit)
 

@@ -53,7 +53,8 @@ tasks.shadowJar {
         "com.eternalcode.gitcheck",
         "org.json.simple",
         "org.apache.commons",
-        "javassist"
+        "javassist",
+        "com.github.benmanes.caffeine",
     ).forEach { pack ->
         relocate(pack, "$prefix.$pack")
     }
