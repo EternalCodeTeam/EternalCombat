@@ -8,6 +8,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerMoveEvent;
+import org.bukkit.event.player.PlayerTeleportEvent;
 import org.bukkit.util.Vector;
 
 public class RegionController implements Listener {
@@ -54,6 +55,22 @@ public class RegionController implements Listener {
 
             player.setVelocity(vector);
 
+            this.announcer.sendMessage(player, this.pluginConfig.messages.cantEnterOnRegion);
+        }
+    }
+
+    @EventHandler
+    public void onPlayerTeleport(PlayerTeleportEvent event) {
+        Player player = event.getPlayer();
+
+        if (!this.fightManager.isInCombat(player.getUniqueId())) {
+            return;
+        }
+
+        Location targetLocation = event.getTo();
+
+        if (this.regionProvider.isInRegion(targetLocation)) {
+            event.setCancelled(true);
             this.announcer.sendMessage(player, this.pluginConfig.messages.cantEnterOnRegion);
         }
     }
