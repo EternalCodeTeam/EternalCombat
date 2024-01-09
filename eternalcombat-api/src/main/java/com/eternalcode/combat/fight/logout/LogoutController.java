@@ -33,7 +33,7 @@ public class LogoutController implements Listener {
             return;
         }
 
-        logoutService.punishForLogout(player);
+        this.logoutService.punishForLogout(player);
         player.setHealth(0.0);
 
         Formatter formatter = new Formatter()
