@@ -13,17 +13,9 @@ import java.util.Set;
 
 public class ConfigService {
 
-    private final ConfigBackupService backupService;
-
     private final Set<OkaeriConfig> configs = new HashSet<>();
 
-    public ConfigService(ConfigBackupService backupService) {
-        this.backupService = backupService;
-    }
-
     public <T extends OkaeriConfig> T create(Class<T> config, File file) {
-        this.backupService.createBackup();
-
         T configFile = ConfigManager.create(config);
 
         configFile.withConfigurer(new YamlBukkitConfigurer(), new SerdesCommons(), new SerdesBukkit());

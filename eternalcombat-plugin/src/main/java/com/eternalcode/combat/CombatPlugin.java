@@ -3,7 +3,6 @@ package com.eternalcode.combat;
 import com.eternalcode.combat.bridge.BridgeService;
 import com.eternalcode.combat.command.InvalidUsage;
 import com.eternalcode.combat.command.PermissionMessage;
-import com.eternalcode.combat.config.ConfigBackupService;
 import com.eternalcode.combat.config.ConfigService;
 import com.eternalcode.combat.config.implementation.PluginConfig;
 import com.eternalcode.combat.drop.DropController;
@@ -75,8 +74,7 @@ public final class CombatPlugin extends JavaPlugin implements EternalCombatApi {
 
         File dataFolder = this.getDataFolder();
 
-        ConfigBackupService backupService = new ConfigBackupService(dataFolder);
-        ConfigService configService = new ConfigService(backupService);
+        ConfigService configService = new ConfigService();
 
         EventCaller eventCaller = new EventCaller(server);
 
