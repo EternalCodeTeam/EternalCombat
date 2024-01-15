@@ -22,6 +22,15 @@ public class DefaultRegionProvider implements RegionProvider {
         return this.contains(min, max, location.getX(), location.getZ());
     }
 
+    @Override
+    public Location getRegionCenter(Location location) {
+        Location spawnLocation = location.getWorld().getSpawnLocation();
+        double x = spawnLocation.getX();
+        double z = spawnLocation.getZ();
+
+        return new Location(location.getWorld(), x, location.getY(), z);
+    }
+
     public boolean contains(Point min, Point max, double x, double z) {
         return x >= min.x() && x < max.x()
             && z >= min.z() && z < max.z();
