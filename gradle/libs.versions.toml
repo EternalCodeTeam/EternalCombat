@@ -2,26 +2,26 @@
 spigotApi = "1.20.2-R0.1-SNAPSHOT"
 
 adventurePlatformBukkit = "4.3.2"
-adventureTextMinimessage = "4.15.0"
+adventureTextMinimessage = "4.16.0"
 
 liteCommands = "2.8.9"
 
-okaeriConfigsYamlBukkit = "5.0.0-beta.5"
-okaeriConfigsSerdesCommons = "5.0.0-beta.5"
-okaeriConfigsSerdesBukkit = "5.0.0-beta.5"
+okaeriConfigsYamlBukkit = "5.0.1"
+okaeriConfigsSerdesCommons = "5.0.1"
+okaeriConfigsSerdesBukkit = "5.0.1"
 
 pandaUtilities = "0.5.2-alpha"
 gitCheck = "1.0.0"
 apacheCommons = "2.15.1"
 
-caffeine = "3.0.4"
+caffeine = "3.1.8"
 
 bStatsBukkit = "3.0.2"
 worldGuardBukkit = "7.0.9"
 
-junitJupiterApi = "5.10.1"
-junitJupiterParams = "5.10.1"
-junitJupiterEngine = "5.10.1"
+junitJupiterApi = "5.10.2"
+junitJupiterParams = "5.10.2"
+junitJupiterEngine = "5.10.2"
 
 [libraries]
 spigotApi = { group = "org.spigotmc", name = "spigot-api", version.ref = "spigotApi" }
