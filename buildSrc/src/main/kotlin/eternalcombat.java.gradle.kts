@@ -7,7 +7,7 @@ group = "com.eternalcode"
 version = "1.2.1-SNAPSHOT"
 
 checkstyle {
-    toolVersion = "10.14.1"
+    toolVersion = "10.14.2"
 
     configFile = file("${rootDir}/config/checkstyle/checkstyle.xml")
 
@@ -20,7 +20,7 @@ configurations.named("checkstyle") {
     resolutionStrategy {
         capabilitiesResolution {
             withCapability("com.google.collections:google-collections") {
-                select("com.google.guava:guava:33.0.0-jre")
+                select("com.google.guava:guava:33.1.0-jre")
             }
         }
     }
