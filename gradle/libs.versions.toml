@@ -12,7 +12,7 @@ okaeriConfigsSerdesBukkit = "5.0.1"
 
 pandaUtilities = "0.5.2-alpha"
 gitCheck = "1.0.0"
-apacheCommons = "2.16.0"
+apacheCommons = "2.16.1"
 
 caffeine = "3.1.8"
 
