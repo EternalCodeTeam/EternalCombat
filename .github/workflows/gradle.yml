@@ -33,11 +33,11 @@ jobs:
       - name: Make gradlew executable
         run: chmod +x gradlew
       - name: Build with Gradle
-        uses: gradle/gradle-build-action@8baac4c8ef753599f92eeb509c246d09d6250fa6
+        uses: gradle/gradle-build-action@e2097ccd7e8ed48671dc068ac4efa86d25745b39
         with:
           arguments: shadowJar
       - name: Upload a Build Artifact
-        uses: actions/upload-artifact@v4.3.1
+        uses: actions/upload-artifact@v4.3.2
         with:
           name: 'Successfully build EternalCombat'
           path: eternalcombat-plugin/build/libs/*.jar
