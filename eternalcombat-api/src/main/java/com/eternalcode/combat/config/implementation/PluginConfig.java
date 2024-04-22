@@ -56,7 +56,7 @@ public class PluginConfig extends OkaeriConfig {
         public boolean shouldReleaseAttacker = true;
 
         @Comment("# If you want to exclude admins from combat, set this to true")
-        public boolean excludeAdminFromCombat = true;
+        public boolean excludeAdminFromCombat = false;
 
         @Comment("# Command blocking mode, available modes: WHITELIST, BLACKLIST")
         public WhitelistBlacklistMode commandBlockingMode = WhitelistBlacklistMode.BLACKLIST;
