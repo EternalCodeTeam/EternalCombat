@@ -37,7 +37,7 @@ jobs:
         with:
           arguments: shadowJar
       - name: Upload a Build Artifact
-        uses: actions/upload-artifact@v4.3.2
+        uses: actions/upload-artifact@v4.3.3
         with:
           name: 'Successfully build EternalCombat'
           path: eternalcombat-plugin/build/libs/*.jar
