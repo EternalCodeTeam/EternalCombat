@@ -5,7 +5,7 @@ import com.eternalcode.commons.time.TemporalAmountParser;
 import java.time.Duration;
 import java.time.temporal.ChronoUnit;
 
-public class DurationUtil {
+public final class DurationUtil {
 
     private static final TemporalAmountParser<Duration> WITHOUT_MILLS = new DurationParser()
         .withUnit("s", ChronoUnit.SECONDS)
