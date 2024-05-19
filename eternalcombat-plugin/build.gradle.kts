@@ -1,5 +1,6 @@
 plugins {
-    id("eternalcombat.java")
+    `eternalcombat-java`
+    `eternalcombat-repositories`
 
     id("net.minecrell.plugin-yml.bukkit")
     id("com.github.johnrengelman.shadow")
