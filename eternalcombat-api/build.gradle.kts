@@ -37,6 +37,6 @@ dependencies {
     api("com.github.ben-manes.caffeine:caffeine:${Versions.CAFFEINE}")
 
     // worldguard
-    api("com.sk89q.worldguard:worldguard-bukkit:${Versions.WORLD_GUARD_BUKKIT}")
+    compileOnly("com.sk89q.worldguard:worldguard-bukkit:${Versions.WORLD_GUARD_BUKKIT}")
 
 }
