@@ -3,6 +3,9 @@ plugins {
     checkstyle
 }
 
+group = "com.eternalcode"
+version = "1.2.2"
+
 java {
     sourceCompatibility = JavaVersion.VERSION_17
     targetCompatibility = JavaVersion.VERSION_17

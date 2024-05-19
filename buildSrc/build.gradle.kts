@@ -13,3 +13,17 @@ dependencies {
     implementation("net.minecrell:plugin-yml:0.6.0")
     implementation("xyz.jpenilla:run-task:2.2.4")
 }
+
+sourceSets {
+    main {
+        java.setSrcDirs(emptyList<String>())
+        groovy.setSrcDirs(emptyList<String>())
+        resources.setSrcDirs(emptyList<String>())
+    }
+    test {
+        java.setSrcDirs(emptyList<String>())
+        kotlin.setSrcDirs(emptyList<String>())
+        groovy.setSrcDirs(emptyList<String>())
+        resources.setSrcDirs(emptyList<String>())
+    }
+}
