@@ -14,6 +14,7 @@ import java.util.concurrent.CompletableFuture;
 public class UpdaterNotificationController implements Listener {
 
     private static final String NEW_VERSION_AVAILABLE = "<b><gradient:#8a1212:#fc6b03>EternalCombat:</gradient></b> <color:#fce303>New version of EternalCombat is available, please update!";
+    private static final String RECEIVE_UPDATES_PERMISSION = "eternalcombat.receiveupdates";
 
     private final UpdaterService updaterService;
     private final PluginConfig pluginConfig;
@@ -32,7 +33,7 @@ public class UpdaterNotificationController implements Listener {
         Player player = event.getPlayer();
         Audience audience = this.audienceProvider.player(player.getUniqueId());
 
-        if (!player.hasPermission("eternalcombat.receiveupdates") || !this.pluginConfig.settings.shouldReceivePluginUpdates) {
+        if (!player.hasPermission(RECEIVE_UPDATES_PERMISSION) || !this.pluginConfig.settings.shouldReceivePluginUpdates) {
             return;
         }
 

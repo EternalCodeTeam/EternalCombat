@@ -36,6 +36,9 @@ dependencies {
     // caffeine
     api("com.github.ben-manes.caffeine:caffeine:${Versions.CAFFEINE}")
 
+    api("com.eternalcode:eternalcode-commons-bukkit:${Versions.ETERNALCODE_COMMONS}")
+    api("com.eternalcode:eternalcode-commons-adventure:${Versions.ETERNALCODE_COMMONS}")
+
     // worldguard
     compileOnly("com.sk89q.worldguard:worldguard-bukkit:${Versions.WORLD_GUARD_BUKKIT}")
 

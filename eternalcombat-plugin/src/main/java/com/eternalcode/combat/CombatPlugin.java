@@ -32,7 +32,8 @@ import com.eternalcode.combat.region.RegionController;
 import com.eternalcode.combat.region.RegionProvider;
 import com.eternalcode.combat.updater.UpdaterNotificationController;
 import com.eternalcode.combat.updater.UpdaterService;
-import com.eternalcode.combat.util.legacy.LegacyColorProcessor;
+import com.eternalcode.commons.adventure.AdventureLegacyColorPostProcessor;
+import com.eternalcode.commons.adventure.AdventureLegacyColorPreProcessor;
 import com.google.common.base.Stopwatch;
 import dev.rollczi.litecommands.LiteCommands;
 import dev.rollczi.litecommands.bukkit.adventure.platform.LiteBukkitAdventurePlatformFactory;
@@ -53,13 +54,19 @@ import java.util.stream.Stream;
 
 public final class CombatPlugin extends JavaPlugin implements EternalCombatApi {
 
+    private static final String FALLBACK_PREFIX = "eternalcombat";
+    private static final int BSTATS_METRICS_ID = 17803;
+
     private FightManager fightManager;
     private FightPearlManager fightPearlManager;
     private FightTagOutService fightTagOutService;
     private FightEffectService fightEffectService;
+
     private LogoutService logoutService;
+
     private DropManager dropManager;
     private DropKeepInventoryManager dropKeepInventoryManager;
+
     private RegionProvider regionProvider;
 
     private PluginConfig pluginConfig;
@@ -92,7 +99,8 @@ public final class CombatPlugin extends JavaPlugin implements EternalCombatApi {
 
         this.audienceProvider = BukkitAudiences.create(this);
         MiniMessage miniMessage = MiniMessage.builder()
-            .postProcessor(new LegacyColorProcessor())
+            .postProcessor(new AdventureLegacyColorPostProcessor())
+            .preProcessor(new AdventureLegacyColorPreProcessor())
             .build();
 
         FightBossBarService fightBossBarService = new FightBossBarService(this.pluginConfig, this.audienceProvider, miniMessage);
@@ -103,7 +111,7 @@ public final class CombatPlugin extends JavaPlugin implements EternalCombatApi {
 
         NotificationAnnouncer notificationAnnouncer = new NotificationAnnouncer(this.audienceProvider, miniMessage);
 
-        this.liteCommands = LiteBukkitAdventurePlatformFactory.builder(server, "eternalcombat", this.audienceProvider)
+        this.liteCommands = LiteBukkitAdventurePlatformFactory.builder(server, FALLBACK_PREFIX, this.audienceProvider)
             .argument(Player.class, new BukkitPlayerArgument<>(this.getServer(), this.pluginConfig.messages.playerNotFound))
             .contextualBind(Player.class, new BukkitOnlyPlayerContextual<>(this.pluginConfig.messages.admin.onlyForPlayers))
 
@@ -118,7 +126,7 @@ public final class CombatPlugin extends JavaPlugin implements EternalCombatApi {
         FightTask fightTask = new FightTask(server, this.pluginConfig, this.fightManager, fightBossBarService, notificationAnnouncer);
         this.getServer().getScheduler().runTaskTimer(this, fightTask, 20L, 20L);
 
-        new Metrics(this, 17803);
+        new Metrics(this, BSTATS_METRICS_ID);
 
         Stream.of(
             new PercentDropModifier(this.pluginConfig.dropSettings),
