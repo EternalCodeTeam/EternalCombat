@@ -1,81 +1,42 @@
 plugins {
-    id("eternalcombat.java")
-
-    `maven-publish`
+    `eternalcombat-java`
+    `eternalcombat-repositories`
+    `eternalcombat-publish`
+    `eternalcombat-java-unit-test`
 }
 
 dependencies {
     // Spigot api
-    compileOnlyApi(libs.spigotApi)
+    compileOnlyApi("org.spigotmc:spigot-api:${Versions.SPIGOT_API}")
 
     // kyori
-    api(libs.adventurePlatformBukkit)
-    api(libs.adventureTextMinimessage)
+    api("net.kyori:adventure-platform-bukkit:${Versions.ADVENTURE_PLATFORM_BUKKIT}")
+    api("net.kyori:adventure-text-minimessage:${Versions.ADVENTURE_TEXT_MINIMESSAGE}")
 
     // litecommands
-    api(libs.liteCommands)
+    api("dev.rollczi.litecommands:bukkit-adventure:${Versions.LITE_COMMANDS}")
 
     // Okaeri configs
-    api(libs.okaeriConfigsYamlBukkit)
-    api(libs.okaeriConfigsSerdesCommons)
-    api(libs.okaeriConfigsSerdesBukkit)
+    api("eu.okaeri:okaeri-configs-yaml-bukkit:${Versions.OKAERI_CONFIGS_YAML_BUKKIT}")
+    api("eu.okaeri:okaeri-configs-serdes-commons:${Versions.OKAERI_CONFIGS_SERDES_COMMONS}")
+    api("eu.okaeri:okaeri-configs-serdes-bukkit:${Versions.OKAERI_CONFIGS_SERDES_BUKKIT}")
 
     // Panda utilities
-    api(libs.pandaUtilities)
+    api("org.panda-lang:panda-utilities:${Versions.PANDA_UTILITIES}")
 
     // GitCheck
-    api(libs.gitCheck)
+    api("com.eternalcode:gitcheck:${Versions.GIT_CHECK}")
 
     // commons
-    api(libs.apacheCommons)
+    api("commons-io:commons-io:${Versions.APACHE_COMMONS}")
 
     // bstats
-    api(libs.bStatsBukkit)
+    api("org.bstats:bstats-bukkit:${Versions.B_STATS_BUKKIT}")
 
     // caffeine
-    api(libs.caffeine)
+    api("com.github.ben-manes.caffeine:caffeine:${Versions.CAFFEINE}")
 
     // worldguard
-    compileOnly(libs.worldGuardBukkit)
+    api("com.sk89q.worldguard:worldguard-bukkit:${Versions.WORLD_GUARD_BUKKIT}")
 
-    // tests
-    testImplementation(libs.spigotApi)
-    testImplementation(libs.jUnitJupiterApi)
-    testImplementation(libs.jUnitJupiterParams)
-    testRuntimeOnly(libs.jUnitJupiterEngine)
-}
-
-java {
-    sourceCompatibility = JavaVersion.VERSION_17
-    targetCompatibility = JavaVersion.VERSION_17
-}
-
-tasks.getByName<Test>("test") {
-    useJUnitPlatform()
-}
-
-java {
-    withSourcesJar()
-    withJavadocJar()
-}
-
-publishing {
-    publications {
-        create<MavenPublication>("maven") {
-            artifactId = "eternalcombat-api"
-            from(project.components["java"])
-        }
-    }
-
-    repositories {
-        mavenLocal()
-        maven {
-            name = "eternalcodeReleases"
-            url = uri("https://repo.eternalcode.pl/releases")
-            credentials {
-                username = System.getenv("ETERNAL_CODE_MAVEN_USERNAME")
-                password = System.getenv("ETERNAL_CODE_MAVEN_PASSWORD")
-            }
-        }
-    }
 }
