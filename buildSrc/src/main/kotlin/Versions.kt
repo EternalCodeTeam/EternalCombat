@@ -6,6 +6,9 @@ object Versions {
     const val JUNIT_JUPITER_PARAMS = "5.10.2"
     const val JUNIT_JUPITER_ENGINE = "5.10.2"
 
+    const val ETERNALCODE_COMMONS = "1.1.2"
+    // TODO: Multification.
+
     const val ADVENTURE_PLATFORM_BUKKIT = "4.3.2"
     const val ADVENTURE_TEXT_MINIMESSAGE = "4.16.0"
 
