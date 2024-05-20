@@ -43,7 +43,7 @@ public class FightManager {
         return event;
     }
 
-    public FightTagEvent tag(UUID target, Duration delay, CauseOfTag causeOfTag) {
+    public FightTagEvent tag(UUID target, Duration delay, CauseOfTag causeOfTag, UUID tagger) {
         FightTagEvent event = this.eventCaller.publishEvent(new FightTagEvent(target, causeOfTag));
 
         if (event.isCancelled()) {
@@ -52,7 +52,7 @@ public class FightManager {
         Instant now = Instant.now();
         Instant endOfCombatLog = now.plus(delay);
 
-        FightTag fightTag = new FightTag(target, endOfCombatLog);
+        FightTag fightTag = new FightTag(target, endOfCombatLog, tagger);
 
         this.fights.put(target, fightTag);
         return event;

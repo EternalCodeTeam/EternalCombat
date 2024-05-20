@@ -18,6 +18,7 @@ bukkit {
     prefix = "EternalCombat"
     name = "EternalCombat"
     softDepend = listOf("WorldGuard")
+    softDepend = listOf("PlaceholderAPI")
     version = "${project.version}"
 }
 

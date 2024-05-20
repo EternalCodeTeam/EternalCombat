@@ -10,6 +10,7 @@ import com.eternalcode.combat.drop.DropKeepInventoryManager;
 import com.eternalcode.combat.drop.DropManager;
 import com.eternalcode.combat.drop.impl.PercentDropModifier;
 import com.eternalcode.combat.drop.impl.PlayersHealthDropModifier;
+import com.eternalcode.combat.fight.FightTagPlaceholder;
 import com.eternalcode.combat.fight.controller.FightActionBlockerController;
 import com.eternalcode.combat.fight.controller.FightMessageController;
 import com.eternalcode.combat.fight.controller.FightTagController;
@@ -46,6 +47,7 @@ import org.bstats.bukkit.Metrics;
 import org.bukkit.Server;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.io.File;
@@ -84,6 +86,8 @@ public final class CombatPlugin extends JavaPlugin implements EternalCombatApi {
         ConfigService configService = new ConfigService();
 
         EventCaller eventCaller = new EventCaller(server);
+
+        Plugin placeholderAPI = getServer().getPluginManager().getPlugin("PlaceholderAPI");
 
         this.pluginConfig = configService.create(PluginConfig.class, new File(dataFolder, "config.yml"));
 
@@ -132,6 +136,14 @@ public final class CombatPlugin extends JavaPlugin implements EternalCombatApi {
             new PercentDropModifier(this.pluginConfig.dropSettings),
             new PlayersHealthDropModifier(this.pluginConfig.dropSettings, this.logoutService)
         ).forEach(this.dropManager::registerModifier);
+
+        if (placeholderAPI != null && placeholderAPI.isEnabled()) {
+            new FightTagPlaceholder(this.fightManager, server).register();
+        }
+        else {
+            getLogger().warning("PlaceholderAPI is not enabled. Placeholders will not work.");
+        }
+
 
         Stream.of(
             new DropController(this.dropManager, this.dropKeepInventoryManager, this.pluginConfig.dropSettings, this.fightManager),

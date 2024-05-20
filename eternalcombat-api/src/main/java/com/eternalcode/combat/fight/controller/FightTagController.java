@@ -74,8 +74,8 @@ public class FightTagController implements Listener {
             }
         }
 
-        this.fightManager.tag(attackedUniqueId, combatTime, CauseOfTag.PLAYER);
-        this.fightManager.tag(attackerUniqueId, combatTime, CauseOfTag.PLAYER);
+        this.fightManager.tag(attackedUniqueId, combatTime, CauseOfTag.PLAYER, attackerUniqueId);
+        this.fightManager.tag(attackerUniqueId, combatTime, CauseOfTag.PLAYER, attackedUniqueId);
     }
 
     @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
@@ -107,7 +107,7 @@ public class FightTagController implements Listener {
             return;
         }
 
-        this.fightManager.tag(uuid, combatTime, CauseOfTag.NON_PLAYER);
+        this.fightManager.tag(uuid, combatTime, CauseOfTag.NON_PLAYER, null);
     }
 
     @Nullable

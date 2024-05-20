@@ -8,11 +8,12 @@ public class FightTag {
 
     private final UUID taggedPlayer;
     private final Instant endOfCombatLog;
+    private UUID tagger;
 
-    FightTag(UUID personToAddCombat, Instant endOfCombatLog) {
+    FightTag(UUID personToAddCombat, Instant endOfCombatLog, UUID tagger) {
         this.taggedPlayer = personToAddCombat;
         this.endOfCombatLog = endOfCombatLog;
-
+        this.tagger = tagger;
     }
 
     public UUID getTaggedPlayer() {
@@ -35,6 +36,10 @@ public class FightTag {
         }
 
         return between;
+    }
+
+    public UUID getTagger() {
+        return this.tagger;
     }
 
 }

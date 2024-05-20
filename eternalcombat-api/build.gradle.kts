@@ -42,4 +42,7 @@ dependencies {
     // worldguard
     compileOnly("com.sk89q.worldguard:worldguard-bukkit:${Versions.WORLD_GUARD_BUKKIT}")
 
+    // PlaceholderAPI
+    compileOnlyApi("me.clip:placeholderapi:${Versions.PLACEHOLDER_API}")
+
 }
