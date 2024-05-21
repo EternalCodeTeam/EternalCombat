@@ -47,7 +47,7 @@ public class FightTagPlaceholder extends PlaceholderExpansion {
             FightTag fightTag = this.getFightTag(player);
 
             if (fightTag == null) {
-                return "None";
+                return "";
             }
 
             Duration duration = fightTag.getRemainingDuration();
@@ -60,7 +60,7 @@ public class FightTagPlaceholder extends PlaceholderExpansion {
             FightTag fightTag = this.getFightTag(player);
 
             if (fightTag == null) {
-                return "None";
+                return "";
             }
 
             Duration duration = fightTag.getRemainingDuration();
@@ -73,13 +73,13 @@ public class FightTagPlaceholder extends PlaceholderExpansion {
             FightTag fightTag = this.getFightTag(player);
 
             if (fightTag == null) {
-                return "None";
+                return "";
             }
 
             Player opponent = this.server.getPlayer(fightTag.getTagger());
 
             if (opponent == null) {
-                return "None";
+                return "";
             }
 
             return opponent.getName();
@@ -90,13 +90,13 @@ public class FightTagPlaceholder extends PlaceholderExpansion {
             FightTag fightTag = this.getFightTag(player);
 
             if (fightTag == null) {
-                return "None";
+                return "";
             }
 
             Player opponent = this.server.getPlayer(fightTag.getTagger());
 
             if (opponent == null) {
-                return "None";
+                return "";
             }
 
             return String.valueOf(opponent.getHealth());
