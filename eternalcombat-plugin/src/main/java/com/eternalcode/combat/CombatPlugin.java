@@ -87,7 +87,7 @@ public final class CombatPlugin extends JavaPlugin implements EternalCombatApi {
 
         EventCaller eventCaller = new EventCaller(server);
 
-        Plugin placeholderAPI = getServer().getPluginManager().getPlugin("PlaceholderAPI");
+        Plugin placeholderAPI = this.getServer().getPluginManager().getPlugin("PlaceholderAPI");
 
         this.pluginConfig = configService.create(PluginConfig.class, new File(dataFolder, "config.yml"));
 

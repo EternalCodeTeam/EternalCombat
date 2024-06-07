@@ -11,8 +11,8 @@ import org.jetbrains.annotations.NotNull;
 
 public class FightTagPlaceholder extends PlaceholderExpansion {
 
-    FightManager fightManager;
-    Server server;
+    private final FightManager fightManager;
+    private final Server server;
 
     public FightTagPlaceholder(FightManager fightManager, Server server) {
         this.fightManager = fightManager;
