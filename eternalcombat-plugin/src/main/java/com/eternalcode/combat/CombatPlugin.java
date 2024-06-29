@@ -10,6 +10,7 @@ import com.eternalcode.combat.drop.DropKeepInventoryManager;
 import com.eternalcode.combat.drop.DropManager;
 import com.eternalcode.combat.drop.impl.PercentDropModifier;
 import com.eternalcode.combat.drop.impl.PlayersHealthDropModifier;
+import com.eternalcode.combat.bridge.placeholder.FightTagPlaceholder;
 import com.eternalcode.combat.fight.controller.FightActionBlockerController;
 import com.eternalcode.combat.fight.controller.FightMessageController;
 import com.eternalcode.combat.fight.controller.FightTagController;
@@ -46,6 +47,7 @@ import org.bstats.bukkit.Metrics;
 import org.bukkit.Server;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.io.File;
@@ -106,7 +108,7 @@ public final class CombatPlugin extends JavaPlugin implements EternalCombatApi {
         FightBossBarService fightBossBarService = new FightBossBarService(this.pluginConfig, this.audienceProvider, miniMessage);
 
         BridgeService bridgeService = new BridgeService(this.pluginConfig, server.getPluginManager(), this.getLogger());
-        bridgeService.init();
+        bridgeService.init(this.fightManager, server);
         this.regionProvider = bridgeService.getRegionProvider();
 
         NotificationAnnouncer notificationAnnouncer = new NotificationAnnouncer(this.audienceProvider, miniMessage);
@@ -132,6 +134,7 @@ public final class CombatPlugin extends JavaPlugin implements EternalCombatApi {
             new PercentDropModifier(this.pluginConfig.dropSettings),
             new PlayersHealthDropModifier(this.pluginConfig.dropSettings, this.logoutService)
         ).forEach(this.dropManager::registerModifier);
+
 
         Stream.of(
             new DropController(this.dropManager, this.dropKeepInventoryManager, this.pluginConfig.dropSettings, this.fightManager),

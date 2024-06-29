@@ -1,9 +1,12 @@
 package com.eternalcode.combat.bridge;
 
+import com.eternalcode.combat.bridge.placeholder.FightTagPlaceholder;
 import com.eternalcode.combat.config.implementation.PluginConfig;
+import com.eternalcode.combat.fight.FightManager;
 import com.eternalcode.combat.region.DefaultRegionProvider;
 import com.eternalcode.combat.region.RegionProvider;
 import com.eternalcode.combat.region.WorldGuardRegionProvider;
+import org.bukkit.Server;
 import org.bukkit.plugin.PluginManager;
 
 import java.util.logging.Logger;
@@ -22,7 +25,7 @@ public class BridgeService {
         this.logger = logger;
     }
 
-    public void init() {
+    public void init(FightManager fightManager, Server server) {
         this.initialize("WorldGuard",
             () -> this.regionProvider = new WorldGuardRegionProvider(this.pluginConfig.settings.blockedRegions),
             () -> {
@@ -30,16 +33,21 @@ public class BridgeService {
 
             this.logger.warning("WorldGuard is not installed, set to default region provider.");
         });
+
+        this.initialize("PlaceholderAPI",
+            () -> new FightTagPlaceholder(fightManager, server).register(),
+            () -> this.logger.warning("PlaceholderAPI is not installed, placeholders will not be registered.")
+        );
     }
 
-    private void initialize(String pluginName, BridgeInitializer initializer, Runnable runnable) {
+    private void initialize(String pluginName, BridgeInitializer initializer, Runnable failureHandler) {
         if (this.pluginManager.isPluginEnabled(pluginName)) {
             initializer.initialize();
 
             this.logger.info("Successfully initialized " + pluginName + " bridge.");
         }
         else {
-            runnable.run();
+            failureHandler.run();
         }
     }
 
