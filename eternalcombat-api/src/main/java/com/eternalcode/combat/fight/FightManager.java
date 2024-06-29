@@ -13,6 +13,8 @@ import java.util.Collections;
 import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
+import org.jetbrains.annotations.ApiStatus;
+import org.jetbrains.annotations.Nullable;
 
 public class FightManager {
 
@@ -43,7 +45,12 @@ public class FightManager {
         return event;
     }
 
-    public FightTagEvent tag(UUID target, Duration delay, CauseOfTag causeOfTag, UUID tagger) {
+    public FightTagEvent tag(UUID target, Duration delay, CauseOfTag causeOfTag) {
+        return this.tag(target, delay, causeOfTag);
+    }
+
+    @ApiStatus.Experimental
+    public FightTagEvent tag(UUID target, Duration delay, CauseOfTag causeOfTag, @Nullable UUID tagger) {
         FightTagEvent event = this.eventCaller.publishEvent(new FightTagEvent(target, causeOfTag));
 
         if (event.isCancelled()) {

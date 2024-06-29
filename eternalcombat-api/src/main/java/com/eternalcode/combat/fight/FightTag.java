@@ -3,14 +3,16 @@ package com.eternalcode.combat.fight;
 import java.time.Duration;
 import java.time.Instant;
 import java.util.UUID;
+import org.jetbrains.annotations.ApiStatus;
+import org.jetbrains.annotations.Nullable;
 
 public class FightTag {
 
     private final UUID taggedPlayer;
     private final Instant endOfCombatLog;
-    private UUID tagger;
+    private final @Nullable UUID tagger;
 
-    FightTag(UUID personToAddCombat, Instant endOfCombatLog, UUID tagger) {
+    FightTag(UUID personToAddCombat, Instant endOfCombatLog, @Nullable UUID tagger) {
         this.taggedPlayer = personToAddCombat;
         this.endOfCombatLog = endOfCombatLog;
         this.tagger = tagger;
@@ -38,6 +40,8 @@ public class FightTag {
         return between;
     }
 
+    @Nullable
+    @ApiStatus.Experimental
     public UUID getTagger() {
         return this.tagger;
     }

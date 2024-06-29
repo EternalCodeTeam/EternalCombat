@@ -58,7 +58,7 @@ public class CombatCommand {
         Formatter formatter = new Formatter()
             .register("{PLAYER}", target.getName());
 
-        FightTagEvent event = this.fightManager.tag(targetUniqueId, time, CauseOfTag.COMMAND, null);
+        FightTagEvent event = this.fightManager.tag(targetUniqueId, time, CauseOfTag.COMMAND);
 
         if (event.isCancelled()) {
             this.announcer.sendMessage(sender, event.getCancelMessage());
@@ -80,8 +80,8 @@ public class CombatCommand {
             return;
         }
 
-        FightTagEvent firstTagEvent = this.fightManager.tag(firstTarget.getUniqueId(), combatTime, CauseOfTag.COMMAND, null);
-        FightTagEvent secondTagEvent = this.fightManager.tag(secondTarget.getUniqueId(), combatTime, CauseOfTag.COMMAND, null);
+        FightTagEvent firstTagEvent = this.fightManager.tag(firstTarget.getUniqueId(), combatTime, CauseOfTag.COMMAND);
+        FightTagEvent secondTagEvent = this.fightManager.tag(secondTarget.getUniqueId(), combatTime, CauseOfTag.COMMAND);
 
         Formatter formatter = new Formatter()
             .register("{FIRST_PLAYER}", firstTarget.getName())

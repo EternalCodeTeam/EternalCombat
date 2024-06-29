@@ -107,7 +107,7 @@ public class FightTagController implements Listener {
             return;
         }
 
-        this.fightManager.tag(uuid, combatTime, CauseOfTag.NON_PLAYER, null);
+        this.fightManager.tag(uuid, combatTime, CauseOfTag.NON_PLAYER);
     }
 
     @Nullable

@@ -10,7 +10,7 @@ import com.eternalcode.combat.drop.DropKeepInventoryManager;
 import com.eternalcode.combat.drop.DropManager;
 import com.eternalcode.combat.drop.impl.PercentDropModifier;
 import com.eternalcode.combat.drop.impl.PlayersHealthDropModifier;
-import com.eternalcode.combat.fight.FightTagPlaceholder;
+import com.eternalcode.combat.bridge.placeholder.FightTagPlaceholder;
 import com.eternalcode.combat.fight.controller.FightActionBlockerController;
 import com.eternalcode.combat.fight.controller.FightMessageController;
 import com.eternalcode.combat.fight.controller.FightTagController;
@@ -87,8 +87,6 @@ public final class CombatPlugin extends JavaPlugin implements EternalCombatApi {
 
         EventCaller eventCaller = new EventCaller(server);
 
-        Plugin placeholderAPI = this.getServer().getPluginManager().getPlugin("PlaceholderAPI");
-
         this.pluginConfig = configService.create(PluginConfig.class, new File(dataFolder, "config.yml"));
 
         this.fightManager = new FightManager(eventCaller);
@@ -110,7 +108,7 @@ public final class CombatPlugin extends JavaPlugin implements EternalCombatApi {
         FightBossBarService fightBossBarService = new FightBossBarService(this.pluginConfig, this.audienceProvider, miniMessage);
 
         BridgeService bridgeService = new BridgeService(this.pluginConfig, server.getPluginManager(), this.getLogger());
-        bridgeService.init();
+        bridgeService.init(this.fightManager, server);
         this.regionProvider = bridgeService.getRegionProvider();
 
         NotificationAnnouncer notificationAnnouncer = new NotificationAnnouncer(this.audienceProvider, miniMessage);
@@ -136,13 +134,6 @@ public final class CombatPlugin extends JavaPlugin implements EternalCombatApi {
             new PercentDropModifier(this.pluginConfig.dropSettings),
             new PlayersHealthDropModifier(this.pluginConfig.dropSettings, this.logoutService)
         ).forEach(this.dropManager::registerModifier);
-
-        if (placeholderAPI != null && placeholderAPI.isEnabled()) {
-            new FightTagPlaceholder(this.fightManager, server).register();
-        }
-        else {
-            getLogger().warning("PlaceholderAPI is not enabled. Placeholders will not work.");
-        }
 
 
         Stream.of(
