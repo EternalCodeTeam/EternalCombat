@@ -17,7 +17,7 @@ bukkit {
     apiVersion = "1.13"
     prefix = "EternalCombat"
     name = "EternalCombat"
-    softDepend = listOf("WorldGuard")
+    softDepend = listOf("WorldGuard", "PlaceholderAPI")
     version = "${project.version}"
 }
 

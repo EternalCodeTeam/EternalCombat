@@ -11,4 +11,5 @@ repositories {
     maven { url = uri("https://storehouse.okaeri.eu/repository/maven-public/") }
     maven { url = uri("https://repo.panda-lang.org/releases") }
     maven { url = uri("https://maven.enginehub.org/repo/") }
+    maven { url = uri("https://repo.extendedclip.com/content/repositories/placeholderapi/")}
 }

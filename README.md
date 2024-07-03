@@ -20,6 +20,19 @@ encounter any compatibility issues, please report them in the
 [Issues tab](https://github.com/EternalCodeTeam/EternalCombat/issues). The plugin requires Java 17 or later, so please
 make sure it is installed on your server.
 
+## PlaceholderAPI
+
+EternalCombat supports PlaceholderAPI, which allows you to use placeholders in other plugins that support it.
+To use placeholders, follow PlaceholderAPI's [instructions](https://wiki.placeholderapi.com/users/) and use the placeholders provided by EternalCombat.
+Provided placeholders:
+ - `%eternalcombat_opponent%` - Returns the name of the player with whom the player is fighting.
+ - `%eternalcombat_opponent_healths%` - Returns the number of minutes remaining until the player is no longer in combat.
+ - `%eternalcombat_remaining_seconds%` - Returns the number of seconds remaining until the player is no longer in combat.
+ - `%eternalcombat_remaining_millis%` - Returns the number of milliseconds remaining until the player is no longer in combat.
+
+If the player is not in combat, the placeholders will return an empty string. 
+If combat was not caused by other player, opponent placeholders will return empty string.
+
 ## Building
 Build EternalCombat using:
 

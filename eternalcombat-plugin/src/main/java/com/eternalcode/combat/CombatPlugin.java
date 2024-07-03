@@ -105,8 +105,8 @@ public final class CombatPlugin extends JavaPlugin implements EternalCombatApi {
 
         FightBossBarService fightBossBarService = new FightBossBarService(this.pluginConfig, this.audienceProvider, miniMessage);
 
-        BridgeService bridgeService = new BridgeService(this.pluginConfig, server.getPluginManager(), this.getLogger());
-        bridgeService.init();
+        BridgeService bridgeService = new BridgeService(this.pluginConfig, server.getPluginManager(), this.getLogger(), this);
+        bridgeService.init(this.fightManager, server);
         this.regionProvider = bridgeService.getRegionProvider();
 
         NotificationAnnouncer notificationAnnouncer = new NotificationAnnouncer(this.audienceProvider, miniMessage);
@@ -132,6 +132,7 @@ public final class CombatPlugin extends JavaPlugin implements EternalCombatApi {
             new PercentDropModifier(this.pluginConfig.dropSettings),
             new PlayersHealthDropModifier(this.pluginConfig.dropSettings, this.logoutService)
         ).forEach(this.dropManager::registerModifier);
+
 
         Stream.of(
             new DropController(this.dropManager, this.dropKeepInventoryManager, this.pluginConfig.dropSettings, this.fightManager),
