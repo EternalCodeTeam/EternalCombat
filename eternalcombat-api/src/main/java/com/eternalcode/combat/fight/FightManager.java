@@ -46,7 +46,7 @@ public class FightManager {
     }
 
     public FightTagEvent tag(UUID target, Duration delay, CauseOfTag causeOfTag) {
-        return this.tag(target, delay, causeOfTag);
+        return this.tag(target, delay, causeOfTag, null);
     }
 
     @ApiStatus.Experimental
