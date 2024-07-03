@@ -7,6 +7,7 @@ import com.eternalcode.combat.region.DefaultRegionProvider;
 import com.eternalcode.combat.region.RegionProvider;
 import com.eternalcode.combat.region.WorldGuardRegionProvider;
 import org.bukkit.Server;
+import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.PluginManager;
 
 import java.util.logging.Logger;
@@ -16,13 +17,15 @@ public class BridgeService {
     private final PluginConfig pluginConfig;
     private final PluginManager pluginManager;
     private final Logger logger;
+    private final Plugin plugin;
 
     private RegionProvider regionProvider;
 
-    public BridgeService(PluginConfig pluginConfig, PluginManager pluginManager, Logger logger) {
+    public BridgeService(PluginConfig pluginConfig, PluginManager pluginManager, Logger logger, Plugin plugin) {
         this.pluginConfig = pluginConfig;
         this.pluginManager = pluginManager;
         this.logger = logger;
+        this.plugin = plugin;
     }
 
     public void init(FightManager fightManager, Server server) {
@@ -35,7 +38,7 @@ public class BridgeService {
         });
 
         this.initialize("PlaceholderAPI",
-            () -> new FightTagPlaceholder(fightManager, server).register(),
+            () -> new FightTagPlaceholder(fightManager, server, plugin).register(),
             () -> this.logger.warning("PlaceholderAPI is not installed, placeholders will not be registered.")
         );
     }
