@@ -9,16 +9,20 @@ import me.clip.placeholderapi.expansion.PlaceholderExpansion;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.Server;
 import org.bukkit.entity.Player;
+import org.bukkit.plugin.Plugin;
 import org.jetbrains.annotations.NotNull;
 
 public class FightTagPlaceholder extends PlaceholderExpansion {
 
     private final FightManager fightManager;
     private final Server server;
+    private final Plugin plugin;
+    private static final String IDENTIFIER = "eternalcombat";
 
-    public FightTagPlaceholder(FightManager fightManager, Server server) {
+    public FightTagPlaceholder(FightManager fightManager, Server server, Plugin plugin) {
         this.fightManager = fightManager;
         this.server = server;
+        this.plugin = plugin;
     }
 
     @Override
@@ -29,17 +33,17 @@ public class FightTagPlaceholder extends PlaceholderExpansion {
 
     @Override
     public @NotNull String getIdentifier() {
-        return "eternalcombat";
+        return IDENTIFIER;
     }
 
     @Override
     public @NotNull String getAuthor() {
-        return "EternalCode";
+        return plugin.getDescription().getAuthors().get(0);
     }
 
     @Override
     public @NotNull String getVersion() {
-        return "1.0";
+        return plugin.getDescription().getVersion();
     }
 
     @Override
