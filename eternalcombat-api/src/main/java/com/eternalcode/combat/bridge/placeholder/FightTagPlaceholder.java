@@ -68,7 +68,7 @@ public class FightTagPlaceholder extends PlaceholderExpansion {
 
         if (identifier.equals("opponent_health")) {
             return getTagger(player)
-                .map(tagger -> String.valueOf(tagger.getHealth()))
+                .map(tagger -> String.format("%.2f", tagger.getHealth()))
                 .orElse("");
         }
 
