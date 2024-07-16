@@ -3,7 +3,6 @@ package com.eternalcode.combat.fight.controller;
 import com.eternalcode.combat.config.implementation.PluginConfig;
 import com.eternalcode.combat.fight.FightManager;
 import com.eternalcode.combat.fight.bossbar.FightBossBarService;
-import com.eternalcode.combat.fight.event.CauseOfUnTag;
 import com.eternalcode.combat.fight.event.FightTagEvent;
 import com.eternalcode.combat.fight.event.FightUntagEvent;
 import com.eternalcode.combat.notification.NotificationAnnouncer;
@@ -12,7 +11,6 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
-import panda.utilities.text.Formatter;
 
 public class FightMessageController implements Listener {
 
@@ -51,10 +49,6 @@ public class FightMessageController implements Listener {
 
         if (player == null) {
             throw new IllegalStateException("Player cannot be null!");
-        }
-
-        if (!this.fightManager.isInCombat(player.getUniqueId())) {
-            return;
         }
 
         this.announcer.sendMessage(player, this.config.messages.playerUntagged);
