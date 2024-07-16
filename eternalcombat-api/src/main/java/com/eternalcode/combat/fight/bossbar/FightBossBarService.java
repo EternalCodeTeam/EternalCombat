@@ -12,7 +12,6 @@ import org.bukkit.entity.Player;
 import panda.utilities.text.Formatter;
 
 import java.time.Duration;
-import java.time.Instant;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -74,25 +73,27 @@ public class FightBossBarService {
         }
 
         BossBar bossBar = fightBossBar.bossBar();
-        float fightBossBarProgress = fightBossBar.progress();
 
-        if (fightBossBarProgress < 0.0F) {
-            Instant now = Instant.now();
+        long combatDurationMillis = this.pluginConfig.settings.combatDuration.toMillis();
+        long remainingDurationMillis = fightTag.getRemainingDuration().toMillis();
 
-            Instant endOfCombatLog = fightTag.getEndOfCombatLog();
+        float progress = (float) remainingDurationMillis / combatDurationMillis;
 
-            Duration between = Duration.between(now, endOfCombatLog);
-            Duration combatDuration = fightBossBar.combatDuration();
-
-            float difference = (float) between.toMillis() / combatDuration.toMillis();
-            float progress = Math.max(0.0F, Math.min(1.0F, difference));
-
-            bossBar.progress(progress);
+        if (progress < 0.03F) {
+            progress = 0.0F;
+            bossBar.name(Component.empty());
         }
 
-        Component name = this.miniMessage.deserialize(message);
+        if (progress > 1.0F) {
+            progress = 1.0F;
+        }
 
-        bossBar.name(name);
+        if ( progress < 1.0F && progress > 0.0F ) {
+            Component name = this.miniMessage.deserialize(message);
+            bossBar.name(name);
+
+        }
+        bossBar.progress(progress);
     }
 
     private void show(Player player, FightBossBar fightBossBar) {
