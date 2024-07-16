@@ -88,11 +88,11 @@ public class FightBossBarService {
             progress = 1.0F;
         }
 
-        if ( progress < 1.0F && progress > 0.0F ) {
+        if (progress < 1.0F && progress > 0.0F ) {
             Component name = this.miniMessage.deserialize(message);
             bossBar.name(name);
-
         }
+
         bossBar.progress(progress);
     }
 
