@@ -19,6 +19,10 @@ public final class DurationUtil {
     }
 
     public static String format(Duration duration) {
+        if (duration.toMillis() < 1000) {
+            return "0s";
+        }
+
         return WITHOUT_MILLS.format(duration);
     }
 }
