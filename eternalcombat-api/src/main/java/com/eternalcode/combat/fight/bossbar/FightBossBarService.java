@@ -79,20 +79,12 @@ public class FightBossBarService {
 
         float progress = (float) remainingDurationMillis / combatDurationMillis;
 
-        if (progress < 0.03F) {
-            progress = 0.0F;
-            bossBar.name(Component.empty());
-        }
-
         if (progress > 1.0F) {
             progress = 1.0F;
         }
 
-        if (progress < 1.0F && progress > 0.0F ) {
-            Component name = this.miniMessage.deserialize(message);
-            bossBar.name(name);
-        }
-
+        Component name = this.miniMessage.deserialize(message);
+        bossBar.name(name);
         bossBar.progress(progress);
     }
 
