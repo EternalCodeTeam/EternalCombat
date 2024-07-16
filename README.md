@@ -15,7 +15,7 @@
 
 ### Information
 
-EternalCombat has been tested on Minecraft versions 1.17.1 to 1.20.6, but it should work on most other versions. If you
+EternalCombat has been tested on Minecraft versions 1.17.1 to 1.21, but it should work on most other versions. If you
 encounter any compatibility issues, please report them in the
 [Issues tab](https://github.com/EternalCodeTeam/EternalCombat/issues). The plugin requires Java 17 or later, so please
 make sure it is installed on your server.
@@ -72,7 +72,7 @@ with Maven:
 
 with Gradle:
 ```kts
-compileOnly("com.eternalcode:eternalcombat-api:1.2.2")
+compileOnly("com.eternalcode:eternalcombat-api:1.3.0")
 ```
 
 with Maven:
@@ -80,7 +80,7 @@ with Maven:
 <dependency>
   <groupId>com.eternalcode</groupId>
   <artifactId>eternalcombat-api</artifactId>
-  <version>1.2.2</version>
+  <version>1.3.0</version>
   <scope>provided</scope>
 </dependency>
 ```
