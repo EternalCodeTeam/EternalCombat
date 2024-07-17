@@ -25,10 +25,10 @@ make sure it is installed on your server.
 EternalCombat supports PlaceholderAPI, which allows you to use placeholders in other plugins that support it.
 To use placeholders, follow PlaceholderAPI's [instructions](https://wiki.placeholderapi.com/users/) and use the placeholders provided by EternalCombat.
 Provided placeholders:
- - `%eternalcombat_opponent%` - Returns the name of the player with whom the player is fighting.
- - `%eternalcombat_opponent_healths%` - Returns the number of minutes remaining until the player is no longer in combat.
- - `%eternalcombat_remaining_seconds%` - Returns the number of seconds remaining until the player is no longer in combat.
- - `%eternalcombat_remaining_millis%` - Returns the number of milliseconds remaining until the player is no longer in combat.
+- `%eternalcombat_opponent%` - Returns the name of the player with whom the player is fighting.
+- `%eternalcombat_opponent_health%` - Returns opponent health in format `00.00`
+- `%eternalcombat_remaining_seconds%` - Returns the number of seconds remaining until the player is no longer in combat.
+- `%eternalcombat_remaining_millis%` - Returns the number of milliseconds remaining until the player is no longer in combat.
 
 If the player is not in combat, the placeholders will return an empty string. 
 If combat was not caused by other player, opponent placeholders will return empty string.
