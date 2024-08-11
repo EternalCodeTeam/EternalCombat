@@ -8,10 +8,10 @@ repositories {
 }
 
 dependencies {
-    implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8:1.9.23")
-    implementation("io.github.goooler.shadow:shadow-gradle-plugin:8.1.7")
+    implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8:1.9.25")
+    implementation("io.github.goooler.shadow:shadow-gradle-plugin:8.1.8")
     implementation("net.minecrell:plugin-yml:0.6.0")
-    implementation("xyz.jpenilla:run-task:2.2.4")
+    implementation("xyz.jpenilla:run-task:2.3.0")
 }
 
 sourceSets {
