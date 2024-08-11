@@ -24,7 +24,7 @@ object Versions {
     const val CAFFEINE = "3.1.8"
 
     const val B_STATS_BUKKIT = "3.0.2"
-    const val WORLD_GUARD_BUKKIT = "7.0.10"
+    const val WORLD_GUARD_BUKKIT = "7.0.9"
 
     const val PLACEHOLDER_API = "2.11.6"
 
