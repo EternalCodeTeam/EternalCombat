@@ -3,7 +3,7 @@ plugins {
     `eternalcombat-repositories`
 
     id("net.minecrell.plugin-yml.bukkit")
-    id("com.github.johnrengelman.shadow")
+    id("io.github.goooler.shadow")
     id("xyz.jpenilla.run-paper")
 }
 
@@ -23,7 +23,7 @@ bukkit {
 
 tasks {
     runServer {
-        minecraftVersion("1.19.4")
+        minecraftVersion("1.21.1")
     }
 }
 
