@@ -12,7 +12,7 @@ java {
 }
 
 checkstyle {
-    toolVersion = "10.16.0"
+    toolVersion = "10.17.0"
 
     configFile = file("${rootDir}/config/checkstyle/checkstyle.xml")
 
@@ -25,7 +25,7 @@ configurations.named("checkstyle") {
     resolutionStrategy {
         capabilitiesResolution {
             withCapability("com.google.collections:google-collections") {
-                select("com.google.guava:guava:33.1.0-jre")
+                select("com.google.guava:guava:33.2.1-jre")
             }
         }
     }
