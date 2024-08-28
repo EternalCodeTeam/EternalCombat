@@ -21,13 +21,13 @@ public class PluginConfig extends OkaeriConfig {
     @Comment("# Do you want to change the plugin settings?")
     public Settings settings = new Settings();
 
-    @Comment({ " ", "# Ender pearl settings" })
+    @Comment({" ", "# Ender pearl settings"})
     public FightPearlSettings pearl = new FightPearlSettings();
 
-    @Comment({ " ", "# Custom effects settings" })
+    @Comment({" ", "# Custom effects settings"})
     public FightEffectSettings effect = new FightEffectSettings();
 
-    @Comment({ " ", "# Set a custom way for a player's items to drop on death (if in combat)" })
+    @Comment({" ", "# Set a custom way for a player's items to drop on death (if in combat)"})
     public DropSettings dropSettings = new DropSettings();
 
     public static class Settings extends OkaeriConfig {
