@@ -21,13 +21,13 @@ public class PluginConfig extends OkaeriConfig {
     @Comment("# Do you want to change the plugin settings?")
     public Settings settings = new Settings();
 
-    @Comment({" ", "# Ender pearl settings"})
+    @Comment({ " ", "# Ender pearl settings" })
     public FightPearlSettings pearl = new FightPearlSettings();
 
-    @Comment({" ", "# Custom effects settings"})
+    @Comment({ " ", "# Custom effects settings" })
     public FightEffectSettings effect = new FightEffectSettings();
 
-    @Comment({" ", "# Set a custom way for a player's items to drop on death (if in combat)"})
+    @Comment({ " ", "# Set a custom way for a player's items to drop on death (if in combat)" })
     public DropSettings dropSettings = new DropSettings();
 
     public static class Settings extends OkaeriConfig {
@@ -46,8 +46,12 @@ public class PluginConfig extends OkaeriConfig {
         @Comment("# List of regions to block")
         public List<String> blockedRegions = Collections.singletonList("your_region");
 
-        @Comment("# Set the knock multiplier for the blocked region")
-        public double blockedRegionKnockMultiplier = 1.2;
+        @Comment({
+            "# Set the knock multiplier for the blocked region",
+            "# Values can be decimal. Do NOT use negative values.",
+            "# Setting it around 1 knocks the player around 2-4 blocks away."
+        })
+        public double blockedRegionKnockMultiplier = 1;
 
         @Comment("# Set the radius of the blocked region if you aren't using WorldGuard basen on default spawn region!")
         public int blockedRegionRadius = 10;
@@ -127,7 +131,7 @@ public class PluginConfig extends OkaeriConfig {
 
     }
 
-    @Comment({" ", "# Do you want to change the plugin messages?"})
+    @Comment({ " ", "# Do you want to change the plugin messages?" })
     public Messages messages = new Messages();
 
     public static class Messages extends OkaeriConfig {
