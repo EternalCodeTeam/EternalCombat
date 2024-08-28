@@ -131,7 +131,7 @@ public class PluginConfig extends OkaeriConfig {
 
     }
 
-    @Comment({ " ", "# Do you want to change the plugin messages?" })
+    @Comment({" ", "# Do you want to change the plugin messages?"})
     public Messages messages = new Messages();
 
     public static class Messages extends OkaeriConfig {
