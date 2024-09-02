@@ -30,33 +30,26 @@ public class WorldGuardRegionProvider implements RegionProvider {
         RegionQuery regionQuery = regionContainer.createQuery();
         ApplicableRegionSet applicableRegions = regionQuery.getApplicableRegions(BukkitAdapter.adapt(location));
 
-        double minX = 0;
-        double maxX = 0;
-        double minZ = 0;
-        double maxZ = 0;
+        ProtectedRegion combatRegion = null;
 
         for (ProtectedRegion region : applicableRegions.getRegions()) {
-            BlockVector3 min = region.getMinimumPoint();
-            BlockVector3 max = region.getMaximumPoint();
+            if(!isCombatRegion(region)) continue;
 
-            if (min.getX() < minX) {
-                minX = min.getX();
-            }
-            if (max.getX() > maxX) {
-                maxX = max.getX();
-            }
-            if (min.getZ() < minZ) {
-                minZ = min.getZ();
-            }
-            if (max.getZ() > maxZ) {
-                maxZ = max.getZ();
-            }
+            combatRegion = region;
+            break;
         }
 
-        double x = (maxX - minX) / 2 + minX;
-        double z = (maxZ - minZ) / 2 + minZ;
+        if (combatRegion == null) {
+            throw new IllegalStateException("Combat region not found.");
+        }
 
-        return new Location(location.getWorld(), x, location.getY(), z);
+        BlockVector3 min = combatRegion.getMinimumPoint();
+        BlockVector3 max = combatRegion.getMaximumPoint();
+
+        double x = (double) (min.getX() + max.getX()) / 2;
+        double z = (double) (min.getZ() + max.getZ()) / 2;
+
+        return new Location(location.getWorld(), x,location.getY(), z);
     }
 
     private boolean isInCombatRegion(Location location, String regionName) {
@@ -65,5 +58,9 @@ public class WorldGuardRegionProvider implements RegionProvider {
         ApplicableRegionSet applicableRegions = regionQuery.getApplicableRegions(BukkitAdapter.adapt(location));
 
         return applicableRegions.getRegions().stream().anyMatch(region -> region.getId().equalsIgnoreCase(regionName));
+    }
+
+    private boolean isCombatRegion(ProtectedRegion region) {
+        return this.regions.stream().anyMatch(regionName -> region.getId().equalsIgnoreCase(regionName));
     }
 }

@@ -17,7 +17,6 @@ public class RegionController implements Listener {
     private final RegionProvider regionProvider;
     private final FightManager fightManager;
     private final PluginConfig pluginConfig;
-    private final double knockbackMultiplier;
 
     public RegionController(NotificationAnnouncer announcer, RegionProvider regionProvider, FightManager fightManager, PluginConfig pluginConfig) {
         this.announcer = announcer;
@@ -25,7 +24,6 @@ public class RegionController implements Listener {
         this.fightManager = fightManager;
         this.pluginConfig = pluginConfig;
 
-        this.knockbackMultiplier = this.pluginConfig.settings.blockedRegionKnockMultiplier;
     }
 
     @EventHandler
@@ -51,15 +49,16 @@ public class RegionController implements Listener {
                 return;
             }
 
-            Location spawnLocation = this.regionProvider.getRegionCenter(locationTo);
-            Location playerLocation = player.getLocation();
+            Location centerOfRegion = this.regionProvider.getRegionCenter(locationTo);
+            Location subtract = player.getLocation().subtract(centerOfRegion);
 
-            double xMultiplier = playerLocation.getX() > spawnLocation.getX() ? 0.5 : -0.5;
-            double zMultiplier = playerLocation.getZ() > spawnLocation.getZ() ? 0.5 : -0.5;
+            Vector knockbackVector = new Vector(subtract.getX(), 0, subtract.getZ()).normalize();
+            Vector configuredVector = new Vector(
+                this.pluginConfig.settings.blockedRegionKnockMultiplier,
+                0.5,
+                this.pluginConfig.settings.blockedRegionKnockMultiplier);
 
-            Vector knockback = new Vector(xMultiplier * this.knockbackMultiplier, 0.5, zMultiplier * this.knockbackMultiplier);
-
-            player.setVelocity(knockback);
+            player.setVelocity(knockbackVector.multiply(configuredVector));
 
             this.announcer.sendMessage(player, this.pluginConfig.messages.cantEnterOnRegion);
         }
