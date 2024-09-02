@@ -1,6 +1,10 @@
 package com.eternalcode.combat.notification;
 
 import com.eternalcode.combat.notification.implementation.BossBarNotification;
+import java.time.Duration;
+import java.time.Instant;
+import java.util.HashMap;
+import java.util.UUID;
 import net.kyori.adventure.audience.Audience;
 import net.kyori.adventure.bossbar.BossBar;
 import net.kyori.adventure.platform.AudienceProvider;
@@ -15,6 +19,7 @@ public final class NotificationAnnouncer {
 
     private final AudienceProvider audienceProvider;
     private final MiniMessage miniMessage;
+    private final HashMap<UUID, Instant> timeLimitMap = new HashMap<>();
 
     public NotificationAnnouncer(AudienceProvider audienceProvider, MiniMessage miniMessage) {
         this.audienceProvider = audienceProvider;
@@ -67,6 +72,26 @@ public final class NotificationAnnouncer {
         Component message = this.miniMessage.deserialize(text);
 
         audience.sendMessage(message);
+    }
+
+    public void sendMessage(Player player, String text, Duration timeLimit) {
+        Audience audience = this.audience(player);
+        Component message = this.miniMessage.deserialize(text);
+
+        UUID uniqueId = player.getUniqueId();
+
+        if (this.timeLimitMap.containsKey(uniqueId)) {
+            Instant instant = this.timeLimitMap.get(uniqueId);
+
+            if (instant.isAfter(Instant.now())) {
+                return;
+            }
+            else {
+                this.timeLimitMap.remove(uniqueId);
+            }
+        }
+        audience.sendMessage(message);
+        this.timeLimitMap.put(uniqueId, Instant.now().plus(timeLimit));
     }
 
     private Audience audience(CommandSender sender) {
