@@ -50,7 +50,6 @@ public final class NotificationAnnouncer {
 
             case BOSS_BAR -> {
                 BossBarNotification bossBarNotification = (BossBarNotification) notification;
-
                 BossBar bossBar = bossBarNotification.create(message);
 
                 audience.showBossBar(bossBar);
@@ -86,9 +85,9 @@ public final class NotificationAnnouncer {
             if (instant.isAfter(Instant.now())) {
                 return;
             }
-            else {
-                this.timeLimitMap.remove(uniqueId);
-            }
+
+            this.timeLimitMap.remove(uniqueId);
+
         }
         audience.sendMessage(message);
         this.timeLimitMap.put(uniqueId, Instant.now().plus(timeLimit));

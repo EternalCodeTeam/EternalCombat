@@ -7,6 +7,7 @@ import com.sk89q.worldguard.protection.ApplicableRegionSet;
 import com.sk89q.worldguard.protection.regions.ProtectedRegion;
 import com.sk89q.worldguard.protection.regions.RegionContainer;
 import com.sk89q.worldguard.protection.regions.RegionQuery;
+import java.util.concurrent.atomic.AtomicReference;
 import org.bukkit.Location;
 
 import java.util.List;
@@ -30,21 +31,21 @@ public class WorldGuardRegionProvider implements RegionProvider {
         RegionQuery regionQuery = regionContainer.createQuery();
         ApplicableRegionSet applicableRegions = regionQuery.getApplicableRegions(BukkitAdapter.adapt(location));
 
-        ProtectedRegion combatRegion = null;
+        AtomicReference<ProtectedRegion> combatRegion = new AtomicReference<>();
 
         for (ProtectedRegion region : applicableRegions.getRegions()) {
             if(!isCombatRegion(region)) continue;
 
-            combatRegion = region;
+            combatRegion.set(region);
             break;
         }
 
-        if (combatRegion == null) {
+        if (combatRegion.get() == null) {
             throw new IllegalStateException("Combat region not found.");
         }
 
-        BlockVector3 min = combatRegion.getMinimumPoint();
-        BlockVector3 max = combatRegion.getMaximumPoint();
+        BlockVector3 min = combatRegion.get().getMinimumPoint();
+        BlockVector3 max = combatRegion.get().getMaximumPoint();
 
         double x = (double) (min.getX() + max.getX()) / 2;
         double z = (double) (min.getZ() + max.getZ()) / 2;
