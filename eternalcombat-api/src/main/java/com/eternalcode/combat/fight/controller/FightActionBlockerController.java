@@ -18,6 +18,7 @@ import org.bukkit.event.player.PlayerToggleFlightEvent;
 
 import java.util.List;
 import java.util.UUID;
+import panda.utilities.text.Formatter;
 
 public class FightActionBlockerController implements Listener {
 
@@ -49,18 +50,29 @@ public class FightActionBlockerController implements Listener {
 
         List<Material> specificBlocksToPreventPlacing = this.config.settings.specificBlocksToPreventPlacing;
 
-        boolean isBlockPlaceLevel = level > this.config.settings.minBlockPlacingLevel;
-        if (isBlockPlaceLevel && specificBlocksToPreventPlacing.isEmpty()) {
+        boolean isPlacementBlocked = isPlacementBlocked(level);
+
+        Formatter formatter = new Formatter()
+            .register("{Y}", this.config.settings.blockPlacingYCoordinate)
+            .register("{MODE}", this.config.settings.blockPlacingModeName);
+
+        if (isPlacementBlocked && specificBlocksToPreventPlacing.isEmpty()) {
             event.setCancelled(true);
-            this.announcer.sendMessage(player, this.config.messages.blockPlacingBlockedDuringCombat);
+            this.announcer.sendMessage(player, formatter.format(this.config.messages.blockPlacingBlockedDuringCombat));
         }
 
         Material blockMaterial = block.getType();
         boolean isBlockInDisabledList = specificBlocksToPreventPlacing.contains(blockMaterial);
-        if (isBlockPlaceLevel && isBlockInDisabledList) {
+        if (isPlacementBlocked && isBlockInDisabledList) {
             event.setCancelled(true);
-            this.announcer.sendMessage(player, this.config.messages.blockPlacingBlockedDuringCombat);
+            this.announcer.sendMessage(player, formatter.format(this.config.messages.blockPlacingBlockedDuringCombat));
         }
+    }
+
+    private boolean isPlacementBlocked(int level) {
+        return this.config.settings.blockPlacingMode == PluginConfig.Settings.BlockPlacingMode.ABOVE
+            ? level > this.config.settings.blockPlacingYCoordinate
+            : level < this.config.settings.blockPlacingYCoordinate;
     }
 
     @EventHandler
