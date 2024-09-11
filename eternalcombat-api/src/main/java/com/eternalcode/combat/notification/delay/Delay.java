@@ -1,31 +1,29 @@
 package com.eternalcode.combat.notification.delay;
 
-import java.time.Instant;
-import java.util.UUID;
+import com.eternalcode.combat.notification.Notification;
+import java.time.Duration;
 
 public class Delay {
 
     private final SourceOfDelay source;
-    private final Instant end;
-    private final UUID uniqueId;
+    private final Duration delayDuration;
+    private final Notification notification;
 
-    public Delay(SourceOfDelay source, Instant end, UUID uniqueId) {
+    public Delay(SourceOfDelay source, Duration delayDuration, Notification notification) {
         this.source = source;
-        this.end = end;
-        this.uniqueId = uniqueId;
-    }
-
-    public Instant getEnd() {
-        return end;
+        this.delayDuration = delayDuration;
+        this.notification = notification;
     }
 
     public SourceOfDelay getSource() {
         return source;
     }
 
-    public UUID getUniqueId() {
-        return uniqueId;
+    public Duration getDelayDuration() {
+        return delayDuration;
     }
 
-
+    public Notification getNotification() {
+        return notification;
+    }
 }

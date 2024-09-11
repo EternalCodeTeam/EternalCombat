@@ -20,7 +20,6 @@ public final class NotificationAnnouncer {
 
     private final AudienceProvider audienceProvider;
     private final MiniMessage miniMessage;
-    private final DelayManager delayManager = new DelayManager();
 
     public NotificationAnnouncer(AudienceProvider audienceProvider, MiniMessage miniMessage) {
         this.audienceProvider = audienceProvider;

@@ -110,6 +110,9 @@ public class PluginConfig extends OkaeriConfig {
             BELOW
         }
 
+        @Comment("# Set delay for message if the block placing is blocked to reduce spam (in milliseconds)")
+        public Duration blockPlacingMessageCooldown = Duration.ofMillis(500);
+
         @Comment({
             "# Disable placing specific blocks?",
             "# If you want to block all blocks, enable shouldPreventBlockPlacing and make this list empty",
