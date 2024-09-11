@@ -50,12 +50,7 @@ public class FightActionBlockerController implements Listener {
 
         List<Material> specificBlocksToPreventPlacing = this.config.settings.specificBlocksToPreventPlacing;
 
-        boolean isPlacementBlocked;
-        if (this.config.settings.blockPlacingMode == PluginConfig.Settings.BlockPlacingMode.ABOVE) {
-            isPlacementBlocked = level > this.config.settings.blockPlacingYCoordinate;
-        } else {
-            isPlacementBlocked = level < this.config.settings.blockPlacingYCoordinate;
-        }
+        boolean isPlacementBlocked = isPlacementBlocked(level);
 
         Formatter formatter = new Formatter()
             .register("{Y}", this.config.settings.blockPlacingYCoordinate)
@@ -72,6 +67,12 @@ public class FightActionBlockerController implements Listener {
             event.setCancelled(true);
             this.announcer.sendMessage(player, formatter.format(this.config.messages.blockPlacingBlockedDuringCombat));
         }
+    }
+
+    private boolean isPlacementBlocked(int level) {
+        return this.config.settings.blockPlacingMode == PluginConfig.Settings.BlockPlacingMode.ABOVE
+            ? level > this.config.settings.blockPlacingYCoordinate
+            : level < this.config.settings.blockPlacingYCoordinate;
     }
 
     @EventHandler
