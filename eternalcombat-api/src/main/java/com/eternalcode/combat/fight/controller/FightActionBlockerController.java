@@ -32,9 +32,6 @@ public class FightActionBlockerController implements Listener {
         this.config = config;
     }
 
-    //blockPlacingYCoordinate
-    //blockPlacingMode
-
     @EventHandler
     void onPlace(BlockPlaceEvent event) {
         if (!this.config.settings.shouldPreventBlockPlacing) {
