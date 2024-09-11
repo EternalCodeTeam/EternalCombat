@@ -26,4 +26,7 @@ public class FightPearlSettings extends OkaeriConfig {
     @Comment("# Message sent when player tries to throw ender pearl, but has delay")
     public String pearlThrowBlockedDelayDuringCombat = "&cYou must wait {TIME} before next throw!";
 
+    @Comment("# Set cooldown for message if the pearl throw delay is enabled to reduce spam (in milliseconds)")
+    public Duration pearlThrowBlockedDelayMessageCooldown = Duration.ofMillis(500);
+
 }

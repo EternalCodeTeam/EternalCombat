@@ -53,8 +53,8 @@ public class PluginConfig extends OkaeriConfig {
         })
         public double blockedRegionKnockMultiplier = 1;
 
-        @Comment({" ", "# Set duration (IN SECONDS) between next messages sent about not being able to enter the region"})
-        public int regionEnterMessageCooldown = 3;
+        @Comment({" ", "# Set duration between next messages sent about not being able to enter the region (in milliseconds)"})
+        public Duration regionEnterMessageCooldown = Duration.ofMillis(3000);
 
         @Comment("# Set the radius of the blocked region if you aren't using WorldGuard basen on default spawn region!")
         public int blockedRegionRadius = 10;
