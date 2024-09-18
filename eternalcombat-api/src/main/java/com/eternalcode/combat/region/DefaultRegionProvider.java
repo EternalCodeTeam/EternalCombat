@@ -1,5 +1,6 @@
 package com.eternalcode.combat.region;
 
+import java.util.Optional;
 import org.bukkit.Location;
 
 public class DefaultRegionProvider implements RegionProvider {
@@ -11,7 +12,7 @@ public class DefaultRegionProvider implements RegionProvider {
     }
 
     @Override
-    public boolean isInRegion(Location location) {
+    public Optional<Region> getRegion(Location location) {
         Location spawnLocation = location.getWorld().getSpawnLocation();
         double x = spawnLocation.getX();
         double z = spawnLocation.getZ();
@@ -19,23 +20,25 @@ public class DefaultRegionProvider implements RegionProvider {
         Point min = new Point(x - this.radius, z - this.radius);
         Point max = new Point(x + this.radius, z + this.radius);
 
-        return this.contains(min, max, location.getX(), location.getZ());
+        if (this.contains(min, max, location.getX(), location.getZ())) {
+            return Optional.of(new SpawnRegion(location, x, z));
+        }
+
+        return Optional.empty();
     }
 
-    @Override
-    public Location getRegionCenter(Location location) {
-        Location spawnLocation = location.getWorld().getSpawnLocation();
-        double x = spawnLocation.getX();
-        double z = spawnLocation.getZ();
-
-        return new Location(location.getWorld(), x, location.getY(), z);
-    }
-
-    public boolean contains(Point min, Point max, double x, double z) {
+    private boolean contains(Point min, Point max, double x, double z) {
         return x >= min.x() && x < max.x()
             && z >= min.z() && z < max.z();
     }
 
-    public record Point(double x, double z) {}
+    private record Point(double x, double z) {}
+
+    private record SpawnRegion(Location contextLocation, double x, double z) implements Region {
+        @Override
+        public Location getCenter() {
+            return new Location(contextLocation.getWorld(), x, contextLocation.getY(), z);
+        }
+    }
 
 }

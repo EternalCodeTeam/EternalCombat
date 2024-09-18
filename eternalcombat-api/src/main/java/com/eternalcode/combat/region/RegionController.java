@@ -3,6 +3,7 @@ package com.eternalcode.combat.region;
 import com.eternalcode.combat.config.implementation.PluginConfig;
 import com.eternalcode.combat.fight.FightManager;
 import com.eternalcode.combat.notification.NotificationAnnouncer;
+import java.util.Optional;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -23,7 +24,6 @@ public class RegionController implements Listener {
         this.regionProvider = regionProvider;
         this.fightManager = fightManager;
         this.pluginConfig = pluginConfig;
-
     }
 
     @EventHandler
@@ -45,11 +45,13 @@ public class RegionController implements Listener {
         int zFrom = locationFrom.getBlockZ();
 
         if (xTo != xFrom || yTo != yFrom || zTo != zFrom) {
-            if (!this.regionProvider.isInRegion(locationTo)) {
+            Optional<Region> regionOptional = regionProvider.getRegion(locationTo);
+            if (regionOptional.isEmpty()) {
                 return;
             }
 
-            Location centerOfRegion = this.regionProvider.getRegionCenter(locationTo);
+            Region region = regionOptional.get();
+            Location centerOfRegion = region.getCenter();
             Location subtract = player.getLocation().subtract(centerOfRegion);
 
             Vector knockbackVector = new Vector(subtract.getX(), 0, subtract.getZ()).normalize();

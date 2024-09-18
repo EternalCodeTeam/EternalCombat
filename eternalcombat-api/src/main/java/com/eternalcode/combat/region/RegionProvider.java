@@ -1,11 +1,14 @@
 package com.eternalcode.combat.region;
 
+import java.util.Optional;
 import org.bukkit.Location;
 
 public interface RegionProvider {
 
-    boolean isInRegion(Location location);
+    Optional<Region> getRegion(Location location);
 
-    Location getRegionCenter(Location location);
+    default boolean isInRegion(Location location) {
+        return getRegion(location).isPresent();
+    }
 
 }
