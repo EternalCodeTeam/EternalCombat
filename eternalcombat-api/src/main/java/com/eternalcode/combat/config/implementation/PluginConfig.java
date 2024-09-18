@@ -62,7 +62,10 @@ public class PluginConfig extends OkaeriConfig {
         @Comment("# Release attacker after victim dies?")
         public boolean shouldReleaseAttacker = true;
 
-        @Comment("# If you want to exclude admins from combat, set this to true")
+        @Comment({"# If you want to exclude admins from combat, ",
+            "# Setting this to true - admins cannot be tagged and will not tag other players on hit",
+            "# Setting this to false - admins can be tagged and can tag other players on hit"
+        })
         public boolean excludeAdminFromCombat = false;
 
         @Comment("# Command blocking mode, available modes: WHITELIST, BLACKLIST")
@@ -94,8 +97,21 @@ public class PluginConfig extends OkaeriConfig {
         @Comment("# Whether to block the placement of blocks?")
         public boolean shouldPreventBlockPlacing = true;
 
-        @Comment("# The minimum Y level at which block placing is blocked")
-        public int minBlockPlacingLevel = 40;
+        @Comment({ "# Block the placement of blocks above or below a certain Y coordinate",
+            "# Select the mode for block placing, available modes: ABOVE, BELOW"
+        })
+        public BlockPlacingMode blockPlacingMode = BlockPlacingMode.ABOVE;
+
+        @Comment("# Block placing mode custom name used if messages")
+        public String blockPlacingModeName = "above";
+
+        @Comment("# Set the Y coordinate for block placing relative to mode selected above")
+        public int blockPlacingYCoordinate = 40;
+
+        public enum BlockPlacingMode {
+            ABOVE,
+            BELOW
+        }
 
         @Comment({
             "# Disable placing specific blocks?",
@@ -181,8 +197,10 @@ public class PluginConfig extends OkaeriConfig {
         @Comment("# Message sent when player tries to open inventory, but the inventory open is blocked")
         public String inventoryBlockedDuringCombat = "&cYou cannot open this inventory during combat!";
 
-        @Comment("# Message sent when player tries to place a block, but the block place is blocked")
-        public String blockPlacingBlockedDuringCombat = "&cYou cannot place above 40Y coordinate during combat!";
+        @Comment({"# Message sent when player tries to place a block, but the block place is blocked",
+        "# Placeholder {Y} is replaced with the Y coordinate set in the config",
+        "# Placeholder {MODE} is replaced with the mode set in the config"})
+        public String blockPlacingBlockedDuringCombat = "&cYou cannot place {MODE} {Y} coordinate during combat!";
 
         @Comment("# Message sent when player tries to enter a region")
         public String cantEnterOnRegion = "&cYou can't enter this region during combat!";

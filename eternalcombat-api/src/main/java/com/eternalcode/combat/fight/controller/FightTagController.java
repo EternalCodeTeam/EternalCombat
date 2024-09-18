@@ -54,7 +54,7 @@ public class FightTagController implements Listener {
         UUID attackedUniqueId = attackedPlayerByPerson.getUniqueId();
         UUID attackerUniqueId = attacker.getUniqueId();
 
-        if (attacker.isOp()) {
+        if (attacker.isOp() && this.config.settings.excludeAdminFromCombat) {
             return;
         }
 
