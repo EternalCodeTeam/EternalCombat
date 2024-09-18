@@ -55,7 +55,10 @@ public class PluginConfig extends OkaeriConfig {
         @Comment("# Release attacker after victim dies?")
         public boolean shouldReleaseAttacker = true;
 
-        @Comment("# If you want to exclude admins from combat, set this to true")
+        @Comment({"# If you want to exclude admins from combat, ",
+            "# Setting this to true - admins cannot be tagged and will not tag other players on hit",
+            "# Setting this to false - admins can be tagged and can tag other players on hit"
+        })
         public boolean excludeAdminFromCombat = false;
 
         @Comment("# Command blocking mode, available modes: WHITELIST, BLACKLIST")
