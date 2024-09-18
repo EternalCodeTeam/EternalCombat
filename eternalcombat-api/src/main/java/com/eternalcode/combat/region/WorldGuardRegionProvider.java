@@ -19,11 +19,10 @@ import java.util.List;
 public class WorldGuardRegionProvider implements RegionProvider {
 
     private final RegionContainer regionContainer = WorldGuard.getInstance().getPlatform().getRegionContainer();
-    private final TreeSet<String> regions;
+    private final TreeSet<String> regions = new TreeSet<>(String.CASE_INSENSITIVE_ORDER);
     private final PluginConfig pluginConfig;
 
     public WorldGuardRegionProvider(List<String> regions, PluginConfig pluginConfig) {
-        this.regions = new TreeSet<>(String.CASE_INSENSITIVE_ORDER);
         this.regions.addAll(regions);
         this.pluginConfig = pluginConfig;
     }
