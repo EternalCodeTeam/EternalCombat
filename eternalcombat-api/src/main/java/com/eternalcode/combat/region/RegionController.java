@@ -3,7 +3,6 @@ package com.eternalcode.combat.region;
 import com.eternalcode.combat.config.implementation.PluginConfig;
 import com.eternalcode.combat.fight.FightManager;
 import com.eternalcode.combat.notification.NotificationAnnouncer;
-import java.time.Duration;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -61,7 +60,7 @@ public class RegionController implements Listener {
 
             player.setVelocity(knockbackVector.multiply(configuredVector));
 
-            this.announcer.sendMessage(player, this.pluginConfig.messages.cantEnterOnRegion, Duration.ofSeconds(this.pluginConfig.settings.regionEnterMessageCooldown));
+            this.announcer.sendMessage(player, this.pluginConfig.messages.cantEnterOnRegion);
         }
     }
 
