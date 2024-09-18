@@ -21,7 +21,7 @@ public class DefaultRegionProvider implements RegionProvider {
         Point max = new Point(x + this.radius, z + this.radius);
 
         if (this.contains(min, max, location.getX(), location.getZ())) {
-            return Optional.of(new SpawnRegion(location, x, z));
+            return Optional.of(() -> new Location(location.getWorld(), x, location.getY(), z));
         }
 
         return Optional.empty();
@@ -33,12 +33,5 @@ public class DefaultRegionProvider implements RegionProvider {
     }
 
     private record Point(double x, double z) {}
-
-    private record SpawnRegion(Location contextLocation, double x, double z) implements Region {
-        @Override
-        public Location getCenter() {
-            return new Location(contextLocation.getWorld(), x, contextLocation.getY(), z);
-        }
-    }
 
 }
