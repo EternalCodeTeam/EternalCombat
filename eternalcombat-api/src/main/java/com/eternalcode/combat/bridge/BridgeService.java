@@ -30,12 +30,12 @@ public class BridgeService {
 
     public void init(FightManager fightManager, Server server) {
         this.initialize("WorldGuard",
-            () -> this.regionProvider = new WorldGuardRegionProvider(this.pluginConfig.settings.blockedRegions),
+            () -> this.regionProvider = new WorldGuardRegionProvider(this.pluginConfig.settings.blockedRegions, this.pluginConfig),
             () -> {
-            this.regionProvider = new DefaultRegionProvider(this.pluginConfig.settings.blockedRegionRadius);
+                this.regionProvider = new DefaultRegionProvider(this.pluginConfig.settings.blockedRegionRadius);
 
-            this.logger.warning("WorldGuard is not installed, set to default region provider.");
-        });
+                this.logger.warning("WorldGuard is not installed, set to default region provider.");
+            });
 
         this.initialize("PlaceholderAPI",
             () -> new FightTagPlaceholder(fightManager, server, plugin).register(),

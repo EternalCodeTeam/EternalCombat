@@ -45,7 +45,6 @@ public final class NotificationAnnouncer {
 
             case BOSS_BAR -> {
                 BossBarNotification bossBarNotification = (BossBarNotification) notification;
-
                 BossBar bossBar = bossBarNotification.create(message);
 
                 audience.showBossBar(bossBar);

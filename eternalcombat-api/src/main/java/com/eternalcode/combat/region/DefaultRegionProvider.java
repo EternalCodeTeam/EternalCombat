@@ -1,6 +1,8 @@
 package com.eternalcode.combat.region;
 
+import java.util.Optional;
 import org.bukkit.Location;
+import org.bukkit.util.BlockVector;
 
 public class DefaultRegionProvider implements RegionProvider {
 
@@ -11,31 +13,24 @@ public class DefaultRegionProvider implements RegionProvider {
     }
 
     @Override
-    public boolean isInRegion(Location location) {
+    public Optional<Region> getRegion(Location location) {
         Location spawnLocation = location.getWorld().getSpawnLocation();
         double x = spawnLocation.getX();
         double z = spawnLocation.getZ();
 
-        Point min = new Point(x - this.radius, z - this.radius);
-        Point max = new Point(x + this.radius, z + this.radius);
+        BlockVector min = new BlockVector(x - this.radius, 0, z - this.radius);
+        BlockVector max = new BlockVector(x + this.radius, 0, z + this.radius);
 
-        return this.contains(min, max, location.getX(), location.getZ());
+        if (this.contains(min, max, location.getX(), location.getZ())) {
+            return Optional.of(() -> new Location(location.getWorld(), x, location.getY(), z));
+        }
+
+        return Optional.empty();
     }
 
-    @Override
-    public Location getRegionCenter(Location location) {
-        Location spawnLocation = location.getWorld().getSpawnLocation();
-        double x = spawnLocation.getX();
-        double z = spawnLocation.getZ();
-
-        return new Location(location.getWorld(), x, location.getY(), z);
+    private boolean contains(BlockVector min, BlockVector max, double x, double z) {
+        return x >= min.getX() && x < max.getX()
+            && z >= min.getZ() && z < max.getZ();
     }
-
-    public boolean contains(Point min, Point max, double x, double z) {
-        return x >= min.x() && x < max.x()
-            && z >= min.z() && z < max.z();
-    }
-
-    public record Point(double x, double z) {}
 
 }

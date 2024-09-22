@@ -3,6 +3,7 @@ package com.eternalcode.combat.region;
 import com.eternalcode.combat.config.implementation.PluginConfig;
 import com.eternalcode.combat.fight.FightManager;
 import com.eternalcode.combat.notification.NotificationAnnouncer;
+import java.util.Optional;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -44,17 +45,22 @@ public class RegionController implements Listener {
         int zFrom = locationFrom.getBlockZ();
 
         if (xTo != xFrom || yTo != yFrom || zTo != zFrom) {
-            if (!this.regionProvider.isInRegion(locationTo)) {
+            Optional<Region> regionOptional = regionProvider.getRegion(locationTo);
+            if (regionOptional.isEmpty()) {
                 return;
             }
 
-            Location spawnLocation = this.regionProvider.getRegionCenter(locationTo);
-            Location playerLocation = player.getLocation().subtract(spawnLocation);
-            double distance = playerLocation.distance(spawnLocation);
-            Vector knockback = new Vector(0, 3, 0).multiply(this.pluginConfig.settings.blockedRegionKnockMultiplier / distance);
-            Vector vector = playerLocation.toVector().add(knockback);
+            Region region = regionOptional.get();
+            Location centerOfRegion = region.getCenter();
+            Location subtract = player.getLocation().subtract(centerOfRegion);
 
-            player.setVelocity(vector);
+            Vector knockbackVector = new Vector(subtract.getX(), 0, subtract.getZ()).normalize();
+            Vector configuredVector = new Vector(
+                this.pluginConfig.settings.blockedRegionKnockMultiplier,
+                0.5,
+                this.pluginConfig.settings.blockedRegionKnockMultiplier);
+
+            player.setVelocity(knockbackVector.multiply(configuredVector));
 
             this.announcer.sendMessage(player, this.pluginConfig.messages.cantEnterOnRegion);
         }

@@ -46,8 +46,15 @@ public class PluginConfig extends OkaeriConfig {
         @Comment("# List of regions to block")
         public List<String> blockedRegions = Collections.singletonList("your_region");
 
-        @Comment("# Set the knock multiplier for the blocked region")
-        public double blockedRegionKnockMultiplier = 1.2;
+        @Comment({
+            "# Set the knock multiplier for the blocked region",
+            "# Values can be decimal. Do NOT use negative values.",
+            "# Setting it around 1 knocks the player around 2-4 blocks away."
+        })
+        public double blockedRegionKnockMultiplier = 1;
+
+        @Comment({"# Should the player be prevented from entering regions with WorldGuard flag PVP set to DENY "})
+        public boolean shouldPreventPvpRegions = true;
 
         @Comment("# Set the radius of the blocked region if you aren't using WorldGuard basen on default spawn region!")
         public int blockedRegionRadius = 10;
@@ -196,7 +203,7 @@ public class PluginConfig extends OkaeriConfig {
         public String blockPlacingBlockedDuringCombat = "&cYou cannot place {MODE} {Y} coordinate during combat!";
 
         @Comment("# Message sent when player tries to enter a region")
-        public String cantEnterOnRegion = "&cYou can't enter on this region during combat!";
+        public String cantEnterOnRegion = "&cYou can't enter this region during combat!";
 
         public static class AdminMessages extends OkaeriConfig {
             @Comment("# Message sent when the configuration is reloaded")

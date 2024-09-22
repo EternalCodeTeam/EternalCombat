@@ -1,69 +1,75 @@
 package com.eternalcode.combat.region;
 
+import com.eternalcode.combat.config.implementation.PluginConfig;
 import com.sk89q.worldedit.bukkit.BukkitAdapter;
 import com.sk89q.worldedit.math.BlockVector3;
 import com.sk89q.worldguard.WorldGuard;
 import com.sk89q.worldguard.protection.ApplicableRegionSet;
+import com.sk89q.worldguard.protection.flags.Flags;
+import com.sk89q.worldguard.protection.flags.StateFlag;
 import com.sk89q.worldguard.protection.regions.ProtectedRegion;
 import com.sk89q.worldguard.protection.regions.RegionContainer;
 import com.sk89q.worldguard.protection.regions.RegionQuery;
+import java.util.Optional;
+import java.util.TreeSet;
 import org.bukkit.Location;
 
 import java.util.List;
 
 public class WorldGuardRegionProvider implements RegionProvider {
 
-    private final List<String> regions;
+    private final RegionContainer regionContainer = WorldGuard.getInstance().getPlatform().getRegionContainer();
+    private final TreeSet<String> regions = new TreeSet<>(String.CASE_INSENSITIVE_ORDER);
+    private final PluginConfig pluginConfig;
 
-    public WorldGuardRegionProvider(List<String> regions) {
-        this.regions = regions;
+    public WorldGuardRegionProvider(List<String> regions, PluginConfig pluginConfig) {
+        this.regions.addAll(regions);
+        this.pluginConfig = pluginConfig;
     }
 
     @Override
-    public boolean isInRegion(Location location) {
-        return this.regions.stream().anyMatch(region -> this.isInCombatRegion(location, region));
-    }
-
-    @Override
-    public Location getRegionCenter(Location location) {
-        RegionContainer regionContainer = WorldGuard.getInstance().getPlatform().getRegionContainer();
-        RegionQuery regionQuery = regionContainer.createQuery();
+    public Optional<Region> getRegion(Location location) {
+        RegionQuery regionQuery = this.regionContainer.createQuery();
         ApplicableRegionSet applicableRegions = regionQuery.getApplicableRegions(BukkitAdapter.adapt(location));
 
-        double minX = 0;
-        double maxX = 0;
-        double minZ = 0;
-        double maxZ = 0;
-
         for (ProtectedRegion region : applicableRegions.getRegions()) {
-            BlockVector3 min = region.getMinimumPoint();
-            BlockVector3 max = region.getMaximumPoint();
+            if (!isCombatRegion(region)) {
+                continue;
+            }
 
-            if (min.getX() < minX) {
-                minX = min.getX();
-            }
-            if (max.getX() > maxX) {
-                maxX = max.getX();
-            }
-            if (min.getZ() < minZ) {
-                minZ = min.getZ();
-            }
-            if (max.getZ() > maxZ) {
-                maxZ = max.getZ();
+            return Optional.of(new RegionImpl(location, region));
+        }
+
+        return Optional.empty();
+    }
+
+    private boolean isCombatRegion(ProtectedRegion region) {
+        if (this.regions.contains(region.getId())) {
+            return true;
+        }
+
+        if (this.pluginConfig.settings.shouldPreventPvpRegions) {
+            StateFlag.State flag = region.getFlag(Flags.PVP);
+
+            if (flag != null) {
+                return flag.equals(StateFlag.State.DENY);
             }
         }
 
-        double x = (maxX - minX) / 2 + minX;
-        double z = (maxZ - minZ) / 2 + minZ;
-
-        return new Location(location.getWorld(), x, location.getY(), z);
+        return false;
     }
 
-    private boolean isInCombatRegion(Location location, String regionName) {
-        RegionContainer regionContainer = WorldGuard.getInstance().getPlatform().getRegionContainer();
-        RegionQuery regionQuery = regionContainer.createQuery();
-        ApplicableRegionSet applicableRegions = regionQuery.getApplicableRegions(BukkitAdapter.adapt(location));
+    private record RegionImpl(Location contextLocation, ProtectedRegion region) implements Region {
+        @Override
+        public Location getCenter() {
+            BlockVector3 min = region.getMinimumPoint();
+            BlockVector3 max = region.getMaximumPoint();
 
-        return applicableRegions.getRegions().stream().anyMatch(region -> region.getId().equalsIgnoreCase(regionName));
+            double x = (double) (min.getX() + max.getX()) / 2;
+            double z = (double) (min.getZ() + max.getZ()) / 2;
+
+            return new Location(contextLocation.getWorld(), x, contextLocation.getY(), z);
+        }
     }
+
 }
