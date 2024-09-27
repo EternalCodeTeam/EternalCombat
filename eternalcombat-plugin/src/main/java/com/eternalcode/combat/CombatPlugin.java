@@ -1,7 +1,7 @@
 package com.eternalcode.combat;
 
 import com.eternalcode.combat.bridge.BridgeService;
-import com.eternalcode.combat.command.CombatCommand;
+import com.eternalcode.combat.command.CombatTagUntagCommand;
 import com.eternalcode.combat.command.handler.InvalidUsageHandlerImpl;
 import com.eternalcode.combat.command.handler.MissingPermissionHandlerImpl;
 import com.eternalcode.combat.config.ConfigService;
@@ -27,7 +27,7 @@ import com.eternalcode.combat.fight.pearl.FightPearlController;
 import com.eternalcode.combat.fight.pearl.FightPearlManager;
 import com.eternalcode.combat.fight.tagout.FightTagOutController;
 import com.eternalcode.combat.fight.tagout.FightTagOutService;
-import com.eternalcode.combat.fight.tagout.TagOutCommand;
+import com.eternalcode.combat.command.CombatTagImmunityCommand;
 import com.eternalcode.combat.notification.NotificationAnnouncer;
 import com.eternalcode.combat.region.RegionController;
 import com.eternalcode.combat.region.RegionProvider;
@@ -118,8 +118,8 @@ public final class CombatPlugin extends JavaPlugin implements EternalCombatApi {
             .missingPermission(new MissingPermissionHandlerImpl(this.pluginConfig, notificationAnnouncer))
 
             .commands(
-                new CombatCommand(this.fightManager, notificationAnnouncer, this.pluginConfig),
-                new TagOutCommand(this.fightTagOutService, notificationAnnouncer, this.pluginConfig)
+                new CombatTagUntagCommand(this.fightManager, notificationAnnouncer, this.pluginConfig),
+                new CombatTagImmunityCommand(this.fightTagOutService, notificationAnnouncer, this.pluginConfig)
             )
 
             .build();

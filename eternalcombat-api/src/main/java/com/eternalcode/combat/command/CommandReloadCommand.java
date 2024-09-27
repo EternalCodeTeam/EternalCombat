@@ -14,14 +14,14 @@ import panda.utilities.text.Formatter;
 
 @Command(name = "combatlog", aliases = "combat")
 @Permission("eternalcombat.reload")
-public class ReloadCommand {
+public class CommandReloadCommand {
 
     private static final String RELOAD_MESSAGE = "<b><gradient:#8a1212:#fc6b03>EternalCombat:</gradient></b> Reloaded EternalCombat in <color:#fce303>{TIME}ms!</color>";
 
     private final ConfigService configService;
     private final NotificationAnnouncer announcer;
 
-    public ReloadCommand(ConfigService configService, NotificationAnnouncer announcer) {
+    public CommandReloadCommand(ConfigService configService, NotificationAnnouncer announcer) {
         this.configService = configService;
         this.announcer = announcer;
     }

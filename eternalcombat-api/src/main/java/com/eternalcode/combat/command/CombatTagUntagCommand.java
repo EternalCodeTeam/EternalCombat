@@ -20,30 +20,16 @@ import java.time.Duration;
 import java.util.UUID;
 
 @Command(name = "combatlog", aliases = "combat")
-public class CombatCommand {
+public class CombatTagUntagCommand {
 
     private final FightManager fightManager;
     private final NotificationAnnouncer announcer;
     private final PluginConfig config;
 
-    public CombatCommand(FightManager fightManager, NotificationAnnouncer announcer, PluginConfig config) {
+    public CombatTagUntagCommand(FightManager fightManager, NotificationAnnouncer announcer, PluginConfig config) {
         this.fightManager = fightManager;
         this.announcer = announcer;
         this.config = config;
-    }
-
-    @Execute(name = "status")
-    @Permission("eternalcombat.status")
-    void status(@Context CommandSender sender, @Arg Player target) {
-        UUID targetUniqueId = target.getUniqueId();
-        PluginConfig.Messages messages = this.config.messages;
-
-        Formatter formatter = new Formatter()
-            .register("{PLAYER}", target.getName());
-
-        this.announcer.sendMessage(sender, this.fightManager.isInCombat(targetUniqueId)
-            ? formatter.format(messages.admin.playerInCombat)
-            : formatter.format(messages.admin.playerNotInCombat));
     }
 
     @Execute(name = "tag")
