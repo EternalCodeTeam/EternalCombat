@@ -3,7 +3,7 @@ package com.eternalcode.combat;
 import com.eternalcode.combat.bridge.BridgeService;
 import com.eternalcode.combat.command.CombatStatusCommand;
 import com.eternalcode.combat.command.CombatTagUntagCommand;
-import com.eternalcode.combat.command.CommandReloadCommand;
+import com.eternalcode.combat.command.CombatReloadCommand;
 import com.eternalcode.combat.command.handler.InvalidUsageHandlerImpl;
 import com.eternalcode.combat.command.handler.MissingPermissionHandlerImpl;
 import com.eternalcode.combat.config.ConfigService;
@@ -123,7 +123,7 @@ public final class CombatPlugin extends JavaPlugin implements EternalCombatApi {
                 new CombatTagUntagCommand(this.fightManager, notificationAnnouncer, this.pluginConfig),
                 new CombatTagImmunityCommand(this.fightTagOutService, notificationAnnouncer, this.pluginConfig),
                 new CombatStatusCommand(this.fightManager, notificationAnnouncer, this.pluginConfig),
-                new CommandReloadCommand(configService, notificationAnnouncer)
+                new CombatReloadCommand(configService, notificationAnnouncer)
             )
 
             .build();
