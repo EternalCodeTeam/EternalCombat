@@ -6,6 +6,7 @@ import com.eternalcode.combat.notification.NotificationAnnouncer;
 import com.eternalcode.combat.util.DurationUtil;
 import dev.rollczi.litecommands.annotations.argument.Arg;
 import dev.rollczi.litecommands.annotations.command.Command;
+import dev.rollczi.litecommands.annotations.context.Context;
 import dev.rollczi.litecommands.annotations.execute.Execute;
 import dev.rollczi.litecommands.annotations.permission.Permission;
 import java.time.Duration;
@@ -33,7 +34,7 @@ public class CombatTagImmunityCommand {
 
     @Execute
     @Permission("eternalcombat.tagout")
-    void tagout(Player sender, @Arg Duration time) {
+    void tagout(@Context Player sender, @Arg Duration time) {
         UUID targetUniqueId = sender.getUniqueId();
 
         Formatter formatter = new Formatter()
@@ -48,7 +49,7 @@ public class CombatTagImmunityCommand {
 
     @Execute
     @Permission("eternalcombat.tagout")
-    void tagout(Player sender, @Arg Player target, @Arg Duration time) {
+    void tagout(@Context Player sender, @Arg Player target, @Arg Duration time) {
         UUID targetUniqueId = target.getUniqueId();
 
         Instant now = Instant.now();
@@ -69,7 +70,7 @@ public class CombatTagImmunityCommand {
 
     @Execute(name = "remove")
     @Permission("eternalcombat.tagout")
-    void untagout(Player sender, @Arg Player target) {
+    void untagout(@Context Player sender, @Arg Player target) {
         UUID targetUniqueId = target.getUniqueId();
 
         this.fightTagOutService.unTagOut(targetUniqueId);
@@ -87,7 +88,7 @@ public class CombatTagImmunityCommand {
 
     @Execute(name = "remove")
     @Permission("eternalcombat.tagout")
-    void untagout(Player sender) {
+    void untagout(@Context Player sender) {
         UUID senderUniqueId = sender.getUniqueId();
 
         this.fightTagOutService.unTagOut(senderUniqueId);
