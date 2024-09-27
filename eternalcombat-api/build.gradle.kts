@@ -14,7 +14,7 @@ dependencies {
     api("net.kyori:adventure-text-minimessage:${Versions.ADVENTURE_TEXT_MINIMESSAGE}")
 
     // litecommands
-    api("dev.rollczi.litecommands:bukkit-adventure:${Versions.LITE_COMMANDS}")
+    api("dev.rollczi:litecommands-bukkit:${Versions.LITE_COMMANDS}")
 
     // Okaeri configs
     api("eu.okaeri:okaeri-configs-yaml-bukkit:${Versions.OKAERI_CONFIGS_YAML_BUKKIT}")
