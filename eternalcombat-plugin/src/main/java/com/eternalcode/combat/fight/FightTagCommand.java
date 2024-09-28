@@ -56,7 +56,7 @@ public class FightTagCommand {
         FightTagEvent event = this.fightManager.tag(targetUniqueId, time, CauseOfTag.COMMAND);
 
         if (event.isCancelled()) {
-            this.announcer.sendMessage(sender, event.getCancelMessage());
+            this.announcer.sendMessage(sender, this.config.messages.admin.adminTagOutCanceled);
             return;
         }
 
@@ -85,11 +85,11 @@ public class FightTagCommand {
         String format = formatter.format(messages.admin.adminTagMultiplePlayers);
 
         if (firstTagEvent.isCancelled()) {
-            this.announcer.sendMessage(sender, firstTagEvent.getCancelMessage());
+            this.announcer.sendMessage(sender, this.config.messages.admin.adminTagOutCanceled);
         }
 
         if (secondTagEvent.isCancelled()) {
-            this.announcer.sendMessage(sender, firstTagEvent.getCancelMessage());
+            this.announcer.sendMessage(sender, this.config.messages.admin.adminTagOutCanceled);
         }
 
         if (firstTagEvent.isCancelled() && secondTagEvent.isCancelled()) {

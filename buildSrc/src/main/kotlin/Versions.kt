@@ -6,6 +6,8 @@ object Versions {
     const val JUNIT_JUPITER_PARAMS = "5.10.3"
     const val JUNIT_JUPITER_ENGINE = "5.10.3"
 
+    const val JETBRAINS_ANNOTATIONS = "24.1.0"
+
     const val ETERNALCODE_COMMONS = "1.1.3"
     // TODO: Multification.
 
