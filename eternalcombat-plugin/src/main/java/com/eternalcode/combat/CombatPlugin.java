@@ -10,7 +10,7 @@ import com.eternalcode.combat.drop.DropKeepInventoryManager;
 import com.eternalcode.combat.drop.DropManager;
 import com.eternalcode.combat.drop.impl.PercentDropModifier;
 import com.eternalcode.combat.drop.impl.PlayersHealthDropModifier;
-import com.eternalcode.combat.fight.FightTagUntagCommand;
+import com.eternalcode.combat.fight.FightTagCommand;
 import com.eternalcode.combat.fight.controller.FightActionBlockerController;
 import com.eternalcode.combat.fight.controller.FightMessageController;
 import com.eternalcode.combat.fight.controller.FightTagController;
@@ -118,7 +118,7 @@ public final class CombatPlugin extends JavaPlugin implements EternalCombatApi {
             .missingPermission(new MissingPermissionHandlerImpl(this.pluginConfig, notificationAnnouncer))
 
             .commands(
-                new FightTagUntagCommand(this.fightManager, notificationAnnouncer, this.pluginConfig),
+                new FightTagCommand(this.fightManager, notificationAnnouncer, this.pluginConfig),
                 new FightTagOutCommand(this.fightTagOutService, notificationAnnouncer, this.pluginConfig),
                 new EternalCombatReloadCommand(configService, notificationAnnouncer)
             )
