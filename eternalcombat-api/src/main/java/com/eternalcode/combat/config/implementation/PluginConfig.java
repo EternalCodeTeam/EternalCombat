@@ -206,9 +206,6 @@ public class PluginConfig extends OkaeriConfig {
         public String cantEnterOnRegion = "&cYou can't enter this region during combat!";
 
         public static class AdminMessages extends OkaeriConfig {
-            @Comment("# Message sent when the configuration is reloaded")
-            public String reload = "&aConfiguration has been successfully reloaded!";
-
             @Comment("# Message sent when console tries to use a command that is only for players")
             public String onlyForPlayers = "&cThis command is only available to players!";
 

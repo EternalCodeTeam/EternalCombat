@@ -1,43 +1,38 @@
-package com.eternalcode.combat;
+package com.eternalcode.combat.fight;
 
-import com.eternalcode.combat.config.ConfigService;
 import com.eternalcode.combat.config.implementation.PluginConfig;
-import com.eternalcode.combat.fight.FightManager;
 import com.eternalcode.combat.fight.event.CauseOfTag;
 import com.eternalcode.combat.fight.event.CauseOfUnTag;
 import com.eternalcode.combat.fight.event.FightTagEvent;
 import com.eternalcode.combat.fight.event.FightUntagEvent;
 import com.eternalcode.combat.notification.NotificationAnnouncer;
-import dev.rollczi.litecommands.argument.Arg;
-import dev.rollczi.litecommands.command.async.Async;
-import dev.rollczi.litecommands.command.execute.Execute;
-import dev.rollczi.litecommands.command.permission.Permission;
-import dev.rollczi.litecommands.command.route.Route;
+import dev.rollczi.litecommands.annotations.argument.Arg;
+import dev.rollczi.litecommands.annotations.command.Command;
+import dev.rollczi.litecommands.annotations.context.Context;
+import dev.rollczi.litecommands.annotations.execute.Execute;
+import dev.rollczi.litecommands.annotations.permission.Permission;
+import java.time.Duration;
+import java.util.UUID;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import panda.utilities.text.Formatter;
 
-import java.time.Duration;
-import java.util.UUID;
-
-@Route(name = "combatlog", aliases = "combat")
-public class CombatCommand {
+@Command(name = "combatlog", aliases = "combat")
+public class FightTagCommand {
 
     private final FightManager fightManager;
-    private final ConfigService configService;
     private final NotificationAnnouncer announcer;
     private final PluginConfig config;
 
-    public CombatCommand(FightManager fightManager, ConfigService configService, NotificationAnnouncer announcer, PluginConfig config) {
+    public FightTagCommand(FightManager fightManager, NotificationAnnouncer announcer, PluginConfig config) {
         this.fightManager = fightManager;
-        this.configService = configService;
         this.announcer = announcer;
         this.config = config;
     }
 
-    @Execute(route = "status", required = 1)
+    @Execute(name = "status")
     @Permission("eternalcombat.status")
-    void status(CommandSender sender, @Arg Player target) {
+    void status(@Context CommandSender sender, @Arg Player target) {
         UUID targetUniqueId = target.getUniqueId();
         PluginConfig.Messages messages = this.config.messages;
 
@@ -49,9 +44,9 @@ public class CombatCommand {
             : formatter.format(messages.admin.playerNotInCombat));
     }
 
-    @Execute(route = "tag", required = 1)
+    @Execute(name = "tag")
     @Permission("eternalcombat.tag")
-    void tag(CommandSender sender, @Arg Player target) {
+    void tag(@Context CommandSender sender, @Arg Player target) {
         UUID targetUniqueId = target.getUniqueId(); 
         Duration time = this.config.settings.combatDuration;
 
@@ -69,9 +64,9 @@ public class CombatCommand {
         this.announcer.sendMessage(sender, format);
     }
 
-    @Execute(route = "tag", required = 2)
+    @Execute(name = "tag")
     @Permission("eternalcombat.tag")
-    void tagMultiple(CommandSender sender, @Arg Player firstTarget, @Arg Player secondTarget) {
+    void tagMultiple(@Context CommandSender sender, @Arg Player firstTarget, @Arg Player secondTarget) {
         Duration combatTime = this.config.settings.combatDuration;
         PluginConfig.Messages messages = this.config.messages;
         
@@ -104,17 +99,9 @@ public class CombatCommand {
         this.announcer.sendMessage(sender, format);
     }
 
-    @Async
-    @Execute(route = "reload")
-    @Permission("eternalcombat.reload")
-    void execute(CommandSender player) {
-        this.configService.reload();
-        this.announcer.sendMessage(player, this.config.messages.admin.reload);
-    }
-
-    @Execute(route = "untag", required = 1)
+    @Execute(name = "untag")
     @Permission("eternalcombat.untag")
-    void untag(Player sender, @Arg Player target) {
+    void untag(@Context Player sender, @Arg Player target) {
         UUID targetUniqueId = target.getUniqueId();
 
         if (!this.fightManager.isInCombat(targetUniqueId)) {

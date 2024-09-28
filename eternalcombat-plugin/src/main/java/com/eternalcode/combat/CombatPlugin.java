@@ -1,8 +1,8 @@
 package com.eternalcode.combat;
 
 import com.eternalcode.combat.bridge.BridgeService;
-import com.eternalcode.combat.command.InvalidUsage;
-import com.eternalcode.combat.command.PermissionMessage;
+import com.eternalcode.combat.command.handler.InvalidUsageHandlerImpl;
+import com.eternalcode.combat.command.handler.MissingPermissionHandlerImpl;
 import com.eternalcode.combat.config.ConfigService;
 import com.eternalcode.combat.config.implementation.PluginConfig;
 import com.eternalcode.combat.drop.DropController;
@@ -10,6 +10,7 @@ import com.eternalcode.combat.drop.DropKeepInventoryManager;
 import com.eternalcode.combat.drop.DropManager;
 import com.eternalcode.combat.drop.impl.PercentDropModifier;
 import com.eternalcode.combat.drop.impl.PlayersHealthDropModifier;
+import com.eternalcode.combat.fight.FightTagCommand;
 import com.eternalcode.combat.fight.controller.FightActionBlockerController;
 import com.eternalcode.combat.fight.controller.FightMessageController;
 import com.eternalcode.combat.fight.controller.FightTagController;
@@ -26,7 +27,7 @@ import com.eternalcode.combat.fight.pearl.FightPearlController;
 import com.eternalcode.combat.fight.pearl.FightPearlManager;
 import com.eternalcode.combat.fight.tagout.FightTagOutController;
 import com.eternalcode.combat.fight.tagout.FightTagOutService;
-import com.eternalcode.combat.fight.tagout.TagOutCommand;
+import com.eternalcode.combat.fight.tagout.FightTagOutCommand;
 import com.eternalcode.combat.notification.NotificationAnnouncer;
 import com.eternalcode.combat.region.RegionController;
 import com.eternalcode.combat.region.RegionProvider;
@@ -36,16 +37,14 @@ import com.eternalcode.commons.adventure.AdventureLegacyColorPostProcessor;
 import com.eternalcode.commons.adventure.AdventureLegacyColorPreProcessor;
 import com.google.common.base.Stopwatch;
 import dev.rollczi.litecommands.LiteCommands;
-import dev.rollczi.litecommands.bukkit.adventure.platform.LiteBukkitAdventurePlatformFactory;
-import dev.rollczi.litecommands.bukkit.tools.BukkitOnlyPlayerContextual;
-import dev.rollczi.litecommands.bukkit.tools.BukkitPlayerArgument;
+import dev.rollczi.litecommands.bukkit.LiteBukkitFactory;
+import dev.rollczi.litecommands.bukkit.LiteBukkitMessages;
 import net.kyori.adventure.platform.AudienceProvider;
 import net.kyori.adventure.platform.bukkit.BukkitAudiences;
 import net.kyori.adventure.text.minimessage.MiniMessage;
 import org.bstats.bukkit.Metrics;
 import org.bukkit.Server;
 import org.bukkit.command.CommandSender;
-import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.io.File;
@@ -111,17 +110,20 @@ public final class CombatPlugin extends JavaPlugin implements EternalCombatApi {
 
         NotificationAnnouncer notificationAnnouncer = new NotificationAnnouncer(this.audienceProvider, miniMessage);
 
-        this.liteCommands = LiteBukkitAdventurePlatformFactory.builder(server, FALLBACK_PREFIX, this.audienceProvider)
-            .argument(Player.class, new BukkitPlayerArgument<>(this.getServer(), this.pluginConfig.messages.playerNotFound))
-            .contextualBind(Player.class, new BukkitOnlyPlayerContextual<>(this.pluginConfig.messages.admin.onlyForPlayers))
+        this.liteCommands = LiteBukkitFactory.builder(FALLBACK_PREFIX, this, server)
+            .message(LiteBukkitMessages.PLAYER_NOT_FOUND, this.pluginConfig.messages.playerNotFound)
+            .message(LiteBukkitMessages.PLAYER_ONLY, this.pluginConfig.messages.admin.onlyForPlayers)
 
-            .invalidUsageHandler(new InvalidUsage(this.pluginConfig, notificationAnnouncer))
-            .permissionHandler(new PermissionMessage(this.pluginConfig, notificationAnnouncer))
+            .invalidUsage(new InvalidUsageHandlerImpl(this.pluginConfig, notificationAnnouncer))
+            .missingPermission(new MissingPermissionHandlerImpl(this.pluginConfig, notificationAnnouncer))
 
-            .commandInstance(new CombatCommand(this.fightManager, configService, notificationAnnouncer, this.pluginConfig))
-            .commandInstance(new TagOutCommand(this.fightTagOutService, notificationAnnouncer, this.pluginConfig))
+            .commands(
+                new FightTagCommand(this.fightManager, notificationAnnouncer, this.pluginConfig),
+                new FightTagOutCommand(this.fightTagOutService, notificationAnnouncer, this.pluginConfig),
+                new EternalCombatReloadCommand(configService, notificationAnnouncer)
+            )
 
-            .register();
+            .build();
 
         FightTask fightTask = new FightTask(server, this.pluginConfig, this.fightManager, fightBossBarService, notificationAnnouncer);
         this.getServer().getScheduler().runTaskTimer(this, fightTask, 20L, 20L);
@@ -159,7 +161,7 @@ public final class CombatPlugin extends JavaPlugin implements EternalCombatApi {
         EternalCombatProvider.deinitialize();
 
         if (this.liteCommands != null) {
-            this.liteCommands.getPlatform().unregisterAll();
+            this.liteCommands.unregister();
         }
 
         if (this.audienceProvider != null) {

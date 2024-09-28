@@ -3,33 +3,37 @@ package com.eternalcode.combat.fight.tagout;
 import com.eternalcode.combat.config.implementation.PluginConfig;
 import com.eternalcode.combat.notification.NotificationAnnouncer;
 import com.eternalcode.combat.util.DurationUtil;
-import dev.rollczi.litecommands.argument.Arg;
-import dev.rollczi.litecommands.command.execute.Execute;
-import dev.rollczi.litecommands.command.permission.Permission;
-import dev.rollczi.litecommands.command.route.Route;
-import org.bukkit.entity.Player;
-import panda.utilities.text.Formatter;
-
+import dev.rollczi.litecommands.annotations.argument.Arg;
+import dev.rollczi.litecommands.annotations.command.Command;
+import dev.rollczi.litecommands.annotations.context.Context;
+import dev.rollczi.litecommands.annotations.execute.Execute;
+import dev.rollczi.litecommands.annotations.permission.Permission;
 import java.time.Duration;
 import java.time.Instant;
 import java.util.UUID;
+import org.bukkit.entity.Player;
+import panda.utilities.text.Formatter;
 
-@Route(name = "tagout", aliases = "tagimmunity")
-public class TagOutCommand {
+@Command(name = "tagout", aliases = "tagimmunity")
+public class FightTagOutCommand {
 
     private final FightTagOutService fightTagOutService;
     private final NotificationAnnouncer announcer;
     private final PluginConfig config;
 
-    public TagOutCommand(FightTagOutService fightTagOutService, NotificationAnnouncer announcer, PluginConfig config) {
+    public FightTagOutCommand(
+        FightTagOutService fightTagOutService,
+        NotificationAnnouncer announcer,
+        PluginConfig config
+    ) {
         this.fightTagOutService = fightTagOutService;
         this.announcer = announcer;
         this.config = config;
     }
 
-    @Execute(required = 1)
+    @Execute
     @Permission("eternalcombat.tagout")
-    void tagout(Player sender, @Arg Duration time) {
+    void tagout(@Context Player sender, @Arg Duration time) {
         UUID targetUniqueId = sender.getUniqueId();
 
         Formatter formatter = new Formatter()
@@ -42,9 +46,9 @@ public class TagOutCommand {
         this.announcer.sendMessage(sender, format);
     }
 
-    @Execute(required = 2)
+    @Execute
     @Permission("eternalcombat.tagout")
-    void tagout(Player sender, @Arg Player target, @Arg Duration time) {
+    void tagout(@Context Player sender, @Arg Player target, @Arg Duration time) {
         UUID targetUniqueId = target.getUniqueId();
 
         Instant now = Instant.now();
@@ -63,9 +67,9 @@ public class TagOutCommand {
         this.announcer.sendMessage(target, playerTagOutFormat);
     }
 
-    @Execute(route = "remove", required = 1)
+    @Execute(name = "remove")
     @Permission("eternalcombat.tagout")
-    void untagout(Player sender, @Arg Player target) {
+    void untagout(@Context Player sender, @Arg Player target) {
         UUID targetUniqueId = target.getUniqueId();
 
         this.fightTagOutService.unTagOut(targetUniqueId);
@@ -81,9 +85,9 @@ public class TagOutCommand {
         this.announcer.sendMessage(target, this.config.messages.admin.playerTagOutOff);
     }
 
-    @Execute(route = "remove", required = 0)
+    @Execute(name = "remove")
     @Permission("eternalcombat.tagout")
-    void untagout(Player sender) {
+    void untagout(@Context Player sender) {
         UUID senderUniqueId = sender.getUniqueId();
 
         this.fightTagOutService.unTagOut(senderUniqueId);
