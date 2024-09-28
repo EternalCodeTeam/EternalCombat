@@ -1,7 +1,6 @@
-package com.eternalcode.combat.command;
+package com.eternalcode.combat.fight;
 
 import com.eternalcode.combat.config.implementation.PluginConfig;
-import com.eternalcode.combat.fight.FightManager;
 import com.eternalcode.combat.fight.event.CauseOfTag;
 import com.eternalcode.combat.fight.event.CauseOfUnTag;
 import com.eternalcode.combat.fight.event.FightTagEvent;
@@ -12,24 +11,37 @@ import dev.rollczi.litecommands.annotations.command.Command;
 import dev.rollczi.litecommands.annotations.context.Context;
 import dev.rollczi.litecommands.annotations.execute.Execute;
 import dev.rollczi.litecommands.annotations.permission.Permission;
+import java.time.Duration;
+import java.util.UUID;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import panda.utilities.text.Formatter;
 
-import java.time.Duration;
-import java.util.UUID;
-
 @Command(name = "combatlog", aliases = "combat")
-public class CombatTagUntagCommand {
+public class FightTagUntagCommand {
 
     private final FightManager fightManager;
     private final NotificationAnnouncer announcer;
     private final PluginConfig config;
 
-    public CombatTagUntagCommand(FightManager fightManager, NotificationAnnouncer announcer, PluginConfig config) {
+    public FightTagUntagCommand(FightManager fightManager, NotificationAnnouncer announcer, PluginConfig config) {
         this.fightManager = fightManager;
         this.announcer = announcer;
         this.config = config;
+    }
+
+    @Execute(name = "status")
+    @Permission("eternalcombat.status")
+    void status(@Context CommandSender sender, @Arg Player target) {
+        UUID targetUniqueId = target.getUniqueId();
+        PluginConfig.Messages messages = this.config.messages;
+
+        Formatter formatter = new Formatter()
+            .register("{PLAYER}", target.getName());
+
+        this.announcer.sendMessage(sender, this.fightManager.isInCombat(targetUniqueId)
+            ? formatter.format(messages.admin.playerInCombat)
+            : formatter.format(messages.admin.playerNotInCombat));
     }
 
     @Execute(name = "tag")

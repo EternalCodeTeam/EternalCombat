@@ -1,4 +1,4 @@
-package com.eternalcode.combat.command;
+package com.eternalcode.combat;
 
 import com.eternalcode.combat.config.ConfigService;
 import com.eternalcode.combat.notification.NotificationAnnouncer;
@@ -14,14 +14,14 @@ import panda.utilities.text.Formatter;
 
 @Command(name = "combatlog", aliases = "combat")
 @Permission("eternalcombat.reload")
-public class CombatReloadCommand {
+public class EternalCombatReloadCommand {
 
     private static final String RELOAD_MESSAGE = "<b><gradient:#8a1212:#fc6b03>EternalCombat:</gradient></b> Reloaded EternalCombat in <color:#fce303>{TIME}ms!</color>";
 
     private final ConfigService configService;
     private final NotificationAnnouncer announcer;
 
-    public CombatReloadCommand(ConfigService configService, NotificationAnnouncer announcer) {
+    public EternalCombatReloadCommand(ConfigService configService, NotificationAnnouncer announcer) {
         this.configService = configService;
         this.announcer = announcer;
     }

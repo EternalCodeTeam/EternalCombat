@@ -1,7 +1,6 @@
-package com.eternalcode.combat.command;
+package com.eternalcode.combat.fight.tagout;
 
 import com.eternalcode.combat.config.implementation.PluginConfig;
-import com.eternalcode.combat.fight.tagout.FightTagOutService;
 import com.eternalcode.combat.notification.NotificationAnnouncer;
 import com.eternalcode.combat.util.DurationUtil;
 import dev.rollczi.litecommands.annotations.argument.Arg;
@@ -16,13 +15,13 @@ import org.bukkit.entity.Player;
 import panda.utilities.text.Formatter;
 
 @Command(name = "tagout", aliases = "tagimmunity")
-public class CombatTagImmunityCommand {
+public class FightTagOutCommand {
 
     private final FightTagOutService fightTagOutService;
     private final NotificationAnnouncer announcer;
     private final PluginConfig config;
 
-    public CombatTagImmunityCommand(
+    public FightTagOutCommand(
         FightTagOutService fightTagOutService,
         NotificationAnnouncer announcer,
         PluginConfig config
