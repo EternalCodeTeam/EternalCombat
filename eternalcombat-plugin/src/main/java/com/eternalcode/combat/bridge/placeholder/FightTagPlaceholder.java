@@ -38,12 +38,12 @@ public class FightTagPlaceholder extends PlaceholderExpansion {
 
     @Override
     public @NotNull String getAuthor() {
-        return plugin.getDescription().getAuthors().get(0);
+        return this.plugin.getDescription().getAuthors().get(0);
     }
 
     @Override
     public @NotNull String getVersion() {
-        return plugin.getDescription().getVersion();
+        return this.plugin.getDescription().getVersion();
     }
 
     @Override
@@ -56,18 +56,18 @@ public class FightTagPlaceholder extends PlaceholderExpansion {
 
         if (identifier.equals("remaining_millis")) {
             return this.getFightTag(player)
-                .map(fightTagInter -> DurationParser.TIME_UNITS.format(fightTagInter.getRemainingDuration()))
+                .map(fightTag -> DurationParser.TIME_UNITS.format(fightTag.getRemainingDuration()))
                 .orElse("");
         }
 
         if (identifier.equals("opponent")) {
-            return getTagger(player)
+            return this.getTagger(player)
                 .map(tagger -> tagger.getName())
                 .orElse("");
         }
 
         if (identifier.equals("opponent_health")) {
-            return getTagger(player)
+            return this.getTagger(player)
                 .map(tagger -> String.format("%.2f", tagger.getHealth()))
                 .orElse("");
         }

@@ -45,7 +45,7 @@ public class RegionController implements Listener {
         int zFrom = locationFrom.getBlockZ();
 
         if (xTo != xFrom || yTo != yFrom || zTo != zFrom) {
-            Optional<Region> regionOptional = regionProvider.getRegion(locationTo);
+            Optional<Region> regionOptional = this.regionProvider.getRegion(locationTo);
             if (regionOptional.isEmpty()) {
                 return;
             }

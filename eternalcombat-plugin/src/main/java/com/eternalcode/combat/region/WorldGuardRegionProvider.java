@@ -33,7 +33,7 @@ public class WorldGuardRegionProvider implements RegionProvider {
         ApplicableRegionSet applicableRegions = regionQuery.getApplicableRegions(BukkitAdapter.adapt(location));
 
         for (ProtectedRegion region : applicableRegions.getRegions()) {
-            if (!isCombatRegion(region)) {
+            if (!this.isCombatRegion(region)) {
                 continue;
             }
 
@@ -62,13 +62,13 @@ public class WorldGuardRegionProvider implements RegionProvider {
     private record RegionImpl(Location contextLocation, ProtectedRegion region) implements Region {
         @Override
         public Location getCenter() {
-            BlockVector3 min = region.getMinimumPoint();
-            BlockVector3 max = region.getMaximumPoint();
+            BlockVector3 min = this.region.getMinimumPoint();
+            BlockVector3 max = this.region.getMaximumPoint();
 
             double x = (double) (min.getX() + max.getX()) / 2;
             double z = (double) (min.getZ() + max.getZ()) / 2;
 
-            return new Location(contextLocation.getWorld(), x, contextLocation.getY(), z);
+            return new Location(this.contextLocation.getWorld(), x, this.contextLocation.getY(), z);
         }
     }
 

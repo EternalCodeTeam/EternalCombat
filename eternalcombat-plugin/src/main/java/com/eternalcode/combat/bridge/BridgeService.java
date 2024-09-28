@@ -38,7 +38,7 @@ public class BridgeService {
             });
 
         this.initialize("PlaceholderAPI",
-            () -> new FightTagPlaceholder(fightManager, server, plugin).register(),
+            () -> new FightTagPlaceholder(fightManager, server, this.plugin).register(),
             () -> this.logger.warning("PlaceholderAPI is not installed, placeholders will not be registered.")
         );
     }

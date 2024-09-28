@@ -50,7 +50,7 @@ public class FightActionBlockerController implements Listener {
 
         List<Material> specificBlocksToPreventPlacing = this.config.settings.specificBlocksToPreventPlacing;
 
-        boolean isPlacementBlocked = isPlacementBlocked(level);
+        boolean isPlacementBlocked = this.isPlacementBlocked(level);
 
         Formatter formatter = new Formatter()
             .register("{Y}", this.config.settings.blockPlacingYCoordinate)
