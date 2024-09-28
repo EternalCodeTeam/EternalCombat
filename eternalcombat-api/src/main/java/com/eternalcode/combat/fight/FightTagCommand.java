@@ -18,13 +18,13 @@ import org.bukkit.entity.Player;
 import panda.utilities.text.Formatter;
 
 @Command(name = "combatlog", aliases = "combat")
-public class FightTagUntagCommand {
+public class FightTagCommand {
 
     private final FightManager fightManager;
     private final NotificationAnnouncer announcer;
     private final PluginConfig config;
 
-    public FightTagUntagCommand(FightManager fightManager, NotificationAnnouncer announcer, PluginConfig config) {
+    public FightTagCommand(FightManager fightManager, NotificationAnnouncer announcer, PluginConfig config) {
         this.fightManager = fightManager;
         this.announcer = announcer;
         this.config = config;
