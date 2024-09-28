@@ -1,4 +1,4 @@
-package com.eternalcode.combat.command.handler;
+package com.eternalcode.combat.handler;
 
 import com.eternalcode.combat.config.implementation.PluginConfig;
 import com.eternalcode.combat.notification.NotificationAnnouncer;

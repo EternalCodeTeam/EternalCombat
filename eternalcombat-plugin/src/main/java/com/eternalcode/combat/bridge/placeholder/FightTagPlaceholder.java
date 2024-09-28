@@ -50,13 +50,13 @@ public class FightTagPlaceholder extends PlaceholderExpansion {
     public String onRequest(OfflinePlayer player, String identifier) {
         if (identifier.equals("remaining_seconds")) {
             return this.getFightTag(player)
-                .map(fightTag -> DurationUtil.format(fightTag.getRemainingDuration()))
+                .map(fightTagInter -> DurationUtil.format(fightTagInter.getRemainingDuration()))
                 .orElse("");
         }
 
         if (identifier.equals("remaining_millis")) {
             return this.getFightTag(player)
-                .map(fightTag -> DurationParser.TIME_UNITS.format(fightTag.getRemainingDuration()))
+                .map(fightTagInter -> DurationParser.TIME_UNITS.format(fightTagInter.getRemainingDuration()))
                 .orElse("");
         }
 
@@ -77,7 +77,7 @@ public class FightTagPlaceholder extends PlaceholderExpansion {
 
     private @NotNull Optional<Player> getTagger(OfflinePlayer player) {
         return this.getFightTag(player)
-            .map(fightTag -> fightTag.getTagger())
+            .map(fightTagInter -> fightTagInter.getTagger())
             .map(taggerId -> this.server.getPlayer(taggerId));
     }
 

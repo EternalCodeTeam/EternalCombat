@@ -1,8 +1,9 @@
 package com.eternalcode.combat;
 
 import com.eternalcode.combat.bridge.BridgeService;
-import com.eternalcode.combat.command.handler.InvalidUsageHandlerImpl;
-import com.eternalcode.combat.command.handler.MissingPermissionHandlerImpl;
+import com.eternalcode.combat.fight.FightManager;
+import com.eternalcode.combat.handler.InvalidUsageHandlerImpl;
+import com.eternalcode.combat.handler.MissingPermissionHandlerImpl;
 import com.eternalcode.combat.config.ConfigService;
 import com.eternalcode.combat.config.implementation.PluginConfig;
 import com.eternalcode.combat.drop.DropController;
@@ -17,7 +18,7 @@ import com.eternalcode.combat.fight.controller.FightTagController;
 import com.eternalcode.combat.fight.controller.FightUnTagController;
 import com.eternalcode.combat.fight.effect.FightEffectController;
 import com.eternalcode.combat.event.EventCaller;
-import com.eternalcode.combat.fight.FightManager;
+import com.eternalcode.combat.fight.FightManagerImpl;
 import com.eternalcode.combat.fight.FightTask;
 import com.eternalcode.combat.fight.bossbar.FightBossBarService;
 import com.eternalcode.combat.fight.effect.FightEffectService;
@@ -86,7 +87,7 @@ public final class CombatPlugin extends JavaPlugin implements EternalCombatApi {
 
         this.pluginConfig = configService.create(PluginConfig.class, new File(dataFolder, "config.yml"));
 
-        this.fightManager = new FightManager(eventCaller);
+        this.fightManager = new FightManagerImpl(eventCaller);
         this.fightPearlManager = new FightPearlManager(this.pluginConfig.pearl);
         this.fightTagOutService = new FightTagOutService();
         this.fightEffectService = new FightEffectService();

@@ -1,8 +1,8 @@
 package com.eternalcode.combat.fight;
 
-import com.eternalcode.combat.fight.event.CauseOfUnTag;
 import com.eternalcode.combat.config.implementation.PluginConfig;
 import com.eternalcode.combat.fight.bossbar.FightBossBarService;
+import com.eternalcode.combat.fight.event.CauseOfUnTag;
 import com.eternalcode.combat.notification.Notification;
 import com.eternalcode.combat.notification.NotificationAnnouncer;
 import com.eternalcode.combat.notification.implementation.BossBarNotification;
