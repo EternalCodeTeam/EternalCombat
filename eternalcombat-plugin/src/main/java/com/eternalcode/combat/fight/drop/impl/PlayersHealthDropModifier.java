@@ -1,10 +1,10 @@
-package com.eternalcode.combat.drop.impl;
+package com.eternalcode.combat.fight.drop.impl;
 
-import com.eternalcode.combat.drop.Drop;
-import com.eternalcode.combat.drop.DropModifier;
-import com.eternalcode.combat.drop.DropResult;
-import com.eternalcode.combat.drop.DropSettings;
-import com.eternalcode.combat.drop.DropType;
+import com.eternalcode.combat.fight.drop.Drop;
+import com.eternalcode.combat.fight.drop.DropModifier;
+import com.eternalcode.combat.fight.drop.DropResult;
+import com.eternalcode.combat.fight.drop.DropSettings;
+import com.eternalcode.combat.fight.drop.DropType;
 import com.eternalcode.combat.fight.logout.Logout;
 import com.eternalcode.combat.fight.logout.LogoutService;
 import com.eternalcode.combat.util.InventoryUtil;

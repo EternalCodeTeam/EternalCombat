@@ -1,16 +1,17 @@
-package com.eternalcode.combat.drop;
+package com.eternalcode.combat.fight.drop;
 
 import java.util.HashMap;
 import java.util.Map;
 
-public class DropManager {
+public class DropServiceImpl implements DropService {
 
     private final Map<DropType, DropModifier> modifiers;
 
-    public DropManager() {
+    public DropServiceImpl() {
         this.modifiers = new HashMap<>();
     }
 
+    @Override
     public void registerModifier(DropModifier dropModifier) {
         DropType dropType = dropModifier.getDropType();
 
@@ -25,6 +26,7 @@ public class DropManager {
         this.modifiers.put(dropType, dropModifier);
     }
 
+    @Override
     public DropResult modify(DropType dropType, Drop drop) {
         if (!this.modifiers.containsKey(dropType)) {
             throw new RuntimeException("No drop modifier found for type '%s'".formatted(dropType.name()));

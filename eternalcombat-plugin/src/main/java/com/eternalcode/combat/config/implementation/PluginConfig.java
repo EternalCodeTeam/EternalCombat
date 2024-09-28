@@ -1,7 +1,7 @@
 package com.eternalcode.combat.config.implementation;
 
 import com.eternalcode.combat.WhitelistBlacklistMode;
-import com.eternalcode.combat.drop.DropSettings;
+import com.eternalcode.combat.fight.drop.DropSettings;
 import com.eternalcode.combat.fight.effect.FightEffectSettings;
 import com.eternalcode.combat.fight.pearl.FightPearlSettings;
 import com.eternalcode.combat.notification.Notification;

@@ -1,4 +1,4 @@
-package com.eternalcode.combat.drop;
+package com.eternalcode.combat.fight.drop;
 
 import org.bukkit.inventory.ItemStack;
 

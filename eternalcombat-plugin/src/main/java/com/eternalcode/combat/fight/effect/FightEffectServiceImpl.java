@@ -10,17 +10,19 @@ import java.util.UUID;
 import java.util.List;
 import java.util.ArrayList;
 
-public class FightEffectService {
+public class FightEffectServiceImpl implements FightEffectService {
 
     private final Map<UUID, List<PotionEffect>> activeEffects = new HashMap<>();
     private static final int INFINITE_DURATION = -1;
 
+    @Override
     public void storeActiveEffect(Player player, PotionEffect effect) {
         List<PotionEffect> effects = this.activeEffects.computeIfAbsent(player.getUniqueId(), k -> new ArrayList<>());
 
         effects.add(effect);
     }
 
+    @Override
     public void restoreActiveEffects(Player player) {
         List<PotionEffect> currentEffects = this.getCurrentEffects(player);
 
@@ -31,14 +33,17 @@ public class FightEffectService {
         this.clearStoredEffects(player);
     }
 
+    @Override
     public void clearStoredEffects(Player player) {
         this.activeEffects.remove(player.getUniqueId());
     }
 
+    @Override
     public List<PotionEffect> getCurrentEffects(Player player) {
         return this.activeEffects.getOrDefault(player.getUniqueId(), new ArrayList<>());
     }
 
+    @Override
     public void applyCustomEffect(Player player, PotionEffectType type, Integer amplifier) {
         PotionEffect activeEffect = player.getPotionEffect(type);
 
@@ -59,6 +64,7 @@ public class FightEffectService {
         player.addPotionEffect(new PotionEffect(type, INFINITE_DURATION, amplifier));
     }
 
+    @Override
     public void removeCustomEffect(Player player, PotionEffectType type, Integer amplifier) {
         PotionEffect activeEffect = player.getPotionEffect(type);
 

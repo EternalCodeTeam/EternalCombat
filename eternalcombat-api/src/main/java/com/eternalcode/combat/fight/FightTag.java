@@ -7,11 +7,16 @@ import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.Nullable;
 
 public interface FightTag {
+
     @Nullable
     @ApiStatus.Experimental
     UUID getTagger();
+
     Duration getRemainingDuration();
+
     boolean isExpired();
+
     Instant getEndOfCombatLog();
+
     UUID getTaggedPlayer();
 }

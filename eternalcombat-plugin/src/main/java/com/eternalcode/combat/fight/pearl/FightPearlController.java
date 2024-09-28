@@ -24,13 +24,13 @@ public class FightPearlController implements Listener {
     private final FightPearlSettings settings;
     private final NotificationAnnouncer announcer;
     private final FightManager fightManager;
-    private final FightPearlManager fightPearlManager;
+    private final FightPearlService fightPearlService;
 
-    public FightPearlController(FightPearlSettings settings, NotificationAnnouncer announcer, FightManager fightManager, FightPearlManager fightPearlManager) {
+    public FightPearlController(FightPearlSettings settings, NotificationAnnouncer announcer, FightManager fightManager, FightPearlService fightPearlService) {
         this.settings = settings;
         this.announcer = announcer;
         this.fightManager = fightManager;
-        this.fightPearlManager = fightPearlManager;
+        this.fightPearlService = fightPearlService;
     }
 
     @EventHandler
@@ -62,10 +62,10 @@ public class FightPearlController implements Listener {
             return;
         }
 
-        if (this.fightPearlManager.hasDelay(uniqueId)) {
+        if (this.fightPearlService.hasDelay(uniqueId)) {
             event.setCancelled(true);
 
-            Duration remainingPearlDelay = this.fightPearlManager.getRemainingDelay(uniqueId);
+            Duration remainingPearlDelay = this.fightPearlService.getRemainingDelay(uniqueId);
 
             Formatter formatter = new Formatter()
                 .register("{TIME}", DurationUtil.format(remainingPearlDelay));
@@ -75,7 +75,7 @@ public class FightPearlController implements Listener {
             return;
         }
 
-        this.fightPearlManager.markDelay(uniqueId);
+        this.fightPearlService.markDelay(uniqueId);
     }
 
     @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)

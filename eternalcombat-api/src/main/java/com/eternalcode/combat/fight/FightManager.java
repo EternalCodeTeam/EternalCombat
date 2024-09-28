@@ -13,11 +13,17 @@ import org.jetbrains.annotations.Nullable;
 public interface FightManager {
 
     boolean isInCombat(UUID player);
+
     FightTag getTag(UUID target);
+
     Collection<FightTag> getFights();
+
     @ApiStatus.Experimental
     FightTagEvent tag(UUID target, Duration delay, CauseOfTag causeOfTag, @Nullable UUID tagger);
+
     FightTagEvent tag(UUID target, Duration delay, CauseOfTag causeOfTag);
+
     FightUntagEvent untag(UUID player, CauseOfUnTag causeOfUnTag);
+
     void untagAll();
 }

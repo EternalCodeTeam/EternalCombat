@@ -1,4 +1,4 @@
-package com.eternalcode.combat.drop;
+package com.eternalcode.combat.fight.drop;
 
 import com.eternalcode.combat.fight.FightManager;
 import org.bukkit.entity.Player;
@@ -15,13 +15,13 @@ import java.util.UUID;
 
 public class DropController implements Listener {
 
-    private final DropManager dropManager;
+    private final DropService dropService;
     private final DropKeepInventoryManager keepInventoryManager;
     private final DropSettings dropSettings;
     private final FightManager fightManager;
 
-    public DropController(DropManager dropManager, DropKeepInventoryManager keepInventoryManager, DropSettings dropSettings, FightManager fightManager) {
-        this.dropManager = dropManager;
+    public DropController(DropService dropService, DropKeepInventoryManager keepInventoryManager, DropSettings dropSettings, FightManager fightManager) {
+        this.dropService = dropService;
         this.keepInventoryManager = keepInventoryManager;
         this.dropSettings = dropSettings;
         this.fightManager = fightManager;
@@ -45,7 +45,7 @@ public class DropController implements Listener {
             .droppedExp(player.getTotalExperience())
             .build();
 
-        DropResult result = this.dropManager.modify(dropType, drop);
+        DropResult result = this.dropService.modify(dropType, drop);
 
         if (result == null) {
             return;
