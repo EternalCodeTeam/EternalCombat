@@ -16,11 +16,11 @@ import java.util.UUID;
 public class DropController implements Listener {
 
     private final DropService dropService;
-    private final DropKeepInventoryManager keepInventoryManager;
+    private final DropKeepInventoryService keepInventoryManager;
     private final DropSettings dropSettings;
     private final FightManager fightManager;
 
-    public DropController(DropService dropService, DropKeepInventoryManager keepInventoryManager, DropSettings dropSettings, FightManager fightManager) {
+    public DropController(DropService dropService, DropKeepInventoryService keepInventoryManager, DropSettings dropSettings, FightManager fightManager) {
         this.dropService = dropService;
         this.keepInventoryManager = keepInventoryManager;
         this.dropSettings = dropSettings;

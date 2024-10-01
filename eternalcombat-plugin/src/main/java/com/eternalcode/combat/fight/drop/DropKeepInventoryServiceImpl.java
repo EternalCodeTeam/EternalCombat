@@ -1,6 +1,5 @@
 package com.eternalcode.combat.fight.drop;
 
-import com.eternalcode.combat.fight.drop.DropKeepInventoryManager;
 import org.bukkit.inventory.ItemStack;
 
 import java.util.ArrayList;
@@ -10,7 +9,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
-public class DropKeepInventoryManagerImpl implements DropKeepInventoryManager {
+public class DropKeepInventoryServiceImpl implements DropKeepInventoryService {
 
     private final Map<UUID, List<ItemStack>> itemsToGiveAfterRespawn = new HashMap<>();
 

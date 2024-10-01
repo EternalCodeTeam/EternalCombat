@@ -4,7 +4,7 @@ import java.util.List;
 import java.util.UUID;
 import org.bukkit.inventory.ItemStack;
 
-public interface DropKeepInventoryManager {
+public interface DropKeepInventoryService {
 
     List<ItemStack> nextItems(UUID uuid);
 

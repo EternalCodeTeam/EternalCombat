@@ -1,7 +1,7 @@
 package com.eternalcode.combat;
 
 import com.eternalcode.combat.bridge.BridgeService;
-import com.eternalcode.combat.fight.drop.DropKeepInventoryManager;
+import com.eternalcode.combat.fight.drop.DropKeepInventoryService;
 import com.eternalcode.combat.fight.FightManager;
 import com.eternalcode.combat.fight.drop.DropService;
 import com.eternalcode.combat.fight.effect.FightEffectService;
@@ -12,7 +12,7 @@ import com.eternalcode.combat.handler.MissingPermissionHandlerImpl;
 import com.eternalcode.combat.config.ConfigService;
 import com.eternalcode.combat.config.implementation.PluginConfig;
 import com.eternalcode.combat.fight.drop.DropController;
-import com.eternalcode.combat.fight.drop.DropKeepInventoryManagerImpl;
+import com.eternalcode.combat.fight.drop.DropKeepInventoryServiceImpl;
 import com.eternalcode.combat.fight.drop.DropServiceImpl;
 import com.eternalcode.combat.fight.drop.impl.PercentDropModifier;
 import com.eternalcode.combat.fight.drop.impl.PlayersHealthDropModifier;
@@ -70,7 +70,7 @@ public final class CombatPlugin extends JavaPlugin implements EternalCombatApi {
     private LogoutService logoutService;
 
     private DropService dropService;
-    private DropKeepInventoryManager dropKeepInventoryManager;
+    private DropKeepInventoryService dropKeepInventoryService;
 
     private RegionProvider regionProvider;
 
@@ -98,7 +98,7 @@ public final class CombatPlugin extends JavaPlugin implements EternalCombatApi {
         this.fightEffectService = new FightEffectServiceImpl();
         this.logoutService = new LogoutService();
         this.dropService = new DropServiceImpl();
-        this.dropKeepInventoryManager = new DropKeepInventoryManagerImpl();
+        this.dropKeepInventoryService = new DropKeepInventoryServiceImpl();
 
         UpdaterService updaterService = new UpdaterService(this.getDescription());
 
@@ -143,7 +143,7 @@ public final class CombatPlugin extends JavaPlugin implements EternalCombatApi {
 
 
         Stream.of(
-            new DropController(this.dropService, this.dropKeepInventoryManager, this.pluginConfig.dropSettings, this.fightManager),
+            new DropController(this.dropService, this.dropKeepInventoryService, this.pluginConfig.dropSettings, this.fightManager),
             new FightTagController(this.fightManager, this.pluginConfig),
             new LogoutController(this.fightManager, this.logoutService, notificationAnnouncer, this.pluginConfig),
             new FightUnTagController(this.fightManager, this.pluginConfig, this.logoutService),
@@ -188,7 +188,7 @@ public final class CombatPlugin extends JavaPlugin implements EternalCombatApi {
     }
 
     @Override
-    public FightPearlService getFightPearlManager() {
+    public FightPearlService getFightPearlService() {
         return this.fightPearlService;
     }
 
@@ -208,7 +208,7 @@ public final class CombatPlugin extends JavaPlugin implements EternalCombatApi {
     }
 
     @Override
-    public DropKeepInventoryManager getDropKeepInventoryManager() {
-        return this.dropKeepInventoryManager;
+    public DropKeepInventoryService getDropKeepInventoryService() {
+        return this.dropKeepInventoryService;
     }
 }
