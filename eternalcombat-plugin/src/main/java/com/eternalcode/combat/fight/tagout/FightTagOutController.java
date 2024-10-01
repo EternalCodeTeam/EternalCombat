@@ -1,5 +1,6 @@
 package com.eternalcode.combat.fight.tagout;
 
+import com.eternalcode.combat.fight.event.CancelTagReason;
 import com.eternalcode.combat.fight.event.FightTagEvent;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -19,6 +20,7 @@ public class FightTagOutController implements Listener {
         UUID uniqueId = event.getPlayer();
 
         if (this.tagOutService.isTaggedOut(uniqueId)) {
+            event.setCancelReason(CancelTagReason.TAGOUT);
             event.setCancelled(true);
         }
     }

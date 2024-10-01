@@ -16,6 +16,7 @@ public class FightTagEvent extends Event implements Cancellable {
     private final UUID player;
     private final CauseOfTag cause;
     private boolean cancelled = false;
+    private CancelTagReason cancelReason;
 
     public FightTagEvent(UUID player, CauseOfTag cause) {
         super(false);
@@ -50,6 +51,24 @@ public class FightTagEvent extends Event implements Cancellable {
     @Override
     public void setCancelled(boolean cancelled) {
         this.cancelled = cancelled;
+    }
+
+    /**
+     * Gets the reason why the event was cancelled.
+     *
+     * @return The cancel reason.
+     */
+    public CancelTagReason getCancelReason() {
+        return this.cancelReason;
+    }
+
+    /**
+     * Sets the reason why the event was cancelled.
+     *
+     * @param cancelReason The cancel reason.
+     */
+    public void setCancelReason(CancelTagReason cancelReason) {
+        this.cancelReason = cancelReason;
     }
 
     @NotNull

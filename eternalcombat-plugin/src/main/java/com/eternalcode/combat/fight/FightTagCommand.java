@@ -1,6 +1,7 @@
 package com.eternalcode.combat.fight;
 
 import com.eternalcode.combat.config.implementation.PluginConfig;
+import com.eternalcode.combat.fight.event.CancelTagReason;
 import com.eternalcode.combat.fight.event.CauseOfTag;
 import com.eternalcode.combat.fight.event.CauseOfUnTag;
 import com.eternalcode.combat.fight.event.FightTagEvent;
@@ -56,7 +57,13 @@ public class FightTagCommand {
         FightTagEvent event = this.fightManager.tag(targetUniqueId, time, CauseOfTag.COMMAND);
 
         if (event.isCancelled()) {
-            this.announcer.sendMessage(sender, this.config.messages.admin.adminTagOutCanceled);
+            CancelTagReason cancelReason = event.getCancelReason();
+
+            if (cancelReason == CancelTagReason.TAGOUT) {
+                this.announcer.sendMessage(sender, this.config.messages.admin.adminTagOutCanceled);
+                return;
+            }
+
             return;
         }
 
@@ -85,11 +92,25 @@ public class FightTagCommand {
         String format = formatter.format(messages.admin.adminTagMultiplePlayers);
 
         if (firstTagEvent.isCancelled()) {
-            this.announcer.sendMessage(sender, this.config.messages.admin.adminTagOutCanceled);
+            CancelTagReason cancelReason = firstTagEvent.getCancelReason();
+
+            if (cancelReason == CancelTagReason.TAGOUT) {
+                this.announcer.sendMessage(sender, this.config.messages.admin.adminTagOutCanceled);
+                return;
+            }
+
+            return;
         }
 
         if (secondTagEvent.isCancelled()) {
-            this.announcer.sendMessage(sender, this.config.messages.admin.adminTagOutCanceled);
+            CancelTagReason cancelReason = secondTagEvent.getCancelReason();
+
+            if (cancelReason == CancelTagReason.TAGOUT) {
+                this.announcer.sendMessage(sender, this.config.messages.admin.adminTagOutCanceled);
+                return;
+            }
+
+            return;
         }
 
         if (firstTagEvent.isCancelled() && secondTagEvent.isCancelled()) {
