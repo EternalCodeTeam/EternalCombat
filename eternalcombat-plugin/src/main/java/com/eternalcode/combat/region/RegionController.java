@@ -62,7 +62,11 @@ public class RegionController implements Listener {
 
             player.setVelocity(knockbackVector.multiply(configuredVector));
 
-            this.announcer.sendMessage(player, this.pluginConfig.messages.cantEnterOnRegion);
+            this.announcer.create()
+                .player(player.getUniqueId())
+                .notice(this.pluginConfig.messages.cantEnterOnRegion)
+                .send();
+
         }
     }
 
@@ -78,7 +82,10 @@ public class RegionController implements Listener {
 
         if (this.regionProvider.isInRegion(targetLocation)) {
             event.setCancelled(true);
-            this.announcer.sendMessage(player, this.pluginConfig.messages.cantEnterOnRegion);
+            this.announcer.create()
+                .player(player.getUniqueId())
+                .notice(this.pluginConfig.messages.cantEnterOnRegion)
+                .send();
         }
     }
 }

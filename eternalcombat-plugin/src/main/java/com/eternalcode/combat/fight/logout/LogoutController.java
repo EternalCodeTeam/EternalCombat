@@ -8,7 +8,6 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerQuitEvent;
-import panda.utilities.text.Formatter;
 
 public class LogoutController implements Listener {
 
@@ -36,11 +35,11 @@ public class LogoutController implements Listener {
         this.logoutService.punishForLogout(player);
         player.setHealth(0.0);
 
-        Formatter formatter = new Formatter()
-                .register("{PLAYER}", player.getName());
-
-        String format = formatter.format(this.config.messages.playerLoggedOutDuringCombat);
-        this.announcer.broadcast(format);
+        this.announcer.create()
+            .notice(this.config.messages.playerLoggedOutDuringCombat)
+            .placeholder("{PLAYER}", player.getName())
+            .onlinePlayers()
+            .send();
 
     }
 

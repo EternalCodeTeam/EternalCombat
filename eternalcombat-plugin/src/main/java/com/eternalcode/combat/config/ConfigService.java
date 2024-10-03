@@ -1,6 +1,10 @@
 package com.eternalcode.combat.config;
 
 import com.eternalcode.combat.notification.serializer.NotificationSerializer;
+import com.eternalcode.multification.bukkit.notice.resolver.sound.SoundBukkitResolver;
+import com.eternalcode.multification.notice.resolver.NoticeResolverDefaults;
+import com.eternalcode.multification.notice.resolver.NoticeResolverRegistry;
+import com.eternalcode.multification.okaeri.MultificationSerdesPack;
 import eu.okaeri.configs.ConfigManager;
 import eu.okaeri.configs.OkaeriConfig;
 import eu.okaeri.configs.serdes.commons.SerdesCommons;
@@ -18,10 +22,13 @@ public class ConfigService {
     public <T extends OkaeriConfig> T create(Class<T> config, File file) {
         T configFile = ConfigManager.create(config);
 
-        configFile.withConfigurer(new YamlBukkitConfigurer(), new SerdesCommons(), new SerdesBukkit());
-        configFile.withSerdesPack(registry -> {
-            registry.register(new NotificationSerializer());
-        });
+        YamlBukkitConfigurer yamlBukkitConfigurer = new YamlBukkitConfigurer();
+        NoticeResolverRegistry noticeRegistry = NoticeResolverDefaults.createRegistry()
+            .registerResolver(new SoundBukkitResolver());
+
+        configFile.withConfigurer(yamlBukkitConfigurer, new SerdesCommons(), new SerdesBukkit());
+        configFile.withConfigurer(yamlBukkitConfigurer, new MultificationSerdesPack(noticeRegistry));
+        configFile.withSerdesPack(registry -> registry.register(new NotificationSerializer()));
 
         configFile.withBindFile(file);
         configFile.withRemoveOrphans(true);
