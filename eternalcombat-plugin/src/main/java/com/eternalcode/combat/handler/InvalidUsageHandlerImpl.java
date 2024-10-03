@@ -8,7 +8,6 @@ import dev.rollczi.litecommands.invalidusage.InvalidUsageHandler;
 import dev.rollczi.litecommands.invocation.Invocation;
 import dev.rollczi.litecommands.schematic.Schematic;
 import org.bukkit.command.CommandSender;
-import panda.utilities.text.Formatter;
 
 public class InvalidUsageHandlerImpl implements InvalidUsageHandler<CommandSender> {
 
@@ -29,10 +28,12 @@ public class InvalidUsageHandlerImpl implements InvalidUsageHandler<CommandSende
         Schematic schematic = commandSenderInvalidUsage.getSchematic();
 
         for (String usage : schematic.all()) {
-            Formatter formatter = new Formatter()
-                .register("{USAGE}", usage);
-
-            this.announcer.sendMessage(invocation.sender(), formatter.format(this.config.messages.invalidCommandUsage));
+            this.announcer.create()
+                .viewer(invocation.sender())
+                .notice(this.config.messages.invalidCommandUsage)
+                .placeholder("{USAGE}", usage)
+                .send();
         }
+
     }
 }

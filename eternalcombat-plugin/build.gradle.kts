@@ -45,6 +45,10 @@ dependencies {
 
     // PlaceholderAPI
     compileOnly("me.clip:placeholderapi:${Versions.PLACEHOLDER_API}")
+
+    // Multification
+    implementation("com.eternalcode:multification-bukkit:${Versions.MULTIFICATION}")
+    implementation("com.eternalcode:multification-okaeri:${Versions.MULTIFICATION}")
 }
 
 bukkit {
@@ -92,7 +96,8 @@ tasks.shadowJar {
         "org.apache.commons",
         "javassist",
         "com.github.benmanes.caffeine",
-        "com.eternalcode.commons"
+        "com.eternalcode.commons",
+        "com.eternalcode.multification"
     ).forEach { pack ->
         relocate(pack, "$prefix.$pack")
     }

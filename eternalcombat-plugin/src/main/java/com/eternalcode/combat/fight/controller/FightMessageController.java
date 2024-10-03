@@ -2,7 +2,6 @@ package com.eternalcode.combat.fight.controller;
 
 import com.eternalcode.combat.config.implementation.PluginConfig;
 import com.eternalcode.combat.fight.FightManager;
-import com.eternalcode.combat.fight.bossbar.FightBossBarService;
 import com.eternalcode.combat.fight.event.FightTagEvent;
 import com.eternalcode.combat.fight.event.FightUntagEvent;
 import com.eternalcode.combat.notification.NotificationAnnouncer;
@@ -16,14 +15,12 @@ public class FightMessageController implements Listener {
 
     private final FightManager fightManager;
     private final NotificationAnnouncer announcer;
-    private final FightBossBarService bossBarService;
     private final PluginConfig config;
     private final Server server;
 
-    public FightMessageController(FightManager fightManager, NotificationAnnouncer announcer, FightBossBarService bossBarService, PluginConfig config, Server server) {
+    public FightMessageController(FightManager fightManager, NotificationAnnouncer announcer, PluginConfig config, Server server) {
         this.fightManager = fightManager;
         this.announcer = announcer;
-        this.bossBarService = bossBarService;
         this.config = config;
         this.server = server;
     }
@@ -40,7 +37,10 @@ public class FightMessageController implements Listener {
             return;
         }
 
-        this.announcer.sendMessage(player, this.config.messages.playerTagged);
+        this.announcer.create()
+            .player(player.getUniqueId())
+            .notice(this.config.messages.playerTagged)
+            .send();
     }
 
     @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
@@ -51,7 +51,10 @@ public class FightMessageController implements Listener {
             throw new IllegalStateException("Player cannot be null!");
         }
 
-        this.announcer.sendMessage(player, this.config.messages.playerUntagged);
-        this.bossBarService.hide(event.getPlayer());
+        this.announcer.create()
+            .player(player.getUniqueId())
+            .notice(this.config.messages.playerUntagged)
+            .send();
+
     }
 }

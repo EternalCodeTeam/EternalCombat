@@ -1,78 +1,48 @@
 package com.eternalcode.combat.notification;
 
-import com.eternalcode.combat.notification.implementation.BossBarNotification;
-import net.kyori.adventure.audience.Audience;
-import net.kyori.adventure.bossbar.BossBar;
+import com.eternalcode.combat.config.implementation.PluginConfig;
+import com.eternalcode.multification.adventure.AudienceConverter;
+import com.eternalcode.multification.bukkit.BukkitMultification;
+import com.eternalcode.multification.translation.TranslationProvider;
 import net.kyori.adventure.platform.AudienceProvider;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.minimessage.MiniMessage;
-import net.kyori.adventure.title.Title;
+import net.kyori.adventure.text.serializer.ComponentSerializer;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
-import panda.utilities.text.Formatter;
+import org.jetbrains.annotations.NotNull;
 
-public final class NotificationAnnouncer {
+public final class NotificationAnnouncer extends BukkitMultification<PluginConfig> {
 
     private final AudienceProvider audienceProvider;
+    private final PluginConfig pluginConfig;
     private final MiniMessage miniMessage;
 
-    public NotificationAnnouncer(AudienceProvider audienceProvider, MiniMessage miniMessage) {
+    public NotificationAnnouncer(AudienceProvider audienceProvider, PluginConfig pluginConfig, MiniMessage miniMessage) {
         this.audienceProvider = audienceProvider;
+        this.pluginConfig = pluginConfig;
         this.miniMessage = miniMessage;
     }
 
-    public void send(CommandSender sender, Notification notification, Formatter formatter) {
-        Audience audience = this.audience(sender);
-        Component message = this.miniMessage.deserialize(formatter.format(notification.message()));
-
-        NotificationType type = notification.type();
-
-        switch (type) {
-            case CHAT -> audience.sendMessage(message);
-            case ACTION_BAR -> audience.sendActionBar(message);
-
-            case TITLE -> {
-                Title title = Title.title(message, Component.empty());
-
-                audience.showTitle(title);
-            }
-
-            case SUB_TITLE -> {
-                Title subTitle = Title.title(Component.empty(), message);
-
-                audience.showTitle(subTitle);
-            }
-
-            case BOSS_BAR -> {
-                BossBarNotification bossBarNotification = (BossBarNotification) notification;
-                BossBar bossBar = bossBarNotification.create(message);
-
-                audience.showBossBar(bossBar);
-            }
-
-            default -> throw new IllegalStateException("Unknown notification type: " + type);
-        }
+    @Override
+    protected @NotNull TranslationProvider<PluginConfig> translationProvider() {
+        return locale -> this.pluginConfig;
     }
 
-    public void sendMessage(CommandSender commandSender, String text) {
-        Audience audience = this.audience(commandSender);
-        Component message = this.miniMessage.deserialize(text);
-
-        audience.sendMessage(message);
+    @Override
+    protected @NotNull ComponentSerializer<Component, Component, String> serializer() {
+        return this.miniMessage;
     }
 
-    public void broadcast(String text) {
-        Audience audience = this.audienceProvider.all();
-        Component message = this.miniMessage.deserialize(text);
+    @Override
+    protected @NotNull AudienceConverter<CommandSender> audienceConverter() {
+        return commandSender -> {
+            if (commandSender instanceof Player player) {
+                return this.audienceProvider.player(player.getUniqueId());
+            }
 
-        audience.sendMessage(message);
-    }
+            return this.audienceProvider.console();
+        };
 
-    private Audience audience(CommandSender sender) {
-        if (sender instanceof Player player) {
-            return this.audienceProvider.player(player.getUniqueId());
-        }
-
-        return this.audienceProvider.console();
     }
 }
