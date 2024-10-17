@@ -12,7 +12,12 @@ dependencies {
 
     // kyori
     implementation("net.kyori:adventure-platform-bukkit:${Versions.ADVENTURE_PLATFORM_BUKKIT}")
-    implementation("net.kyori:adventure-text-minimessage:${Versions.ADVENTURE_TEXT_MINIMESSAGE}")
+    implementation("net.kyori:adventure-text-minimessage:${Versions.ADVENTURE_API}")
+    implementation("net.kyori:adventure-api") {
+        version {
+            strictly(Versions.ADVENTURE_API)
+        }
+    }
 
     // litecommands
     implementation("dev.rollczi:litecommands-bukkit:${Versions.LITE_COMMANDS}")
