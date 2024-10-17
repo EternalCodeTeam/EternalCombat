@@ -16,7 +16,6 @@ import java.time.Duration;
 import java.util.UUID;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
-import panda.utilities.text.Formatter;
 
 @Command(name = "combatlog", aliases = "combat")
 public class FightTagCommand {
@@ -35,24 +34,23 @@ public class FightTagCommand {
     @Permission("eternalcombat.status")
     void status(@Context CommandSender sender, @Arg Player target) {
         UUID targetUniqueId = target.getUniqueId();
-        PluginConfig.Messages messages = this.config.messages;
 
-        Formatter formatter = new Formatter()
-            .register("{PLAYER}", target.getName());
+        this.announcer.create()
+            .notice(this.fightManager.isInCombat(targetUniqueId)
+                ? this.config.messages.admin.playerInCombat
+                : this.config.messages.admin.playerNotInCombat
+            )
+            .placeholder("{PLAYER}", target.getName())
+            .viewer(sender)
+            .send();
 
-        this.announcer.sendMessage(sender, this.fightManager.isInCombat(targetUniqueId)
-            ? formatter.format(messages.admin.playerInCombat)
-            : formatter.format(messages.admin.playerNotInCombat));
     }
 
     @Execute(name = "tag")
     @Permission("eternalcombat.tag")
     void tag(@Context CommandSender sender, @Arg Player target) {
-        UUID targetUniqueId = target.getUniqueId(); 
+        UUID targetUniqueId = target.getUniqueId();
         Duration time = this.config.settings.combatDuration;
-
-        Formatter formatter = new Formatter()
-            .register("{PLAYER}", target.getName());
 
         FightTagEvent event = this.fightManager.tag(targetUniqueId, time, CauseOfTag.COMMAND);
 
@@ -60,15 +58,20 @@ public class FightTagCommand {
             CancelTagReason cancelReason = event.getCancelReason();
 
             if (cancelReason == CancelTagReason.TAGOUT) {
-                this.announcer.sendMessage(sender, this.config.messages.admin.adminTagOutCanceled);
-                return;
+                this.announcer.create()
+                    .notice(this.config.messages.admin.adminTagOutCanceled)
+                    .viewer(sender)
+                    .send();
             }
 
             return;
         }
 
-        String format = formatter.format(this.config.messages.admin.adminTagPlayer);
-        this.announcer.sendMessage(sender, format);
+        this.announcer.create()
+            .notice(this.config.messages.admin.adminTagPlayer)
+            .viewer(sender)
+            .send();
+
     }
 
     @Execute(name = "tag")
@@ -76,27 +79,28 @@ public class FightTagCommand {
     void tagMultiple(@Context CommandSender sender, @Arg Player firstTarget, @Arg Player secondTarget) {
         Duration combatTime = this.config.settings.combatDuration;
         PluginConfig.Messages messages = this.config.messages;
-        
+
         if (sender.equals(firstTarget) || sender.equals(secondTarget)) {
-            this.announcer.sendMessage(sender, messages.admin.adminCannotTagSelf);
+
+            this.announcer.create()
+                .notice(messages.admin.adminCannotTagSelf)
+                .viewer(sender)
+                .send();
+
             return;
         }
 
         FightTagEvent firstTagEvent = this.fightManager.tag(firstTarget.getUniqueId(), combatTime, CauseOfTag.COMMAND);
         FightTagEvent secondTagEvent = this.fightManager.tag(secondTarget.getUniqueId(), combatTime, CauseOfTag.COMMAND);
 
-        Formatter formatter = new Formatter()
-            .register("{FIRST_PLAYER}", firstTarget.getName())
-            .register("{SECOND_PLAYER}", secondTarget.getName());
-
-        String format = formatter.format(messages.admin.adminTagMultiplePlayers);
-
         if (firstTagEvent.isCancelled()) {
             CancelTagReason cancelReason = firstTagEvent.getCancelReason();
 
             if (cancelReason == CancelTagReason.TAGOUT) {
-                this.announcer.sendMessage(sender, this.config.messages.admin.adminTagOutCanceled);
-                return;
+                this.announcer.create()
+                    .notice(messages.admin.adminTagOutCanceled)
+                    .send();
+
             }
 
             return;
@@ -106,8 +110,11 @@ public class FightTagCommand {
             CancelTagReason cancelReason = secondTagEvent.getCancelReason();
 
             if (cancelReason == CancelTagReason.TAGOUT) {
-                this.announcer.sendMessage(sender, this.config.messages.admin.adminTagOutCanceled);
-                return;
+                this.announcer.create()
+                    .notice(messages.admin.adminTagOutCanceled)
+                    .viewer(sender)
+                    .send();
+
             }
 
             return;
@@ -117,7 +124,13 @@ public class FightTagCommand {
             return;
         }
 
-        this.announcer.sendMessage(sender, format);
+        this.announcer.create()
+            .notice(messages.admin.adminTagMultiplePlayers)
+            .placeholder("{FIRST_PLAYER}", firstTarget.getName())
+            .placeholder("{SECOND_PLAYER}", secondTarget.getName())
+            .viewer(sender)
+            .send();
+
     }
 
     @Execute(name = "untag")
@@ -126,7 +139,10 @@ public class FightTagCommand {
         UUID targetUniqueId = target.getUniqueId();
 
         if (!this.fightManager.isInCombat(targetUniqueId)) {
-            this.announcer.sendMessage(sender, this.config.messages.admin.adminPlayerNotInCombat);
+            this.announcer.create()
+                    .viewer(sender)
+                    .notice(this.config.messages.admin.adminPlayerNotInCombat)
+                    .send();
             return;
         }
 
@@ -135,11 +151,11 @@ public class FightTagCommand {
             return;
         }
 
-        Formatter formatter = new Formatter()
-            .register("{PLAYER}", target.getName());
 
-        String format = formatter.format(this.config.messages.admin.adminUntagPlayer);
-
-        this.announcer.sendMessage(sender, format);
+        this.announcer.create()
+            .notice(this.config.messages.admin.adminUntagPlayer)
+            .placeholder("{PLAYER}", target.getName())
+            .viewer(sender)
+            .send();
     }
 }
