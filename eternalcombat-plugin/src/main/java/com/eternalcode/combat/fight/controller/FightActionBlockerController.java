@@ -18,7 +18,6 @@ import org.bukkit.event.player.PlayerToggleFlightEvent;
 
 import java.util.List;
 import java.util.UUID;
-import panda.utilities.text.Formatter;
 
 public class FightActionBlockerController implements Listener {
 
@@ -52,20 +51,29 @@ public class FightActionBlockerController implements Listener {
 
         boolean isPlacementBlocked = this.isPlacementBlocked(level);
 
-        Formatter formatter = new Formatter()
-            .register("{Y}", this.config.settings.blockPlacingYCoordinate)
-            .register("{MODE}", this.config.settings.blockPlacingModeName);
-
         if (isPlacementBlocked && specificBlocksToPreventPlacing.isEmpty()) {
             event.setCancelled(true);
-            this.announcer.sendMessage(player, formatter.format(this.config.messages.blockPlacingBlockedDuringCombat));
+            this.announcer.create()
+                .player(uniqueId)
+                .notice(this.config.messages.blockPlacingBlockedDuringCombat)
+                .placeholder("{Y}", String.valueOf(this.config.settings.blockPlacingYCoordinate))
+                .placeholder("{MODE}", this.config.settings.blockPlacingModeName)
+                .send();
+
         }
 
         Material blockMaterial = block.getType();
         boolean isBlockInDisabledList = specificBlocksToPreventPlacing.contains(blockMaterial);
         if (isPlacementBlocked && isBlockInDisabledList) {
             event.setCancelled(true);
-            this.announcer.sendMessage(player, formatter.format(this.config.messages.blockPlacingBlockedDuringCombat));
+
+            this.announcer.create()
+                .player(uniqueId)
+                .notice(this.config.messages.blockPlacingBlockedDuringCombat)
+                .placeholder("{Y}", String.valueOf(this.config.settings.blockPlacingYCoordinate))
+                .placeholder("{MODE}", this.config.settings.blockPlacingModeName)
+                .send();
+
         }
     }
 
@@ -146,7 +154,11 @@ public class FightActionBlockerController implements Listener {
 
         event.setCancelled(true);
 
-        this.announcer.sendMessage(player, this.config.messages.inventoryBlockedDuringCombat);
+        this.announcer.create()
+            .player(uniqueId)
+            .notice(this.config.messages.inventoryBlockedDuringCombat)
+            .send();
+
     }
 
     @EventHandler
@@ -169,7 +181,11 @@ public class FightActionBlockerController implements Listener {
 
         if (shouldCancel) {
             event.setCancelled(true);
-            this.announcer.sendMessage(player, this.config.messages.commandDisabledDuringCombat);
+            this.announcer.create()
+                .player(playerUniqueId)
+                .notice(this.config.messages.commandDisabledDuringCombat)
+                .send();
+
         }
     }
 }

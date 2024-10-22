@@ -14,7 +14,6 @@ import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
-import panda.utilities.text.Formatter;
 
 import java.time.Duration;
 import java.util.UUID;
@@ -58,7 +57,11 @@ public class FightPearlController implements Listener {
 
         if (this.settings.pearlThrowDelay.isZero()) {
             event.setCancelled(true);
-            this.announcer.sendMessage(player, this.settings.pearlThrowBlockedDuringCombat);
+            this.announcer.create()
+                .player(uniqueId)
+                .notice(this.settings.pearlThrowBlockedDuringCombat)
+                .send();
+
             return;
         }
 
@@ -67,11 +70,12 @@ public class FightPearlController implements Listener {
 
             Duration remainingPearlDelay = this.fightPearlService.getRemainingDelay(uniqueId);
 
-            Formatter formatter = new Formatter()
-                .register("{TIME}", DurationUtil.format(remainingPearlDelay));
+            this.announcer.create()
+                .player(uniqueId)
+                .notice(this.settings.pearlThrowBlockedDelayDuringCombat)
+                .placeholder("{TIME}", DurationUtil.format(remainingPearlDelay))
+                .send();
 
-            String format = formatter.format(this.settings.pearlThrowBlockedDelayDuringCombat);
-            this.announcer.sendMessage(player, format);
             return;
         }
 

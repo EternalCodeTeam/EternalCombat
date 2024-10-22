@@ -9,11 +9,10 @@ import dev.rollczi.litecommands.annotations.context.Context;
 import dev.rollczi.litecommands.annotations.execute.Execute;
 import dev.rollczi.litecommands.annotations.permission.Permission;
 import java.time.Duration;
-import java.time.Instant;
 import java.util.UUID;
 import org.bukkit.entity.Player;
-import panda.utilities.text.Formatter;
 
+@Permission("eternalcombat.tagout")
 @Command(name = "tagout", aliases = "tagimmunity")
 public class FightTagOutCommand {
 
@@ -32,67 +31,72 @@ public class FightTagOutCommand {
     }
 
     @Execute
-    @Permission("eternalcombat.tagout")
     void tagout(@Context Player sender, @Arg Duration time) {
         UUID targetUniqueId = sender.getUniqueId();
 
-        Formatter formatter = new Formatter()
-            .register("{PLAYER}", sender.getName())
-            .register("{TIME}", DurationUtil.format(time));
-
         this.fightTagOutService.tagOut(targetUniqueId, time);
 
-        String format = formatter.format(this.config.messages.admin.adminTagOutSelf);
-        this.announcer.sendMessage(sender, format);
+        this.announcer.create()
+            .notice(this.config.messages.admin.adminTagOutSelf)
+            .placeholder("{TIME}", DurationUtil.format(time))
+            .viewer(sender)
+            .send();
+
     }
 
     @Execute
-    @Permission("eternalcombat.tagout")
     void tagout(@Context Player sender, @Arg Player target, @Arg Duration time) {
         UUID targetUniqueId = target.getUniqueId();
 
-        Instant now = Instant.now();
-        Duration remaining = Duration.between(now, now.plus(time));
-
-        Formatter formatter = new Formatter()
-            .register("{PLAYER}", target.getName())
-            .register("{TIME}", DurationUtil.format(remaining));
-
         this.fightTagOutService.tagOut(targetUniqueId, time);
 
-        String adminTagOutFormat = formatter.format(this.config.messages.admin.adminTagOut);
-        this.announcer.sendMessage(sender, adminTagOutFormat);
+        this.announcer.create()
+            .notice(this.config.messages.admin.adminTagOut)
+            .placeholder("{PLAYER}", target.getName())
+            .placeholder("{TIME}", DurationUtil.format(time))
+            .viewer(sender)
+            .send();
 
-        String playerTagOutFormat = formatter.format(this.config.messages.admin.playerTagOut);
-        this.announcer.sendMessage(target, playerTagOutFormat);
+        this.announcer.create()
+            .notice(this.config.messages.admin.playerTagOut)
+            .placeholder("{TIME}", DurationUtil.format(time))
+            .player(target.getUniqueId())
+            .send();
+
     }
 
     @Execute(name = "remove")
-    @Permission("eternalcombat.tagout")
     void untagout(@Context Player sender, @Arg Player target) {
         UUID targetUniqueId = target.getUniqueId();
 
         this.fightTagOutService.unTagOut(targetUniqueId);
 
-        Formatter formatter = new Formatter()
-            .register("{PLAYER}", target.getName());
 
         if (!targetUniqueId.equals(sender.getUniqueId())) {
-            String adminUnTagOutFormat = formatter.format(this.config.messages.admin.adminTagOutOff);
-            this.announcer.sendMessage(sender, adminUnTagOutFormat);
+            this.announcer.create()
+                .notice(this.config.messages.admin.adminTagOutOff)
+                .placeholder("{PLAYER}", target.getName())
+                .viewer(sender)
+                .send();
         }
 
-        this.announcer.sendMessage(target, this.config.messages.admin.playerTagOutOff);
+        this.announcer.create()
+            .notice(this.config.messages.admin.playerTagOutOff)
+            .player(targetUniqueId)
+            .send();
     }
 
     @Execute(name = "remove")
-    @Permission("eternalcombat.tagout")
     void untagout(@Context Player sender) {
         UUID senderUniqueId = sender.getUniqueId();
 
         this.fightTagOutService.unTagOut(senderUniqueId);
 
-        this.announcer.sendMessage(sender, this.config.messages.admin.playerTagOutOff);
+        this.announcer.create()
+            .notice(this.config.messages.admin.playerTagOutOff)
+            .viewer(sender)
+            .send();
+
     }
 }
 

@@ -25,7 +25,6 @@ import com.eternalcode.combat.fight.effect.FightEffectController;
 import com.eternalcode.combat.event.EventCaller;
 import com.eternalcode.combat.fight.FightManagerImpl;
 import com.eternalcode.combat.fight.FightTask;
-import com.eternalcode.combat.fight.bossbar.FightBossBarService;
 import com.eternalcode.combat.fight.effect.FightEffectServiceImpl;
 import com.eternalcode.combat.fight.logout.LogoutController;
 import com.eternalcode.combat.fight.logout.LogoutService;
@@ -41,6 +40,7 @@ import com.eternalcode.combat.updater.UpdaterNotificationController;
 import com.eternalcode.combat.updater.UpdaterService;
 import com.eternalcode.commons.adventure.AdventureLegacyColorPostProcessor;
 import com.eternalcode.commons.adventure.AdventureLegacyColorPreProcessor;
+import com.eternalcode.multification.notice.Notice;
 import com.google.common.base.Stopwatch;
 import dev.rollczi.litecommands.LiteCommands;
 import dev.rollczi.litecommands.bukkit.LiteBukkitFactory;
@@ -108,13 +108,12 @@ public final class CombatPlugin extends JavaPlugin implements EternalCombatApi {
             .preProcessor(new AdventureLegacyColorPreProcessor())
             .build();
 
-        FightBossBarService fightBossBarService = new FightBossBarService(this.pluginConfig, this.audienceProvider, miniMessage);
-
         BridgeService bridgeService = new BridgeService(this.pluginConfig, server.getPluginManager(), this.getLogger(), this);
         bridgeService.init(this.fightManager, server);
         this.regionProvider = bridgeService.getRegionProvider();
 
-        NotificationAnnouncer notificationAnnouncer = new NotificationAnnouncer(this.audienceProvider, miniMessage);
+
+        NotificationAnnouncer notificationAnnouncer = new NotificationAnnouncer(this.audienceProvider, this.pluginConfig, miniMessage);
 
         this.liteCommands = LiteBukkitFactory.builder(FALLBACK_PREFIX, this, server)
             .message(LiteBukkitMessages.PLAYER_NOT_FOUND, this.pluginConfig.messages.playerNotFound)
@@ -129,9 +128,14 @@ public final class CombatPlugin extends JavaPlugin implements EternalCombatApi {
                 new EternalCombatReloadCommand(configService, notificationAnnouncer)
             )
 
+            .result(Notice.class, (invocation, result, chain) -> notificationAnnouncer.create()
+                .viewer(invocation.sender())
+                .notice(result)
+                .send())
+
             .build();
 
-        FightTask fightTask = new FightTask(server, this.pluginConfig, this.fightManager, fightBossBarService, notificationAnnouncer);
+        FightTask fightTask = new FightTask(server, this.pluginConfig, this.fightManager, notificationAnnouncer);
         this.getServer().getScheduler().runTaskTimer(this, fightTask, 20L, 20L);
 
         new Metrics(this, BSTATS_METRICS_ID);
@@ -153,7 +157,7 @@ public final class CombatPlugin extends JavaPlugin implements EternalCombatApi {
             new RegionController(notificationAnnouncer, this.regionProvider, this.fightManager, this.pluginConfig),
             new FightEffectController(this.pluginConfig.effect, this.fightEffectService, this.fightManager, this.getServer()),
             new FightTagOutController(this.fightTagOutService),
-            new FightMessageController(this.fightManager, notificationAnnouncer, fightBossBarService, this.pluginConfig, this.getServer())
+            new FightMessageController(this.fightManager, notificationAnnouncer, this.pluginConfig, this.getServer())
         ).forEach(listener -> this.getServer().getPluginManager().registerEvents(listener, this));
 
         EternalCombatProvider.initialize(this);

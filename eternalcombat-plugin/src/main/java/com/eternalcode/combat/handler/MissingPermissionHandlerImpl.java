@@ -7,7 +7,6 @@ import dev.rollczi.litecommands.invocation.Invocation;
 import dev.rollczi.litecommands.permission.MissingPermissions;
 import dev.rollczi.litecommands.permission.MissingPermissionsHandler;
 import org.bukkit.command.CommandSender;
-import panda.utilities.text.Formatter;
 
 public class MissingPermissionHandlerImpl implements MissingPermissionsHandler<CommandSender> {
 
@@ -27,9 +26,13 @@ public class MissingPermissionHandlerImpl implements MissingPermissionsHandler<C
     ) {
         String joinedText = missingPermissions.asJoinedText();
 
-        Formatter formatter = new Formatter()
-            .register("{PERMISSION}", joinedText);
 
-        this.announcer.sendMessage(invocation.sender(), formatter.format(this.config.messages.noPermission));
+        this.announcer.create()
+            .viewer(invocation.sender())
+            .notice(this.config.messages.noPermission)
+            .placeholder("{PERMISSION}", joinedText)
+            .send();
+
     }
 }
+
