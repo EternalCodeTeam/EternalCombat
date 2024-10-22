@@ -60,7 +60,7 @@ public class FightTagCommand {
         if (event.isCancelled()) {
             CancelTagReason cancelReason = event.getCancelReason();
 
-            tagoutReasonHandler(sender, cancelReason, this.config.messages);
+            this.tagoutReasonHandler(sender, cancelReason, this.config.messages);
 
             return;
         }
@@ -95,7 +95,7 @@ public class FightTagCommand {
         if (firstTagEvent.isCancelled()) {
             CancelTagReason cancelReason = firstTagEvent.getCancelReason();
 
-            tagoutReasonHandler(sender, cancelReason, messages);
+            this.tagoutReasonHandler(sender, cancelReason, messages);
 
             return;
         }
@@ -103,7 +103,7 @@ public class FightTagCommand {
         if (secondTagEvent.isCancelled()) {
             CancelTagReason cancelReason = secondTagEvent.getCancelReason();
 
-            tagoutReasonHandler(sender, cancelReason, messages);
+            this.tagoutReasonHandler(sender, cancelReason, messages);
 
             return;
         }
