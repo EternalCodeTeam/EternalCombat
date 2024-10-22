@@ -12,6 +12,8 @@ import dev.rollczi.litecommands.annotations.command.Command;
 import dev.rollczi.litecommands.annotations.context.Context;
 import dev.rollczi.litecommands.annotations.execute.Execute;
 import dev.rollczi.litecommands.annotations.permission.Permission;
+import dev.rollczi.litecommands.annotations.priority.Priority;
+import dev.rollczi.litecommands.annotations.priority.PriorityValue;
 import java.time.Duration;
 import java.util.UUID;
 import org.bukkit.command.CommandSender;
@@ -48,6 +50,7 @@ public class FightTagCommand {
 
     @Execute(name = "tag")
     @Permission("eternalcombat.tag")
+    @Priority(PriorityValue.HIGH)
     void tag(@Context CommandSender sender, @Arg Player target) {
         UUID targetUniqueId = target.getUniqueId();
         Duration time = this.config.settings.combatDuration;
@@ -69,6 +72,7 @@ public class FightTagCommand {
 
         this.announcer.create()
             .notice(this.config.messages.admin.adminTagPlayer)
+            .placeholder("{PLAYER}", target.getName())
             .viewer(sender)
             .send();
 

@@ -177,7 +177,7 @@ public class PluginConfig extends OkaeriConfig {
 
         @Comment("# Message sent when the player does not have permission to perform a command")
         public Notice noPermission = BukkitNotice.builder()
-            .chat("&cYou don't have permission to perform this command!")
+            .chat("&cYou don't have permission \"{PERMISSION}\" to perform this command!")
             .build();
 
         @Comment("# Message sent when the specified player could not be found")

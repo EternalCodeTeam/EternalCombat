@@ -12,6 +12,7 @@ import java.time.Duration;
 import java.util.UUID;
 import org.bukkit.entity.Player;
 
+@Permission("eternalcombat.tagout")
 @Command(name = "tagout", aliases = "tagimmunity")
 public class FightTagOutCommand {
 
@@ -30,7 +31,6 @@ public class FightTagOutCommand {
     }
 
     @Execute
-    @Permission("eternalcombat.tagout")
     void tagout(@Context Player sender, @Arg Duration time) {
         UUID targetUniqueId = sender.getUniqueId();
 
@@ -45,7 +45,6 @@ public class FightTagOutCommand {
     }
 
     @Execute
-    @Permission("eternalcombat.tagout")
     void tagout(@Context Player sender, @Arg Player target, @Arg Duration time) {
         UUID targetUniqueId = target.getUniqueId();
 
@@ -67,7 +66,6 @@ public class FightTagOutCommand {
     }
 
     @Execute(name = "remove")
-    @Permission("eternalcombat.tagout")
     void untagout(@Context Player sender, @Arg Player target) {
         UUID targetUniqueId = target.getUniqueId();
 
@@ -89,7 +87,6 @@ public class FightTagOutCommand {
     }
 
     @Execute(name = "remove")
-    @Permission("eternalcombat.tagout")
     void untagout(@Context Player sender) {
         UUID senderUniqueId = sender.getUniqueId();
 

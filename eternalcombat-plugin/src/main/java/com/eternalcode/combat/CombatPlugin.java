@@ -40,6 +40,7 @@ import com.eternalcode.combat.updater.UpdaterNotificationController;
 import com.eternalcode.combat.updater.UpdaterService;
 import com.eternalcode.commons.adventure.AdventureLegacyColorPostProcessor;
 import com.eternalcode.commons.adventure.AdventureLegacyColorPreProcessor;
+import com.eternalcode.multification.notice.Notice;
 import com.google.common.base.Stopwatch;
 import dev.rollczi.litecommands.LiteCommands;
 import dev.rollczi.litecommands.bukkit.LiteBukkitFactory;
@@ -126,6 +127,11 @@ public final class CombatPlugin extends JavaPlugin implements EternalCombatApi {
                 new FightTagOutCommand(this.fightTagOutService, notificationAnnouncer, this.pluginConfig),
                 new EternalCombatReloadCommand(configService, notificationAnnouncer)
             )
+
+            .result(Notice.class, (invocation, result, chain) -> notificationAnnouncer.create()
+                .viewer(invocation.sender())
+                .notice(result)
+                .send())
 
             .build();
 

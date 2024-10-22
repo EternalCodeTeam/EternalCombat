@@ -7,7 +7,6 @@ import dev.rollczi.litecommands.invocation.Invocation;
 import dev.rollczi.litecommands.permission.MissingPermissions;
 import dev.rollczi.litecommands.permission.MissingPermissionsHandler;
 import org.bukkit.command.CommandSender;
-import org.bukkit.entity.Player;
 
 public class MissingPermissionHandlerImpl implements MissingPermissionsHandler<CommandSender> {
 
@@ -27,24 +26,13 @@ public class MissingPermissionHandlerImpl implements MissingPermissionsHandler<C
     ) {
         String joinedText = missingPermissions.asJoinedText();
 
-        if (invocation instanceof CommandSender sender) {
 
-            if (sender instanceof Player player) {
-                this.announcer.create()
-                    .player(player.getUniqueId())
-                    .notice(this.config.messages.noPermission)
-                    .placeholder("{PERMISSION}", joinedText)
-                    .send();
-                return;
-            }
-
-            this.announcer.create()
-                .console()
-                .notice(this.config.messages.noPermission)
-                .placeholder("{PERMISSION}", joinedText)
-                .send();
-
-        }
+        this.announcer.create()
+            .viewer(invocation.sender())
+            .notice(this.config.messages.noPermission)
+            .placeholder("{PERMISSION}", joinedText)
+            .send();
 
     }
 }
+
