@@ -60,12 +60,7 @@ public class FightTagCommand {
         if (event.isCancelled()) {
             CancelTagReason cancelReason = event.getCancelReason();
 
-            if (cancelReason == CancelTagReason.TAGOUT) {
-                this.announcer.create()
-                    .notice(this.config.messages.admin.adminTagOutCanceled)
-                    .viewer(sender)
-                    .send();
-            }
+            tagoutReasonHandler(sender, cancelReason, this.config.messages);
 
             return;
         }
@@ -100,12 +95,7 @@ public class FightTagCommand {
         if (firstTagEvent.isCancelled()) {
             CancelTagReason cancelReason = firstTagEvent.getCancelReason();
 
-            if (cancelReason == CancelTagReason.TAGOUT) {
-                this.announcer.create()
-                    .notice(messages.admin.adminTagOutCanceled)
-                    .send();
-
-            }
+            tagoutReasonHandler(sender, cancelReason, messages);
 
             return;
         }
@@ -113,13 +103,7 @@ public class FightTagCommand {
         if (secondTagEvent.isCancelled()) {
             CancelTagReason cancelReason = secondTagEvent.getCancelReason();
 
-            if (cancelReason == CancelTagReason.TAGOUT) {
-                this.announcer.create()
-                    .notice(messages.admin.adminTagOutCanceled)
-                    .viewer(sender)
-                    .send();
-
-            }
+            tagoutReasonHandler(sender, cancelReason, messages);
 
             return;
         }
@@ -144,9 +128,9 @@ public class FightTagCommand {
 
         if (!this.fightManager.isInCombat(targetUniqueId)) {
             this.announcer.create()
-                    .viewer(sender)
-                    .notice(this.config.messages.admin.adminPlayerNotInCombat)
-                    .send();
+                .viewer(sender)
+                .notice(this.config.messages.admin.adminPlayerNotInCombat)
+                .send();
             return;
         }
 
@@ -161,5 +145,15 @@ public class FightTagCommand {
             .placeholder("{PLAYER}", target.getName())
             .viewer(sender)
             .send();
+    }
+
+    private void tagoutReasonHandler(CommandSender sender, CancelTagReason cancelReason, PluginConfig.Messages messages) {
+        if (cancelReason == CancelTagReason.TAGOUT) {
+            this.announcer.create()
+                .notice(messages.admin.adminTagOutCanceled)
+                .viewer(sender)
+                .send();
+
+        }
     }
 }

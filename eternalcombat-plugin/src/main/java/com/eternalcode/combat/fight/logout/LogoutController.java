@@ -38,7 +38,7 @@ public class LogoutController implements Listener {
         this.announcer.create()
             .notice(this.config.messages.playerLoggedOutDuringCombat)
             .placeholder("{PLAYER}", player.getName())
-            .onlinePlayers()
+            .all()
             .send();
 
     }
