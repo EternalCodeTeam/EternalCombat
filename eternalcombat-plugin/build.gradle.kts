@@ -95,7 +95,7 @@ tasks.shadowJar {
         "eu.okaeri",
         "net.kyori",
         "org.bstats",
-//        "dev.rollczi.litecommands",
+        "dev.rollczi.litecommands",
         "com.eternalcode.gitcheck",
         "org.json.simple",
         "org.apache.commons",
