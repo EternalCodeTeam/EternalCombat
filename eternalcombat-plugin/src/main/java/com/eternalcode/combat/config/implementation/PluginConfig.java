@@ -23,13 +23,13 @@ public class PluginConfig extends OkaeriConfig {
     @Comment("# Do you want to change the plugin settings?")
     public Settings settings = new Settings();
 
-    @Comment({" ", "# Ender pearl settings"})
+    @Comment({ " ", "# Ender pearl settings" })
     public FightPearlSettings pearl = new FightPearlSettings();
 
-    @Comment({" ", "# Custom effects settings"})
+    @Comment({ " ", "# Custom effects settings" })
     public FightEffectSettings effect = new FightEffectSettings();
 
-    @Comment({" ", "# Set a custom way for a player's items to drop on death (if in combat)"})
+    @Comment({ " ", "# Set a custom way for a player's items to drop on death (if in combat)" })
     public DropSettings dropSettings = new DropSettings();
 
     public static class Settings extends OkaeriConfig {
@@ -55,7 +55,7 @@ public class PluginConfig extends OkaeriConfig {
         })
         public double blockedRegionKnockMultiplier = 1;
 
-        @Comment({"# Should the player be prevented from entering regions with WorldGuard flag PVP set to DENY "})
+        @Comment({ "# Should the player be prevented from entering regions with WorldGuard flag PVP set to DENY " })
         public boolean shouldPreventPvpRegions = true;
 
         @Comment("# Set the radius of the blocked region if you aren't using WorldGuard basen on default spawn region!")
@@ -64,7 +64,7 @@ public class PluginConfig extends OkaeriConfig {
         @Comment("# Release attacker after victim dies?")
         public boolean shouldReleaseAttacker = true;
 
-        @Comment({"# If you want to exclude admins from combat, ",
+        @Comment({ "# If you want to exclude admins from combat, ",
             "# Setting this to true - admins cannot be tagged and will not tag other players on hit",
             "# Setting this to false - admins can be tagged and can tag other players on hit"
         })
@@ -152,7 +152,7 @@ public class PluginConfig extends OkaeriConfig {
 
     }
 
-    @Comment({" ", "# Do you want to change the plugin messages?"})
+    @Comment({ " ", "# Do you want to change the plugin messages?" })
     public Messages messages = new Messages();
 
     public static class Messages extends OkaeriConfig {
@@ -176,130 +176,82 @@ public class PluginConfig extends OkaeriConfig {
             .build();
 
         @Comment("# Message sent when the player does not have permission to perform a command")
-        public Notice noPermission = BukkitNotice.builder()
-            .chat("&cYou don't have permission \"{PERMISSION}\" to perform this command!")
-            .build();
+        public Notice noPermission = Notice.chat("&cYou don't have permission \"{PERMISSION}\" to perform this command!");
 
         @Comment("# Message sent when the specified player could not be found")
-        public Notice playerNotFound = BukkitNotice.builder()
-            .chat("&cThe specified player could not be found!")
-            .build();
+        public Notice playerNotFound = Notice.chat("&cThe specified player could not be found!");
 
         @Comment("# Message sent when the player enters combat")
-        public Notice playerTagged = BukkitNotice.builder()
-            .chat("&cYou are in combat, do not leave the server!")
-            .build();
+        public Notice playerTagged = Notice.chat("&cYou are in combat, do not leave the server!");
 
         @Comment("# Message sent when the player leaves combat")
-        public Notice playerUntagged = BukkitNotice.builder()
-            .chat("&aYou are no longer in combat! You can safely leave the server.")
-            .build();
+        public Notice playerUntagged = Notice.chat("&aYou are no longer in combat! You can safely leave the server.");
 
         @Comment("# This is broadcast when the player is in combat and logs out")
-        public Notice playerLoggedOutDuringCombat = BukkitNotice.builder()
-            .chat("&c{PLAYER} logged off during the fight!")
-            .build();
+        public Notice playerLoggedOutDuringCombat = Notice.chat("&c{PLAYER} logged off during the fight!");
 
         @Comment({
             "# Message sent when the player is in combat and tries to use a disabled command",
             "# you can configure the list of disabled commands in the blockedCommands section of the config.yml file"
         })
-        public Notice commandDisabledDuringCombat = BukkitNotice.builder()
-            .chat("&cUsing this command during combat is prohibited!")
-            .build();
+        public Notice commandDisabledDuringCombat = Notice.chat("&cUsing this command during combat is prohibited!");
 
         @Comment("# Message sent when player tries to use a command with invalid arguments")
-        public Notice invalidCommandUsage = BukkitNotice.builder()
-            .chat("&7Correct usage: &e{USAGE}")
-            .build();
+        public Notice invalidCommandUsage = Notice.chat("&7Correct usage: &e{USAGE}");
 
         @Comment("# Message sent when player tries to open inventory, but the inventory open is blocked")
-        public Notice inventoryBlockedDuringCombat = BukkitNotice.builder()
-            .chat("&cYou cannot open this inventory during combat!")
-            .build();
+        public Notice inventoryBlockedDuringCombat = Notice.chat("&cYou cannot open this inventory during combat!");
 
-        @Comment({"# Message sent when player tries to place a block, but the block place is blocked",
-        "# Placeholder {Y} is replaced with the Y coordinate set in the config",
-        "# Placeholder {MODE} is replaced with the mode set in the config"})
-        public Notice blockPlacingBlockedDuringCombat = BukkitNotice.builder()
-            .chat("&cYou cannot place {MODE} {Y} coordinate during combat!")
-            .build();
+        @Comment({ "# Message sent when player tries to place a block, but the block place is blocked",
+            "# Placeholder {Y} is replaced with the Y coordinate set in the config",
+            "# Placeholder {MODE} is replaced with the mode set in the config" })
+        public Notice blockPlacingBlockedDuringCombat = Notice.chat("&cYou cannot place {MODE} {Y} coordinate during combat!");
 
         @Comment("# Message sent when player tries to enter a region")
-        public Notice cantEnterOnRegion = BukkitNotice.builder()
-            .chat("&cYou can't enter this region during combat!")
-            .build();
+        public Notice cantEnterOnRegion = Notice.chat("&cYou can't enter this region during combat!");
 
         public static class AdminMessages extends OkaeriConfig {
             @Comment("# Message sent when console tries to use a command that is only for players")
-            public Notice onlyForPlayers = BukkitNotice.builder()
-                .chat("&cThis command is only available to players!")
-                .build();
+            public Notice onlyForPlayers = Notice.chat("&cThis command is only available to players!");
 
             @Comment("# Message sent to admin when they tag a player")
-            public Notice adminTagPlayer = BukkitNotice.builder()
-                .chat("&7You have tagged &e{PLAYER}")
-                .build();
+            public Notice adminTagPlayer = Notice.chat("&7You have tagged &e{PLAYER}");
 
             @Comment("# Message sent when a player is tagged by an admin")
-            public Notice adminTagMultiplePlayers = BukkitNotice.builder()
-                .chat("&7You have tagged &e{FIRST_PLAYER}&7 and &e{SECOND_PLAYER}&7.")
-                .build();
+            public Notice adminTagMultiplePlayers = Notice.chat("&7You have tagged &e{FIRST_PLAYER}&7 and &e{SECOND_PLAYER}&7.");
 
             @Comment("# Message sent to admin when they remove a player from combat")
-            public Notice adminUntagPlayer = BukkitNotice.builder()
-                .chat("&7You have removed &e{PLAYER}&7 from the fight.")
-                .build();
+            public Notice adminUntagPlayer = Notice.chat("&7You have removed &e{PLAYER}&7 from the fight.");
 
             @Comment("# Message sent when the player is not in combat")
-            public Notice adminPlayerNotInCombat = BukkitNotice.builder()
-                .chat("&cThis player is not in combat!")
-                .build();
+            public Notice adminPlayerNotInCombat = Notice.chat("&cThis player is not in combat!");
 
             @Comment("# Message sent when the player is in combat")
-            public Notice playerInCombat = BukkitNotice.builder()
-                .chat("&c{PLAYER} is currently in combat!")
-                .build();
+            public Notice playerInCombat = Notice.chat("&c{PLAYER} is currently in combat!");
 
             @Comment("# Message sent when a player is not in combat")
-            public Notice playerNotInCombat = BukkitNotice.builder()
-                .chat("&a{PLAYER} is not currently in combat.")
-                .build();
+            public Notice playerNotInCombat = Notice.chat("&a{PLAYER} is not currently in combat.");
 
             @Comment("# Message sent when an admin tries to tag themselves")
-            public Notice adminCannotTagSelf = BukkitNotice.builder()
-                .chat("&cYou cannot tag yourself!")
-                .build();
+            public Notice adminCannotTagSelf = Notice.chat("&cYou cannot tag yourself!");
 
             @Comment("# Message sent when an admin disables the ability to get tagged for some time")
-            public Notice adminTagOutSelf = BukkitNotice.builder()
-                .chat("&7Successfully disabled tag for Yourself! You will be taggable after &e{TIME} ")
-                .build();
+            public Notice adminTagOutSelf = Notice.chat("&7Successfully disabled tag for Yourself! You will be taggable after &e{TIME} ");
 
             @Comment("# Message sent when an admin disables the ability to get tagged for some time for other player")
-            public Notice adminTagOut = BukkitNotice.builder()
-                .chat("&7Successfully disabled tag for &e{PLAYER}! They will be taggable after &e{TIME} ")
-                .build();
+            public Notice adminTagOut = Notice.chat("&7Successfully disabled tag for &e{PLAYER}! They will be taggable after &e{TIME} ");
 
             @Comment("# Message sent to the player whom the ability to get tagged for some time has been disabled")
-            public Notice playerTagOut = BukkitNotice.builder()
-                .chat("&7You will be taggable in &e{TIME} !")
-                .build();
+            public Notice playerTagOut = Notice.chat("&7You will be taggable in &e{TIME} !");
 
             @Comment("# Message sent when an admin reenables the ability to get tagged for the player")
-            public Notice adminTagOutOff = BukkitNotice.builder()
-                .chat("&7Successfully enabled tag for &e{PLAYER}!")
-                .build();
+            public Notice adminTagOutOff = Notice.chat("&7Successfully enabled tag for &e{PLAYER}!");
 
             @Comment("# Message sent to the player whom the ability to get tagged has been reenabled")
-            public Notice playerTagOutOff = BukkitNotice.builder()
-                .chat("&7You are now taggable!")
-                .build();
+            public Notice playerTagOutOff = Notice.chat("&7You are now taggable!");
 
             @Comment("# Message sent when player cannot be tagged because they have enabled tag-out")
-            public Notice adminTagOutCanceled = BukkitNotice.builder()
-                .chat("&cCannot tag this player due to tag-out!")
-                .build();
+            public Notice adminTagOutCanceled = Notice.chat("&cCannot tag this player due to tag-out!");
         }
     }
 }
