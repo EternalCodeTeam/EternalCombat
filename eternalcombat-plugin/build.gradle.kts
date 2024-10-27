@@ -12,7 +12,12 @@ dependencies {
 
     // kyori
     implementation("net.kyori:adventure-platform-bukkit:${Versions.ADVENTURE_PLATFORM_BUKKIT}")
-    implementation("net.kyori:adventure-text-minimessage:${Versions.ADVENTURE_TEXT_MINIMESSAGE}")
+    implementation("net.kyori:adventure-text-minimessage:${Versions.ADVENTURE_API}")
+    implementation("net.kyori:adventure-api") {
+        version {
+            strictly(Versions.ADVENTURE_API)
+        }
+    }
 
     // litecommands
     implementation("dev.rollczi:litecommands-bukkit:${Versions.LITE_COMMANDS}")
@@ -45,6 +50,10 @@ dependencies {
 
     // PlaceholderAPI
     compileOnly("me.clip:placeholderapi:${Versions.PLACEHOLDER_API}")
+
+    // Multification
+    implementation("com.eternalcode:multification-bukkit:${Versions.MULTIFICATION}")
+    implementation("com.eternalcode:multification-okaeri:${Versions.MULTIFICATION}")
 }
 
 bukkit {
@@ -92,7 +101,8 @@ tasks.shadowJar {
         "org.apache.commons",
         "javassist",
         "com.github.benmanes.caffeine",
-        "com.eternalcode.commons"
+        "com.eternalcode.commons",
+        "com.eternalcode.multification"
     ).forEach { pack ->
         relocate(pack, "$prefix.$pack")
     }

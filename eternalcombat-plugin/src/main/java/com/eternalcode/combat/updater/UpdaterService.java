@@ -4,8 +4,8 @@ import com.eternalcode.gitcheck.GitCheck;
 import com.eternalcode.gitcheck.GitCheckResult;
 import com.eternalcode.gitcheck.git.GitRepository;
 import com.eternalcode.gitcheck.git.GitTag;
+import dev.rollczi.litecommands.shared.Lazy;
 import org.bukkit.plugin.PluginDescriptionFile;
-import panda.std.Lazy;
 
 import java.util.concurrent.CompletableFuture;
 
