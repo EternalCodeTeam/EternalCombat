@@ -4,6 +4,7 @@ import com.eternalcode.combat.WhitelistBlacklistMode;
 import com.eternalcode.combat.config.implementation.PluginConfig;
 import com.eternalcode.combat.fight.FightManager;
 import com.eternalcode.combat.fight.event.CauseOfTag;
+import org.bukkit.GameMode;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Projectile;
@@ -54,11 +55,13 @@ public class FightTagController implements Listener {
         UUID attackedUniqueId = attackedPlayerByPerson.getUniqueId();
         UUID attackerUniqueId = attacker.getUniqueId();
 
-        if (attacker.isOp() && this.config.settings.excludeAdminFromCombat) {
+        if (attacker.isOp() && this.config.settings.excludeOpFromCombat ||
+            attacker.getGameMode().equals(GameMode.CREATIVE) && this.config.settings.excludeCreativeFromCombat ) {
             return;
         }
 
-        if (attackedPlayerByPerson.isOp() && this.config.settings.excludeAdminFromCombat) {
+        if (attackedPlayerByPerson.isOp() && this.config.settings.excludeOpFromCombat ||
+            attackedPlayerByPerson.getGameMode().equals(GameMode.CREATIVE) && this.config.settings.excludeCreativeFromCombat) {
             return;
         }
 
