@@ -55,13 +55,11 @@ public class FightTagController implements Listener {
         UUID attackedUniqueId = attackedPlayerByPerson.getUniqueId();
         UUID attackerUniqueId = attacker.getUniqueId();
 
-        if (attacker.isOp() && this.config.settings.excludeOpFromCombat ||
-            attacker.getGameMode().equals(GameMode.CREATIVE) && this.config.settings.excludeCreativeFromCombat ) {
+        if (this.cannotBeTagged(attacker)) {
             return;
         }
 
-        if (attackedPlayerByPerson.isOp() && this.config.settings.excludeOpFromCombat ||
-            attackedPlayerByPerson.getGameMode().equals(GameMode.CREATIVE) && this.config.settings.excludeCreativeFromCombat) {
+        if (this.cannotBeTagged(attackedPlayerByPerson)) {
             return;
         }
 
@@ -92,6 +90,10 @@ public class FightTagController implements Listener {
         }
 
         if (this.isPlayerInDisabledWorld(player)) {
+            return;
+        }
+
+        if (this.cannotBeTagged(player)) {
             return;
         }
 
@@ -130,6 +132,11 @@ public class FightTagController implements Listener {
         String worldName = player.getWorld().getName();
 
         return this.config.settings.worldsToIgnore.contains(worldName);
+    }
+
+    private boolean cannotBeTagged(Player player) {
+        return (player.getGameMode().equals(GameMode.CREATIVE) && this.config.settings.excludeCreativeFromCombat) ||
+            (player.isOp() && this.config.settings.excludeOpFromCombat);
     }
 
 }
