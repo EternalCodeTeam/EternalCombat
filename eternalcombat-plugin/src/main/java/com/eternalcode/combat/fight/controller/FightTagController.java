@@ -145,5 +145,4 @@ public class FightTagController implements Listener {
 
         return false;
     }
-
 }
