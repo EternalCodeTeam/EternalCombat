@@ -68,7 +68,13 @@ public class PluginConfig extends OkaeriConfig {
             "# Setting this to true - admins cannot be tagged and will not tag other players on hit",
             "# Setting this to false - admins can be tagged and can tag other players on hit"
         })
-        public boolean excludeAdminFromCombat = false;
+        public boolean excludeOpFromCombat = false;
+
+        @Comment({"# If you want to exclude players in creative mode from combat, ",
+            "# Setting this to true - players in creative mode cannot be tagged and will not tag other players on hit",
+            "# Setting this to false - players in creative mode can be tag others"
+        })
+        public boolean excludeCreativeFromCombat = false;
 
         @Comment("# Command blocking mode, available modes: WHITELIST, BLACKLIST")
         public WhitelistBlacklistMode commandBlockingMode = WhitelistBlacklistMode.BLACKLIST;

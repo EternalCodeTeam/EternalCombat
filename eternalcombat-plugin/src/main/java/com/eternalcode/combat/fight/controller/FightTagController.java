@@ -4,6 +4,7 @@ import com.eternalcode.combat.WhitelistBlacklistMode;
 import com.eternalcode.combat.config.implementation.PluginConfig;
 import com.eternalcode.combat.fight.FightManager;
 import com.eternalcode.combat.fight.event.CauseOfTag;
+import org.bukkit.GameMode;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Projectile;
@@ -54,11 +55,11 @@ public class FightTagController implements Listener {
         UUID attackedUniqueId = attackedPlayerByPerson.getUniqueId();
         UUID attackerUniqueId = attacker.getUniqueId();
 
-        if (attacker.isOp() && this.config.settings.excludeAdminFromCombat) {
+        if (this.cannotBeTagged(attacker)) {
             return;
         }
 
-        if (attackedPlayerByPerson.isOp() && this.config.settings.excludeAdminFromCombat) {
+        if (this.cannotBeTagged(attackedPlayerByPerson)) {
             return;
         }
 
@@ -89,6 +90,10 @@ public class FightTagController implements Listener {
         }
 
         if (this.isPlayerInDisabledWorld(player)) {
+            return;
+        }
+
+        if (this.cannotBeTagged(player)) {
             return;
         }
 
@@ -129,4 +134,15 @@ public class FightTagController implements Listener {
         return this.config.settings.worldsToIgnore.contains(worldName);
     }
 
+    private boolean cannotBeTagged(Player player) {
+        if (player.getGameMode().equals(GameMode.CREATIVE) && this.config.settings.excludeCreativeFromCombat) {
+            return true;
+        }
+
+        if (player.isOp() && this.config.settings.excludeOpFromCombat) {
+            return true;
+        }
+
+        return false;
+    }
 }
