@@ -135,8 +135,15 @@ public class FightTagController implements Listener {
     }
 
     private boolean cannotBeTagged(Player player) {
-        return (player.getGameMode().equals(GameMode.CREATIVE) && this.config.settings.excludeCreativeFromCombat) ||
-            (player.isOp() && this.config.settings.excludeOpFromCombat);
+        if (player.getGameMode().equals(GameMode.CREATIVE) && this.config.settings.excludeCreativeFromCombat) {
+            return true;
+        }
+
+        if (player.isOp() && this.config.settings.excludeOpFromCombat) {
+            return true;
+        }
+
+        return false;
     }
 
 }
