@@ -10,6 +10,8 @@ import com.sk89q.worldguard.protection.flags.StateFlag;
 import com.sk89q.worldguard.protection.regions.ProtectedRegion;
 import com.sk89q.worldguard.protection.regions.RegionContainer;
 import com.sk89q.worldguard.protection.regions.RegionQuery;
+
+import java.util.ArrayList;
 import java.util.Optional;
 import java.util.TreeSet;
 import org.bukkit.Location;
@@ -32,7 +34,11 @@ public class WorldGuardRegionProvider implements RegionProvider {
         RegionQuery regionQuery = this.regionContainer.createQuery();
         ApplicableRegionSet applicableRegions = regionQuery.getApplicableRegions(BukkitAdapter.adapt(location));
 
-        for (ProtectedRegion region : applicableRegions.getRegions()) {
+        List<ProtectedRegion> sortedRegions = new ArrayList<>(applicableRegions.getRegions());
+        sortedRegions.sort((r1, r2) -> Integer.compare(r2.getPriority(), r1.getPriority()));
+
+        for (ProtectedRegion region : sortedRegions) {
+
             if (!this.isCombatRegion(region)) {
                 continue;
             }
