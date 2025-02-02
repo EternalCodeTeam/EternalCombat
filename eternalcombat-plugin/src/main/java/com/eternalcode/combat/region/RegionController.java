@@ -56,9 +56,9 @@ public class RegionController implements Listener {
 
             Vector knockbackVector = new Vector(subtract.getX(), 0, subtract.getZ()).normalize();
             Vector configuredVector = new Vector(
-                this.pluginConfig.settings.blockedRegionKnockMultiplier,
+                this.pluginConfig.settings.regionKnockbackMultiplier,
                 0.5,
-                this.pluginConfig.settings.blockedRegionKnockMultiplier);
+                this.pluginConfig.settings.regionKnockbackMultiplier);
 
             player.setVelocity(knockbackVector.multiply(configuredVector));
 
