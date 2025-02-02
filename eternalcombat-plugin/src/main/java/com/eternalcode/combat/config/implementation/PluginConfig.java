@@ -367,20 +367,20 @@ public class PluginConfig extends OkaeriConfig {
 
             @Comment({
                 "# Message displayed when an admin disables combat tagging for themselves.",
-                "# The {TIME} placeholder is replaced with the remaining time before tagging is reenabled."
+                "# The {TIME} placeholder is replaced with the remaining fight time."
             })
             public Notice adminTagOutSelf = Notice.chat("&7Successfully disabled tag for Yourself! You will be taggable after &e{TIME} ");
 
             @Comment({
                 "# Message displayed when an admin disables combat tagging for another player.",
                 "# The {PLAYER} placeholder is replaced with the player's name.",
-                "# The {TIME} placeholder is replaced with the remaining time before tagging is reenabled."
+                "# The {TIME} placeholder is replaced with the remaining fight time."
             })
             public Notice adminTagOut = Notice.chat("&7Successfully disabled tag for &e{PLAYER}! They will be taggable after &e{TIME} ");
 
             @Comment({
                 "# Message displayed to a player when their combat tagging is disabled.",
-                "# The {TIME} placeholder is replaced with the remaining time before tagging is reenabled."
+                "# The {TIME} placeholder is replaced with the remaining fight time."
             })
             public Notice playerTagOut = Notice.chat("&7You will be taggable in &e{TIME} !");
 
