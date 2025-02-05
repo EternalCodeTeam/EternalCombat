@@ -21,7 +21,7 @@ import java.util.List;
 public class PluginConfig extends OkaeriConfig {
 
     @Comment({
-        "# settings for the plugin.",
+        "# Settings for the plugin.",
         "# Modify these to customize the plugin's behavior."
     })
     public Settings settings = new Settings();
