@@ -6,4 +6,8 @@ public interface Region {
 
     Location getCenter();
 
+    Location getMin();
+
+    Location getMax();
+
 }

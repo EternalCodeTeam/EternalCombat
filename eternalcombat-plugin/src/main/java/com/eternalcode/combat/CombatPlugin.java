@@ -1,5 +1,8 @@
 package com.eternalcode.combat;
 
+import com.eternalcode.combat.border.BorderParticleController;
+import com.eternalcode.combat.border.BorderService;
+import com.eternalcode.combat.border.BorderServiceImpl;
 import com.eternalcode.combat.bridge.BridgeService;
 import com.eternalcode.combat.fight.drop.DropKeepInventoryService;
 import com.eternalcode.combat.fight.FightManager;
@@ -40,6 +43,8 @@ import com.eternalcode.combat.updater.UpdaterNotificationController;
 import com.eternalcode.combat.updater.UpdaterService;
 import com.eternalcode.commons.adventure.AdventureLegacyColorPostProcessor;
 import com.eternalcode.commons.adventure.AdventureLegacyColorPreProcessor;
+import com.eternalcode.commons.bukkit.scheduler.BukkitSchedulerImpl;
+import com.eternalcode.commons.scheduler.Scheduler;
 import com.eternalcode.multification.notice.Notice;
 import com.google.common.base.Stopwatch;
 import dev.rollczi.litecommands.LiteCommands;
@@ -89,6 +94,7 @@ public final class CombatPlugin extends JavaPlugin implements EternalCombatApi {
         ConfigService configService = new ConfigService();
 
         EventCaller eventCaller = new EventCaller(server);
+        Scheduler scheduler = new BukkitSchedulerImpl(this);
 
         this.pluginConfig = configService.create(PluginConfig.class, new File(dataFolder, "config.yml"));
 
@@ -111,7 +117,7 @@ public final class CombatPlugin extends JavaPlugin implements EternalCombatApi {
         BridgeService bridgeService = new BridgeService(this.pluginConfig, server.getPluginManager(), this.getLogger(), this);
         bridgeService.init(this.fightManager, server);
         this.regionProvider = bridgeService.getRegionProvider();
-
+        BorderService borderService = new BorderServiceImpl(scheduler, server, regionProvider, 5);
 
         NotificationAnnouncer notificationAnnouncer = new NotificationAnnouncer(this.audienceProvider, this.pluginConfig, miniMessage);
 
@@ -157,7 +163,8 @@ public final class CombatPlugin extends JavaPlugin implements EternalCombatApi {
             new RegionController(notificationAnnouncer, this.regionProvider, this.fightManager, this.pluginConfig),
             new FightEffectController(this.pluginConfig.effect, this.fightEffectService, this.fightManager, this.getServer()),
             new FightTagOutController(this.fightTagOutService),
-            new FightMessageController(this.fightManager, notificationAnnouncer, this.pluginConfig, this.getServer())
+            new FightMessageController(this.fightManager, notificationAnnouncer, this.pluginConfig, this.getServer()),
+            new BorderParticleController(borderService)
         ).forEach(listener -> this.getServer().getPluginManager().registerEvents(listener, this));
 
         EternalCombatProvider.initialize(this);
