@@ -20,6 +20,15 @@ import java.util.List;
 
 public class PluginConfig extends OkaeriConfig {
 
+    @Comment(" ")
+    @Comment("#  _____ _     EternalCombat      _ _____                 _           _    ")
+    @Comment("# |  ___| |  o()xxx[{:::::::::>  | /  __ \\               | |         | |   ")
+    @Comment("# | |__ | |_ ___ _ __ _ __   __ _| | /  \\/ ___  _ __ ___ | |__   __ _| |_  ")
+    @Comment("# |  __|| __/ _ \\ '__| '_ \\ / _` | | |    / _ \\| '_ ` _ \\| '_ \\ / _` | __| ")
+    @Comment("# | |___| ||  __/ |  | | | | (_| | | \\__/\\ (_) | | | | | | |_) | (_| | |_  ")
+    @Comment("# \\____/ \\__\\___|_|  |_| |_|\\__,_|_|\\____/\\___/|_| |_| |_|_.__/ \\__,_|\\__| ")
+    @Comment(" ")
+
     @Comment({
         "# Settings for the plugin.",
         "# Modify these to customize the plugin's behavior."
