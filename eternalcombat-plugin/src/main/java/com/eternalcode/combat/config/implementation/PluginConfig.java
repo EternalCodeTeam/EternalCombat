@@ -260,7 +260,7 @@ public class PluginConfig extends OkaeriConfig {
             "# Message displayed when a player lacks permission to execute a command.",
             "# The {PERMISSION} placeholder is replaced with the required permission."
         })
-        public Notice noPermission = Notice.chat("<gradient:red:dark_red>You don't have permission <white>'{PERMISSION}'</white> to perform this command!</gradient>");
+        public Notice noPermission = Notice.chat("<gradient:red:dark_red>You don't have permission <dark_gray>(<gray>{PERMISSION}</gray>)</dark_gray> to perform this command!</gradient>");
 
         @Comment({
             "# Message displayed when a specified player is not found.",
@@ -272,13 +272,13 @@ public class PluginConfig extends OkaeriConfig {
             "# Message displayed when a player enters combat.",
             "# This message warns the player not to leave the server while in combat."
         })
-        public Notice playerTagged = Notice.chat("<gradient:red:yellow>⚠ <white>You are in combat!</white> Do not leave the server!</gradient>");
+        public Notice playerTagged = Notice.chat("<gradient:red:yellow>⚠ <white>You are in combat!</white> <u>Do not leave the server!</gradient>");
 
         @Comment({
             "# Message displayed when a player leaves combat.",
             "# This message informs the player that they can safely leave the server."
         })
-        public Notice playerUntagged = Notice.chat("<gradient:#00ff00:#00b300>✌ <white>Combat ended!</white> You can now safely leave!</gradient>");
+        public Notice playerUntagged = Notice.chat("<gradient:#00ff00:#00b300>✌ <white>Combat ended!</white> You can now safely leave!</u></gradient>");
 
         @Comment({
             "# Broadcast message displayed when a player logs out during combat.",
@@ -386,7 +386,7 @@ public class PluginConfig extends OkaeriConfig {
             public Notice playerTagOut = Notice.chat("<gradient:#00ff88:#00b300>🛡 <gray>Protection active for</gray> <white>{TIME}</white></gradient>");
 
             @Comment({
-                "# Message displayed when an admin reenables combat taggi<gradient:#00ff88:#00b300>✌ <gray>You are now taggable!</gray></gradient>ng for a player.",
+                "# Message displayed when an admin reenables combat tagging for a player.",
                 "# The {PLAYER} placeholder is replaced with the player's name."
             })
             public Notice adminTagOutOff = Notice.chat("<gradient:#00ff88:#00b300>✌ <gray>Re-enabled tagging for</gray> <white>{PLAYER}</white></gradient>");
