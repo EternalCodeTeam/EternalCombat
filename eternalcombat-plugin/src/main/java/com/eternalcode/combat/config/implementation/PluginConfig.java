@@ -225,7 +225,6 @@ public class PluginConfig extends OkaeriConfig {
             EntityType.ENDER_PEARL,
             EntityType.EGG
         );
-
     }
 
     @Comment({
@@ -253,7 +252,7 @@ public class PluginConfig extends OkaeriConfig {
             "# BossBar overlays: https://javadoc.io/static/net.kyori/adventure-api/4.14.0/net/kyori/adventure/bossbar/BossBar.Overlay.html"
         })
         public Notice combatNotification = BukkitNotice.builder()
-            .actionBar("&dCombat ends in: &f{TIME}")
+            .actionBar("<gradient:#5e4fa2:#f79459>Combat ends in: <white>{TIME}</white></gradient>")
             .sound(Sound.ENTITY_EXPERIENCE_ORB_PICKUP, SoundCategory.PLAYERS, 2.0F, 1.0F)
             .build();
 
@@ -261,148 +260,148 @@ public class PluginConfig extends OkaeriConfig {
             "# Message displayed when a player lacks permission to execute a command.",
             "# The {PERMISSION} placeholder is replaced with the required permission."
         })
-        public Notice noPermission = Notice.chat("&cYou don't have permission \"{PERMISSION}\" to perform this command!");
+        public Notice noPermission = Notice.chat("<gradient:red:dark_red>You don't have permission <white>'{PERMISSION}'</white> to perform this command!</gradient>");
 
         @Comment({
             "# Message displayed when a specified player is not found.",
             "# This message is shown when a command targets a player who is not online or does not exist."
         })
-        public Notice playerNotFound = Notice.chat("&cThe specified player could not be found!");
+        public Notice playerNotFound = Notice.chat("<gradient:#ff0000:#ff6b6b>The specified player could not be found!</gradient>");
 
         @Comment({
             "# Message displayed when a player enters combat.",
             "# This message warns the player not to leave the server while in combat."
         })
-        public Notice playerTagged = Notice.chat("&cYou are in combat, do not leave the server!");
+        public Notice playerTagged = Notice.chat("<gradient:red:yellow>⚠ <white>You are in combat!</white> Do not leave the server!</gradient>");
 
         @Comment({
             "# Message displayed when a player leaves combat.",
             "# This message informs the player that they can safely leave the server."
         })
-        public Notice playerUntagged = Notice.chat("&aYou are no longer in combat! You can safely leave the server.");
+        public Notice playerUntagged = Notice.chat("<gradient:#00ff00:#00b300>✌ <white>Combat ended!</white> You can now safely leave!</gradient>");
 
         @Comment({
             "# Broadcast message displayed when a player logs out during combat.",
             "# The {PLAYER} placeholder is replaced with the player's name."
         })
-        public Notice playerLoggedOutDuringCombat = Notice.chat("&c{PLAYER} logged off during the fight!");
+        public Notice playerLoggedOutDuringCombat = Notice.chat("<gradient:red:dark_red>⚠ <white>{PLAYER}</white> logged off during combat!</gradient>");
 
         @Comment({
             "# Message displayed when a player attempts to use a disabled command during combat.",
             "# This message informs the player that the command is prohibited while in combat."
         })
-        public Notice commandDisabledDuringCombat = Notice.chat("&cUsing this command during combat is prohibited!");
+        public Notice commandDisabledDuringCombat = Notice.chat("<gradient:red:yellow>⚠ <white>Command blocked!</white> Cannot use this during combat!</gradient>");
 
         @Comment({
             "# Message displayed when a player uses a command with incorrect arguments.",
             "# The {USAGE} placeholder is replaced with the correct command syntax."
         })
-        public Notice invalidCommandUsage = Notice.chat("&7Correct usage: &e{USAGE}");
+        public Notice invalidCommandUsage = Notice.chat("<gray>Usage: <gradient:gold:yellow>{USAGE}</gradient>");
 
         @Comment({
             "# Message displayed when a player attempts to open their inventory during combat.",
             "# This message informs the player that inventory access is blocked while in combat."
         })
-        public Notice inventoryBlockedDuringCombat = Notice.chat("&cYou cannot open this inventory during combat!");
+        public Notice inventoryBlockedDuringCombat = Notice.chat("<gradient:red:dark_red>⚠ <white>Inventory access</white> is restricted during combat!</gradient>");
 
         @Comment({
             "# Message displayed when a player attempts to place a block during combat.",
             "# The {MODE} placeholder is replaced with the block placement mode (ABOVE/BELOW).",
             "# The {Y} placeholder is replaced with the Y coordinate set in the config."
         })
-        public Notice blockPlacingBlockedDuringCombat = Notice.chat("&cYou cannot place {MODE} {Y} coordinate during combat!");
+        public Notice blockPlacingBlockedDuringCombat = Notice.chat("<gradient:red:yellow>⚠ Block placement <white>{MODE} Y:{Y}</white> is restricted!</gradient>");
 
         @Comment({
             "# Message displayed when a player attempts to enter a restricted region during combat.",
             "# This message informs the player that they cannot enter the region while in combat."
         })
-        public Notice cantEnterOnRegion = Notice.chat("&cYou can't enter this region during combat!");
+        public Notice cantEnterOnRegion = Notice.chat("<gradient:red:dark_red>⚠ Restricted area!</gradient> <white>Cannot enter during combat!</white>");
 
         public static class AdminMessages extends OkaeriConfig {
             @Comment({
                 "# Message displayed when the console attempts to use a player-only command.",
                 "# This message informs the console that the command is not available for non-players."
             })
-            public Notice onlyForPlayers = Notice.chat("&cThis command is only available to players!");
+            public Notice onlyForPlayers = Notice.chat("<gradient:red:dark_red>❌ This command is player-only!</gradient>");
 
             @Comment({
                 "# Message displayed to an admin when they tag a player.",
                 "# The {PLAYER} placeholder is replaced with the tagged player's name."
             })
-            public Notice adminTagPlayer = Notice.chat("&7You have tagged &e{PLAYER}");
+            public Notice adminTagPlayer = Notice.chat("<gradient:#00b3ff:#0066ff>⚔ <gray>Tagged player:</gray> <white>{PLAYER}</white></gradient>");
 
             @Comment({
                 "# Message displayed when an admin tags multiple players.",
                 "# The {FIRST_PLAYER} and {SECOND_PLAYER} placeholders are replaced with the players' names."
             })
-            public Notice adminTagMultiplePlayers = Notice.chat("&7You have tagged &e{FIRST_PLAYER}&7 and &e{SECOND_PLAYER}&7.");
+            public Notice adminTagMultiplePlayers = Notice.chat("<gradient:#00b3ff:#0066ff>⚔ <gray>Tagged:</gray> <white>{FIRST_PLAYER}</white> <gray>and</gray> <white>{SECOND_PLAYER}</white></gradient>");
 
             @Comment({
                 "# Message displayed to an admin when they remove a player from combat.",
                 "# The {PLAYER} placeholder is replaced with the player's name."
             })
-            public Notice adminUntagPlayer = Notice.chat("&7You have removed &e{PLAYER}&7 from the fight.");
+            public Notice adminUntagPlayer = Notice.chat("<gradient:#00ff88:#00b300>✌ <gray>Removed</gray> <white>{PLAYER}</white> <gray>from combat</gray></gradient>");
 
             @Comment({
                 "# Message displayed when an admin attempts to untag a player who is not in combat.",
                 "# This message informs the admin that the player is not currently in combat."
             })
-            public Notice adminPlayerNotInCombat = Notice.chat("&cThis player is not in combat!");
+            public Notice adminPlayerNotInCombat = Notice.chat("<gradient:red:dark_red>❌ <white>{PLAYER}</white> is not in combat!</gradient>");
 
             @Comment({
                 "# Message displayed when a player is in combat.",
                 "# The {PLAYER} placeholder is replaced with the player's name."
             })
-            public Notice playerInCombat = Notice.chat("&c{PLAYER} is currently in combat!");
+            public Notice playerInCombat = Notice.chat("<gradient:#ff6666:#ff0000>⚔ <white>{PLAYER}</white> <gray>is in combat!</gray></gradient>");
 
             @Comment({
                 "# Message displayed when a player is not in combat.",
                 "# The {PLAYER} placeholder is replaced with the player's name."
             })
-            public Notice playerNotInCombat = Notice.chat("&a{PLAYER} is not currently in combat.");
+            public Notice playerNotInCombat = Notice.chat("<gradient:#00ff00:#00b300>✌ <white>{PLAYER}</white> <gray>is safe</gray></gradient>");
 
             @Comment({
                 "# Message displayed when an admin attempts to tag themselves.",
                 "# This message informs the admin that they cannot tag themselves."
             })
-            public Notice adminCannotTagSelf = Notice.chat("&cYou cannot tag yourself!");
+            public Notice adminCannotTagSelf = Notice.chat("<gradient:red:dark_red>❌ Cannot tag yourself!</gradient>");
 
             @Comment({
                 "# Message displayed when an admin disables combat tagging for themselves.",
                 "# The {TIME} placeholder is replaced with the remaining fight time."
             })
-            public Notice adminTagOutSelf = Notice.chat("&7Successfully disabled tag for Yourself! You will be taggable after &e{TIME} ");
+            public Notice adminTagOutSelf = Notice.chat("<gradient:#00b3ff:#0066ff>🛡 <gray>Self-protection active for</gray> <white>{TIME}</white></gradient>");
 
             @Comment({
                 "# Message displayed when an admin disables combat tagging for another player.",
                 "# The {PLAYER} placeholder is replaced with the player's name.",
                 "# The {TIME} placeholder is replaced with the remaining fight time."
             })
-            public Notice adminTagOut = Notice.chat("&7Successfully disabled tag for &e{PLAYER}! They will be taggable after &e{TIME} ");
+            public Notice adminTagOut = Notice.chat("<gradient:#00b3ff:#0066ff>🛡 <gray>Protected</gray> <white>{PLAYER}</white> <gray>for</gray> <white>{TIME}</white></gradient>");
 
             @Comment({
                 "# Message displayed to a player when their combat tagging is disabled.",
                 "# The {TIME} placeholder is replaced with the remaining fight time."
             })
-            public Notice playerTagOut = Notice.chat("&7You will be taggable in &e{TIME} !");
+            public Notice playerTagOut = Notice.chat("<gradient:#00ff88:#00b300>🛡 <gray>Protection active for</gray> <white>{TIME}</white></gradient>");
 
             @Comment({
-                "# Message displayed when an admin reenables combat tagging for a player.",
+                "# Message displayed when an admin reenables combat taggi<gradient:#00ff88:#00b300>✌ <gray>You are now taggable!</gray></gradient>ng for a player.",
                 "# The {PLAYER} placeholder is replaced with the player's name."
             })
-            public Notice adminTagOutOff = Notice.chat("&7Successfully enabled tag for &e{PLAYER}!");
+            public Notice adminTagOutOff = Notice.chat("<gradient:#00ff88:#00b300>✌ <gray>Re-enabled tagging for</gray> <white>{PLAYER}</white></gradient>");
 
             @Comment({
                 "# Message displayed to a player when their combat tagging is reenabled.",
                 "# This message informs the player that they can now be tagged again."
             })
-            public Notice playerTagOutOff = Notice.chat("&7You are now taggable!");
+            public Notice playerTagOutOff = Notice.chat("");
 
             @Comment({
                 "# Message displayed when an admin attempts to tag a player who has tag-out enabled.",
                 "# This message informs the admin that the player cannot be tagged at this time."
             })
-            public Notice adminTagOutCanceled = Notice.chat("&cCannot tag this player due to tag-out!");
+            public Notice adminTagOutCanceled = Notice.chat("<gradient:red:dark_red>❌ Player has tag-out protection!</gradient>");
         }
     }
 }
