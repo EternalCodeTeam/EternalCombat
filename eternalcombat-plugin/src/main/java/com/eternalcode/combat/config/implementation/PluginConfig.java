@@ -127,7 +127,9 @@ public class PluginConfig extends OkaeriConfig {
         public List<String> restrictedCommands = List.of(
             "gamemode",
             "spawn",
-            "tp"
+            "tp",
+            "tpa",
+            "tpaccept"
         );
 
         @Comment({
@@ -138,7 +140,7 @@ public class PluginConfig extends OkaeriConfig {
 
         @Comment({
             "# Disable the use of elytra when a player takes damage.",
-            "# Set to 'true' to disable elytra usage upon taking damage."
+            "# Set to 'true' to disable elytra usage upon taking damage, even when the player is mid-air."
         })
         public boolean disableElytraOnDamage = true;
 
@@ -152,7 +154,7 @@ public class PluginConfig extends OkaeriConfig {
             "# Prevent players from opening their inventory during combat.",
             "# Set to 'true' to block inventory access while in combat."
         })
-        public boolean disableInventoryAccess = true;
+        public boolean disableInventoryAccess = false;
 
         @Comment({
             "# Prevent players from placing blocks during combat.",
@@ -220,7 +222,8 @@ public class PluginConfig extends OkaeriConfig {
             "# For a full list of entity types, visit: https://hub.spigotmc.org/javadocs/bukkit/org/bukkit/entity/EntityType.html"
         })
         public List<EntityType> ignoredProjectileTypes = List.of(
-            EntityType.ENDER_PEARL
+            EntityType.ENDER_PEARL,
+            EntityType.EGG
         );
 
     }
@@ -244,7 +247,6 @@ public class PluginConfig extends OkaeriConfig {
             " ",
             "# Configure the combat log notification displayed to players.",
             "# You can use the {TIME} variable to display the remaining combat time.",
-            "# Available notification types: CHAT, ACTION_BAR, TITLE, SUB_TITLE, BOSS_BAR.",
             " ",
             "# BossBar progress: Set to -1.0 to show the remaining combat time as a progress bar.",
             "# BossBar colors: https://javadoc.io/static/net.kyori/adventure-api/4.14.0/net/kyori/adventure/bossbar/BossBar.Color.html",
@@ -342,7 +344,7 @@ public class PluginConfig extends OkaeriConfig {
             public Notice adminUntagPlayer = Notice.chat("&7You have removed &e{PLAYER}&7 from the fight.");
 
             @Comment({
-                "# Message displayed when an admin attempts to tag a player who is not in combat.",
+                "# Message displayed when an admin attempts to untag a player who is not in combat.",
                 "# This message informs the admin that the player is not currently in combat."
             })
             public Notice adminPlayerNotInCombat = Notice.chat("&cThis player is not in combat!");
