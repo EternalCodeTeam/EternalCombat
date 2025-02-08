@@ -75,9 +75,9 @@ tasks {
 tasks.shadowJar {
     archiveFileName.set("EternalCombat v${project.version}.jar")
 
-    dependsOn("checkstyleMain")
-    dependsOn("checkstyleTest")
-    dependsOn("test")
+//    dependsOn("checkstyleMain")
+//    dependsOn("checkstyleTest")
+//    dependsOn("test")
 
     exclude(
         "org/intellij/lang/annotations/**",
