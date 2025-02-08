@@ -34,7 +34,7 @@ public class FightUnTagController implements Listener {
 
         this.fightManager.untag(player.getUniqueId(), cause);
 
-        if (killer != null && this.config.settings.shouldReleaseAttacker) {
+        if (killer != null && this.config.settings.releaseAttackerOnVictimDeath) {
             this.fightManager.untag(killer.getUniqueId(), CauseOfUnTag.ATTACKER_RELEASE);
         }
     }

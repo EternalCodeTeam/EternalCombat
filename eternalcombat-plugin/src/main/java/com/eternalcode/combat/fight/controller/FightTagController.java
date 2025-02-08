@@ -35,7 +35,7 @@ public class FightTagController implements Listener {
             return;
         }
 
-        List<EntityType> disabledProjectileEntities = this.config.settings.disabledProjectileEntities;
+        List<EntityType> disabledProjectileEntities = this.config.settings.ignoredProjectileTypes;
 
         if (event.getDamager() instanceof Projectile projectile && disabledProjectileEntities.contains(projectile.getType())) {
             return;
@@ -51,7 +51,7 @@ public class FightTagController implements Listener {
             return;
         }
 
-        Duration combatTime = this.config.settings.combatDuration;
+        Duration combatTime = this.config.settings.combatTimerDuration;
         UUID attackedUniqueId = attackedPlayerByPerson.getUniqueId();
         UUID attackerUniqueId = attacker.getUniqueId();
 
@@ -63,7 +63,7 @@ public class FightTagController implements Listener {
             return;
         }
 
-        if (this.config.settings.shouldPreventFlying) {
+        if (this.config.settings.disableFlying) {
             if (attackedPlayerByPerson.isFlying()) {
                 attackedPlayerByPerson.setFlying(false);
                 attackedPlayerByPerson.setAllowFlight(false);
@@ -81,7 +81,7 @@ public class FightTagController implements Listener {
 
     @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
     void onEntityDamage(EntityDamageEvent event) {
-        if (!this.config.settings.shouldEnableDamageCauses) {
+        if (!this.config.settings.enableDamageCauseLogging) {
             return;
         }
 
@@ -97,12 +97,12 @@ public class FightTagController implements Listener {
             return;
         }
 
-        Duration combatTime = this.config.settings.combatDuration;
+        Duration combatTime = this.config.settings.combatTimerDuration;
 
         UUID uuid = player.getUniqueId();
 
-        List<EntityDamageEvent.DamageCause> damageCauses = this.config.settings.damageCausesToLog;
-        WhitelistBlacklistMode mode = this.config.settings.damageCausesMode;
+        List<EntityDamageEvent.DamageCause> damageCauses = this.config.settings.loggedDamageCauses;
+        WhitelistBlacklistMode mode = this.config.settings.damageCauseRestrictionMode;
 
         EntityDamageEvent.DamageCause cause = event.getCause();
 
@@ -131,15 +131,15 @@ public class FightTagController implements Listener {
     private boolean isPlayerInDisabledWorld(Player player) {
         String worldName = player.getWorld().getName();
 
-        return this.config.settings.worldsToIgnore.contains(worldName);
+        return this.config.settings.ignoredWorlds.contains(worldName);
     }
 
     private boolean cannotBeTagged(Player player) {
-        if (player.getGameMode().equals(GameMode.CREATIVE) && this.config.settings.excludeCreativeFromCombat) {
+        if (player.getGameMode().equals(GameMode.CREATIVE) && this.config.settings.excludeCreativePlayersFromCombat) {
             return true;
         }
 
-        if (player.isOp() && this.config.settings.excludeOpFromCombat) {
+        if (player.isOp() && this.config.settings.excludeAdminsFromCombat) {
             return true;
         }
 

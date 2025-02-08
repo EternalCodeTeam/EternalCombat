@@ -20,101 +20,174 @@ import java.util.List;
 
 public class PluginConfig extends OkaeriConfig {
 
-    @Comment("# Do you want to change the plugin settings?")
+    @Comment(" ")
+    @Comment("#  _____ _     EternalCombat      _ _____                 _           _    ")
+    @Comment("# |  ___| |  o()xxx[{:::::::::>  | /  __ \\               | |         | |   ")
+    @Comment("# | |__ | |_ ___ _ __ _ __   __ _| | /  \\/ ___  _ __ ___ | |__   __ _| |_  ")
+    @Comment("# |  __|| __/ _ \\ '__| '_ \\ / _` | | |    / _ \\| '_ ` _ \\| '_ \\ / _` | __| ")
+    @Comment("# | |___| ||  __/ |  | | | | (_| | | \\__/\\ (_) | | | | | | |_) | (_| | |_  ")
+    @Comment("# \\____/ \\__\\___|_|  |_| |_|\\__,_|_|\\____/\\___/|_| |_| |_|_.__/ \\__,_|\\__| ")
+    @Comment(" ")
+
+    @Comment({
+        "# Settings for the plugin.",
+        "# Modify these to customize the plugin's behavior."
+    })
     public Settings settings = new Settings();
 
-    @Comment({ " ", "# Ender pearl settings" })
+    @Comment({
+        " ",
+        "# Settings related to Ender Pearls.",
+        "# Configure cooldowns, restrictions, and other behaviors for Ender Pearls during combat."
+    })
     public FightPearlSettings pearl = new FightPearlSettings();
 
-    @Comment({ " ", "# Custom effects settings" })
+    @Comment({
+        " ",
+        "# Custom effects applied during combat.",
+        "# Configure effects like blindness, slowness, or other debuffs that are applied to players in combat."
+    })
     public FightEffectSettings effect = new FightEffectSettings();
 
-    @Comment({ " ", "# Set a custom way for a player's items to drop on death (if in combat)" })
+    @Comment({
+        " ",
+        "# Customize how items are dropped when a player dies during combat.",
+        "# Configure whether items drop, how they drop, and any additional rules for item drops."
+    })
     public DropSettings dropSettings = new DropSettings();
 
     public static class Settings extends OkaeriConfig {
 
-        @Comment("# Whether the player should receive information about new plugin updates upon joining the server")
-        public boolean shouldReceivePluginUpdates = true;
+        @Comment({
+            "# Notify players about new plugin updates when they join the server.",
+            "# Set to 'true' to enable update notifications, or 'false' to disable them."
+        })
+        public boolean notifyAboutUpdates = true;
 
-        @Comment("# The duration of combat in seconds")
-        public Duration combatDuration = Duration.ofSeconds(20);
+        @Comment({
+            "# The duration (in seconds) that a player remains in combat after being attacked.",
+            "# After this time expires, the player will no longer be considered in combat."
+        })
+        public Duration combatTimerDuration = Duration.ofSeconds(20);
 
-        @Comment("# List of worlds to ignore")
-        public List<String> worldsToIgnore = List.of(
+        @Comment({
+            "# List of worlds where combat logging is disabled.",
+            "# Players in these worlds will not be tagged or affected by combat rules."
+        })
+        public List<String> ignoredWorlds = List.of(
             "your_world"
         );
 
-        @Comment("# List of regions to block")
+        @Comment({
+            "# List of regions where combat is restricted.",
+            "# Players in these regions will not be able to engage in combat."
+        })
         public List<String> blockedRegions = Collections.singletonList("your_region");
 
         @Comment({
-            "# Set the knock multiplier for the blocked region",
-            "# Values can be decimal. Do NOT use negative values.",
-            "# Setting it around 1 knocks the player around 2-4 blocks away."
+            "# Adjust the knockback multiplier for restricted regions.",
+            "# Higher values increase the knockback distance. Avoid using negative values.",
+            "# A value of 1.0 typically knocks players 2-4 blocks away."
         })
-        public double blockedRegionKnockMultiplier = 1;
-
-        @Comment({ "# Should the player be prevented from entering regions with WorldGuard flag PVP set to DENY " })
-        public boolean shouldPreventPvpRegions = true;
-
-        @Comment("# Set the radius of the blocked region if you aren't using WorldGuard basen on default spawn region!")
-        public int blockedRegionRadius = 10;
-
-        @Comment("# Release attacker after victim dies?")
-        public boolean shouldReleaseAttacker = true;
-
-        @Comment({ "# If you want to exclude admins from combat, ",
-            "# Setting this to true - admins cannot be tagged and will not tag other players on hit",
-            "# Setting this to false - admins can be tagged and can tag other players on hit"
-        })
-        public boolean excludeOpFromCombat = false;
-
-        @Comment({"# If you want to exclude players in creative mode from combat, ",
-            "# Setting this to true - players in creative mode cannot be tagged and will not tag other players on hit",
-            "# Setting this to false - players in creative mode can be tag others"
-        })
-        public boolean excludeCreativeFromCombat = false;
-
-        @Comment("# Command blocking mode, available modes: WHITELIST, BLACKLIST")
-        public WhitelistBlacklistMode commandBlockingMode = WhitelistBlacklistMode.BLACKLIST;
+        public double regionKnockbackMultiplier = 1;
 
         @Comment({
-            "# List of commands based on the mode above",
-            "# Based on BLACKLIST mode, all commands in the list are blocked, and all others are allowed",
-            "# Based on WHITELIST mode, all commands in the list are allowed, and all others are blocked",
+            "# Prevent players from entering regions where PVP is disabled by WorldGuard.",
+            "# Set to 'true' to enforce this restriction, or 'false' to allow PVP in all regions."
         })
-        public List<String> blockedCommands = List.of(
+        public boolean preventPvpInRegions = true;
+
+        @Comment({
+            "# Define the radius of restricted regions if WorldGuard is not used.",
+            "# This setting is based on the default spawn region."
+        })
+        public int restrictedRegionRadius = 10;
+
+        @Comment({
+            "# Automatically release the attacker from combat when the victim dies.",
+            "# Set to 'true' to enable this feature, or 'false' to keep the attacker in combat."
+        })
+        public boolean releaseAttackerOnVictimDeath = true;
+
+        @Comment({
+            "# Exclude server administrators from combat tagging and being tagged.",
+            "# Set to 'true' to prevent admins from being tagged or tagging others.",
+            "# Set to 'false' to allow admins to participate in combat."
+        })
+        public boolean excludeAdminsFromCombat = false;
+
+        @Comment({
+            "# Exclude players in creative mode from combat tagging and being tagged.",
+            "# Set to 'true' to prevent creative mode players from being tagged or tagging others.",
+            "# Set to 'false' to allow creative mode players to participate in combat."
+        })
+        public boolean excludeCreativePlayersFromCombat = false;
+
+        @Comment({
+            "# Set the mode for command restrictions during combat.",
+            "# Available modes: WHITELIST (only listed commands are allowed), BLACKLIST (listed commands are blocked)."
+        })
+        public WhitelistBlacklistMode commandRestrictionMode = WhitelistBlacklistMode.BLACKLIST;
+
+        @Comment({
+            "# List of commands affected by the command restriction mode.",
+            "# In BLACKLIST mode, these commands are blocked. In WHITELIST mode, only these commands are allowed."
+        })
+        public List<String> restrictedCommands = List.of(
             "gamemode",
             "spawn",
-            "tp"
+            "tp",
+            "tpa",
+            "tpaccept"
         );
 
-        @Comment("# Block the use of elytra?")
-        public boolean shouldPreventElytraUsage = true;
-
-        @Comment("# Block flying? (flying players will fall to the ground)")
-        public boolean shouldPreventFlying = true;
-
-        @Comment("# Disable the use of elytra on damage?")
-        public boolean shouldElytraDisableOnDamage = true;
-
-        @Comment("# Block the opening of inventory?")
-        public boolean shouldPreventInventoryOpening = true;
-
-        @Comment("# Whether to block the placement of blocks?")
-        public boolean shouldPreventBlockPlacing = true;
-
-        @Comment({ "# Block the placement of blocks above or below a certain Y coordinate",
-            "# Select the mode for block placing, available modes: ABOVE, BELOW"
+        @Comment({
+            "# Disable the use of elytra during combat.",
+            "# Set to 'true' to prevent players from using elytra while in combat."
         })
-        public BlockPlacingMode blockPlacingMode = BlockPlacingMode.ABOVE;
+        public boolean disableElytraUsage = true;
 
-        @Comment("# Block placing mode custom name used if messages")
-        public String blockPlacingModeName = "above";
+        @Comment({
+            "# Disable the use of elytra when a player takes damage.",
+            "# Set to 'true' to disable elytra usage upon taking damage, even when the player is mid-air."
+        })
+        public boolean disableElytraOnDamage = true;
 
-        @Comment("# Set the Y coordinate for block placing relative to mode selected above")
-        public int blockPlacingYCoordinate = 40;
+        @Comment({
+            "# Prevent players from flying during combat.",
+            "# Flying players will fall to the ground if this is enabled."
+        })
+        public boolean disableFlying = true;
+
+        @Comment({
+            "# Prevent players from opening their inventory during combat.",
+            "# Set to 'true' to block inventory access while in combat."
+        })
+        public boolean disableInventoryAccess = false;
+
+        @Comment({
+            "# Prevent players from placing blocks during combat.",
+            "# Set to 'true' to block block placement while in combat."
+        })
+        public boolean disableBlockPlacing = true;
+
+        @Comment({
+            "# Restrict block placement above or below a specific Y coordinate.",
+            "# Available modes: ABOVE (blocks cannot be placed above the Y coordinate), BELOW (blocks cannot be placed below the Y coordinate)."
+        })
+        public BlockPlacingMode blockPlacementMode = BlockPlacingMode.ABOVE;
+
+        @Comment({
+            "# Custom name for the block placement mode used in messages.",
+            "# This name will be displayed in notifications related to block placement restrictions."
+        })
+        public String blockPlacementModeDisplayName = "above";
+
+        @Comment({
+            "# Define the Y coordinate for block placement restrictions.",
+            "# This value is relative to the selected block placement mode (ABOVE or BELOW)."
+        })
+        public int blockPlacementYCoordinate = 40;
 
         public enum BlockPlacingMode {
             ABOVE,
@@ -122,26 +195,30 @@ public class PluginConfig extends OkaeriConfig {
         }
 
         @Comment({
-            "# Disable placing specific blocks?",
-            "# If you want to block all blocks, enable shouldPreventBlockPlacing and make this list empty",
-            "# If you want to disable placing only specific blocks, enable shouldPreventBlockPlacing and add blocks to this list above",
-            "# If you want to disable this feature completely, disable shouldPreventBlockPlacing option above",
+            "# Restrict the placement of specific blocks during combat.",
+            "# Add blocks to this list to prevent their placement. Leave the list empty to block all blocks.",
+            "# Note: This feature requires 'disableBlockPlacing' to be enabled."
         })
-        public List<Material> specificBlocksToPreventPlacing = List.of();
-
-        @Comment("# Do You want to enable combat log for non-player causes of damage? - Set to false to disable")
-        public boolean shouldEnableDamageCauses = false;
-
-        @Comment("# Select the mode for damage causes, available modes: WHITELIST, BLACKLIST")
-        public WhitelistBlacklistMode damageCausesMode = WhitelistBlacklistMode.WHITELIST;
+        public List<Material> restrictedBlockTypes = List.of();
 
         @Comment({
-            "# After selecting the mode above, select the causes of damage to be logged",
-            "# You can find a list of all causes here: https://hub.spigotmc.org/javadocs/spigot/org/bukkit/event/entity/EntityDamageEvent.DamageCause.html",
-            "# While using Whitelist mode the player will get a combat log after the damage from the list below",
-            "# While using Blacklist mode the player will get a combat log after any damage non-listed below",
+            "# Enable or disable combat logging for damage caused by non-player entities.",
+            "# Set to 'true' to log damage from non-player sources, or 'false' to disable this feature."
         })
-        public List<EntityDamageEvent.DamageCause> damageCausesToLog = List.of(
+        public boolean enableDamageCauseLogging = false;
+
+        @Comment({
+            "# Set the mode for logging damage causes.",
+            "# Available modes: WHITELIST (only listed causes are logged), BLACKLIST (all causes except listed ones are logged)."
+        })
+        public WhitelistBlacklistMode damageCauseRestrictionMode = WhitelistBlacklistMode.WHITELIST;
+
+        @Comment({
+            "# List of damage causes to be logged based on the selected mode.",
+            "# In WHITELIST mode, only these causes are logged. In BLACKLIST mode, all causes except these are logged.",
+            "# For a full list of damage causes, visit: https://hub.spigotmc.org/javadocs/spigot/org/bukkit/event/entity/EntityDamageEvent.DamageCause.html"
+        })
+        public List<EntityDamageEvent.DamageCause> loggedDamageCauses = List.of(
             EntityDamageEvent.DamageCause.LAVA,
             EntityDamageEvent.DamageCause.CONTACT,
             EntityDamageEvent.DamageCause.FIRE,
@@ -149,115 +226,191 @@ public class PluginConfig extends OkaeriConfig {
         );
 
         @Comment({
-            "# After what type of projectile entity should not tag the player as fighter?",
-            "# You can find a list of all entity types here: https://hub.spigotmc.org/javadocs/bukkit/org/bukkit/entity/EntityType.html"
+            "# List of projectile types that do not trigger combat tagging.",
+            "# Players hit by these projectiles will not be tagged as in combat.",
+            "# For a full list of entity types, visit: https://hub.spigotmc.org/javadocs/bukkit/org/bukkit/entity/EntityType.html"
         })
-        public List<EntityType> disabledProjectileEntities = List.of(
-            EntityType.ENDER_PEARL
+        public List<EntityType> ignoredProjectileTypes = List.of(
+            EntityType.ENDER_PEARL,
+            EntityType.EGG
         );
-
     }
 
-    @Comment({ " ", "# Do you want to change the plugin messages?" })
+    @Comment({
+        " ",
+        "# Customize the messages displayed by the plugin.",
+        "# Modify these to change the text and formatting of notifications and alerts."
+    })
     public Messages messages = new Messages();
 
     public static class Messages extends OkaeriConfig {
 
-        @Comment("# Do you want to change the admin messages?")
+        @Comment({
+            "# Customize messages related to admin commands and notifications.",
+            "# These messages are displayed to server administrators."
+        })
         public AdminMessages admin = new AdminMessages();
 
         @Comment({
             " ",
-            "# Combat log notification",
-            "# You can use {TIME} variable to display the time left in combat",
-            "# Notification types: CHAT, ACTION_BAR, TITLE, SUB_TITLE, BOSS_BAR",
+            "# Configure the combat log notification displayed to players.",
+            "# You can use the {TIME} variable to display the remaining combat time.",
             " ",
-            "# BossBar progress: This is the value of the progress bar. Set it to -1.0 to show the remaining combat time",
+            "# BossBar progress: Set to -1.0 to show the remaining combat time as a progress bar.",
             "# BossBar colors: https://javadoc.io/static/net.kyori/adventure-api/4.14.0/net/kyori/adventure/bossbar/BossBar.Color.html",
             "# BossBar overlays: https://javadoc.io/static/net.kyori/adventure-api/4.14.0/net/kyori/adventure/bossbar/BossBar.Overlay.html"
         })
         public Notice combatNotification = BukkitNotice.builder()
-            .actionBar("&dCombat ends in: &f{TIME}")
+            .actionBar("Combat ends in: <white>{TIME}</white></gradient>")
             .sound(Sound.ENTITY_EXPERIENCE_ORB_PICKUP, SoundCategory.PLAYERS, 2.0F, 1.0F)
             .build();
 
-        @Comment("# Message sent when the player does not have permission to perform a command")
-        public Notice noPermission = Notice.chat("&cYou don't have permission \"{PERMISSION}\" to perform this command!");
-
-        @Comment("# Message sent when the specified player could not be found")
-        public Notice playerNotFound = Notice.chat("&cThe specified player could not be found!");
-
-        @Comment("# Message sent when the player enters combat")
-        public Notice playerTagged = Notice.chat("&cYou are in combat, do not leave the server!");
-
-        @Comment("# Message sent when the player leaves combat")
-        public Notice playerUntagged = Notice.chat("&aYou are no longer in combat! You can safely leave the server.");
-
-        @Comment("# This is broadcast when the player is in combat and logs out")
-        public Notice playerLoggedOutDuringCombat = Notice.chat("&c{PLAYER} logged off during the fight!");
+        @Comment({
+            "# Message displayed when a player lacks permission to execute a command.",
+            "# The {PERMISSION} placeholder is replaced with the required permission."
+        })
+        public Notice noPermission = Notice.chat("<gradient:red:dark_red>You don't have permission <dark_gray>(<gray>{PERMISSION}</gray>)</dark_gray> to perform this command!</gradient>");
 
         @Comment({
-            "# Message sent when the player is in combat and tries to use a disabled command",
-            "# you can configure the list of disabled commands in the blockedCommands section of the config.yml file"
+            "# Message displayed when a specified player is not found.",
+            "# This message is shown when a command targets a player who is not online or does not exist."
         })
-        public Notice commandDisabledDuringCombat = Notice.chat("&cUsing this command during combat is prohibited!");
+        public Notice playerNotFound = Notice.chat("<gradient:#ff0000:#ff6b6b>The specified player could not be found!</gradient>");
 
-        @Comment("# Message sent when player tries to use a command with invalid arguments")
-        public Notice invalidCommandUsage = Notice.chat("&7Correct usage: &e{USAGE}");
+        @Comment({
+            "# Message displayed when a player enters combat.",
+            "# This message warns the player not to leave the server while in combat."
+        })
+        public Notice playerTagged = Notice.chat("<gradient:red:yellow>⚠ <white>You are in combat!</white> <u>Do not leave the server!</gradient>");
 
-        @Comment("# Message sent when player tries to open inventory, but the inventory open is blocked")
-        public Notice inventoryBlockedDuringCombat = Notice.chat("&cYou cannot open this inventory during combat!");
+        @Comment({
+            "# Message displayed when a player leaves combat.",
+            "# This message informs the player that they can safely leave the server."
+        })
+        public Notice playerUntagged = Notice.chat("<gradient:#00ff00:#00b300>✌ <white>Combat ended!</white> You can now safely leave!</u></gradient>");
 
-        @Comment({ "# Message sent when player tries to place a block, but the block place is blocked",
-            "# Placeholder {Y} is replaced with the Y coordinate set in the config",
-            "# Placeholder {MODE} is replaced with the mode set in the config" })
-        public Notice blockPlacingBlockedDuringCombat = Notice.chat("&cYou cannot place {MODE} {Y} coordinate during combat!");
+        @Comment({
+            "# Broadcast message displayed when a player logs out during combat.",
+            "# The {PLAYER} placeholder is replaced with the player's name."
+        })
+        public Notice playerLoggedOutDuringCombat = Notice.chat("<gradient:red:dark_red>⚠ <white>{PLAYER}</white> logged off during combat!</gradient>");
 
-        @Comment("# Message sent when player tries to enter a region")
-        public Notice cantEnterOnRegion = Notice.chat("&cYou can't enter this region during combat!");
+        @Comment({
+            "# Message displayed when a player attempts to use a disabled command during combat.",
+            "# This message informs the player that the command is prohibited while in combat."
+        })
+        public Notice commandDisabledDuringCombat = Notice.chat("<gradient:red:yellow>⚠ <white>Command blocked!</white> Cannot use this during combat!</gradient>");
+
+        @Comment({
+            "# Message displayed when a player uses a command with incorrect arguments.",
+            "# The {USAGE} placeholder is replaced with the correct command syntax."
+        })
+        public Notice invalidCommandUsage = Notice.chat("<gray>Usage: <gradient:gold:yellow>{USAGE}</gradient>");
+
+        @Comment({
+            "# Message displayed when a player attempts to open their inventory during combat.",
+            "# This message informs the player that inventory access is blocked while in combat."
+        })
+        public Notice inventoryBlockedDuringCombat = Notice.chat("<gradient:red:dark_red>⚠ <white>Inventory access</white> is restricted during combat!</gradient>");
+
+        @Comment({
+            "# Message displayed when a player attempts to place a block during combat.",
+            "# The {MODE} placeholder is replaced with the block placement mode (ABOVE/BELOW).",
+            "# The {Y} placeholder is replaced with the Y coordinate set in the config."
+        })
+        public Notice blockPlacingBlockedDuringCombat = Notice.chat("<gradient:red:yellow>⚠ Block placement <white>{MODE} Y:{Y}</white> is restricted!</gradient>");
+
+        @Comment({
+            "# Message displayed when a player attempts to enter a restricted region during combat.",
+            "# This message informs the player that they cannot enter the region while in combat."
+        })
+        public Notice cantEnterOnRegion = Notice.chat("<gradient:red:dark_red>⚠ Restricted area!</gradient> <white>Cannot enter during combat!</white>");
 
         public static class AdminMessages extends OkaeriConfig {
-            @Comment("# Message sent when console tries to use a command that is only for players")
-            public Notice onlyForPlayers = Notice.chat("&cThis command is only available to players!");
+            @Comment({
+                "# Message displayed when the console attempts to use a player-only command.",
+                "# This message informs the console that the command is not available for non-players."
+            })
+            public Notice onlyForPlayers = Notice.chat("<gradient:red:dark_red>❌ This command is player-only!</gradient>");
 
-            @Comment("# Message sent to admin when they tag a player")
-            public Notice adminTagPlayer = Notice.chat("&7You have tagged &e{PLAYER}");
+            @Comment({
+                "# Message displayed to an admin when they tag a player.",
+                "# The {PLAYER} placeholder is replaced with the tagged player's name."
+            })
+            public Notice adminTagPlayer = Notice.chat("<gradient:#00b3ff:#0066ff>⚔ <gray>Tagged player:</gray> <white>{PLAYER}</white></gradient>");
 
-            @Comment("# Message sent when a player is tagged by an admin")
-            public Notice adminTagMultiplePlayers = Notice.chat("&7You have tagged &e{FIRST_PLAYER}&7 and &e{SECOND_PLAYER}&7.");
+            @Comment({
+                "# Message displayed when an admin tags multiple players.",
+                "# The {FIRST_PLAYER} and {SECOND_PLAYER} placeholders are replaced with the players' names."
+            })
+            public Notice adminTagMultiplePlayers = Notice.chat("<gradient:#00b3ff:#0066ff>⚔ <gray>Tagged:</gray> <white>{FIRST_PLAYER}</white> <gray>and</gray> <white>{SECOND_PLAYER}</white></gradient>");
 
-            @Comment("# Message sent to admin when they remove a player from combat")
-            public Notice adminUntagPlayer = Notice.chat("&7You have removed &e{PLAYER}&7 from the fight.");
+            @Comment({
+                "# Message displayed to an admin when they remove a player from combat.",
+                "# The {PLAYER} placeholder is replaced with the player's name."
+            })
+            public Notice adminUntagPlayer = Notice.chat("<gradient:#00ff88:#00b300>✌ <gray>Removed</gray> <white>{PLAYER}</white> <gray>from combat</gray></gradient>");
 
-            @Comment("# Message sent when the player is not in combat")
-            public Notice adminPlayerNotInCombat = Notice.chat("&cThis player is not in combat!");
+            @Comment({
+                "# Message displayed when an admin attempts to untag a player who is not in combat.",
+                "# This message informs the admin that the player is not currently in combat."
+            })
+            public Notice adminPlayerNotInCombat = Notice.chat("<gradient:red:dark_red>❌ <white>{PLAYER}</white> is not in combat!</gradient>");
 
-            @Comment("# Message sent when the player is in combat")
-            public Notice playerInCombat = Notice.chat("&c{PLAYER} is currently in combat!");
+            @Comment({
+                "# Message displayed when a player is in combat.",
+                "# The {PLAYER} placeholder is replaced with the player's name."
+            })
+            public Notice playerInCombat = Notice.chat("<gradient:#ff6666:#ff0000>⚔ <white>{PLAYER}</white> <gray>is in combat!</gray></gradient>");
 
-            @Comment("# Message sent when a player is not in combat")
-            public Notice playerNotInCombat = Notice.chat("&a{PLAYER} is not currently in combat.");
+            @Comment({
+                "# Message displayed when a player is not in combat.",
+                "# The {PLAYER} placeholder is replaced with the player's name."
+            })
+            public Notice playerNotInCombat = Notice.chat("<gradient:#00ff00:#00b300>✌ <white>{PLAYER}</white> <gray>is safe</gray></gradient>");
 
-            @Comment("# Message sent when an admin tries to tag themselves")
-            public Notice adminCannotTagSelf = Notice.chat("&cYou cannot tag yourself!");
+            @Comment({
+                "# Message displayed when an admin attempts to tag themselves.",
+                "# This message informs the admin that they cannot tag themselves."
+            })
+            public Notice adminCannotTagSelf = Notice.chat("<gradient:red:dark_red>❌ Cannot tag yourself!</gradient>");
 
-            @Comment("# Message sent when an admin disables the ability to get tagged for some time")
-            public Notice adminTagOutSelf = Notice.chat("&7Successfully disabled tag for Yourself! You will be taggable after &e{TIME} ");
+            @Comment({
+                "# Message displayed when an admin disables combat tagging for themselves.",
+                "# The {TIME} placeholder is replaced with the remaining fight time."
+            })
+            public Notice adminTagOutSelf = Notice.chat("<gradient:#00b3ff:#0066ff>🛡 <gray>Self-protection active for</gray> <white>{TIME}</white></gradient>");
 
-            @Comment("# Message sent when an admin disables the ability to get tagged for some time for other player")
-            public Notice adminTagOut = Notice.chat("&7Successfully disabled tag for &e{PLAYER}! They will be taggable after &e{TIME} ");
+            @Comment({
+                "# Message displayed when an admin disables combat tagging for another player.",
+                "# The {PLAYER} placeholder is replaced with the player's name.",
+                "# The {TIME} placeholder is replaced with the remaining fight time."
+            })
+            public Notice adminTagOut = Notice.chat("<gradient:#00b3ff:#0066ff>🛡 <gray>Protected</gray> <white>{PLAYER}</white> <gray>for</gray> <white>{TIME}</white></gradient>");
 
-            @Comment("# Message sent to the player whom the ability to get tagged for some time has been disabled")
-            public Notice playerTagOut = Notice.chat("&7You will be taggable in &e{TIME} !");
+            @Comment({
+                "# Message displayed to a player when their combat tagging is disabled.",
+                "# The {TIME} placeholder is replaced with the remaining fight time."
+            })
+            public Notice playerTagOut = Notice.chat("<gradient:#00ff88:#00b300>🛡 <gray>Protection active for</gray> <white>{TIME}</white></gradient>");
 
-            @Comment("# Message sent when an admin reenables the ability to get tagged for the player")
-            public Notice adminTagOutOff = Notice.chat("&7Successfully enabled tag for &e{PLAYER}!");
+            @Comment({
+                "# Message displayed when an admin reenables combat tagging for a player.",
+                "# The {PLAYER} placeholder is replaced with the player's name."
+            })
+            public Notice adminTagOutOff = Notice.chat("<gradient:#00ff88:#00b300>✌ <gray>Re-enabled tagging for</gray> <white>{PLAYER}</white></gradient>");
 
-            @Comment("# Message sent to the player whom the ability to get tagged has been reenabled")
-            public Notice playerTagOutOff = Notice.chat("&7You are now taggable!");
+            @Comment({
+                "# Message displayed to a player when their combat tagging is reenabled.",
+                "# This message informs the player that they can now be tagged again."
+            })
+            public Notice playerTagOutOff = Notice.chat("");
 
-            @Comment("# Message sent when player cannot be tagged because they have enabled tag-out")
-            public Notice adminTagOutCanceled = Notice.chat("&cCannot tag this player due to tag-out!");
+            @Comment({
+                "# Message displayed when an admin attempts to tag a player who has tag-out enabled.",
+                "# This message informs the admin that the player cannot be tagged at this time."
+            })
+            public Notice adminTagOutCanceled = Notice.chat("<gradient:red:dark_red>❌ Player has tag-out protection!</gradient>");
         }
     }
 }

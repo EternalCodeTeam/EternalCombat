@@ -53,7 +53,7 @@ public class FightTagCommand {
     @Priority(PriorityValue.HIGH)
     void tag(@Context CommandSender sender, @Arg Player target) {
         UUID targetUniqueId = target.getUniqueId();
-        Duration time = this.config.settings.combatDuration;
+        Duration time = this.config.settings.combatTimerDuration;
 
         FightTagEvent event = this.fightManager.tag(targetUniqueId, time, CauseOfTag.COMMAND);
 
@@ -76,7 +76,7 @@ public class FightTagCommand {
     @Execute(name = "tag")
     @Permission("eternalcombat.tag")
     void tagMultiple(@Context CommandSender sender, @Arg Player firstTarget, @Arg Player secondTarget) {
-        Duration combatTime = this.config.settings.combatDuration;
+        Duration combatTime = this.config.settings.combatTimerDuration;
         PluginConfig.Messages messages = this.config.messages;
 
         if (sender.equals(firstTarget) || sender.equals(secondTarget)) {

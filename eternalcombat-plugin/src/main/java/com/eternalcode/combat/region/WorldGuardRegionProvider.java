@@ -48,7 +48,7 @@ public class WorldGuardRegionProvider implements RegionProvider {
             return true;
         }
 
-        if (this.pluginConfig.settings.shouldPreventPvpRegions) {
+        if (this.pluginConfig.settings.preventPvpInRegions) {
             StateFlag.State flag = region.getFlag(Flags.PVP);
 
             if (flag != null) {
