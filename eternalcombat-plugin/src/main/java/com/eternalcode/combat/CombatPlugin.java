@@ -1,38 +1,34 @@
 package com.eternalcode.combat;
 
 import com.eternalcode.combat.bridge.BridgeService;
-import com.eternalcode.combat.fight.drop.DropKeepInventoryService;
-import com.eternalcode.combat.fight.FightManager;
-import com.eternalcode.combat.fight.drop.DropService;
-import com.eternalcode.combat.fight.effect.FightEffectService;
-import com.eternalcode.combat.fight.tagout.FightTagOutService;
-import com.eternalcode.combat.fight.pearl.FightPearlService;
-import com.eternalcode.combat.handler.InvalidUsageHandlerImpl;
-import com.eternalcode.combat.handler.MissingPermissionHandlerImpl;
 import com.eternalcode.combat.config.ConfigService;
 import com.eternalcode.combat.config.implementation.PluginConfig;
-import com.eternalcode.combat.fight.drop.DropController;
-import com.eternalcode.combat.fight.drop.DropKeepInventoryServiceImpl;
-import com.eternalcode.combat.fight.drop.DropServiceImpl;
-import com.eternalcode.combat.fight.drop.impl.PercentDropModifier;
-import com.eternalcode.combat.fight.drop.impl.PlayersHealthDropModifier;
+import com.eternalcode.combat.event.EventCaller;
+import com.eternalcode.combat.fight.FightManager;
+import com.eternalcode.combat.fight.FightManagerImpl;
 import com.eternalcode.combat.fight.FightTagCommand;
+import com.eternalcode.combat.fight.FightTask;
 import com.eternalcode.combat.fight.controller.FightActionBlockerController;
 import com.eternalcode.combat.fight.controller.FightMessageController;
 import com.eternalcode.combat.fight.controller.FightTagController;
 import com.eternalcode.combat.fight.controller.FightUnTagController;
+import com.eternalcode.combat.fight.drop.*;
+import com.eternalcode.combat.fight.drop.impl.PercentDropModifier;
+import com.eternalcode.combat.fight.drop.impl.PlayersHealthDropModifier;
 import com.eternalcode.combat.fight.effect.FightEffectController;
-import com.eternalcode.combat.event.EventCaller;
-import com.eternalcode.combat.fight.FightManagerImpl;
-import com.eternalcode.combat.fight.FightTask;
+import com.eternalcode.combat.fight.effect.FightEffectService;
 import com.eternalcode.combat.fight.effect.FightEffectServiceImpl;
 import com.eternalcode.combat.fight.logout.LogoutController;
 import com.eternalcode.combat.fight.logout.LogoutService;
 import com.eternalcode.combat.fight.pearl.FightPearlController;
+import com.eternalcode.combat.fight.pearl.FightPearlService;
 import com.eternalcode.combat.fight.pearl.FightPearlServiceImpl;
-import com.eternalcode.combat.fight.tagout.FightTagOutController;
-import com.eternalcode.combat.fight.tagout.FightTagOutServiceImpl;
 import com.eternalcode.combat.fight.tagout.FightTagOutCommand;
+import com.eternalcode.combat.fight.tagout.FightTagOutController;
+import com.eternalcode.combat.fight.tagout.FightTagOutService;
+import com.eternalcode.combat.fight.tagout.FightTagOutServiceImpl;
+import com.eternalcode.combat.handler.InvalidUsageHandlerImpl;
+import com.eternalcode.combat.handler.MissingPermissionHandlerImpl;
 import com.eternalcode.combat.notification.NotificationAnnouncer;
 import com.eternalcode.combat.region.RegionController;
 import com.eternalcode.combat.region.RegionProvider;
@@ -49,6 +45,7 @@ import net.kyori.adventure.platform.AudienceProvider;
 import net.kyori.adventure.platform.bukkit.BukkitAudiences;
 import net.kyori.adventure.text.minimessage.MiniMessage;
 import org.bstats.bukkit.Metrics;
+import org.bukkit.Bukkit;
 import org.bukkit.Server;
 import org.bukkit.command.CommandSender;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -97,8 +94,6 @@ public final class CombatPlugin extends JavaPlugin implements EternalCombatApi {
         this.fightTagOutService = new FightTagOutServiceImpl();
         this.fightEffectService = new FightEffectServiceImpl();
         this.logoutService = new LogoutService();
-        this.dropService = new DropServiceImpl();
-        this.dropKeepInventoryService = new DropKeepInventoryServiceImpl();
 
         UpdaterService updaterService = new UpdaterService(this.getDescription());
 
@@ -141,13 +136,6 @@ public final class CombatPlugin extends JavaPlugin implements EternalCombatApi {
         new Metrics(this, BSTATS_METRICS_ID);
 
         Stream.of(
-            new PercentDropModifier(this.pluginConfig.dropSettings),
-            new PlayersHealthDropModifier(this.pluginConfig.dropSettings, this.logoutService)
-        ).forEach(this.dropService::registerModifier);
-
-
-        Stream.of(
-            new DropController(this.dropService, this.dropKeepInventoryService, this.pluginConfig.dropSettings, this.fightManager),
             new FightTagController(this.fightManager, this.pluginConfig),
             new LogoutController(this.fightManager, this.logoutService, notificationAnnouncer, this.pluginConfig),
             new FightUnTagController(this.fightManager, this.pluginConfig, this.logoutService),
@@ -159,6 +147,18 @@ public final class CombatPlugin extends JavaPlugin implements EternalCombatApi {
             new FightTagOutController(this.fightTagOutService),
             new FightMessageController(this.fightManager, notificationAnnouncer, this.pluginConfig, this.getServer())
         ).forEach(listener -> this.getServer().getPluginManager().registerEvents(listener, this));
+
+        if (!(this.pluginConfig.dropSettings.dropType == DropType.UNCHANGED)) {
+            this.dropService = new DropServiceImpl();
+            this.dropKeepInventoryService = new DropKeepInventoryServiceImpl();
+            Bukkit.getPluginManager().registerEvents(new DropController(this.dropService,
+                this.dropKeepInventoryService, this.pluginConfig.dropSettings, this.fightManager), this);
+
+            Stream.of(
+                new PercentDropModifier(this.pluginConfig.dropSettings),
+                new PlayersHealthDropModifier(this.pluginConfig.dropSettings, this.logoutService)
+            ).forEach(this.dropService::registerModifier);
+        }
 
         EternalCombatProvider.initialize(this);
 
