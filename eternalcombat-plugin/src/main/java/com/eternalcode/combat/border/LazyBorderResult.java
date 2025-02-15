@@ -1,7 +1,7 @@
 package com.eternalcode.combat.border;
 
+import dev.rollczi.litecommands.shared.Lazy;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 import java.util.function.Supplier;
@@ -10,9 +10,9 @@ import java.util.stream.StreamSupport;
 
 class LazyBorderResult implements BorderResult {
 
-    private final List<Supplier<List<BorderPoint>>> borderPoints = new ArrayList<>();
+    private final List<Lazy<List<BorderPoint>>> borderPoints = new ArrayList<>();
 
-    void addLazyBorderPoints(Supplier<List<BorderPoint>> supplier) {
+    void addLazyBorderPoints(Lazy<List<BorderPoint>> supplier) {
         borderPoints.add(supplier);
     }
 
@@ -21,13 +21,13 @@ class LazyBorderResult implements BorderResult {
     }
 
     @Override
-    public Stream<BorderPoint> parallelStream() {
+    public Stream<BorderPoint> stream() {
         if (borderPoints.isEmpty()) {
             return Stream.empty();
         }
 
         Iterable<BorderPoint> iterable = () -> new LazyBorderResultIterator();
-        return StreamSupport.stream(iterable.spliterator(), true);
+        return StreamSupport.stream(iterable.spliterator(), false);
     }
 
     private class LazyBorderResultIterator implements Iterator<BorderPoint> {
@@ -47,7 +47,6 @@ class LazyBorderResult implements BorderResult {
             currentSupplierIndex++;
             currentIterator = borderPoints.get(currentSupplierIndex).get().iterator();
             return currentIterator.hasNext();
-
         }
 
         @Override

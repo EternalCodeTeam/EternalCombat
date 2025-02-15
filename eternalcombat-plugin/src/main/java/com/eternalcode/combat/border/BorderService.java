@@ -1,10 +1,13 @@
 package com.eternalcode.combat.border;
 
-import java.util.Optional;
+import java.util.Set;
 import org.bukkit.Location;
+import org.bukkit.entity.Player;
 
 public interface BorderService {
 
-    Optional<BorderResult> resolveBorder(Location location);
+    void updateBorder(Player player, Location to);
+
+    Set<BorderPoint> getActiveBorder(Player player);
 
 }

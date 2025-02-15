@@ -1,8 +1,12 @@
 package com.eternalcode.combat.border;
 
+import com.eternalcode.combat.border.event.BorderHideAsyncEvent;
+import com.eternalcode.combat.border.event.BorderShowAsyncEvent;
+import com.eternalcode.combat.event.EventCaller;
 import com.eternalcode.combat.region.Region;
 import com.eternalcode.combat.region.RegionProvider;
 import com.eternalcode.commons.scheduler.Scheduler;
+import dev.rollczi.litecommands.shared.Lazy;
 import java.time.Duration;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -11,23 +15,30 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
+import java.util.concurrent.CompletableFuture;
+import java.util.function.Consumer;
+import java.util.stream.Collectors;
 import org.bukkit.Location;
 import org.bukkit.Server;
 import org.bukkit.World;
+import org.bukkit.entity.Player;
 
 public class BorderServiceImpl implements BorderService {
 
     private final Scheduler scheduler;
-    private final double distance;
-    private final int distanceRounded;
-    private final double distanceSquared;
-    private final Map<String, BorderTriggerIndex> borderIndexes = new HashMap<>();
+    private final EventCaller eventCaller;
 
-    public BorderServiceImpl(Scheduler scheduler, Server server, RegionProvider provider, double distance) {
+    private final int distanceRounded;
+    private final double distance;
+
+    private final Map<String, BorderTriggerIndex> borderIndexes = new HashMap<>();
+    private final BorderActivePointsRegistry activeBorderPoints = new BorderActivePointsRegistry();
+
+    public BorderServiceImpl(Scheduler scheduler, Server server, RegionProvider provider, EventCaller eventCaller, double distance) {
         this.scheduler = scheduler;
-        this.distance = distance;
+        this.eventCaller = eventCaller;
         this.distanceRounded = (int) Math.ceil(distance);
-        this.distanceSquared = Math.pow(distance, 2);
+        this.distance = distance;
         this.scheduler.timerSync(() -> {
             for (World world : server.getWorlds()) {
                 this.updateTriggersAsync(world.getName(), provider.getRegions(world));
@@ -44,20 +55,62 @@ public class BorderServiceImpl implements BorderService {
                 triggers.add(new BorderTrigger(min.getBlockX(), min.getBlockY(), min.getBlockZ(), max.getBlockX(), max.getBlockY(), max.getBlockZ(), distanceRounded));
             }
 
-            this.borderIndexes.put(world, BorderTriggerIndex.create(triggers));
+            BorderTriggerIndex index = BorderTriggerIndex.create(triggers);
+            this.borderIndexes.put(world, index);
         });
     }
 
     @Override
-    public Optional<BorderResult> resolveBorder(Location location) {
+    public void updateBorder(Player player, Location location) {
+        Optional<BorderResult> result = resolveBorder(location);
+        String world = player.getWorld().getName();
+
+        if (result.isEmpty()) {
+            if (this.activeBorderPoints.hasPoints(world, player.getUniqueId())) {
+                return;
+            }
+
+            scheduler.async(() -> {
+                Set<BorderPoint> borderPoints = this.activeBorderPoints.removePoints(world, player.getUniqueId());
+                if (!borderPoints.isEmpty()) {
+                    eventCaller.publishEvent(new BorderHideAsyncEvent(player, borderPoints));
+                }
+            });
+            return;
+        }
+
+        scheduler.async(() -> {
+            BorderResult borderResult = result.get();
+            Set<BorderPoint> points = borderResult.stream()
+                .collect(Collectors.toSet());
+
+            if (!points.isEmpty()) {
+                BorderShowAsyncEvent event = eventCaller.publishEvent(new BorderShowAsyncEvent(player, points));
+                points = event.getPoints();
+            }
+
+            Set<BorderPoint> toRemove = this.activeBorderPoints.putPoints(world, player.getUniqueId(), points); // async
+
+            if (!toRemove.isEmpty()) { // async
+                eventCaller.publishEvent(new BorderHideAsyncEvent(player, toRemove)); // async
+            }
+        });
+    }
+
+    @Override
+    public Set<BorderPoint> getActiveBorder(Player player) {
+        return this.activeBorderPoints.getPoints(player.getWorld().getName(), player.getUniqueId());
+    }
+
+    private Optional<BorderResult> resolveBorder(Location location) {
         BorderTriggerIndex index = borderIndexes.get(location.getWorld().getName());
         if (index == null) {
             return Optional.empty();
         }
 
-        int x = location.getBlockX();
-        int y = location.getBlockY();
-        int z = location.getBlockZ();
+        int x = (int) Math.round(location.getX());
+        int y = (int) Math.round(location.getY());
+        int z = (int) Math.round(location.getZ());
         Set<BorderTrigger> triggers = index.getTriggers(x, z);
         LazyBorderResult result = new LazyBorderResult();
 
@@ -66,7 +119,7 @@ public class BorderServiceImpl implements BorderService {
                 continue;
             }
 
-            result.addLazyBorderPoints(() -> this.resolveBorderPoints(trigger, x, y, z));
+            result.addLazyBorderPoints(new Lazy<>(() -> this.resolveBorderPoints(trigger, location)));
         }
 
         if (result.isEmpty()) {
@@ -76,9 +129,13 @@ public class BorderServiceImpl implements BorderService {
         return Optional.of(result);
     }
 
-    private List<BorderPoint> resolveBorderPoints(BorderTrigger trigger, int x, int y, int z) {
+    private List<BorderPoint> resolveBorderPoints(BorderTrigger trigger, Location playerLocation) {
         BorderPoint borderMin = trigger.min();
         BorderPoint borderMax = trigger.max();
+
+        int x = (int) Math.round(playerLocation.getX());
+        int y = (int) Math.round(playerLocation.getY());
+        int z = (int) Math.round(playerLocation.getZ());
 
         int realMinX = Math.max(borderMin.x(), x - distanceRounded);
         int realMaxX = Math.min(borderMax.x(), x + distanceRounded);
@@ -90,9 +147,9 @@ public class BorderServiceImpl implements BorderService {
         List<BorderPoint> points = new ArrayList<>();
 
         if (borderMin.y() >= realMinY) {
-            for (int currentX = realMinX; currentX <= realMaxX; currentX++) {
-                for (int currentZ = realMinZ; currentZ <= realMaxZ; currentZ++) {
-                    addPoint(points, currentX, realMinY, currentZ, x, y, z);
+            for (int currentX = realMinX; currentX <= realMaxX - 1; currentX++) {
+                for (int currentZ = realMinZ; currentZ <= realMaxZ - 1; currentZ++) {
+                    addPoint(points, currentX, realMinY, currentZ, playerLocation, null);
                 }
             }
         }
@@ -100,15 +157,16 @@ public class BorderServiceImpl implements BorderService {
         if (borderMax.y() <= realMaxY) {
             for (int currentX = realMinX; currentX <= realMaxX; currentX++) {
                 for (int currentZ = realMinZ; currentZ <= realMaxZ; currentZ++) {
-                    addPoint(points, currentX, realMaxY, currentZ, x, y, z);
+                    BorderPoint inclusive = new BorderPoint(Math.max(realMinX, currentX - 1), realMaxY - 1, Math.max(realMinZ, currentZ - 1));
+                    addPoint(points, currentX, realMaxY, currentZ, playerLocation, inclusive);
                 }
             }
         }
 
         if (borderMin.x() >= realMinX) {
-            for (int currentY = realMinY; currentY <= realMaxY; currentY++) {
-                for (int currentZ = realMinZ; currentZ <= realMaxZ; currentZ++) {
-                    addPoint(points, realMinX, currentY, currentZ, x, y, z);
+            for (int currentY = realMinY; currentY <= realMaxY - 1; currentY++) {
+                for (int currentZ = realMinZ; currentZ <= realMaxZ - 1; currentZ++) {
+                    addPoint(points, realMinX, currentY, currentZ, playerLocation, null);
                 }
             }
         }
@@ -116,15 +174,16 @@ public class BorderServiceImpl implements BorderService {
         if (borderMax.x() <= realMaxX) {
             for (int currentY = realMinY; currentY <= realMaxY; currentY++) {
                 for (int currentZ = realMinZ; currentZ <= realMaxZ; currentZ++) {
-                    addPoint(points, realMaxX, currentY, currentZ, x, y, z);
+                    BorderPoint inclusive = new BorderPoint(realMaxX - 1, Math.max(realMinY, currentY - 1), Math.max(realMinZ, currentZ - 1));
+                    addPoint(points, realMaxX, currentY, currentZ, playerLocation, inclusive);
                 }
             }
         }
 
         if (borderMin.z() >= realMinZ) {
-            for (int currentX = realMinX; currentX <= realMaxX; currentX++) {
-                for (int currentY = realMinY; currentY <= realMaxY; currentY++) {
-                    addPoint(points, currentX, currentY, realMinZ, x, y, z);
+            for (int currentX = realMinX; currentX <= realMaxX - 1; currentX++) {
+                for (int currentY = realMinY; currentY <= realMaxY - 1; currentY++) {
+                    addPoint(points, currentX, currentY, realMinZ, playerLocation, null);
                 }
             }
         }
@@ -132,7 +191,8 @@ public class BorderServiceImpl implements BorderService {
         if (borderMax.z() <= realMaxZ) {
             for (int currentX = realMinX; currentX <= realMaxX; currentX++) {
                 for (int currentY = realMinY; currentY <= realMaxY; currentY++) {
-                    addPoint(points, currentX, currentY, realMaxZ, x, y, z);
+                    BorderPoint inclusive = new BorderPoint(Math.max(realMinX, currentX - 1), Math.max(realMinY, currentY - 1), realMaxZ - 1);
+                    addPoint(points, currentX, currentY, realMaxZ, playerLocation, inclusive);
                 }
             }
         }
@@ -140,16 +200,16 @@ public class BorderServiceImpl implements BorderService {
         return points;
     }
 
-    private void addPoint(List<BorderPoint> points, int x, int y, int z, int playerX, int playerY, int playerZ) {
-        if (isNotVisible(x, y, z, playerX, playerY, playerZ)) {
+    private void addPoint(List<BorderPoint> points, int x, int y, int z, Location playerLocation, BorderPoint inclusive) {
+        if (isNotVisible(x, y, z, playerLocation)) {
             return;
         }
 
-        points.add(new BorderPoint(x, y, z));
+        points.add(new BorderPoint(x, y, z, inclusive));
     }
 
-    private boolean isNotVisible(int currentX, int currentY, int currentZ, int x, int y, int z) {
-        return Math.pow(currentX - x, 2) + Math.pow(currentY - y, 2) + Math.pow(currentZ - z, 2) > this.distanceSquared;
+    private boolean isNotVisible(int x, int y, int z, Location playerLocation) {
+        return Math.sqrt(Math.pow(x - playerLocation.getX(), 2) + Math.pow(y - playerLocation.getY(), 2) + Math.pow(z - playerLocation.getZ(), 2)) > this.distance;
     }
 
 }

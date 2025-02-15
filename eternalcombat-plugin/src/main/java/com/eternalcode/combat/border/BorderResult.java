@@ -4,6 +4,8 @@ import java.util.stream.Stream;
 
 public interface BorderResult {
 
-    Stream<BorderPoint> parallelStream();
+    BorderResult EMPTY = () -> Stream.empty();
+
+    Stream<BorderPoint> stream();
 
 }

@@ -29,6 +29,7 @@ object Versions {
     const val WORLD_GUARD_BUKKIT = "7.0.9"
 
     const val PLACEHOLDER_API = "2.11.6"
+    const val PAPERLIB = "1.0.8"
 
 }
 

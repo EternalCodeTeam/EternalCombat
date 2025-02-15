@@ -1,8 +1,10 @@
 package com.eternalcode.combat;
 
-import com.eternalcode.combat.border.BorderParticleController;
+import com.eternalcode.combat.border.BorderUpdateController;
 import com.eternalcode.combat.border.BorderService;
 import com.eternalcode.combat.border.BorderServiceImpl;
+import com.eternalcode.combat.border.particle.BorderBlockController;
+import com.eternalcode.combat.border.particle.BorderParticleController;
 import com.eternalcode.combat.bridge.BridgeService;
 import com.eternalcode.combat.fight.drop.DropKeepInventoryService;
 import com.eternalcode.combat.fight.FightManager;
@@ -125,7 +127,7 @@ public final class CombatPlugin extends JavaPlugin implements EternalCombatApi {
         BridgeService bridgeService = new BridgeService(this.pluginConfig, server.getPluginManager(), this.getLogger(), this);
         bridgeService.init(this.fightManager, server);
         this.regionProvider = bridgeService.getRegionProvider();
-        BorderService borderService = new BorderServiceImpl(scheduler, server, regionProvider, 6.5);
+        BorderService borderService = new BorderServiceImpl(scheduler, server, regionProvider, eventCaller, 6.5);
 
         NotificationAnnouncer notificationAnnouncer = new NotificationAnnouncer(this.audienceProvider, this.pluginConfig, miniMessage);
 
@@ -172,7 +174,9 @@ public final class CombatPlugin extends JavaPlugin implements EternalCombatApi {
             new FightEffectController(this.pluginConfig.effect, this.fightEffectService, this.fightManager, this.getServer()),
             new FightTagOutController(this.fightTagOutService),
             new FightMessageController(this.fightManager, notificationAnnouncer, this.pluginConfig, this.getServer()),
-            new BorderParticleController(borderService, scheduler)
+            new BorderUpdateController(borderService),
+            new BorderParticleController(borderService, scheduler, server),
+            new BorderBlockController(borderService, scheduler, server)
         ).forEach(listener -> this.getServer().getPluginManager().registerEvents(listener, this));
 
         EternalCombatProvider.initialize(this);
