@@ -8,6 +8,8 @@ public interface BorderService {
 
     void updateBorder(Player player, Location to);
 
+    void clearBorder(Player player);
+
     Set<BorderPoint> getActiveBorder(Player player);
 
 }

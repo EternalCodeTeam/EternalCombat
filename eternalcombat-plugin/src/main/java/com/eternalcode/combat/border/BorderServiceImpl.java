@@ -15,8 +15,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
-import java.util.concurrent.CompletableFuture;
-import java.util.function.Consumer;
+import java.util.UUID;
 import java.util.stream.Collectors;
 import org.bukkit.Location;
 import org.bukkit.Server;
@@ -70,12 +69,7 @@ public class BorderServiceImpl implements BorderService {
                 return;
             }
 
-            scheduler.async(() -> {
-                Set<BorderPoint> borderPoints = this.activeBorderPoints.removePoints(world, player.getUniqueId());
-                if (!borderPoints.isEmpty()) {
-                    eventCaller.publishEvent(new BorderHideAsyncEvent(player, borderPoints));
-                }
-            });
+            this.clearBorder(player);
             return;
         }
 
@@ -93,6 +87,18 @@ public class BorderServiceImpl implements BorderService {
 
             if (!toRemove.isEmpty()) { // async
                 eventCaller.publishEvent(new BorderHideAsyncEvent(player, toRemove)); // async
+            }
+        });
+    }
+
+    @Override
+    public void clearBorder(Player player) {
+        World world = player.getWorld();
+        UUID uniqueId = player.getUniqueId();
+        scheduler.async(() -> {
+            Set<BorderPoint> borderPoints = this.activeBorderPoints.removePoints(world.getName(), uniqueId);
+            if (!borderPoints.isEmpty()) {
+                eventCaller.publishEvent(new BorderHideAsyncEvent(player, borderPoints));
             }
         });
     }
