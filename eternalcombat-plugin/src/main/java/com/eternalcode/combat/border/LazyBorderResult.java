@@ -5,7 +5,8 @@ import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 import java.util.function.Supplier;
-import org.jetbrains.annotations.NotNull;
+import java.util.stream.Stream;
+import java.util.stream.StreamSupport;
 
 class LazyBorderResult implements BorderResult {
 
@@ -20,12 +21,13 @@ class LazyBorderResult implements BorderResult {
     }
 
     @Override
-    public @NotNull Iterator<BorderPoint> iterator() {
+    public Stream<BorderPoint> parallelStream() {
         if (borderPoints.isEmpty()) {
-            return Collections.emptyIterator();
+            return Stream.empty();
         }
 
-        return new LazyBorderResultIterator();
+        Iterable<BorderPoint> iterable = () -> new LazyBorderResultIterator();
+        return StreamSupport.stream(iterable.spliterator(), true);
     }
 
     private class LazyBorderResultIterator implements Iterator<BorderPoint> {

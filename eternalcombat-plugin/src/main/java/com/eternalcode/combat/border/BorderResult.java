@@ -1,5 +1,9 @@
 package com.eternalcode.combat.border;
 
-public interface BorderResult extends Iterable<BorderPoint> {
+import java.util.stream.Stream;
+
+public interface BorderResult {
+
+    Stream<BorderPoint> parallelStream();
 
 }
