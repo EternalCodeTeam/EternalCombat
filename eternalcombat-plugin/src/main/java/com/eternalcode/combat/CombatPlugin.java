@@ -46,10 +46,12 @@ import com.eternalcode.commons.adventure.AdventureLegacyColorPreProcessor;
 import com.eternalcode.commons.bukkit.scheduler.BukkitSchedulerImpl;
 import com.eternalcode.commons.scheduler.Scheduler;
 import com.eternalcode.multification.notice.Notice;
+import com.github.retrooper.packetevents.PacketEvents;
 import com.google.common.base.Stopwatch;
 import dev.rollczi.litecommands.LiteCommands;
 import dev.rollczi.litecommands.bukkit.LiteBukkitFactory;
 import dev.rollczi.litecommands.bukkit.LiteBukkitMessages;
+import io.github.retrooper.packetevents.factory.spigot.SpigotPacketEventsBuilder;
 import net.kyori.adventure.platform.AudienceProvider;
 import net.kyori.adventure.platform.bukkit.BukkitAudiences;
 import net.kyori.adventure.text.minimessage.MiniMessage;
@@ -85,6 +87,12 @@ public final class CombatPlugin extends JavaPlugin implements EternalCombatApi {
     private LiteCommands<CommandSender> liteCommands;
 
     @Override
+    public void onLoad() {
+        PacketEvents.setAPI(SpigotPacketEventsBuilder.build(this));
+        PacketEvents.getAPI().load();
+    }
+
+    @Override
     public void onEnable() {
         Stopwatch started = Stopwatch.createStarted();
         Server server = this.getServer();
@@ -117,7 +125,7 @@ public final class CombatPlugin extends JavaPlugin implements EternalCombatApi {
         BridgeService bridgeService = new BridgeService(this.pluginConfig, server.getPluginManager(), this.getLogger(), this);
         bridgeService.init(this.fightManager, server);
         this.regionProvider = bridgeService.getRegionProvider();
-        BorderService borderService = new BorderServiceImpl(scheduler, server, regionProvider, 5);
+        BorderService borderService = new BorderServiceImpl(scheduler, server, regionProvider, 6.5);
 
         NotificationAnnouncer notificationAnnouncer = new NotificationAnnouncer(this.audienceProvider, this.pluginConfig, miniMessage);
 
@@ -164,7 +172,7 @@ public final class CombatPlugin extends JavaPlugin implements EternalCombatApi {
             new FightEffectController(this.pluginConfig.effect, this.fightEffectService, this.fightManager, this.getServer()),
             new FightTagOutController(this.fightTagOutService),
             new FightMessageController(this.fightManager, notificationAnnouncer, this.pluginConfig, this.getServer()),
-            new BorderParticleController(borderService)
+            new BorderParticleController(borderService, scheduler)
         ).forEach(listener -> this.getServer().getPluginManager().registerEvents(listener, this));
 
         EternalCombatProvider.initialize(this);
@@ -186,6 +194,8 @@ public final class CombatPlugin extends JavaPlugin implements EternalCombatApi {
         }
 
         this.fightManager.untagAll();
+
+        PacketEvents.getAPI().terminate();
     }
 
     @Override

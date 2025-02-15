@@ -54,6 +54,7 @@ dependencies {
     // Multification
     implementation("com.eternalcode:multification-bukkit:${Versions.MULTIFICATION}")
     implementation("com.eternalcode:multification-okaeri:${Versions.MULTIFICATION}")
+    implementation("com.github.retrooper:packetevents-spigot:2.7.0")
 }
 
 bukkit {
@@ -68,15 +69,13 @@ bukkit {
 
 tasks {
     runServer {
-        minecraftVersion("1.21.1")
+        minecraftVersion("1.21.4")
     }
 }
 
 tasks.shadowJar {
     archiveFileName.set("EternalCombat v${project.version}.jar")
 
-    dependsOn("checkstyleMain")
-    dependsOn("checkstyleTest")
     dependsOn("test")
 
     exclude(

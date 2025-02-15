@@ -3,6 +3,7 @@ package com.eternalcode.combat.region;
 import java.util.Collection;
 import java.util.Optional;
 import org.bukkit.Location;
+import org.bukkit.World;
 
 public interface RegionProvider {
 
@@ -12,6 +13,6 @@ public interface RegionProvider {
         return this.getRegion(location).isPresent();
     }
 
-    Collection<Region> getRegions(String worldName);
+    Collection<Region> getRegions(World world);
 
 }

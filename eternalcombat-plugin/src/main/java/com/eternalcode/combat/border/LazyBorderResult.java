@@ -4,15 +4,14 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Set;
 import java.util.function.Supplier;
 import org.jetbrains.annotations.NotNull;
 
 class LazyBorderResult implements BorderResult {
 
-    private final List<Supplier<Set<BorderPoint>>> borderPoints = new ArrayList<>();
+    private final List<Supplier<List<BorderPoint>>> borderPoints = new ArrayList<>();
 
-    void addLazyBorderPoints(Supplier<Set<BorderPoint>> supplier) {
+    void addLazyBorderPoints(Supplier<List<BorderPoint>> supplier) {
         borderPoints.add(supplier);
     }
 

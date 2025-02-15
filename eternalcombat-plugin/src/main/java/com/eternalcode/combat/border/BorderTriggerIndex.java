@@ -14,7 +14,7 @@ class BorderTriggerIndex {
     }
 
     Set<BorderTrigger> getTriggers(int x, int z) {
-        long position = packPosition(x, z);
+        long position = packChunk(x >> 8, z >> 8);
         return this.index.getOrDefault(position, Set.of());
     }
 
@@ -24,17 +24,32 @@ class BorderTriggerIndex {
 
     private BorderTriggerIndex with(Collection<BorderTrigger> triggers) {
         for (BorderTrigger trigger : triggers) {
-            long position = packPosition(trigger.min().x(), trigger.min().z());
-            Set<BorderTrigger> triggersInChunk = this.index.computeIfAbsent(position, key -> new HashSet<>());
-            triggersInChunk
-                .add(trigger);
+            withTrigger(trigger);
         }
         return this;
     }
 
-    private static long packPosition(int x, int z) {
-        int bigChunkX = x >> 8;
-        int bigChunkZ = z >> 8;
+    private void withTrigger(BorderTrigger trigger) {
+        int minX = trigger.min().x() >> 8;
+        int minZ = trigger.min().z() >> 8;
+        int maxX = trigger.max().x() >> 8;
+        int maxZ = trigger.max().z() >> 8;
+
+        int startX = Math.min(minX, maxX);
+        int startZ = Math.min(minZ, maxZ);
+        int endX = Math.max(minX, maxX);
+        int endZ = Math.max(minZ, maxZ);
+
+        for (int chunkX = startX; chunkX <= endX; chunkX++) {
+            for (int chunkZ = startZ; chunkZ <= endZ; chunkZ++) {
+                long packed = packChunk(chunkX, chunkZ);
+                this.index.computeIfAbsent(packed, key -> new HashSet<>())
+                    .add(trigger);
+            }
+        }
+    }
+
+    private static long packChunk(int bigChunkX, int bigChunkZ) {
         return (long) bigChunkX & 0xFFFFFFFFL | ((long) bigChunkZ & 0xFFFFFFFFL) << 32;
     }
 
