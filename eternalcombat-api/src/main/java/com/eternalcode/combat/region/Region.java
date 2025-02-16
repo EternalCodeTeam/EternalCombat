@@ -10,6 +10,10 @@ public interface Region {
 
     Location getMax();
 
+    default boolean contains(Location location) {
+        return this.contains(location.getX(), location.getY(), location.getZ());
+    }
+
     default boolean contains(double x, double y, double z) {
         Location min = this.getMin();
         Location max = this.getMax();

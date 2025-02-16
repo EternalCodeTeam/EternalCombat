@@ -75,8 +75,7 @@ public class BorderServiceImpl implements BorderService {
 
         scheduler.async(() -> {
             BorderResult borderResult = result.get();
-            Set<BorderPoint> points = borderResult.stream()
-                .collect(Collectors.toSet());
+            Set<BorderPoint> points = borderResult.collect();
 
             if (!points.isEmpty()) {
                 BorderShowAsyncEvent event = eventCaller.publishEvent(new BorderShowAsyncEvent(player, points));

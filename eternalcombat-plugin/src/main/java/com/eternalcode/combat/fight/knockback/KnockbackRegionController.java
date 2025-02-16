@@ -1,35 +1,43 @@
-package com.eternalcode.combat.region;
+package com.eternalcode.combat.fight.knockback;
 
 import com.eternalcode.combat.config.implementation.PluginConfig;
 import com.eternalcode.combat.fight.FightManager;
+import com.eternalcode.combat.fight.event.FightTagEvent;
 import com.eternalcode.combat.notification.NotificationAnnouncer;
+import com.eternalcode.combat.region.Region;
+import com.eternalcode.combat.region.RegionProvider;
+import java.time.Duration;
 import java.util.Optional;
 import org.bukkit.Location;
+import org.bukkit.Server;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.event.player.PlayerTeleportEvent;
-import org.bukkit.util.Vector;
 
-public class RegionController implements Listener {
+public class KnockbackRegionController implements Listener {
 
     private final NotificationAnnouncer announcer;
     private final RegionProvider regionProvider;
     private final FightManager fightManager;
     private final PluginConfig pluginConfig;
+    private final KnockbackService knockbackService;
+    private final Server server;
 
-    public RegionController(NotificationAnnouncer announcer, RegionProvider regionProvider, FightManager fightManager, PluginConfig pluginConfig) {
+    public KnockbackRegionController(NotificationAnnouncer announcer, RegionProvider regionProvider, FightManager fightManager, PluginConfig pluginConfig, KnockbackService knockbackService, Server server) {
         this.announcer = announcer;
         this.regionProvider = regionProvider;
         this.fightManager = fightManager;
         this.pluginConfig = pluginConfig;
+        this.knockbackService = knockbackService;
+        this.server = server;
     }
 
-    @EventHandler
+    @EventHandler(ignoreCancelled = true, priority = EventPriority.HIGHEST)
     void onPlayerMove(PlayerMoveEvent event) {
         Player player = event.getPlayer();
-
         if (!this.fightManager.isInCombat(player.getUniqueId())) {
             return;
         }
@@ -51,29 +59,24 @@ public class RegionController implements Listener {
             }
 
             Region region = regionOptional.get();
-            Location centerOfRegion = region.getCenter();
-            Location subtract = player.getLocation().subtract(centerOfRegion);
-
-            Vector knockbackVector = new Vector(subtract.getX(), 0, subtract.getZ()).normalize();
-            Vector configuredVector = new Vector(
-                this.pluginConfig.settings.blockedRegionKnockMultiplier,
-                0.5,
-                this.pluginConfig.settings.blockedRegionKnockMultiplier);
-
-            player.setVelocity(knockbackVector.multiply(configuredVector));
+            if (region.contains(locationFrom)) {
+                this.knockbackService.knockback(region, player);
+                this.knockbackService.forceKnockbackLater(player, region, Duration.ofSeconds(1));
+            } else {
+                event.setCancelled(true);
+                this.knockbackService.konckbackLater(region, player, Duration.ofMillis(50));
+            }
 
             this.announcer.create()
                 .player(player.getUniqueId())
                 .notice(this.pluginConfig.messages.cantEnterOnRegion)
                 .send();
-
         }
     }
 
-    @EventHandler
-    public void onPlayerTeleport(PlayerTeleportEvent event) {
+    @EventHandler(ignoreCancelled = true, priority = EventPriority.HIGHEST)
+    void onPlayerTeleport(PlayerTeleportEvent event) {
         Player player = event.getPlayer();
-
         if (!this.fightManager.isInCombat(player.getUniqueId())) {
             return;
         }
@@ -88,4 +91,26 @@ public class RegionController implements Listener {
                 .send();
         }
     }
+
+    @EventHandler(ignoreCancelled = true, priority = EventPriority.HIGHEST)
+    void onTag(FightTagEvent event) {
+        Player player = this.server.getPlayer(event.getPlayer());
+        if (player == null) {
+            throw new IllegalStateException("Player cannot be null!");
+        }
+
+        Optional<Region> regionOptional = this.regionProvider.getRegion(player.getLocation());
+        if (regionOptional.isEmpty()) {
+            return;
+        }
+
+        Region region = regionOptional.get();
+        this.knockbackService.knockback(region, player);
+        this.knockbackService.forceKnockbackLater(player, region, Duration.ofSeconds(1));
+        this.announcer.create()
+            .player(player.getUniqueId())
+            .notice(this.pluginConfig.messages.cantEnterOnRegion)
+            .send();
+    }
+
 }

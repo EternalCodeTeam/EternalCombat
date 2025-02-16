@@ -9,14 +9,15 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerMoveEvent;
+import org.bukkit.event.player.PlayerTeleportEvent;
 
-public class BorderUpdateController implements Listener {
+public class BorderTriggerController implements Listener {
 
     private final BorderService borderService;
     private final FightManager fightManager;
     private final Server server;
 
-    public BorderUpdateController(BorderService borderService, FightManager fightManager, Server server) {
+    public BorderTriggerController(BorderService borderService, FightManager fightManager, Server server) {
         this.borderService = borderService;
         this.fightManager = fightManager;
         this.server = server;
@@ -36,6 +37,16 @@ public class BorderUpdateController implements Listener {
         }
 
         borderService.updateBorder(player, to);
+    }
+
+    @EventHandler(ignoreCancelled = true, priority = EventPriority.MONITOR)
+    void onTeleport(PlayerTeleportEvent event) {
+        Player player = event.getPlayer();
+        if (!fightManager.isInCombat(player.getUniqueId())) {
+            return;
+        }
+
+        borderService.updateBorder(player, event.getTo());
     }
 
     @EventHandler(ignoreCancelled = true, priority = EventPriority.MONITOR)

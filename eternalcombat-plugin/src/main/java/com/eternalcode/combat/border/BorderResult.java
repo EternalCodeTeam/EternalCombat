@@ -1,11 +1,9 @@
 package com.eternalcode.combat.border;
 
-import java.util.stream.Stream;
+import java.util.Set;
 
 public interface BorderResult {
 
-    BorderResult EMPTY = () -> Stream.empty();
-
-    Stream<BorderPoint> stream();
+    Set<BorderPoint> collect();
 
 }

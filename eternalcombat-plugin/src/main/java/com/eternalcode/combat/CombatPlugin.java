@@ -1,6 +1,6 @@
 package com.eternalcode.combat;
 
-import com.eternalcode.combat.border.BorderUpdateController;
+import com.eternalcode.combat.border.BorderTriggerController;
 import com.eternalcode.combat.border.BorderService;
 import com.eternalcode.combat.border.BorderServiceImpl;
 import com.eternalcode.combat.border.particle.BorderBlockController;
@@ -10,6 +10,7 @@ import com.eternalcode.combat.fight.drop.DropKeepInventoryService;
 import com.eternalcode.combat.fight.FightManager;
 import com.eternalcode.combat.fight.drop.DropService;
 import com.eternalcode.combat.fight.effect.FightEffectService;
+import com.eternalcode.combat.fight.knockback.KnockbackService;
 import com.eternalcode.combat.fight.tagout.FightTagOutService;
 import com.eternalcode.combat.fight.pearl.FightPearlService;
 import com.eternalcode.combat.handler.InvalidUsageHandlerImpl;
@@ -39,7 +40,7 @@ import com.eternalcode.combat.fight.tagout.FightTagOutController;
 import com.eternalcode.combat.fight.tagout.FightTagOutServiceImpl;
 import com.eternalcode.combat.fight.tagout.FightTagOutCommand;
 import com.eternalcode.combat.notification.NotificationAnnouncer;
-import com.eternalcode.combat.region.RegionController;
+import com.eternalcode.combat.fight.knockback.KnockbackRegionController;
 import com.eternalcode.combat.region.RegionProvider;
 import com.eternalcode.combat.updater.UpdaterNotificationController;
 import com.eternalcode.combat.updater.UpdaterService;
@@ -128,6 +129,7 @@ public final class CombatPlugin extends JavaPlugin implements EternalCombatApi {
         bridgeService.init(this.fightManager, server);
         this.regionProvider = bridgeService.getRegionProvider();
         BorderService borderService = new BorderServiceImpl(scheduler, server, regionProvider, eventCaller, 6.5);
+        KnockbackService knockbackService = new KnockbackService(this.pluginConfig, scheduler);
 
         NotificationAnnouncer notificationAnnouncer = new NotificationAnnouncer(this.audienceProvider, this.pluginConfig, miniMessage);
 
@@ -170,11 +172,11 @@ public final class CombatPlugin extends JavaPlugin implements EternalCombatApi {
             new FightActionBlockerController(this.fightManager, notificationAnnouncer, this.pluginConfig),
             new FightPearlController(this.pluginConfig.pearl, notificationAnnouncer, this.fightManager, this.fightPearlService),
             new UpdaterNotificationController(updaterService, this.pluginConfig, this.audienceProvider, miniMessage),
-            new RegionController(notificationAnnouncer, this.regionProvider, this.fightManager, this.pluginConfig),
+            new KnockbackRegionController(notificationAnnouncer, this.regionProvider, this.fightManager, this.pluginConfig, knockbackService, server),
             new FightEffectController(this.pluginConfig.effect, this.fightEffectService, this.fightManager, this.getServer()),
             new FightTagOutController(this.fightTagOutService),
             new FightMessageController(this.fightManager, notificationAnnouncer, this.pluginConfig, this.getServer()),
-            new BorderUpdateController(borderService, fightManager, server),
+            new BorderTriggerController(borderService, fightManager, server),
             new BorderParticleController(borderService, scheduler, server),
             new BorderBlockController(borderService, scheduler, server)
         ).forEach(listener -> this.getServer().getPluginManager().registerEvents(listener, this));
