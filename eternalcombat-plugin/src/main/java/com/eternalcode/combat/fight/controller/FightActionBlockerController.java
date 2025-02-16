@@ -129,7 +129,7 @@ public class FightActionBlockerController implements Listener {
 
     @EventHandler
     void onUnTag(FightUntagEvent event) {
-        if (!this.config.settings.shouldPreventFlying) {
+        if (!this.config.settings.disableFlying) {
             return;
         }
 
