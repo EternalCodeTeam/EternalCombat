@@ -1,56 +1,79 @@
 package com.eternalcode.combat.border;
 
+import com.eternalcode.combat.region.Region;
+import com.eternalcode.combat.region.RegionProvider;
+import com.eternalcode.commons.scheduler.Scheduler;
+import java.time.Duration;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
-import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
-import java.util.Set;
+import org.bukkit.Location;
+import org.bukkit.Server;
+import org.bukkit.World;
 
 class BorderTriggerIndex {
 
-    private final Map<Long, Set<BorderTrigger>> index = new HashMap<>();
+    private final Server server;
+    private final Scheduler scheduler;
+    private final RegionProvider provider;
+    private final BorderSettings settings;
 
-    private BorderTriggerIndex() {
+    private final Map<String, BorderTriggerIndexBucket> borderIndexes = new HashMap<>();
+
+    private BorderTriggerIndex(Server server, Scheduler scheduler, RegionProvider provider, BorderSettings settings) {
+        this.server = server;
+        this.scheduler = scheduler;
+        this.provider = provider;
+        this.settings = settings;
     }
 
-    Set<BorderTrigger> getTriggers(int x, int z) {
-        long position = packChunk(x >> 8, z >> 8);
-        return this.index.getOrDefault(position, Set.of());
-    }
-
-    static BorderTriggerIndex create(Collection<BorderTrigger> triggers) {
-        return new BorderTriggerIndex().with(triggers);
-    }
-
-    private BorderTriggerIndex with(Collection<BorderTrigger> triggers) {
-        for (BorderTrigger trigger : triggers) {
-            withTrigger(trigger);
+    private void update() {
+        for (World world : server.getWorlds()) {
+            updateWorld(world.getName(), provider.getRegions(world));
         }
-        return this;
     }
 
-    private void withTrigger(BorderTrigger trigger) {
-        int minX = trigger.min().x() >> 8;
-        int minZ = trigger.min().z() >> 8;
-        int maxX = trigger.max().x() >> 8;
-        int maxZ = trigger.max().z() >> 8;
+    private void updateWorld(String world, Collection<Region> regions) {
+        this.scheduler.async(() -> {
+            List<BorderTrigger> triggers = new ArrayList<>();
+            for (Region region : regions) {
+                Location min = region.getMin();
+                Location max = region.getMax();
 
-        int startX = Math.min(minX, maxX);
-        int startZ = Math.min(minZ, maxZ);
-        int endX = Math.max(minX, maxX);
-        int endZ = Math.max(minZ, maxZ);
-
-        for (int chunkX = startX; chunkX <= endX; chunkX++) {
-            for (int chunkZ = startZ; chunkZ <= endZ; chunkZ++) {
-                long packed = packChunk(chunkX, chunkZ);
-                this.index.computeIfAbsent(packed, key -> new HashSet<>())
-                    .add(trigger);
+                triggers.add(new BorderTrigger(
+                    min.getBlockX(), min.getBlockY(), min.getBlockZ(),
+                    max.getBlockX() + 1, max.getBlockY() + 1, max.getBlockZ() + 1,
+                    settings.distanceRounded()
+                ));
             }
-        }
+
+            BorderTriggerIndexBucket index = BorderTriggerIndexBucket.create(triggers);
+            this.borderIndexes.put(world, index);
+        });
     }
 
-    private static long packChunk(int bigChunkX, int bigChunkZ) {
-        return (long) bigChunkX & 0xFFFFFFFFL | ((long) bigChunkZ & 0xFFFFFFFFL) << 32;
+    static BorderTriggerIndex started(Server server, Scheduler scheduler, RegionProvider provider, BorderSettings settings) {
+        BorderTriggerIndex index = new BorderTriggerIndex(server, scheduler, provider, settings);
+        scheduler.timerSync(() -> index.update(), Duration.ZERO, settings.indexRefreshDelay());
+        return index;
+    }
+
+    public List<BorderTrigger> getTriggered(Location location) {
+        BorderTriggerIndexBucket index = borderIndexes.get(location.getWorld().getName());
+        if (index == null) {
+            return List.of();
+        }
+
+        int x = (int) Math.round(location.getX());
+        int y = (int) Math.round(location.getY());
+        int z = (int) Math.round(location.getZ());
+
+        return index.getTriggers(x, z)
+            .stream()
+            .filter(trigger -> trigger.isTriggered(x, y, z))
+            .toList();
     }
 
 }

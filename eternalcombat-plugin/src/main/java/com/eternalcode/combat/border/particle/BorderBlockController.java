@@ -15,18 +15,18 @@ import com.github.retrooper.packetevents.protocol.world.states.type.StateTypes;
 import com.github.retrooper.packetevents.util.Vector3i;
 import com.github.retrooper.packetevents.wrapper.play.server.WrapperPlayServerMultiBlockChange;
 import com.github.retrooper.packetevents.wrapper.play.server.WrapperPlayServerMultiBlockChange.EncodedBlock;
+import com.google.common.cache.Cache;
+import com.google.common.cache.CacheBuilder;
 import io.papermc.lib.PaperLib;
 import java.time.Duration;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 import org.bukkit.ChunkSnapshot;
-import org.bukkit.DyeColor;
 import org.bukkit.Material;
 import org.bukkit.Server;
 import org.bukkit.entity.Player;
@@ -44,6 +44,9 @@ public class BorderBlockController implements Listener {
     private final Server server;
     private final Set<UUID> playersToUpdate = ConcurrentHashMap.newKeySet();
     private final Map<UUID, Object> lockedPlayers = new ConcurrentHashMap<>();
+    private final Cache<ChunkLocation, ChunkSnapshot> chunkCache = CacheBuilder.newBuilder()
+        .expireAfterWrite(Duration.ofMillis(500))
+        .build();
 
     public BorderBlockController(BorderService borderService, Scheduler scheduler, Server server) {
         this.borderService = borderService;
@@ -138,7 +141,7 @@ public class BorderBlockController implements Listener {
         }
     }
 
-    private static Set<BorderPoint> processChunks(Player player, Collection<BorderPoint> blocks) {
+    private Set<BorderPoint> processChunks(Player player, Collection<BorderPoint> blocks) {
         Map<ChunkLocation, Set<BorderPoint>> chunksToProcess = new HashMap<>();
         for (BorderPoint block : blocks) {
             BorderPoint inclusive = block.toInclusive();
@@ -148,12 +151,13 @@ public class BorderBlockController implements Listener {
 
         Set<BorderPoint> points = new HashSet<>();
         chunksToProcess.forEach((location, chunkPoints) -> {
-            ChunkSnapshot chunk = PaperLib.getChunkAtAsync(player.getWorld(), location.x(), location.z(), false)
-                .thenApply(chunk1 -> chunk1.getChunkSnapshot())
-                .join();
+            ChunkSnapshot snapshot = loadChunkSnapshot(player, location);
+            if (snapshot == null) {
+                return;
+            }
 
             for (BorderPoint point : chunkPoints) {
-                Material type = chunk.getBlockType(point.x() - (location.x() << 4), point.y(), point.z() - (location.z() << 4));
+                Material type = snapshot.getBlockType(point.x() - (location.x() << 4), point.y(), point.z() - (location.z() << 4));
                 if (!type.isAir()) {
                     continue;
                 }
@@ -179,40 +183,24 @@ public class BorderBlockController implements Listener {
         return chunksToUpdate;
     }
 
-
     private EncodedBlock toEncodedBlock(BorderPoint point) {
-        StateType type = xyzToRGB(point.x(), point.y(), point.z());
+        StateType type = BorderColorUtil.xyzToColoredGlass(point.x(), point.y(), point.z());
         WrappedBlockState state = WrappedBlockState.getDefaultState(SERVER_VERSION, type);
         return new EncodedBlock(state.getGlobalId(), point.x(), point.y(), point.z());
     }
 
-    private static StateType xyzToRGB(int x, int y, int z) {
-        float hue = (float) (((Math.sin(x * 0.05) + Math.cos(z * 0.05)) * 0.5 + 0.5) % 1.0);
-        float saturation = 1.0f;
-        float brightness = 0.8f + 0.2f * Math.max(0.0f, Math.min(1.0f, (float) y / 255));
-
-        java.awt.Color hsbColor = java.awt.Color.getHSBColor(hue, saturation, brightness);
-        return getStateType(hsbColor.getRed(), hsbColor.getGreen(), hsbColor.getBlue());
-    }
-
-    private static StateType getStateType(int red, int green, int blue) {
-        int distance = Integer.MAX_VALUE;
-        DyeColor closest = null;
-        for (DyeColor dye : DyeColor.values()) {
-            org.bukkit.Color color = dye.getColor();
-            int dist = Math.abs(color.getRed() - red) + Math.abs(color.getGreen() - green) + Math.abs(color.getBlue() - blue);
-            if (dist < distance) {
-                distance = dist;
-                closest = dye;
-            }
+    private ChunkSnapshot loadChunkSnapshot(Player player, ChunkLocation location) {
+        ChunkSnapshot snapshot = chunkCache.getIfPresent(location);
+        if (snapshot != null) {
+            return snapshot;
         }
 
-        StateType byName = StateTypes.getByName((closest.name() + "_STAINED_GLASS").toLowerCase(Locale.ROOT));
-        if (byName == null) {
-            return StateTypes.WHITE_STAINED_GLASS;
-        }
-        return byName;
-    }
+        ChunkSnapshot chunkSnapshot = PaperLib.getChunkAtAsync(player.getWorld(), location.x(), location.z(), false)
+            .thenApply(chunk -> chunk.getChunkSnapshot())
+            .join();
 
+        chunkCache.put(location, chunkSnapshot);
+        return chunkSnapshot;
+    }
 
 }

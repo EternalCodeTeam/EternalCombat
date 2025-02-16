@@ -75,7 +75,7 @@ public class BorderParticleController implements Listener {
     }
 
     private void playParticle(Player player, BorderPoint point) {
-        Color color = xyzToRGB(point.x(), point.y(), point.z());
+        Color color = BorderColorUtil.xyzToColor(point.x(), point.y(), point.z());
         Particle<ParticleDustData> dust = new Particle<>(ParticleTypes.DUST, new ParticleDustData(1F, color));
         WrapperPlayServerParticle particle = new WrapperPlayServerParticle(
             dust,
@@ -89,15 +89,5 @@ public class BorderParticleController implements Listener {
 
         PLAYER_MANAGER.sendPacket(player, particle);
     }
-
-    public static com.github.retrooper.packetevents.protocol.color.Color xyzToRGB(int x, int y, int z) {
-        float hue = (float) (((Math.sin(x * 0.05) + Math.cos(z * 0.05)) * 0.5 + 0.5) % 1.0);
-        float saturation = 1.0f;
-        float brightness = 0.8f + 0.2f * Math.max(0.0f, Math.min(1.0f, (float) y / 255));
-
-        java.awt.Color hsbColor = java.awt.Color.getHSBColor(hue, saturation, brightness);
-        return new com.github.retrooper.packetevents.protocol.color.Color(hsbColor.getRed(), hsbColor.getGreen(), hsbColor.getBlue());
-    }
-
 
 }

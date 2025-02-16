@@ -6,7 +6,7 @@ import java.util.Set;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 
-class BorderActivePointsRegistry {
+class BorderActivePointsIndex {
 
     private final Map<String, Map<UUID, Set<BorderPoint>>> registry = new ConcurrentHashMap<>();
 
@@ -29,7 +29,7 @@ class BorderActivePointsRegistry {
         return Set.of();
     }
 
-    private static  Set<BorderPoint> calculateRemovedPoints(Set<BorderPoint> points, Set<BorderPoint> oldPoints) {
+    private static Set<BorderPoint> calculateRemovedPoints(Set<BorderPoint> points, Set<BorderPoint> oldPoints) {
         Set<BorderPoint> removed = new HashSet<>();
         for (BorderPoint oldPoint : oldPoints) {
             if (!points.contains(oldPoint)) {

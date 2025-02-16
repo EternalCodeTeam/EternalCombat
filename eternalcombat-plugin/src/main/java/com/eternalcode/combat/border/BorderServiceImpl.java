@@ -3,20 +3,14 @@ package com.eternalcode.combat.border;
 import com.eternalcode.combat.border.event.BorderHideAsyncEvent;
 import com.eternalcode.combat.border.event.BorderShowAsyncEvent;
 import com.eternalcode.combat.event.EventCaller;
-import com.eternalcode.combat.region.Region;
 import com.eternalcode.combat.region.RegionProvider;
 import com.eternalcode.commons.scheduler.Scheduler;
 import dev.rollczi.litecommands.shared.Lazy;
-import java.time.Duration;
 import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 import java.util.UUID;
-import java.util.stream.Collectors;
 import org.bukkit.Location;
 import org.bukkit.Server;
 import org.bukkit.World;
@@ -27,36 +21,16 @@ public class BorderServiceImpl implements BorderService {
     private final Scheduler scheduler;
     private final EventCaller eventCaller;
 
-    private final int distanceRounded;
-    private final double distance;
+    private final BorderSettings settings;
 
-    private final Map<String, BorderTriggerIndex> borderIndexes = new HashMap<>();
-    private final BorderActivePointsRegistry activeBorderPoints = new BorderActivePointsRegistry();
+    private final BorderTriggerIndex borderIndexes;
+    private final BorderActivePointsIndex activeBorderIndex = new BorderActivePointsIndex();
 
-    public BorderServiceImpl(Scheduler scheduler, Server server, RegionProvider provider, EventCaller eventCaller, double distance) {
+    public BorderServiceImpl(Scheduler scheduler, Server server, RegionProvider provider, EventCaller eventCaller, BorderSettings settings) {
         this.scheduler = scheduler;
         this.eventCaller = eventCaller;
-        this.distanceRounded = (int) Math.ceil(distance);
-        this.distance = distance;
-        this.scheduler.timerSync(() -> {
-            for (World world : server.getWorlds()) {
-                this.updateTriggersAsync(world.getName(), provider.getRegions(world));
-            }
-        }, Duration.ZERO, Duration.ofSeconds(1));
-    }
-
-    void updateTriggersAsync(String world, Collection<Region> regions) {
-        this.scheduler.async(() -> {
-            List<BorderTrigger> triggers = new ArrayList<>();
-            for (Region region : regions) {
-                Location min = region.getMin();
-                Location max = region.getMax();
-                triggers.add(new BorderTrigger(min.getBlockX(), min.getBlockY(), min.getBlockZ(), max.getBlockX() + 1, max.getBlockY() + 1, max.getBlockZ() + 1, distanceRounded));
-            }
-
-            BorderTriggerIndex index = BorderTriggerIndex.create(triggers);
-            this.borderIndexes.put(world, index);
-        });
+        this.settings = settings;
+        this.borderIndexes = BorderTriggerIndex.started(server, scheduler, provider, settings);
     }
 
     @Override
@@ -65,7 +39,7 @@ public class BorderServiceImpl implements BorderService {
         String world = player.getWorld().getName();
 
         if (result.isEmpty()) {
-            if (this.activeBorderPoints.hasPoints(world, player.getUniqueId())) {
+            if (this.activeBorderIndex.hasPoints(world, player.getUniqueId())) {
                 return;
             }
 
@@ -82,7 +56,7 @@ public class BorderServiceImpl implements BorderService {
                 points = event.getPoints();
             }
 
-            Set<BorderPoint> toRemove = this.activeBorderPoints.putPoints(world, player.getUniqueId(), points);
+            Set<BorderPoint> toRemove = this.activeBorderIndex.putPoints(world, player.getUniqueId(), points);
 
             if (!toRemove.isEmpty()) {
                 eventCaller.publishEvent(new BorderHideAsyncEvent(player, toRemove));
@@ -95,7 +69,7 @@ public class BorderServiceImpl implements BorderService {
         World world = player.getWorld();
         UUID uniqueId = player.getUniqueId();
         scheduler.async(() -> {
-            Set<BorderPoint> borderPoints = this.activeBorderPoints.removePoints(world.getName(), uniqueId);
+            Set<BorderPoint> borderPoints = this.activeBorderIndex.removePoints(world.getName(), uniqueId);
             if (!borderPoints.isEmpty()) {
                 eventCaller.publishEvent(new BorderHideAsyncEvent(player, borderPoints));
             }
@@ -104,26 +78,14 @@ public class BorderServiceImpl implements BorderService {
 
     @Override
     public Set<BorderPoint> getActiveBorder(Player player) {
-        return this.activeBorderPoints.getPoints(player.getWorld().getName(), player.getUniqueId());
+        return this.activeBorderIndex.getPoints(player.getWorld().getName(), player.getUniqueId());
     }
 
     private Optional<BorderResult> resolveBorder(Location location) {
-        BorderTriggerIndex index = borderIndexes.get(location.getWorld().getName());
-        if (index == null) {
-            return Optional.empty();
-        }
-
-        int x = (int) Math.round(location.getX());
-        int y = (int) Math.round(location.getY());
-        int z = (int) Math.round(location.getZ());
-        Set<BorderTrigger> triggers = index.getTriggers(x, z);
         LazyBorderResult result = new LazyBorderResult();
+        List<BorderTrigger> triggered = borderIndexes.getTriggered(location);
 
-        for (BorderTrigger trigger : triggers) {
-            if (!trigger.isTriggered(x, y, z)) {
-                continue;
-            }
-
+        for (BorderTrigger trigger : triggered) {
             result.addLazyBorderPoints(new Lazy<>(() -> this.resolveBorderPoints(trigger, location)));
         }
 
@@ -142,12 +104,12 @@ public class BorderServiceImpl implements BorderService {
         int y = (int) Math.round(playerLocation.getY());
         int z = (int) Math.round(playerLocation.getZ());
 
-        int realMinX = Math.max(borderMin.x(), x - distanceRounded);
-        int realMaxX = Math.min(borderMax.x(), x + distanceRounded);
-        int realMinY = Math.max(borderMin.y(), y - distanceRounded);
-        int realMaxY = Math.min(borderMax.y(), y + distanceRounded);
-        int realMinZ = Math.max(borderMin.z(), z - distanceRounded);
-        int realMaxZ = Math.min(borderMax.z(), z + distanceRounded);
+        int realMinX = Math.max(borderMin.x(), x - settings.distanceRounded());
+        int realMaxX = Math.min(borderMax.x(), x + settings.distanceRounded());
+        int realMinY = Math.max(borderMin.y(), y - settings.distanceRounded());
+        int realMaxY = Math.min(borderMax.y(), y + settings.distanceRounded());
+        int realMinZ = Math.max(borderMin.z(), z - settings.distanceRounded());
+        int realMaxZ = Math.min(borderMax.z(), z + settings.distanceRounded());
 
         List<BorderPoint> points = new ArrayList<>();
 
@@ -206,15 +168,13 @@ public class BorderServiceImpl implements BorderService {
     }
 
     private void addPoint(List<BorderPoint> points, int x, int y, int z, Location playerLocation, BorderPoint inclusive) {
-        if (isNotVisible(x, y, z, playerLocation)) {
-            return;
+        if (isVisible(x, y, z, playerLocation)) {
+            points.add(new BorderPoint(x, y, z, inclusive));
         }
-
-        points.add(new BorderPoint(x, y, z, inclusive));
     }
 
-    private boolean isNotVisible(int x, int y, int z, Location playerLocation) {
-        return Math.sqrt(Math.pow(x - playerLocation.getX(), 2) + Math.pow(y - playerLocation.getY(), 2) + Math.pow(z - playerLocation.getZ(), 2)) > this.distance;
+    private boolean isVisible(int x, int y, int z, Location player) {
+        return Math.sqrt(Math.pow(x - player.getX(), 2) + Math.pow(y - player.getY(), 2) + Math.pow(z - player.getZ(), 2)) <= this.settings.distance();
     }
 
 }

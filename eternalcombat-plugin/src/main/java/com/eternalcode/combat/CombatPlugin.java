@@ -128,7 +128,7 @@ public final class CombatPlugin extends JavaPlugin implements EternalCombatApi {
         BridgeService bridgeService = new BridgeService(this.pluginConfig, server.getPluginManager(), this.getLogger(), this);
         bridgeService.init(this.fightManager, server);
         this.regionProvider = bridgeService.getRegionProvider();
-        BorderService borderService = new BorderServiceImpl(scheduler, server, regionProvider, eventCaller, 6.5);
+        BorderService borderService = new BorderServiceImpl(scheduler, server, regionProvider, eventCaller, () -> 6.5);
         KnockbackService knockbackService = new KnockbackService(this.pluginConfig, scheduler);
 
         NotificationAnnouncer notificationAnnouncer = new NotificationAnnouncer(this.audienceProvider, this.pluginConfig, miniMessage);
