@@ -37,7 +37,7 @@ public class FightActionBlockerController implements Listener {
 
     @EventHandler
     void onPlace(BlockPlaceEvent event) {
-        if (!this.config.settings.shouldPreventBlockPlacing) {
+        if (!this.config.settings.disableBlockPlacing) {
             return;
         }
 
@@ -51,7 +51,7 @@ public class FightActionBlockerController implements Listener {
         Block block = event.getBlock();
         int level = block.getY();
 
-        List<Material> specificBlocksToPreventPlacing = this.config.settings.specificBlocksToPreventPlacing;
+        List<Material> specificBlocksToPreventPlacing = this.config.settings.restrictedBlockTypes;
 
         boolean isPlacementBlocked = this.isPlacementBlocked(level);
 
@@ -60,8 +60,8 @@ public class FightActionBlockerController implements Listener {
             this.announcer.create()
                 .player(uniqueId)
                 .notice(this.config.messages.blockPlacingBlockedDuringCombat)
-                .placeholder("{Y}", String.valueOf(this.config.settings.blockPlacingYCoordinate))
-                .placeholder("{MODE}", this.config.settings.blockPlacingModeName)
+                .placeholder("{Y}", String.valueOf(this.config.settings.blockPlacementYCoordinate))
+                .placeholder("{MODE}", this.config.settings.blockPlacementModeDisplayName)
                 .send();
 
         }
@@ -74,22 +74,22 @@ public class FightActionBlockerController implements Listener {
             this.announcer.create()
                 .player(uniqueId)
                 .notice(this.config.messages.blockPlacingBlockedDuringCombat)
-                .placeholder("{Y}", String.valueOf(this.config.settings.blockPlacingYCoordinate))
-                .placeholder("{MODE}", this.config.settings.blockPlacingModeName)
+                .placeholder("{Y}", String.valueOf(this.config.settings.blockPlacementYCoordinate))
+                .placeholder("{MODE}", this.config.settings.blockPlacementModeDisplayName)
                 .send();
 
         }
     }
 
     private boolean isPlacementBlocked(int level) {
-        return this.config.settings.blockPlacingMode == PluginConfig.Settings.BlockPlacingMode.ABOVE
-            ? level > this.config.settings.blockPlacingYCoordinate
-            : level < this.config.settings.blockPlacingYCoordinate;
+        return this.config.settings.blockPlacementMode == PluginConfig.Settings.BlockPlacingMode.ABOVE
+            ? level > this.config.settings.blockPlacementYCoordinate
+            : level < this.config.settings.blockPlacementYCoordinate;
     }
 
     @EventHandler
     void onToggleGlide(EntityToggleGlideEvent event) {
-        if (!this.config.settings.shouldPreventElytraUsage) {
+        if (!this.config.settings.disableElytraUsage) {
             return;
         }
 
@@ -109,7 +109,7 @@ public class FightActionBlockerController implements Listener {
 
     @EventHandler
     void onFly(PlayerToggleFlightEvent event) {
-        if (!this.config.settings.shouldPreventFlying) {
+        if (!this.config.settings.disableFlying) {
             return;
         }
 
@@ -145,7 +145,7 @@ public class FightActionBlockerController implements Listener {
 
     @EventHandler
     void onDamage(EntityDamageEvent event) {
-        if (!this.config.settings.shouldElytraDisableOnDamage) {
+        if (!this.config.settings.disableElytraOnDamage) {
             return;
         }
 
@@ -161,7 +161,7 @@ public class FightActionBlockerController implements Listener {
 
     @EventHandler
     void onOpenInventory(InventoryOpenEvent event) {
-        if (!this.config.settings.shouldPreventInventoryOpening) {
+        if (!this.config.settings.disableInventoryAccess) {
             return;
         }
 
@@ -192,10 +192,10 @@ public class FightActionBlockerController implements Listener {
 
         String command = event.getMessage().split(" ")[0].substring(1).toLowerCase();
 
-        boolean isMatchCommand = this.config.settings.blockedCommands.stream()
+        boolean isMatchCommand = this.config.settings.restrictedCommands.stream()
             .anyMatch(command::startsWith);
 
-        WhitelistBlacklistMode mode = this.config.settings.commandBlockingMode;
+        WhitelistBlacklistMode mode = this.config.settings.commandRestrictionMode;
 
         boolean shouldCancel = mode.shouldBlock(isMatchCommand);
 
