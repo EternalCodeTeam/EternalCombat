@@ -5,6 +5,7 @@ import com.eternalcode.combat.WhitelistBlacklistMode;
 import com.eternalcode.combat.fight.FightManager;
 import com.eternalcode.combat.fight.event.FightUntagEvent;
 import com.eternalcode.combat.notification.NotificationAnnouncer;
+import org.bukkit.GameMode;
 import org.bukkit.Material;
 import org.bukkit.Server;
 import org.bukkit.block.Block;
@@ -139,8 +140,10 @@ public class FightActionBlockerController implements Listener {
         if (player == null) {
             return;
         }
-
-        player.setAllowFlight(true);
+        GameMode playerGameMode = player.getGameMode();
+        if (playerGameMode == GameMode.CREATIVE || playerGameMode == GameMode.SPECTATOR) {
+            player.setAllowFlight(true);
+        }
     }
 
     @EventHandler
