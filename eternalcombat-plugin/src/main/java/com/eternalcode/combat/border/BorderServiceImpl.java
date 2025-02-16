@@ -82,10 +82,10 @@ public class BorderServiceImpl implements BorderService {
                 points = event.getPoints();
             }
 
-            Set<BorderPoint> toRemove = this.activeBorderPoints.putPoints(world, player.getUniqueId(), points); // async
+            Set<BorderPoint> toRemove = this.activeBorderPoints.putPoints(world, player.getUniqueId(), points);
 
-            if (!toRemove.isEmpty()) { // async
-                eventCaller.publishEvent(new BorderHideAsyncEvent(player, toRemove)); // async
+            if (!toRemove.isEmpty()) {
+                eventCaller.publishEvent(new BorderHideAsyncEvent(player, toRemove));
             }
         });
     }
