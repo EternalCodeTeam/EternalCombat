@@ -50,7 +50,7 @@ public final class KnockbackService {
         Location subtract = player.getLocation().subtract(centerOfRegion);
 
         Vector knockbackVector = new Vector(subtract.getX(), 0, subtract.getZ()).normalize();
-        double multiplier = this.pluginConfig.settings.blockedRegionKnockMultiplier;
+        double multiplier = this.pluginConfig.settings.regionKnockbackMultiplier;
         Vector configuredVector = new Vector(multiplier, 0.5, multiplier);
 
         player.setVelocity(knockbackVector.multiply(configuredVector));

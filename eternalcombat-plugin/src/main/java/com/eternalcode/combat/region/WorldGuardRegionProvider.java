@@ -41,7 +41,7 @@ public class WorldGuardRegionProvider implements RegionProvider {
                 continue;
             }
 
-            return Optional.of(new WorldGuardRegion(location, region));
+            return Optional.of(new WorldGuardRegion(location.getWorld(), region));
         }
 
         return Optional.empty();
@@ -57,8 +57,8 @@ public class WorldGuardRegionProvider implements RegionProvider {
         return regionManager.getRegions()
             .values()
             .stream()
-            .filter(region1 -> isCombatRegion(region1))
-            .map(region -> (Region) new WorldGuardRegion(new Location(world, 0, 0, 0), region))
+            .filter(region -> isCombatRegion(region))
+            .map(region -> (Region) new WorldGuardRegion(world, region))
             .toList();
     }
 
@@ -78,7 +78,7 @@ public class WorldGuardRegionProvider implements RegionProvider {
         return false;
     }
 
-    private record WorldGuardRegion(Location contextLocation, ProtectedRegion region) implements Region {
+    private record WorldGuardRegion(World context, ProtectedRegion region) implements Region {
         @Override
         public Location getCenter() {
             BlockVector3 min = this.region.getMinimumPoint();
@@ -86,20 +86,21 @@ public class WorldGuardRegionProvider implements RegionProvider {
 
             double x = (double) (min.getX() + max.getX()) / 2;
             double z = (double) (min.getZ() + max.getZ()) / 2;
+            double y = (double) (min.getY() + max.getY()) / 2;
 
-            return new Location(this.contextLocation.getWorld(), x, this.contextLocation.getY(), z);
+            return new Location(this.context, x, y, z);
         }
 
         @Override
         public Location getMin() {
             BlockVector3 min = this.region.getMinimumPoint();
-            return new Location(this.contextLocation.getWorld(), min.getX(), min.getY(), min.getZ());
+            return new Location(this.context, min.getX(), min.getY(), min.getZ());
         }
 
         @Override
         public Location getMax() {
             BlockVector3 max = this.region.getMaximumPoint();
-            return new Location(this.contextLocation.getWorld(), max.getX(), max.getY(), max.getZ());
+            return new Location(this.context, max.getX(), max.getY(), max.getZ());
         }
     }
 

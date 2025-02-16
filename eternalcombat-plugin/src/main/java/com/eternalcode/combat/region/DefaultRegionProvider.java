@@ -38,7 +38,7 @@ public class DefaultRegionProvider implements RegionProvider {
         double z = spawnLocation.getZ();
 
         Location min = new Location(world, x - this.radius, world.getMinHeight(), z - this.radius);
-        Location max = new Location(world, x + this.radius, world.getMaxHeight(), z + this.radius);
+        Location max = new Location(world, x + this.radius - 1, world.getMaxHeight() - 1, z + this.radius - 1);
 
         return new DefaultSpawnRegion(min, max, spawnLocation);
     }

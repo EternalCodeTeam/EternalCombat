@@ -51,7 +51,7 @@ public class BorderServiceImpl implements BorderService {
             for (Region region : regions) {
                 Location min = region.getMin();
                 Location max = region.getMax();
-                triggers.add(new BorderTrigger(min.getBlockX(), min.getBlockY(), min.getBlockZ(), max.getBlockX(), max.getBlockY(), max.getBlockZ(), distanceRounded));
+                triggers.add(new BorderTrigger(min.getBlockX(), min.getBlockY(), min.getBlockZ(), max.getBlockX() + 1, max.getBlockY() + 1, max.getBlockZ() + 1, distanceRounded));
             }
 
             BorderTriggerIndex index = BorderTriggerIndex.create(triggers);
