@@ -151,7 +151,7 @@ public final class CombatPlugin extends JavaPlugin implements EternalCombatApi {
             new FightTagController(this.fightManager, this.pluginConfig),
             new LogoutController(this.fightManager, this.logoutService, notificationAnnouncer, this.pluginConfig),
             new FightUnTagController(this.fightManager, this.pluginConfig, this.logoutService),
-            new FightActionBlockerController(this.fightManager, notificationAnnouncer, this.pluginConfig),
+            new FightActionBlockerController(this.fightManager, notificationAnnouncer, this.pluginConfig, server),
             new FightPearlController(this.pluginConfig.pearl, notificationAnnouncer, this.fightManager, this.fightPearlService),
             new UpdaterNotificationController(updaterService, this.pluginConfig, this.audienceProvider, miniMessage),
             new RegionController(notificationAnnouncer, this.regionProvider, this.fightManager, this.pluginConfig),
