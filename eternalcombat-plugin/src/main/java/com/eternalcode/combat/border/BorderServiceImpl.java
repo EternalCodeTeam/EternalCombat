@@ -39,7 +39,7 @@ public class BorderServiceImpl implements BorderService {
         String world = player.getWorld().getName();
 
         if (result.isEmpty()) {
-            if (this.activeBorderIndex.hasPoints(world, player.getUniqueId())) {
+            if (!this.activeBorderIndex.hasPoints(world, player.getUniqueId())) {
                 return;
             }
 
@@ -56,10 +56,10 @@ public class BorderServiceImpl implements BorderService {
                 points = event.getPoints();
             }
 
-            Set<BorderPoint> toRemove = this.activeBorderIndex.putPoints(world, player.getUniqueId(), points);
+            Set<BorderPoint> removed = this.activeBorderIndex.putPoints(world, player.getUniqueId(), points);
 
-            if (!toRemove.isEmpty()) {
-                eventCaller.publishEvent(new BorderHideAsyncEvent(player, toRemove));
+            if (!removed.isEmpty()) {
+                eventCaller.publishEvent(new BorderHideAsyncEvent(player, removed));
             }
         });
     }
@@ -68,10 +68,11 @@ public class BorderServiceImpl implements BorderService {
     public void clearBorder(Player player) {
         World world = player.getWorld();
         UUID uniqueId = player.getUniqueId();
+        
         scheduler.async(() -> {
-            Set<BorderPoint> borderPoints = this.activeBorderIndex.removePoints(world.getName(), uniqueId);
-            if (!borderPoints.isEmpty()) {
-                eventCaller.publishEvent(new BorderHideAsyncEvent(player, borderPoints));
+            Set<BorderPoint> removed = this.activeBorderIndex.removePoints(world.getName(), uniqueId);
+            if (!removed.isEmpty()) {
+                eventCaller.publishEvent(new BorderHideAsyncEvent(player, removed));
             }
         });
     }
@@ -113,6 +114,7 @@ public class BorderServiceImpl implements BorderService {
 
         List<BorderPoint> points = new ArrayList<>();
 
+        // this code is ugly but is fast
         if (borderMin.y() >= realMinY) {
             for (int currentX = realMinX; currentX <= realMaxX - 1; currentX++) {
                 for (int currentZ = realMinZ; currentZ <= realMaxZ - 1; currentZ++) {

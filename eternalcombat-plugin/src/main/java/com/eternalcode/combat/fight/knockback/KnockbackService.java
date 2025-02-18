@@ -15,16 +15,17 @@ import org.bukkit.util.Vector;
 public final class KnockbackService {
 
     private final PluginConfig pluginConfig;
-    private final Map<UUID, Region> insideRegion = new HashMap<>();
     private final Scheduler scheduler;
+
+    private final Map<UUID, Region> insideRegion = new HashMap<>();
 
     public KnockbackService(PluginConfig pluginConfig, Scheduler scheduler) {
         this.pluginConfig = pluginConfig;
         this.scheduler = scheduler;
     }
 
-    public void konckbackLater(Region region, Player player, Duration duration) {
-        this.scheduler.laterSync(() -> knockback(region, player), duration);
+    public void knockbackLater(Region region, Player player, Duration duration) {
+        this.scheduler.laterSync(() -> this.knockback(region, player), duration);
     }
 
     public void forceKnockbackLater(Player player, Region region, Duration duration) {

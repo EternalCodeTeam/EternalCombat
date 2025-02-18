@@ -64,7 +64,7 @@ public class KnockbackRegionController implements Listener {
                 this.knockbackService.forceKnockbackLater(player, region, Duration.ofSeconds(1));
             } else {
                 event.setCancelled(true);
-                this.knockbackService.konckbackLater(region, player, Duration.ofMillis(50));
+                this.knockbackService.knockbackLater(region, player, Duration.ofMillis(50));
             }
 
             this.announcer.create()
@@ -107,6 +107,7 @@ public class KnockbackRegionController implements Listener {
         Region region = regionOptional.get();
         this.knockbackService.knockback(region, player);
         this.knockbackService.forceKnockbackLater(player, region, Duration.ofSeconds(1));
+
         this.announcer.create()
             .player(player.getUniqueId())
             .notice(this.pluginConfig.messages.cantEnterOnRegion)

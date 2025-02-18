@@ -8,13 +8,27 @@ import java.util.Set;
 
 class BorderTriggerIndexBucket {
 
+    /**
+     * Represents "00000000 00000000 00000000 00000000 11111111 11111111 11111111 11111111" bit mask.
+     * This allows removing left bits when used with AND bit operator.
+     * */
+    private static final long LEFT_INT_MASK = 0xFFFFFFFFL;
+
+    /**
+     * Allows packing the coordination on one axis from 256 into 1
+     * Why? - We divide the world into fragments of size 256x256
+     * Why it is 8? Because when you shift bits, then the value will be smaller / bigger in scale 2^n
+     * E.g `2^4 = 16` (standard minecraft chunk size) in our case, it is `2^8 = 256`
+     */
+    private static final int CHUNK_SHIFT = 8;
+
     private final Map<Long, Set<BorderTrigger>> index = new HashMap<>();
 
     private BorderTriggerIndexBucket() {
     }
 
     Set<BorderTrigger> getTriggers(int x, int z) {
-        long position = packChunk(x >> 8, z >> 8);
+        long position = packChunk(x >> CHUNK_SHIFT, z >> CHUNK_SHIFT);
         return this.index.getOrDefault(position, Set.of());
     }
 
@@ -30,10 +44,10 @@ class BorderTriggerIndexBucket {
     }
 
     private void withTrigger(BorderTrigger trigger) {
-        int minX = trigger.min().x() >> 8;
-        int minZ = trigger.min().z() >> 8;
-        int maxX = trigger.max().x() >> 8;
-        int maxZ = trigger.max().z() >> 8;
+        int minX = trigger.min().x() >> CHUNK_SHIFT;
+        int minZ = trigger.min().z() >> CHUNK_SHIFT;
+        int maxX = trigger.max().x() >> CHUNK_SHIFT;
+        int maxZ = trigger.max().z() >> CHUNK_SHIFT;
 
         int startX = Math.min(minX, maxX);
         int startZ = Math.min(minZ, maxZ);
@@ -49,8 +63,22 @@ class BorderTriggerIndexBucket {
         }
     }
 
+    /**
+     * Packs two ints into long value.
+     * <p>
+     * For example for values:
+     * <ul>
+     *   <li>X - 00000000 00000000 00000000 00000001 </li>
+     *   <li>Z - 00000000 00000000 00000000 00000111 </li>
+     * </ul>
+     * This method will return:<br>
+     * 00000000 00000000 00000000 00000111 00000000 00000000 00000000 00000001
+     * </p>
+     * @param bigChunkX right int to pack
+     * @param bigChunkZ left int to pack
+     */
     private static long packChunk(int bigChunkX, int bigChunkZ) {
-        return (long) bigChunkX & 0xFFFFFFFFL | ((long) bigChunkZ & 0xFFFFFFFFL) << 32;
+        return (long) bigChunkX & LEFT_INT_MASK | ((long) bigChunkZ & LEFT_INT_MASK) << Integer.SIZE;
     }
 
 }

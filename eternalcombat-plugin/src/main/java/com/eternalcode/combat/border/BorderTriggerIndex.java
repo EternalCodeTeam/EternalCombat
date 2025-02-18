@@ -29,9 +29,9 @@ class BorderTriggerIndex {
         this.settings = settings;
     }
 
-    private void update() {
+    private void updateWorlds() {
         for (World world : server.getWorlds()) {
-            updateWorld(world.getName(), provider.getRegions(world));
+            this.updateWorld(world.getName(), provider.getRegions(world));
         }
     }
 
@@ -56,7 +56,7 @@ class BorderTriggerIndex {
 
     static BorderTriggerIndex started(Server server, Scheduler scheduler, RegionProvider provider, BorderSettings settings) {
         BorderTriggerIndex index = new BorderTriggerIndex(server, scheduler, provider, settings);
-        scheduler.timerSync(() -> index.update(), Duration.ZERO, settings.indexRefreshDelay());
+        scheduler.timerSync(() -> index.updateWorlds(), Duration.ZERO, settings.indexRefreshDelay());
         return index;
     }
 

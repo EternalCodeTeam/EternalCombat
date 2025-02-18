@@ -57,7 +57,7 @@ public class WorldGuardRegionProvider implements RegionProvider {
         return regionManager.getRegions()
             .values()
             .stream()
-            .filter(region -> isCombatRegion(region))
+            .filter(region -> this.isCombatRegion(region))
             .map(region -> (Region) new WorldGuardRegion(world, region))
             .toList();
     }

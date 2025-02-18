@@ -1,5 +1,6 @@
 package com.eternalcode.combat.border;
 
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
@@ -36,7 +37,7 @@ class BorderActivePointsIndex {
                 removed.add(oldPoint);
             }
         }
-        return removed;
+        return Collections.unmodifiableSet(removed);
     }
 
     Set<BorderPoint> getPoints(String world, UUID player) {

@@ -2,7 +2,6 @@ package com.eternalcode.combat.border.event;
 
 import com.eternalcode.combat.border.BorderPoint;
 import java.util.Set;
-import java.util.UUID;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
@@ -22,11 +21,11 @@ public class BorderHideAsyncEvent extends Event {
     }
 
     public Player getPlayer() {
-        return player;
+        return this.player;
     }
 
     public Set<BorderPoint> getPoints() {
-        return points;
+        return this.points;
     }
 
     @NotNull

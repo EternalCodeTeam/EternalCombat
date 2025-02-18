@@ -42,6 +42,7 @@ public class BorderBlockController implements Listener {
 
     private final BorderService borderService;
     private final Server server;
+    
     private final Set<UUID> playersToUpdate = ConcurrentHashMap.newKeySet();
     private final Map<UUID, Object> lockedPlayers = new ConcurrentHashMap<>();
     private final Cache<ChunkLocation, ChunkSnapshot> chunkCache = CacheBuilder.newBuilder()
@@ -57,7 +58,7 @@ public class BorderBlockController implements Listener {
     @EventHandler
     void onBorderShowAsyncEvent(BorderShowAsyncEvent event) {
         Player player = event.getPlayer();
-        Set<BorderPoint> borderPoints = processChunks(player, event.getPoints());
+        Set<BorderPoint> borderPoints = this.processChunks(player, event.getPoints());
 
         event.setPoints(borderPoints);
         this.playBlocks(player, borderPoints);
@@ -85,7 +86,7 @@ public class BorderBlockController implements Listener {
                 continue;
             }
 
-            updatePlayer(uuid, player);
+            this.updatePlayer(uuid, player);
         }
     }
 
@@ -99,14 +100,14 @@ public class BorderBlockController implements Listener {
                 return;
             }
 
-            playBlocks(player, border);
+            this.playBlocks(player, border);
         }
     }
 
     record ChunkLocation(int x, int z) {}
 
     public void playBlocks(Player player, Collection<BorderPoint> blocks) {
-        Map<Vector3i, Set<BorderPoint>> chunksToUpdate = splitToChunks(blocks);
+        Map<Vector3i, Set<BorderPoint>> chunksToUpdate = this.splitToChunks(blocks);
 
         for (Map.Entry<Vector3i, Set<BorderPoint>> entry : chunksToUpdate.entrySet()) {
             Vector3i chunk = entry.getKey();

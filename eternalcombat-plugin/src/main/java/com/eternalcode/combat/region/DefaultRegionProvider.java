@@ -18,7 +18,7 @@ public class DefaultRegionProvider implements RegionProvider {
     @Override
     public Optional<Region> getRegion(Location location) {
         World world = location.getWorld();
-        Region spawnRegion = createSpawnRegion(world);
+        Region spawnRegion = this.createSpawnRegion(world);
         if (spawnRegion.contains(location.getX(), location.getY(), location.getZ())) {
             return Optional.of(spawnRegion);
         }
@@ -28,7 +28,7 @@ public class DefaultRegionProvider implements RegionProvider {
 
     @Override
     public Collection<Region> getRegions(World world) {
-        Region spawnRegion = createSpawnRegion(world);
+        Region spawnRegion = this.createSpawnRegion(world);
         return List.of(spawnRegion);
     }
 

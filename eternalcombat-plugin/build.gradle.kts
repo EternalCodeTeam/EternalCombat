@@ -54,7 +54,7 @@ dependencies {
     // Multification
     implementation("com.eternalcode:multification-bukkit:${Versions.MULTIFICATION}")
     implementation("com.eternalcode:multification-okaeri:${Versions.MULTIFICATION}")
-    implementation("com.github.retrooper:packetevents-spigot:2.7.0")
+    implementation("com.github.retrooper:packetevents-spigot:${Versions.PACKETS_EVENTS}")
     implementation("io.papermc:paperlib:${Versions.PAPERLIB}")
 }
 

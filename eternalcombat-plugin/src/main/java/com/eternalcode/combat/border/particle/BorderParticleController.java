@@ -46,7 +46,7 @@ public class BorderParticleController implements Listener {
         this.playersToUpdate.add(event.getPlayer().getUniqueId());
 
         for (BorderPoint point : event.getPoints()) {
-            playParticle(event.getPlayer(), point);
+            this.playParticle(event.getPlayer(), point);
         }
     }
 
@@ -69,7 +69,7 @@ public class BorderParticleController implements Listener {
             }
 
             for (BorderPoint point : border) {
-                playParticle(player, point);
+                this.playParticle(player, point);
             }
         }
     }
