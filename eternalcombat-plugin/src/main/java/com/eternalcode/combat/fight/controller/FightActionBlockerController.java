@@ -3,8 +3,11 @@ package com.eternalcode.combat.fight.controller;
 import com.eternalcode.combat.config.implementation.PluginConfig;
 import com.eternalcode.combat.WhitelistBlacklistMode;
 import com.eternalcode.combat.fight.FightManager;
+import com.eternalcode.combat.fight.event.FightUntagEvent;
 import com.eternalcode.combat.notification.NotificationAnnouncer;
+import org.bukkit.GameMode;
 import org.bukkit.Material;
+import org.bukkit.Server;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -24,11 +27,13 @@ public class FightActionBlockerController implements Listener {
     private final FightManager fightManager;
     private final NotificationAnnouncer announcer;
     private final PluginConfig config;
+    private final Server server;
 
-    public FightActionBlockerController(FightManager fightManager, NotificationAnnouncer announcer, PluginConfig config) {
+    public FightActionBlockerController(FightManager fightManager, NotificationAnnouncer announcer, PluginConfig config, Server server) {
         this.fightManager = fightManager;
         this.announcer = announcer;
         this.config = config;
+        this.server = server;
     }
 
     @EventHandler
@@ -120,6 +125,24 @@ public class FightActionBlockerController implements Listener {
             player.setAllowFlight(false);
 
             event.setCancelled(true);
+        }
+    }
+
+    @EventHandler
+    void onUnTag(FightUntagEvent event) {
+        if (!this.config.settings.disableFlying) {
+            return;
+        }
+
+        UUID uniqueId = event.getPlayer();
+        Player player = this.server.getPlayer(uniqueId);
+
+        if (player == null) {
+            return;
+        }
+        GameMode playerGameMode = player.getGameMode();
+        if (playerGameMode == GameMode.CREATIVE || playerGameMode == GameMode.SPECTATOR) {
+            player.setAllowFlight(true);
         }
     }
 
