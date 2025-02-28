@@ -83,20 +83,21 @@ public class BorderServiceImpl implements BorderService {
     }
 
     private Optional<BorderResult> resolveBorder(Location location) {
-        LazyBorderResult result = new LazyBorderResult();
         List<BorderTrigger> triggered = borderIndexes.getTriggered(location);
 
-        for (BorderTrigger trigger : triggered) {
-            result.addLazyBorderPoints(new Lazy<>(() -> this.resolveBorderPoints(trigger, location)));
+        if (triggered.isEmpty()) {
+            return Optional.empty();
         }
 
-        if (result.isEmpty()) {
-            return Optional.empty();
+        BorderLazyResult result = new BorderLazyResult();
+        for (BorderTrigger trigger : triggered) {
+            result.addLazyBorderPoints(new Lazy<>(() -> this.resolveBorderPoints(trigger, location)));
         }
 
         return Optional.of(result);
     }
 
+    /* this code is ugly but is fast */
     private List<BorderPoint> resolveBorderPoints(BorderTrigger trigger, Location playerLocation) {
         BorderPoint borderMin = trigger.min();
         BorderPoint borderMax = trigger.max();
@@ -114,8 +115,7 @@ public class BorderServiceImpl implements BorderService {
 
         List<BorderPoint> points = new ArrayList<>();
 
-        // this code is ugly but is fast
-        if (borderMin.y() >= realMinY) {
+        if (borderMin.y() >= realMinY) { // Bottom wall
             for (int currentX = realMinX; currentX <= realMaxX - 1; currentX++) {
                 for (int currentZ = realMinZ; currentZ <= realMaxZ - 1; currentZ++) {
                     addPoint(points, currentX, realMinY, currentZ, playerLocation, null);
@@ -123,7 +123,7 @@ public class BorderServiceImpl implements BorderService {
             }
         }
 
-        if (borderMax.y() <= realMaxY) {
+        if (borderMax.y() <= realMaxY) { // Top wall
             for (int currentX = realMinX; currentX <= realMaxX; currentX++) {
                 for (int currentZ = realMinZ; currentZ <= realMaxZ; currentZ++) {
                     BorderPoint inclusive = new BorderPoint(Math.max(realMinX, currentX - 1), realMaxY - 1, Math.max(realMinZ, currentZ - 1));
@@ -132,7 +132,7 @@ public class BorderServiceImpl implements BorderService {
             }
         }
 
-        if (borderMin.x() >= realMinX) {
+        if (borderMin.x() >= realMinX) { // West wall (left)
             for (int currentY = realMinY; currentY <= realMaxY - 1; currentY++) {
                 for (int currentZ = realMinZ; currentZ <= realMaxZ - 1; currentZ++) {
                     addPoint(points, realMinX, currentY, currentZ, playerLocation, null);
@@ -140,7 +140,7 @@ public class BorderServiceImpl implements BorderService {
             }
         }
 
-        if (borderMax.x() <= realMaxX) {
+        if (borderMax.x() <= realMaxX) { // East wall (right)
             for (int currentY = realMinY; currentY <= realMaxY; currentY++) {
                 for (int currentZ = realMinZ; currentZ <= realMaxZ; currentZ++) {
                     BorderPoint inclusive = new BorderPoint(realMaxX - 1, Math.max(realMinY, currentY - 1), Math.max(realMinZ, currentZ - 1));
@@ -149,7 +149,7 @@ public class BorderServiceImpl implements BorderService {
             }
         }
 
-        if (borderMin.z() >= realMinZ) {
+        if (borderMin.z() >= realMinZ) { // North wall (front)
             for (int currentX = realMinX; currentX <= realMaxX - 1; currentX++) {
                 for (int currentY = realMinY; currentY <= realMaxY - 1; currentY++) {
                     addPoint(points, currentX, currentY, realMinZ, playerLocation, null);
@@ -157,7 +157,7 @@ public class BorderServiceImpl implements BorderService {
             }
         }
 
-        if (borderMax.z() <= realMaxZ) {
+        if (borderMax.z() <= realMaxZ) { // South wall (back)
             for (int currentX = realMinX; currentX <= realMaxX; currentX++) {
                 for (int currentY = realMinY; currentY <= realMaxY; currentY++) {
                     BorderPoint inclusive = new BorderPoint(Math.max(realMinX, currentX - 1), Math.max(realMinY, currentY - 1), realMaxZ - 1);
@@ -176,7 +176,7 @@ public class BorderServiceImpl implements BorderService {
     }
 
     private boolean isVisible(int x, int y, int z, Location player) {
-        return Math.sqrt(Math.pow(x - player.getX(), 2) + Math.pow(y - player.getY(), 2) + Math.pow(z - player.getZ(), 2)) <= this.settings.distance();
+        return Math.sqrt(Math.pow(x - player.getX(), 2) + Math.pow(y - player.getY(), 2) + Math.pow(z - player.getZ(), 2)) <= this.settings.distance;
     }
 
 }

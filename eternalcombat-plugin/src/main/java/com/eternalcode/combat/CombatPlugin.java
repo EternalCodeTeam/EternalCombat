@@ -3,8 +3,8 @@ package com.eternalcode.combat;
 import com.eternalcode.combat.border.BorderTriggerController;
 import com.eternalcode.combat.border.BorderService;
 import com.eternalcode.combat.border.BorderServiceImpl;
-import com.eternalcode.combat.border.particle.BorderBlockController;
-import com.eternalcode.combat.border.particle.BorderParticleController;
+import com.eternalcode.combat.border.animation.block.BorderBlockController;
+import com.eternalcode.combat.border.animation.particle.ParticleController;
 import com.eternalcode.combat.bridge.BridgeService;
 import com.eternalcode.combat.fight.drop.DropKeepInventoryService;
 import com.eternalcode.combat.fight.FightManager;
@@ -128,7 +128,7 @@ public final class CombatPlugin extends JavaPlugin implements EternalCombatApi {
         BridgeService bridgeService = new BridgeService(this.pluginConfig, server.getPluginManager(), this.getLogger(), this);
         bridgeService.init(this.fightManager, server);
         this.regionProvider = bridgeService.getRegionProvider();
-        BorderService borderService = new BorderServiceImpl(scheduler, server, regionProvider, eventCaller, () -> 6.5);
+        BorderService borderService = new BorderServiceImpl(scheduler, server, regionProvider, eventCaller, pluginConfig.border);
         KnockbackService knockbackService = new KnockbackService(this.pluginConfig, scheduler);
 
         NotificationAnnouncer notificationAnnouncer = new NotificationAnnouncer(this.audienceProvider, this.pluginConfig, miniMessage);
@@ -159,26 +159,26 @@ public final class CombatPlugin extends JavaPlugin implements EternalCombatApi {
         new Metrics(this, BSTATS_METRICS_ID);
 
         Stream.of(
-            new PercentDropModifier(this.pluginConfig.dropSettings),
-            new PlayersHealthDropModifier(this.pluginConfig.dropSettings, this.logoutService)
+            new PercentDropModifier(this.pluginConfig.drop),
+            new PlayersHealthDropModifier(this.pluginConfig.drop, this.logoutService)
         ).forEach(this.dropService::registerModifier);
 
 
         Stream.of(
-            new DropController(this.dropService, this.dropKeepInventoryService, this.pluginConfig.dropSettings, this.fightManager),
+            new DropController(this.dropService, this.dropKeepInventoryService, this.pluginConfig.drop, this.fightManager),
             new FightTagController(this.fightManager, this.pluginConfig),
             new LogoutController(this.fightManager, this.logoutService, notificationAnnouncer, this.pluginConfig),
             new FightUnTagController(this.fightManager, this.pluginConfig, this.logoutService),
             new FightActionBlockerController(this.fightManager, notificationAnnouncer, this.pluginConfig),
             new FightPearlController(this.pluginConfig.pearl, notificationAnnouncer, this.fightManager, this.fightPearlService),
             new UpdaterNotificationController(updaterService, this.pluginConfig, this.audienceProvider, miniMessage),
-            new KnockbackRegionController(notificationAnnouncer, this.regionProvider, this.fightManager, this.pluginConfig, knockbackService, server),
+            new KnockbackRegionController(notificationAnnouncer, this.regionProvider, this.fightManager, knockbackService, server),
             new FightEffectController(this.pluginConfig.effect, this.fightEffectService, this.fightManager, this.getServer()),
             new FightTagOutController(this.fightTagOutService),
             new FightMessageController(this.fightManager, notificationAnnouncer, this.pluginConfig, this.getServer()),
-            new BorderTriggerController(borderService, fightManager, server),
-            new BorderParticleController(borderService, scheduler, server),
-            new BorderBlockController(borderService, scheduler, server)
+            new BorderTriggerController(borderService, pluginConfig.border, fightManager, server),
+            new ParticleController(borderService, pluginConfig.border.particle, scheduler, server),
+            new BorderBlockController(borderService, pluginConfig.border.block, scheduler, server)
         ).forEach(listener -> this.getServer().getPluginManager().registerEvents(listener, this));
 
         EternalCombatProvider.initialize(this);

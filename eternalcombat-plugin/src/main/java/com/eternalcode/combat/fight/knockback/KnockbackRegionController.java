@@ -1,6 +1,5 @@
 package com.eternalcode.combat.fight.knockback;
 
-import com.eternalcode.combat.config.implementation.PluginConfig;
 import com.eternalcode.combat.fight.FightManager;
 import com.eternalcode.combat.fight.event.FightTagEvent;
 import com.eternalcode.combat.notification.NotificationAnnouncer;
@@ -22,15 +21,13 @@ public class KnockbackRegionController implements Listener {
     private final NotificationAnnouncer announcer;
     private final RegionProvider regionProvider;
     private final FightManager fightManager;
-    private final PluginConfig pluginConfig;
     private final KnockbackService knockbackService;
     private final Server server;
 
-    public KnockbackRegionController(NotificationAnnouncer announcer, RegionProvider regionProvider, FightManager fightManager, PluginConfig pluginConfig, KnockbackService knockbackService, Server server) {
+    public KnockbackRegionController(NotificationAnnouncer announcer, RegionProvider regionProvider, FightManager fightManager, KnockbackService knockbackService, Server server) {
         this.announcer = announcer;
         this.regionProvider = regionProvider;
         this.fightManager = fightManager;
-        this.pluginConfig = pluginConfig;
         this.knockbackService = knockbackService;
         this.server = server;
     }
@@ -61,7 +58,7 @@ public class KnockbackRegionController implements Listener {
             Region region = regionOptional.get();
             if (region.contains(locationFrom)) {
                 this.knockbackService.knockback(region, player);
-                this.knockbackService.forceKnockbackLater(player, region, Duration.ofSeconds(1));
+                this.knockbackService.forceKnockbackLater(player, region);
             } else {
                 event.setCancelled(true);
                 this.knockbackService.knockbackLater(region, player, Duration.ofMillis(50));
@@ -69,7 +66,7 @@ public class KnockbackRegionController implements Listener {
 
             this.announcer.create()
                 .player(player.getUniqueId())
-                .notice(this.pluginConfig.messages.cantEnterOnRegion)
+                .notice(config -> config.messages.cantEnterOnRegion)
                 .send();
         }
     }
@@ -87,7 +84,7 @@ public class KnockbackRegionController implements Listener {
             event.setCancelled(true);
             this.announcer.create()
                 .player(player.getUniqueId())
-                .notice(this.pluginConfig.messages.cantEnterOnRegion)
+                .notice(config -> config.messages.cantEnterOnRegion)
                 .send();
         }
     }
@@ -106,11 +103,11 @@ public class KnockbackRegionController implements Listener {
 
         Region region = regionOptional.get();
         this.knockbackService.knockback(region, player);
-        this.knockbackService.forceKnockbackLater(player, region, Duration.ofSeconds(1));
+        this.knockbackService.forceKnockbackLater(player, region);
 
         this.announcer.create()
             .player(player.getUniqueId())
-            .notice(this.pluginConfig.messages.cantEnterOnRegion)
+            .notice(config -> config.messages.cantEnterOnRegion)
             .send();
     }
 

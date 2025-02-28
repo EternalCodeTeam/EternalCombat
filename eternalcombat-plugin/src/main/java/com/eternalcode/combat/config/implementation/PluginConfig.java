@@ -1,8 +1,10 @@
 package com.eternalcode.combat.config.implementation;
 
 import com.eternalcode.combat.WhitelistBlacklistMode;
+import com.eternalcode.combat.border.BorderSettings;
 import com.eternalcode.combat.fight.drop.DropSettings;
 import com.eternalcode.combat.fight.effect.FightEffectSettings;
+import com.eternalcode.combat.fight.knockback.KnockbackSettings;
 import com.eternalcode.combat.fight.pearl.FightPearlSettings;
 import com.eternalcode.multification.bukkit.notice.BukkitNotice;
 import com.eternalcode.multification.notice.Notice;
@@ -54,7 +56,15 @@ public class PluginConfig extends OkaeriConfig {
         "# Customize how items are dropped when a player dies during combat.",
         "# Configure whether items drop, how they drop, and any additional rules for item drops."
     })
-    public DropSettings dropSettings = new DropSettings();
+    public DropSettings drop = new DropSettings();
+
+    public KnockbackSettings knockback = new KnockbackSettings();
+
+    @Comment({
+        "",
+        "# Border Settings",
+    })
+    public BorderSettings border = new BorderSettings();
 
     public static class Settings extends OkaeriConfig {
 
@@ -83,13 +93,6 @@ public class PluginConfig extends OkaeriConfig {
             "# Players in these regions will not be able to engage in combat."
         })
         public List<String> blockedRegions = Collections.singletonList("your_region");
-
-        @Comment({
-            "# Adjust the knockback multiplier for restricted regions.",
-            "# Higher values increase the knockback distance. Avoid using negative values.",
-            "# A value of 1.0 typically knocks players 2-4 blocks away."
-        })
-        public double regionKnockbackMultiplier = 1;
 
         @Comment({
             "# Prevent players from entering regions where PVP is disabled by WorldGuard.",

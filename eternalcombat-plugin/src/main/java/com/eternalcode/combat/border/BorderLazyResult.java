@@ -6,16 +6,12 @@ import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-class LazyBorderResult implements BorderResult {
+class BorderLazyResult implements BorderResult {
 
     private final List<Lazy<List<BorderPoint>>> borderPoints = new ArrayList<>();
 
     void addLazyBorderPoints(Lazy<List<BorderPoint>> supplier) {
         borderPoints.add(supplier);
-    }
-
-    boolean isEmpty() {
-        return borderPoints.isEmpty();
     }
 
     @Override

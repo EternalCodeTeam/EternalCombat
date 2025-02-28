@@ -14,13 +14,13 @@ import org.bukkit.util.Vector;
 
 public final class KnockbackService {
 
-    private final PluginConfig pluginConfig;
+    private final PluginConfig config;
     private final Scheduler scheduler;
 
     private final Map<UUID, Region> insideRegion = new HashMap<>();
 
-    public KnockbackService(PluginConfig pluginConfig, Scheduler scheduler) {
-        this.pluginConfig = pluginConfig;
+    public KnockbackService(PluginConfig config, Scheduler scheduler) {
+        this.config = config;
         this.scheduler = scheduler;
     }
 
@@ -28,7 +28,7 @@ public final class KnockbackService {
         this.scheduler.laterSync(() -> this.knockback(region, player), duration);
     }
 
-    public void forceKnockbackLater(Player player, Region region, Duration duration) {
+    public void forceKnockbackLater(Player player, Region region) {
         if (insideRegion.containsKey(player.getUniqueId())) {
             return;
         }
@@ -43,7 +43,7 @@ public final class KnockbackService {
 
             Location location = KnockbackOutsideRegionGenerator.generate(region.getMin(), region.getMax(), playerLocation);
             player.teleport(location, PlayerTeleportEvent.TeleportCause.PLUGIN);
-        }, duration);
+        }, this.config.knockback.forceDelay);
     }
 
     public void knockback(Region region, Player player) {
@@ -51,7 +51,7 @@ public final class KnockbackService {
         Location subtract = player.getLocation().subtract(centerOfRegion);
 
         Vector knockbackVector = new Vector(subtract.getX(), 0, subtract.getZ()).normalize();
-        double multiplier = this.pluginConfig.settings.regionKnockbackMultiplier;
+        double multiplier = this.config.knockback.multiplier;
         Vector configuredVector = new Vector(multiplier, 0.5, multiplier);
 
         player.setVelocity(knockbackVector.multiply(configuredVector));
