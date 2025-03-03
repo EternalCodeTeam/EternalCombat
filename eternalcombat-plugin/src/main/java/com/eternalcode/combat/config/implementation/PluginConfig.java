@@ -264,7 +264,7 @@ public class PluginConfig extends OkaeriConfig {
             "# BossBar overlays: https://javadoc.io/static/net.kyori/adventure-api/4.14.0/net/kyori/adventure/bossbar/BossBar.Overlay.html"
         })
         public Notice combatNotification = BukkitNotice.builder()
-            .actionBar("Combat ends in: <white>{TIME}</white></gradient>")
+            .actionBar("<bold>Combat ends in: <red>{TIME}</red></bold>")
             .sound(Sound.ENTITY_EXPERIENCE_ORB_PICKUP, SoundCategory.PLAYERS, 2.0F, 1.0F)
             .build();
 
