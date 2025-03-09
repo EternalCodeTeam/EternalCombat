@@ -20,8 +20,8 @@ import org.bukkit.event.Listener;
 
 public class ParticleController implements Listener {
 
-    public static final PacketEventsAPI<?> PACKET_EVENTS_API = PacketEvents.getAPI();
-    public static final PlayerManager PLAYER_MANAGER = PACKET_EVENTS_API.getPlayerManager();
+    private static final PacketEventsAPI<?> PACKET_EVENTS_API = PacketEvents.getAPI();
+    private static final PlayerManager PLAYER_MANAGER = PACKET_EVENTS_API.getPlayerManager();
 
     private final BorderService borderService;
     private final ParticleSettings particleSettings;
