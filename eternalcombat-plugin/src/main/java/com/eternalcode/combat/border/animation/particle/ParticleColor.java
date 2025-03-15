@@ -29,7 +29,8 @@ public class ParticleColor {
             return RAINBOW;
         }
 
-        return new ParticleColor(name, point -> Color.decode(name));
+        Color decoded = Color.decode(name);
+        return new ParticleColor(name, point -> decoded);
     }
 
     private interface ColorProvider {
