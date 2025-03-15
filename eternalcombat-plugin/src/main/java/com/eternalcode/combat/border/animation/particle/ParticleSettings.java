@@ -14,7 +14,6 @@ import com.github.retrooper.packetevents.wrapper.play.server.WrapperPlayServerPa
 import eu.okaeri.configs.OkaeriConfig;
 import eu.okaeri.configs.annotation.Comment;
 import java.awt.Color;
-import org.jetbrains.annotations.Nullable;
 
 @SuppressWarnings("unchecked")
 public class ParticleSettings extends OkaeriConfig {
@@ -25,7 +24,6 @@ public class ParticleSettings extends OkaeriConfig {
     @Comment("# Particle type - https://javadocs.packetevents.com/com/github/retrooper/packetevents/protocol/particle/type/ParticleTypes.html")
     public ParticleType type = ParticleTypes.DUST;
     @Comment({
-        " ",
         "# Particle color (used only for DUST or ENTITY_EFFECT particle type)",
         "# You can set hex color e.g. \"#ca4c45\" or use \"RAINBOW\" to generate rainbow gradient based on x and z coordinates."
     })

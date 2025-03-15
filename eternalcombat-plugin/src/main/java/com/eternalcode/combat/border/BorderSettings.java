@@ -8,7 +8,7 @@ import java.time.Duration;
 
 public class BorderSettings extends OkaeriConfig {
 
-    @Comment("# Border view distance")
+    @Comment("# Border view distance in blocks")
     public double distance = 6.5;
 
     @Comment("# Border block animation settings")
