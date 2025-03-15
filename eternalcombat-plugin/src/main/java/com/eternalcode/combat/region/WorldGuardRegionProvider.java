@@ -7,14 +7,18 @@ import com.sk89q.worldguard.WorldGuard;
 import com.sk89q.worldguard.protection.ApplicableRegionSet;
 import com.sk89q.worldguard.protection.flags.Flags;
 import com.sk89q.worldguard.protection.flags.StateFlag;
+import com.sk89q.worldguard.protection.managers.RegionManager;
 import com.sk89q.worldguard.protection.regions.ProtectedRegion;
 import com.sk89q.worldguard.protection.regions.RegionContainer;
 import com.sk89q.worldguard.protection.regions.RegionQuery;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.Optional;
 import java.util.TreeSet;
 import org.bukkit.Location;
 
 import java.util.List;
+import org.bukkit.World;
 
 public class WorldGuardRegionProvider implements RegionProvider {
 
@@ -37,10 +41,25 @@ public class WorldGuardRegionProvider implements RegionProvider {
                 continue;
             }
 
-            return Optional.of(new RegionImpl(location, region));
+            return Optional.of(new WorldGuardRegion(location.getWorld(), region));
         }
 
         return Optional.empty();
+    }
+
+    @Override
+    public Collection<Region> getRegions(World world) {
+        RegionManager regionManager = this.regionContainer.get(BukkitAdapter.adapt(world));
+        if (regionManager == null) {
+            return Collections.emptyList();
+        }
+
+        return regionManager.getRegions()
+            .values()
+            .stream()
+            .filter(region -> this.isCombatRegion(region))
+            .map(region -> (Region) new WorldGuardRegion(world, region))
+            .toList();
     }
 
     private boolean isCombatRegion(ProtectedRegion region) {
@@ -59,7 +78,7 @@ public class WorldGuardRegionProvider implements RegionProvider {
         return false;
     }
 
-    private record RegionImpl(Location contextLocation, ProtectedRegion region) implements Region {
+    private record WorldGuardRegion(World context, ProtectedRegion region) implements Region {
         @Override
         public Location getCenter() {
             BlockVector3 min = this.region.getMinimumPoint();
@@ -67,8 +86,21 @@ public class WorldGuardRegionProvider implements RegionProvider {
 
             double x = (double) (min.getX() + max.getX()) / 2;
             double z = (double) (min.getZ() + max.getZ()) / 2;
+            double y = (double) (min.getY() + max.getY()) / 2;
 
-            return new Location(this.contextLocation.getWorld(), x, this.contextLocation.getY(), z);
+            return new Location(this.context, x, y, z);
+        }
+
+        @Override
+        public Location getMin() {
+            BlockVector3 min = this.region.getMinimumPoint();
+            return new Location(this.context, min.getX(), min.getY(), min.getZ());
+        }
+
+        @Override
+        public Location getMax() {
+            BlockVector3 max = this.region.getMaximumPoint();
+            return new Location(this.context, max.getX(), max.getY(), max.getZ());
         }
     }
 

@@ -1,6 +1,5 @@
 package com.eternalcode.combat.fight.drop;
 
-import com.eternalcode.combat.fight.drop.DropType;
 import eu.okaeri.configs.OkaeriConfig;
 import eu.okaeri.configs.annotation.Comment;
 
