@@ -1,8 +1,11 @@
 package com.eternalcode.combat.region;
 
+import java.util.Collection;
+import java.util.List;
 import java.util.Optional;
+import org.bukkit.Bukkit;
 import org.bukkit.Location;
-import org.bukkit.util.BlockVector;
+import org.bukkit.World;
 
 public class DefaultRegionProvider implements RegionProvider {
 
@@ -14,23 +17,47 @@ public class DefaultRegionProvider implements RegionProvider {
 
     @Override
     public Optional<Region> getRegion(Location location) {
-        Location spawnLocation = location.getWorld().getSpawnLocation();
-        double x = spawnLocation.getX();
-        double z = spawnLocation.getZ();
-
-        BlockVector min = new BlockVector(x - this.radius, 0, z - this.radius);
-        BlockVector max = new BlockVector(x + this.radius, 0, z + this.radius);
-
-        if (this.contains(min, max, location.getX(), location.getZ())) {
-            return Optional.of(() -> new Location(location.getWorld(), x, location.getY(), z));
+        World world = location.getWorld();
+        Region spawnRegion = this.createSpawnRegion(world);
+        if (spawnRegion.contains(location.getX(), location.getY(), location.getZ())) {
+            return Optional.of(spawnRegion);
         }
 
         return Optional.empty();
     }
 
-    private boolean contains(BlockVector min, BlockVector max, double x, double z) {
-        return x >= min.getX() && x < max.getX()
-            && z >= min.getZ() && z < max.getZ();
+    @Override
+    public Collection<Region> getRegions(World world) {
+        Region spawnRegion = this.createSpawnRegion(world);
+        return List.of(spawnRegion);
+    }
+
+    private Region createSpawnRegion(World world) {
+        Location spawnLocation = world.getSpawnLocation();
+        double x = spawnLocation.getX();
+        double z = spawnLocation.getZ();
+
+        Location min = new Location(world, x - this.radius, world.getMinHeight(), z - this.radius);
+        Location max = new Location(world, x + this.radius - 1, world.getMaxHeight() - 1, z + this.radius - 1);
+
+        return new DefaultSpawnRegion(min, max, spawnLocation);
+    }
+
+    private record DefaultSpawnRegion(Location min, Location max, Location center) implements Region {
+        @Override
+        public Location getCenter() {
+            return this.center;
+        }
+
+        @Override
+        public Location getMin() {
+            return this.min;
+        }
+
+        @Override
+        public Location getMax() {
+            return this.max;
+        }
     }
 
 }
