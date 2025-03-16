@@ -1,20 +1,11 @@
 package com.eternalcode.combat;
 
-import com.eternalcode.combat.border.BorderTriggerController;
 import com.eternalcode.combat.border.BorderService;
 import com.eternalcode.combat.border.BorderServiceImpl;
+import com.eternalcode.combat.border.BorderTriggerController;
 import com.eternalcode.combat.border.animation.block.BorderBlockController;
 import com.eternalcode.combat.border.animation.particle.ParticleController;
 import com.eternalcode.combat.bridge.BridgeService;
-import com.eternalcode.combat.fight.drop.DropKeepInventoryService;
-import com.eternalcode.combat.fight.FightManager;
-import com.eternalcode.combat.fight.drop.DropService;
-import com.eternalcode.combat.fight.effect.FightEffectService;
-import com.eternalcode.combat.fight.knockback.KnockbackService;
-import com.eternalcode.combat.fight.tagout.FightTagOutService;
-import com.eternalcode.combat.fight.pearl.FightPearlService;
-import com.eternalcode.combat.handler.InvalidUsageHandlerImpl;
-import com.eternalcode.combat.handler.MissingPermissionHandlerImpl;
 import com.eternalcode.combat.config.ConfigService;
 import com.eternalcode.combat.config.implementation.PluginConfig;
 import com.eternalcode.combat.event.EventCaller;
@@ -26,12 +17,19 @@ import com.eternalcode.combat.fight.controller.FightActionBlockerController;
 import com.eternalcode.combat.fight.controller.FightMessageController;
 import com.eternalcode.combat.fight.controller.FightTagController;
 import com.eternalcode.combat.fight.controller.FightUnTagController;
-import com.eternalcode.combat.fight.drop.*;
+import com.eternalcode.combat.fight.drop.DropController;
+import com.eternalcode.combat.fight.drop.DropKeepInventoryService;
+import com.eternalcode.combat.fight.drop.DropKeepInventoryServiceImpl;
+import com.eternalcode.combat.fight.drop.DropService;
+import com.eternalcode.combat.fight.drop.DropServiceImpl;
+import com.eternalcode.combat.fight.drop.DropType;
 import com.eternalcode.combat.fight.drop.impl.PercentDropModifier;
 import com.eternalcode.combat.fight.drop.impl.PlayersHealthDropModifier;
 import com.eternalcode.combat.fight.effect.FightEffectController;
 import com.eternalcode.combat.fight.effect.FightEffectService;
 import com.eternalcode.combat.fight.effect.FightEffectServiceImpl;
+import com.eternalcode.combat.fight.knockback.KnockbackRegionController;
+import com.eternalcode.combat.fight.knockback.KnockbackService;
 import com.eternalcode.combat.fight.logout.LogoutController;
 import com.eternalcode.combat.fight.logout.LogoutService;
 import com.eternalcode.combat.fight.pearl.FightPearlController;
@@ -44,7 +42,6 @@ import com.eternalcode.combat.fight.tagout.FightTagOutServiceImpl;
 import com.eternalcode.combat.handler.InvalidUsageHandlerImpl;
 import com.eternalcode.combat.handler.MissingPermissionHandlerImpl;
 import com.eternalcode.combat.notification.NotificationAnnouncer;
-import com.eternalcode.combat.fight.knockback.KnockbackRegionController;
 import com.eternalcode.combat.region.RegionProvider;
 import com.eternalcode.combat.updater.UpdaterNotificationController;
 import com.eternalcode.combat.updater.UpdaterService;
@@ -184,15 +181,15 @@ public final class CombatPlugin extends JavaPlugin implements EternalCombatApi {
             new BorderBlockController(borderService, pluginConfig.border.block, scheduler, server)
         ).forEach(listener -> this.getServer().getPluginManager().registerEvents(listener, this));
 
-        if (!(this.pluginConfig.dropSettings.dropType == DropType.UNCHANGED)) {
+        if (!(this.pluginConfig.drop.dropType == DropType.UNCHANGED)) {
             this.dropService = new DropServiceImpl();
             this.dropKeepInventoryService = new DropKeepInventoryServiceImpl();
             Bukkit.getPluginManager().registerEvents(new DropController(this.dropService,
-                this.dropKeepInventoryService, this.pluginConfig.dropSettings, this.fightManager), this);
+                this.dropKeepInventoryService, this.pluginConfig.drop, this.fightManager), this);
 
             Stream.of(
-                new PercentDropModifier(this.pluginConfig.dropSettings),
-                new PlayersHealthDropModifier(this.pluginConfig.dropSettings, this.logoutService)
+                new PercentDropModifier(this.pluginConfig.drop),
+                new PlayersHealthDropModifier(this.pluginConfig.drop, this.logoutService)
             ).forEach(this.dropService::registerModifier);
         }
 
