@@ -19,6 +19,11 @@ public enum CauseOfTag {
     COMMAND,
 
     /**
+     * Crystal explosion caused the tag.
+     */
+    CRYSTAL,
+
+    /**
      * A custom cause, typically defined by external plugins or systems, applied the combat tag.
      */
     CUSTOM
