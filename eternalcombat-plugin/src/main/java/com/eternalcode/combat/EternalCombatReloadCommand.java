@@ -1,7 +1,7 @@
 package com.eternalcode.combat;
 
 import com.eternalcode.combat.config.ConfigService;
-import com.eternalcode.combat.notification.NotificationAnnouncer;
+import com.eternalcode.combat.notification.NoticeService;
 import com.eternalcode.multification.bukkit.notice.BukkitNotice;
 import com.eternalcode.multification.notice.Notice;
 import com.google.common.base.Stopwatch;
@@ -22,9 +22,9 @@ public class EternalCombatReloadCommand {
         .build();
 
     private final ConfigService configService;
-    private final NotificationAnnouncer announcer;
+    private final NoticeService announcer;
 
-    public EternalCombatReloadCommand(ConfigService configService, NotificationAnnouncer announcer) {
+    public EternalCombatReloadCommand(ConfigService configService, NoticeService announcer) {
         this.configService = configService;
         this.announcer = announcer;
     }

@@ -1,7 +1,7 @@
 package com.eternalcode.combat.fight.tagout;
 
 import com.eternalcode.combat.config.implementation.PluginConfig;
-import com.eternalcode.combat.notification.NotificationAnnouncer;
+import com.eternalcode.combat.notification.NoticeService;
 import com.eternalcode.combat.util.DurationUtil;
 import dev.rollczi.litecommands.annotations.argument.Arg;
 import dev.rollczi.litecommands.annotations.command.Command;
@@ -17,12 +17,12 @@ import org.bukkit.entity.Player;
 public class FightTagOutCommand {
 
     private final FightTagOutService fightTagOutService;
-    private final NotificationAnnouncer announcer;
+    private final NoticeService announcer;
     private final PluginConfig config;
 
     public FightTagOutCommand(
         FightTagOutService fightTagOutService,
-        NotificationAnnouncer announcer,
+        NoticeService announcer,
         PluginConfig config
     ) {
         this.fightTagOutService = fightTagOutService;

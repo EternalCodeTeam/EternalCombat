@@ -1,7 +1,7 @@
 package com.eternalcode.combat.handler;
 
 import com.eternalcode.combat.config.implementation.PluginConfig;
-import com.eternalcode.combat.notification.NotificationAnnouncer;
+import com.eternalcode.combat.notification.NoticeService;
 import dev.rollczi.litecommands.handler.result.ResultHandlerChain;
 import dev.rollczi.litecommands.invalidusage.InvalidUsage;
 import dev.rollczi.litecommands.invalidusage.InvalidUsageHandler;
@@ -12,9 +12,9 @@ import org.bukkit.command.CommandSender;
 public class InvalidUsageHandlerImpl implements InvalidUsageHandler<CommandSender> {
 
     private final PluginConfig config;
-    private final NotificationAnnouncer announcer;
+    private final NoticeService announcer;
 
-    public InvalidUsageHandlerImpl(PluginConfig config, NotificationAnnouncer announcer) {
+    public InvalidUsageHandlerImpl(PluginConfig config, NoticeService announcer) {
         this.config = config;
         this.announcer = announcer;
     }

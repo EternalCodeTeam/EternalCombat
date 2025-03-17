@@ -7,7 +7,7 @@ import com.eternalcode.combat.fight.event.CauseOfTag;
 import com.eternalcode.combat.fight.event.CauseOfUnTag;
 import com.eternalcode.combat.fight.event.FightTagEvent;
 import com.eternalcode.combat.fight.event.FightUntagEvent;
-import com.eternalcode.combat.notification.NotificationAnnouncer;
+import com.eternalcode.combat.notification.NoticeService;
 import dev.rollczi.litecommands.annotations.argument.Arg;
 import dev.rollczi.litecommands.annotations.command.Command;
 import dev.rollczi.litecommands.annotations.context.Context;
@@ -24,10 +24,10 @@ import org.bukkit.entity.Player;
 public class FightTagCommand {
 
     private final FightManager fightManager;
-    private final NotificationAnnouncer announcer;
+    private final NoticeService announcer;
     private final PluginConfig config;
 
-    public FightTagCommand(FightManager fightManager, NotificationAnnouncer announcer, PluginConfig config) {
+    public FightTagCommand(FightManager fightManager, NoticeService announcer, PluginConfig config) {
         this.fightManager = fightManager;
         this.announcer = announcer;
         this.config = config;

@@ -1,7 +1,7 @@
 package com.eternalcode.combat.fight.pearl;
 
 import com.eternalcode.combat.fight.FightManager;
-import com.eternalcode.combat.notification.NotificationAnnouncer;
+import com.eternalcode.combat.notification.NoticeService;
 import com.eternalcode.combat.util.DurationUtil;
 import org.bukkit.Material;
 import org.bukkit.entity.EnderPearl;
@@ -21,11 +21,11 @@ import java.util.UUID;
 public class FightPearlController implements Listener {
 
     private final FightPearlSettings settings;
-    private final NotificationAnnouncer announcer;
+    private final NoticeService announcer;
     private final FightManager fightManager;
     private final FightPearlService fightPearlService;
 
-    public FightPearlController(FightPearlSettings settings, NotificationAnnouncer announcer, FightManager fightManager, FightPearlService fightPearlService) {
+    public FightPearlController(FightPearlSettings settings, NoticeService announcer, FightManager fightManager, FightPearlService fightPearlService) {
         this.settings = settings;
         this.announcer = announcer;
         this.fightManager = fightManager;
