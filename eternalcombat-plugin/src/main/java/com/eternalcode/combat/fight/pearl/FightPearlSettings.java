@@ -24,12 +24,12 @@ public class FightPearlSettings extends OkaeriConfig {
 
     @Comment("# Message sent when player tries to throw ender pearl, but are disabled")
     public Notice pearlThrowBlockedDuringCombat = BukkitNotice.builder()
-        .chat("&cThrowing ender pearls is prohibited during combat!")
+        .chat("<red>Throwing ender pearls is prohibited during combat!")
         .build();
 
     @Comment("# Message sent when player tries to throw ender pearl, but has delay")
     public Notice pearlThrowBlockedDelayDuringCombat = BukkitNotice.builder()
-        .chat("&cYou must wait {TIME} before next throw!")
+        .chat("<red>You must wait {TIME} before next throw!")
         .build();
 
 }

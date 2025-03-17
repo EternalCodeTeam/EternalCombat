@@ -30,7 +30,7 @@ public class InvalidUsageHandlerImpl implements InvalidUsageHandler<CommandSende
         for (String usage : schematic.all()) {
             this.announcer.create()
                 .viewer(invocation.sender())
-                .notice(this.config.messages.invalidCommandUsage)
+                .notice(this.config.messagesSettings.invalidCommandUsage)
                 .placeholder("{USAGE}", usage)
                 .send();
         }

@@ -44,7 +44,7 @@ public class FightTask implements Runnable {
 
             this.announcer.create()
                 .player(player.getUniqueId())
-                .notice(this.config.messages.combatNotification)
+                .notice(this.config.messagesSettings.combatNotification)
                 .placeholder("{TIME}", DurationUtil.format(remaining))
                 .send();
 

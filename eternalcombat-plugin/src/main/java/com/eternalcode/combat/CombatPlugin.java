@@ -134,8 +134,8 @@ public final class CombatPlugin extends JavaPlugin implements EternalCombatApi {
         NotificationAnnouncer notificationAnnouncer = new NotificationAnnouncer(this.audienceProvider, this.pluginConfig, miniMessage);
 
         this.liteCommands = LiteBukkitFactory.builder(FALLBACK_PREFIX, this, server)
-            .message(LiteBukkitMessages.PLAYER_NOT_FOUND, this.pluginConfig.messages.playerNotFound)
-            .message(LiteBukkitMessages.PLAYER_ONLY, this.pluginConfig.messages.admin.onlyForPlayers)
+            .message(LiteBukkitMessages.PLAYER_NOT_FOUND, this.pluginConfig.messagesSettings.playerNotFound)
+            .message(LiteBukkitMessages.PLAYER_ONLY, this.pluginConfig.messagesSettings.admin.onlyForPlayers)
 
             .invalidUsage(new InvalidUsageHandlerImpl(this.pluginConfig, notificationAnnouncer))
             .missingPermission(new MissingPermissionHandlerImpl(this.pluginConfig, notificationAnnouncer))

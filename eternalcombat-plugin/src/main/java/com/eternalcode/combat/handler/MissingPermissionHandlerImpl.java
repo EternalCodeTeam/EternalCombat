@@ -29,7 +29,7 @@ public class MissingPermissionHandlerImpl implements MissingPermissionsHandler<C
 
         this.announcer.create()
             .viewer(invocation.sender())
-            .notice(this.config.messages.noPermission)
+            .notice(this.config.messagesSettings.noPermission)
             .placeholder("{PERMISSION}", joinedText)
             .send();
 
