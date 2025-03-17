@@ -3,7 +3,6 @@ package com.eternalcode.combat.config;
 import com.eternalcode.combat.border.animation.block.BlockTypeTransformer;
 import com.eternalcode.combat.border.animation.particle.ParticleColorTransformer;
 import com.eternalcode.combat.border.animation.particle.ParticleTypeTransformer;
-import com.eternalcode.combat.notification.serializer.NotificationSerializer;
 import com.eternalcode.multification.bukkit.notice.resolver.sound.SoundBukkitResolver;
 import com.eternalcode.multification.notice.resolver.NoticeResolverDefaults;
 import com.eternalcode.multification.notice.resolver.NoticeResolverRegistry;
@@ -37,7 +36,6 @@ public class ConfigService {
             new MultificationSerdesPack(noticeRegistry),
             new DefaultSerdesPack()
         );
-        configFile.withSerdesPack(registry -> registry.register(new NotificationSerializer()));
 
         configFile.withBindFile(file);
         configFile.withRemoveOrphans(true);
