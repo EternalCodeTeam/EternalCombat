@@ -1,5 +1,6 @@
 package com.eternalcode.combat.fight;
 
+import com.eternalcode.combat.config.implementation.MessagesSettings;
 import com.eternalcode.combat.config.implementation.PluginConfig;
 import com.eternalcode.combat.fight.event.CancelTagReason;
 import com.eternalcode.combat.fight.event.CauseOfTag;
@@ -39,8 +40,8 @@ public class FightTagCommand {
 
         this.announcer.create()
             .notice(this.fightManager.isInCombat(targetUniqueId)
-                ? this.config.messages.admin.playerInCombat
-                : this.config.messages.admin.playerNotInCombat
+                ? this.config.messagesSettings.admin.playerInCombat
+                : this.config.messagesSettings.admin.playerNotInCombat
             )
             .placeholder("{PLAYER}", target.getName())
             .viewer(sender)
@@ -60,13 +61,13 @@ public class FightTagCommand {
         if (event.isCancelled()) {
             CancelTagReason cancelReason = event.getCancelReason();
 
-            this.tagoutReasonHandler(sender, cancelReason, this.config.messages);
+            this.tagoutReasonHandler(sender, cancelReason, this.config.messagesSettings);
 
             return;
         }
 
         this.announcer.create()
-            .notice(this.config.messages.admin.adminTagPlayer)
+            .notice(this.config.messagesSettings.admin.adminTagPlayer)
             .placeholder("{PLAYER}", target.getName())
             .viewer(sender)
             .send();
@@ -77,12 +78,12 @@ public class FightTagCommand {
     @Permission("eternalcombat.tag")
     void tagMultiple(@Context CommandSender sender, @Arg Player firstTarget, @Arg Player secondTarget) {
         Duration combatTime = this.config.settings.combatTimerDuration;
-        PluginConfig.Messages messages = this.config.messages;
+        MessagesSettings messagesSettings = this.config.messagesSettings;
 
         if (sender.equals(firstTarget) || sender.equals(secondTarget)) {
 
             this.announcer.create()
-                .notice(messages.admin.adminCannotTagSelf)
+                .notice(messagesSettings.admin.adminCannotTagSelf)
                 .viewer(sender)
                 .send();
 
@@ -95,7 +96,7 @@ public class FightTagCommand {
         if (firstTagEvent.isCancelled()) {
             CancelTagReason cancelReason = firstTagEvent.getCancelReason();
 
-            this.tagoutReasonHandler(sender, cancelReason, messages);
+            this.tagoutReasonHandler(sender, cancelReason, messagesSettings);
 
             return;
         }
@@ -103,7 +104,7 @@ public class FightTagCommand {
         if (secondTagEvent.isCancelled()) {
             CancelTagReason cancelReason = secondTagEvent.getCancelReason();
 
-            this.tagoutReasonHandler(sender, cancelReason, messages);
+            this.tagoutReasonHandler(sender, cancelReason, messagesSettings);
 
             return;
         }
@@ -113,7 +114,7 @@ public class FightTagCommand {
         }
 
         this.announcer.create()
-            .notice(messages.admin.adminTagMultiplePlayers)
+            .notice(messagesSettings.admin.adminTagMultiplePlayers)
             .placeholder("{FIRST_PLAYER}", firstTarget.getName())
             .placeholder("{SECOND_PLAYER}", secondTarget.getName())
             .viewer(sender)
@@ -129,7 +130,7 @@ public class FightTagCommand {
         if (!this.fightManager.isInCombat(targetUniqueId)) {
             this.announcer.create()
                 .viewer(sender)
-                .notice(this.config.messages.admin.adminPlayerNotInCombat)
+                .notice(this.config.messagesSettings.admin.adminPlayerNotInCombat)
                 .send();
             return;
         }
@@ -141,16 +142,16 @@ public class FightTagCommand {
 
 
         this.announcer.create()
-            .notice(this.config.messages.admin.adminUntagPlayer)
+            .notice(this.config.messagesSettings.admin.adminUntagPlayer)
             .placeholder("{PLAYER}", target.getName())
             .viewer(sender)
             .send();
     }
 
-    private void tagoutReasonHandler(CommandSender sender, CancelTagReason cancelReason, PluginConfig.Messages messages) {
+    private void tagoutReasonHandler(CommandSender sender, CancelTagReason cancelReason, MessagesSettings messagesSettings) {
         if (cancelReason == CancelTagReason.TAGOUT) {
             this.announcer.create()
-                .notice(messages.admin.adminTagOutCanceled)
+                .notice(messagesSettings.admin.adminTagOutCanceled)
                 .viewer(sender)
                 .send();
 

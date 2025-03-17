@@ -66,7 +66,7 @@ public class KnockbackRegionController implements Listener {
 
             this.announcer.create()
                 .player(player.getUniqueId())
-                .notice(config -> config.messages.cantEnterOnRegion)
+                .notice(config -> config.messagesSettings.cantEnterOnRegion)
                 .send();
         }
     }
@@ -84,7 +84,7 @@ public class KnockbackRegionController implements Listener {
             event.setCancelled(true);
             this.announcer.create()
                 .player(player.getUniqueId())
-                .notice(config -> config.messages.cantEnterOnRegion)
+                .notice(config -> config.messagesSettings.cantEnterOnRegion)
                 .send();
         }
     }
@@ -107,7 +107,7 @@ public class KnockbackRegionController implements Listener {
 
         this.announcer.create()
             .player(player.getUniqueId())
-            .notice(config -> config.messages.cantEnterOnRegion)
+            .notice(config -> config.messagesSettings.cantEnterOnRegion)
             .send();
     }
 

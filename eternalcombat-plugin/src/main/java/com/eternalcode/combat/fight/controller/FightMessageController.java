@@ -39,7 +39,7 @@ public class FightMessageController implements Listener {
 
         this.announcer.create()
             .player(player.getUniqueId())
-            .notice(this.config.messages.playerTagged)
+            .notice(this.config.messagesSettings.playerTagged)
             .send();
     }
 
@@ -53,7 +53,7 @@ public class FightMessageController implements Listener {
 
         this.announcer.create()
             .player(player.getUniqueId())
-            .notice(this.config.messages.playerUntagged)
+            .notice(this.config.messagesSettings.playerUntagged)
             .send();
 
     }

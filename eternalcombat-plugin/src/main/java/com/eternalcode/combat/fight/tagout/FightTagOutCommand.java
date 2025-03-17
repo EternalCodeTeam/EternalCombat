@@ -37,7 +37,7 @@ public class FightTagOutCommand {
         this.fightTagOutService.tagOut(targetUniqueId, time);
 
         this.announcer.create()
-            .notice(this.config.messages.admin.adminTagOutSelf)
+            .notice(this.config.messagesSettings.admin.adminTagOutSelf)
             .placeholder("{TIME}", DurationUtil.format(time))
             .viewer(sender)
             .send();
@@ -51,14 +51,14 @@ public class FightTagOutCommand {
         this.fightTagOutService.tagOut(targetUniqueId, time);
 
         this.announcer.create()
-            .notice(this.config.messages.admin.adminTagOut)
+            .notice(this.config.messagesSettings.admin.adminTagOut)
             .placeholder("{PLAYER}", target.getName())
             .placeholder("{TIME}", DurationUtil.format(time))
             .viewer(sender)
             .send();
 
         this.announcer.create()
-            .notice(this.config.messages.admin.playerTagOut)
+            .notice(this.config.messagesSettings.admin.playerTagOut)
             .placeholder("{TIME}", DurationUtil.format(time))
             .player(target.getUniqueId())
             .send();
@@ -74,14 +74,14 @@ public class FightTagOutCommand {
 
         if (!targetUniqueId.equals(sender.getUniqueId())) {
             this.announcer.create()
-                .notice(this.config.messages.admin.adminTagOutOff)
+                .notice(this.config.messagesSettings.admin.adminTagOutOff)
                 .placeholder("{PLAYER}", target.getName())
                 .viewer(sender)
                 .send();
         }
 
         this.announcer.create()
-            .notice(this.config.messages.admin.playerTagOutOff)
+            .notice(this.config.messagesSettings.admin.playerTagOutOff)
             .player(targetUniqueId)
             .send();
     }
@@ -93,7 +93,7 @@ public class FightTagOutCommand {
         this.fightTagOutService.unTagOut(senderUniqueId);
 
         this.announcer.create()
-            .notice(this.config.messages.admin.playerTagOutOff)
+            .notice(this.config.messagesSettings.admin.playerTagOutOff)
             .viewer(sender)
             .send();
 

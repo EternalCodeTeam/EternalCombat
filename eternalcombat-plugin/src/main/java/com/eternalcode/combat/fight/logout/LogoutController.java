@@ -36,7 +36,7 @@ public class LogoutController implements Listener {
         player.setHealth(0.0);
 
         this.announcer.create()
-            .notice(this.config.messages.playerLoggedOutDuringCombat)
+            .notice(this.config.messagesSettings.playerLoggedOutDuringCombat)
             .placeholder("{PLAYER}", player.getName())
             .all()
             .send();
