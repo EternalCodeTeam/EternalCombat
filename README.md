@@ -10,6 +10,7 @@
 [![Read the Docs](https://raw.githubusercontent.com/vLuckyyy/badges/main/read-the-documentation.svg)](https://docs.eternalcode.pl/eternalcombat/introduction)
 [![Available on BStats](https://raw.githubusercontent.com/vLuckyyy/badges/main/available-on-bstats.svg)](https://bstats.org/plugin/bukkit/EternalCombat/17803)
 </div>
+
 ### Information
 
 EternalCombat 2.0 has been tested on Minecraft versions **1.17.1 to 1.21.4**, but it should work seamlessly on most
