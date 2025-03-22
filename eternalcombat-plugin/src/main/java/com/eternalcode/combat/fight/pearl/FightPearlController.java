@@ -21,13 +21,13 @@ import java.util.UUID;
 public class FightPearlController implements Listener {
 
     private final FightPearlSettings settings;
-    private final NoticeService announcer;
+    private final NoticeService noticeService;
     private final FightManager fightManager;
     private final FightPearlService fightPearlService;
 
-    public FightPearlController(FightPearlSettings settings, NoticeService announcer, FightManager fightManager, FightPearlService fightPearlService) {
+    public FightPearlController(FightPearlSettings settings, NoticeService noticeService, FightManager fightManager, FightPearlService fightPearlService) {
         this.settings = settings;
-        this.announcer = announcer;
+        this.noticeService = noticeService;
         this.fightManager = fightManager;
         this.fightPearlService = fightPearlService;
     }
@@ -57,7 +57,7 @@ public class FightPearlController implements Listener {
 
         if (this.settings.pearlThrowDelay.isZero()) {
             event.setCancelled(true);
-            this.announcer.create()
+            this.noticeService.create()
                 .player(uniqueId)
                 .notice(this.settings.pearlThrowBlockedDuringCombat)
                 .send();
@@ -70,7 +70,7 @@ public class FightPearlController implements Listener {
 
             Duration remainingPearlDelay = this.fightPearlService.getRemainingDelay(uniqueId);
 
-            this.announcer.create()
+            this.noticeService.create()
                 .player(uniqueId)
                 .notice(this.settings.pearlThrowBlockedDelayDuringCombat)
                 .placeholder("{TIME}", DurationUtil.format(remainingPearlDelay))

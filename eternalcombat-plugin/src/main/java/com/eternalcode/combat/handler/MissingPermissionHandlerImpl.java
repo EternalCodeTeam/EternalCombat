@@ -11,11 +11,11 @@ import org.bukkit.command.CommandSender;
 public class MissingPermissionHandlerImpl implements MissingPermissionsHandler<CommandSender> {
 
     private final PluginConfig config;
-    private final NoticeService announcer;
+    private final NoticeService noticeService;
 
-    public MissingPermissionHandlerImpl(PluginConfig config, NoticeService announcer) {
+    public MissingPermissionHandlerImpl(PluginConfig config, NoticeService noticeService) {
         this.config = config;
-        this.announcer = announcer;
+        this.noticeService = noticeService;
     }
 
     @Override
@@ -27,7 +27,7 @@ public class MissingPermissionHandlerImpl implements MissingPermissionsHandler<C
         String joinedText = missingPermissions.asJoinedText();
 
 
-        this.announcer.create()
+        this.noticeService.create()
             .viewer(invocation.sender())
             .notice(this.config.messagesSettings.noPermission)
             .placeholder("{PERMISSION}", joinedText)

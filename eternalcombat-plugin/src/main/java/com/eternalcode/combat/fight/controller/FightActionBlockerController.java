@@ -26,13 +26,13 @@ import java.util.UUID;
 public class FightActionBlockerController implements Listener {
 
     private final FightManager fightManager;
-    private final NoticeService announcer;
+    private final NoticeService noticeService;
     private final PluginConfig config;
     private final Server server;
 
-    public FightActionBlockerController(FightManager fightManager, NoticeService announcer, PluginConfig config, Server server) {
+    public FightActionBlockerController(FightManager fightManager, NoticeService noticeService, PluginConfig config, Server server) {
         this.fightManager = fightManager;
-        this.announcer = announcer;
+        this.noticeService = noticeService;
         this.config = config;
         this.server = server;
     }
@@ -59,7 +59,7 @@ public class FightActionBlockerController implements Listener {
 
         if (isPlacementBlocked && specificBlocksToPreventPlacing.isEmpty()) {
             event.setCancelled(true);
-            this.announcer.create()
+            this.noticeService.create()
                 .player(uniqueId)
                 .notice(this.config.messagesSettings.blockPlacingBlockedDuringCombat)
                 .placeholder("{Y}", String.valueOf(this.config.blockPlacement.blockPlacementYCoordinate))
@@ -73,7 +73,7 @@ public class FightActionBlockerController implements Listener {
         if (isPlacementBlocked && isBlockInDisabledList) {
             event.setCancelled(true);
 
-            this.announcer.create()
+            this.noticeService.create()
                 .player(uniqueId)
                 .notice(this.config.messagesSettings.blockPlacingBlockedDuringCombat)
                 .placeholder("{Y}", String.valueOf(this.config.blockPlacement.blockPlacementYCoordinate))
@@ -178,7 +178,7 @@ public class FightActionBlockerController implements Listener {
 
         event.setCancelled(true);
 
-        this.announcer.create()
+        this.noticeService.create()
             .player(uniqueId)
             .notice(this.config.messagesSettings.inventoryBlockedDuringCombat)
             .send();
@@ -205,7 +205,7 @@ public class FightActionBlockerController implements Listener {
 
         if (shouldCancel) {
             event.setCancelled(true);
-            this.announcer.create()
+            this.noticeService.create()
                 .player(playerUniqueId)
                 .notice(this.config.messagesSettings.commandDisabledDuringCombat)
                 .send();
