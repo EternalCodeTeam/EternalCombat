@@ -9,6 +9,53 @@ plugins {
 
 dependencies {
     implementation(project(":eternalcombat-api"))
+
+    // kyori
+    implementation("net.kyori:adventure-platform-bukkit:${Versions.ADVENTURE_PLATFORM_BUKKIT}")
+    implementation("net.kyori:adventure-text-minimessage:${Versions.ADVENTURE_API}")
+    implementation("net.kyori:adventure-api") {
+        version {
+            strictly(Versions.ADVENTURE_API)
+        }
+    }
+
+    // litecommands
+    implementation("dev.rollczi:litecommands-bukkit:${Versions.LITE_COMMANDS}")
+
+    // Okaeri configs
+    implementation("eu.okaeri:okaeri-configs-yaml-bukkit:${Versions.OKAERI_CONFIGS_YAML_BUKKIT}")
+    implementation("eu.okaeri:okaeri-configs-serdes-commons:${Versions.OKAERI_CONFIGS_SERDES_COMMONS}")
+    implementation("eu.okaeri:okaeri-configs-serdes-bukkit:${Versions.OKAERI_CONFIGS_SERDES_BUKKIT}")
+
+    // Panda utilities
+    implementation("org.panda-lang:panda-utilities:${Versions.PANDA_UTILITIES}")
+
+    // GitCheck
+    implementation("com.eternalcode:gitcheck:${Versions.GIT_CHECK}")
+
+    // commons
+    implementation("commons-io:commons-io:${Versions.APACHE_COMMONS}")
+
+    // bstats
+    implementation("org.bstats:bstats-bukkit:${Versions.B_STATS_BUKKIT}")
+
+    // caffeine
+    implementation("com.github.ben-manes.caffeine:caffeine:${Versions.CAFFEINE}")
+
+    implementation("com.eternalcode:eternalcode-commons-bukkit:${Versions.ETERNALCODE_COMMONS}")
+    implementation("com.eternalcode:eternalcode-commons-adventure:${Versions.ETERNALCODE_COMMONS}")
+
+    // worldguard
+    compileOnly("com.sk89q.worldguard:worldguard-bukkit:${Versions.WORLD_GUARD_BUKKIT}")
+
+    // PlaceholderAPI
+    compileOnly("me.clip:placeholderapi:${Versions.PLACEHOLDER_API}")
+
+    // Multification
+    implementation("com.eternalcode:multification-bukkit:${Versions.MULTIFICATION}")
+    implementation("com.eternalcode:multification-okaeri:${Versions.MULTIFICATION}")
+    implementation("com.github.retrooper:packetevents-spigot:${Versions.PACKETS_EVENTS}")
+    implementation("io.papermc:paperlib:${Versions.PAPERLIB}")
 }
 
 bukkit {
@@ -23,7 +70,7 @@ bukkit {
 
 tasks {
     runServer {
-        minecraftVersion("1.21.1")
+        minecraftVersion("1.21.4")
     }
 }
 
@@ -54,7 +101,8 @@ tasks.shadowJar {
         "org.apache.commons",
         "javassist",
         "com.github.benmanes.caffeine",
-        "com.eternalcode.commons"
+        "com.eternalcode.commons",
+        "com.eternalcode.multification"
     ).forEach { pack ->
         relocate(pack, "$prefix.$pack")
     }

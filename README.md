@@ -72,7 +72,7 @@ with Maven:
 
 with Gradle:
 ```kts
-compileOnly("com.eternalcode:eternalcombat-api:1.3.3")
+compileOnly("com.eternalcode:eternalcombat-api:1.3.2")
 ```
 
 with Maven:
@@ -80,7 +80,7 @@ with Maven:
 <dependency>
   <groupId>com.eternalcode</groupId>
   <artifactId>eternalcombat-api</artifactId>
-  <version>1.3.3</version>
+  <version>1.3.2</version>
   <scope>provided</scope>
 </dependency>
 ```
@@ -94,4 +94,4 @@ more information on how to contribute and our [code of conduct](./.github/CODE_O
 
 If you find an issue with the plugin, please report it in
 the [Issues tab](https://github.com/EternalCodeTeam/EternalCombat/issues). Please provide as much information as
-possible, including the version of Minecraft and the plugin you are using, as well as any error messages or logs
+possible, including the version of Minecraft and the plugin you are using, as well as any error messagesSettings or logs

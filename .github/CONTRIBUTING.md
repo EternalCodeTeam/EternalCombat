@@ -18,7 +18,7 @@ We expect all contributors to follow our [code of conduct](CODE_OF_CONDUCT.md).
 
 If you find an issue with the plugin, please report it in
 the [Issues tab](https://github.com/EternalCodeTeam/EternalCombat/issues). Please provide as much information as
-possible, including the version of Minecraft and the plugin you are using, as well as any error messages or logs.
+possible, including the version of Minecraft and the plugin you are using, as well as any error messagesSettings or logs.
 
 ### Compatibility
 
