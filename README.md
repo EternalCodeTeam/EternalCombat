@@ -41,7 +41,7 @@ fair, heart-pounding battles that keep players on their toes. Here’s a rundown
   defeated players, you’re in control. Here’s what you can tweak:
 
   | Feature              | Description                                                     |
-      |----------------------|-----------------------------------------------------------------|
+  |----------------------|-----------------------------------------------------------------|
   | Elytra & Inventory   | Disable elytra or inventory access during combat.               |
   | Commands             | Whitelist or blacklist specific commands in combat.             |
   | Damage & Projectiles | Customize damage causes and projectile tagging settings.        |
