@@ -4,7 +4,7 @@ import com.eternalcode.combat.config.implementation.PluginConfig;
 import com.eternalcode.combat.fight.FightManager;
 import com.eternalcode.combat.fight.event.FightTagEvent;
 import com.eternalcode.combat.fight.event.FightUntagEvent;
-import com.eternalcode.combat.notification.NotificationAnnouncer;
+import com.eternalcode.combat.notification.NoticeService;
 import org.bukkit.Server;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -14,11 +14,11 @@ import org.bukkit.event.Listener;
 public class FightMessageController implements Listener {
 
     private final FightManager fightManager;
-    private final NotificationAnnouncer announcer;
+    private final NoticeService announcer;
     private final PluginConfig config;
     private final Server server;
 
-    public FightMessageController(FightManager fightManager, NotificationAnnouncer announcer, PluginConfig config, Server server) {
+    public FightMessageController(FightManager fightManager, NoticeService announcer, PluginConfig config, Server server) {
         this.fightManager = fightManager;
         this.announcer = announcer;
         this.config = config;
@@ -39,7 +39,7 @@ public class FightMessageController implements Listener {
 
         this.announcer.create()
             .player(player.getUniqueId())
-            .notice(this.config.messages.playerTagged)
+            .notice(this.config.messagesSettings.playerTagged)
             .send();
     }
 
@@ -53,7 +53,7 @@ public class FightMessageController implements Listener {
 
         this.announcer.create()
             .player(player.getUniqueId())
-            .notice(this.config.messages.playerUntagged)
+            .notice(this.config.messagesSettings.playerUntagged)
             .send();
 
     }

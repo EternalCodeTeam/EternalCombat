@@ -11,10 +11,18 @@ public class BorderSettings extends OkaeriConfig {
     @Comment("# Border view distance in blocks")
     public double distance = 6.5;
 
-    @Comment("# Border block animation settings")
+    @Comment({
+        " ",
+        "# Border block animation settings",
+        "# Configure the block animation that appears during combat."
+    })
     public BlockSettings block = new BlockSettings();
 
-    @Comment("# Border particle animation settings")
+    @Comment({
+        " ",
+        "# Border particle animation settings",
+        "# Configure the particle animation that appears during combat."
+    })
     public ParticleSettings particle = new ParticleSettings();
 
     public Duration indexRefreshDelay() {

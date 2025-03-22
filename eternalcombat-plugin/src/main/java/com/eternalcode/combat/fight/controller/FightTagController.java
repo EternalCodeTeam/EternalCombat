@@ -35,7 +35,7 @@ public class FightTagController implements Listener {
             return;
         }
 
-        List<EntityType> disabledProjectileEntities = this.config.settings.ignoredProjectileTypes;
+        List<EntityType> disabledProjectileEntities = this.config.combat.ignoredProjectileTypes;
 
         if (event.getDamager() instanceof Projectile projectile && disabledProjectileEntities.contains(projectile.getType())) {
             return;
@@ -63,7 +63,7 @@ public class FightTagController implements Listener {
             return;
         }
 
-        if (this.config.settings.disableFlying) {
+        if (this.config.combat.disableFlying) {
             if (attackedPlayerByPerson.isFlying()) {
                 attackedPlayerByPerson.setFlying(false);
                 attackedPlayerByPerson.setAllowFlight(false);
@@ -81,7 +81,7 @@ public class FightTagController implements Listener {
 
     @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
     void onEntityDamage(EntityDamageEvent event) {
-        if (!this.config.settings.enableDamageCauseLogging) {
+        if (!this.config.combat.enableDamageCauseLogging) {
             return;
         }
 
@@ -101,8 +101,8 @@ public class FightTagController implements Listener {
 
         UUID uuid = player.getUniqueId();
 
-        List<EntityDamageEvent.DamageCause> damageCauses = this.config.settings.loggedDamageCauses;
-        WhitelistBlacklistMode mode = this.config.settings.damageCauseRestrictionMode;
+        List<EntityDamageEvent.DamageCause> damageCauses = this.config.combat.loggedDamageCauses;
+        WhitelistBlacklistMode mode = this.config.combat.damageCauseRestrictionMode;
 
         EntityDamageEvent.DamageCause cause = event.getCause();
 
@@ -135,11 +135,11 @@ public class FightTagController implements Listener {
     }
 
     private boolean cannotBeTagged(Player player) {
-        if (player.getGameMode().equals(GameMode.CREATIVE) && this.config.settings.excludeCreativePlayersFromCombat) {
+        if (player.getGameMode().equals(GameMode.CREATIVE) && this.config.admin.excludeCreativePlayersFromCombat) {
             return true;
         }
 
-        if (player.isOp() && this.config.settings.excludeAdminsFromCombat) {
+        if (player.isOp() && this.config.admin.excludeAdminsFromCombat) {
             return true;
         }
 

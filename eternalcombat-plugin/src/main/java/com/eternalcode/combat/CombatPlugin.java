@@ -42,6 +42,9 @@ import com.eternalcode.combat.fight.tagout.FightTagOutServiceImpl;
 import com.eternalcode.combat.handler.InvalidUsageHandlerImpl;
 import com.eternalcode.combat.handler.MissingPermissionHandlerImpl;
 import com.eternalcode.combat.notification.NotificationAnnouncer;
+import com.eternalcode.combat.fight.tagout.FightTagOutCommand;
+import com.eternalcode.combat.notification.NoticeService;
+import com.eternalcode.combat.fight.knockback.KnockbackRegionController;
 import com.eternalcode.combat.region.RegionProvider;
 import com.eternalcode.combat.updater.UpdaterNotificationController;
 import com.eternalcode.combat.updater.UpdaterService;
@@ -131,29 +134,29 @@ public final class CombatPlugin extends JavaPlugin implements EternalCombatApi {
         BorderService borderService = new BorderServiceImpl(scheduler, server, regionProvider, eventCaller, pluginConfig.border);
         KnockbackService knockbackService = new KnockbackService(this.pluginConfig, scheduler);
 
-        NotificationAnnouncer notificationAnnouncer = new NotificationAnnouncer(this.audienceProvider, this.pluginConfig, miniMessage);
+        NoticeService noticeService = new NoticeService(this.audienceProvider, this.pluginConfig, miniMessage);
 
         this.liteCommands = LiteBukkitFactory.builder(FALLBACK_PREFIX, this, server)
-            .message(LiteBukkitMessages.PLAYER_NOT_FOUND, this.pluginConfig.messages.playerNotFound)
-            .message(LiteBukkitMessages.PLAYER_ONLY, this.pluginConfig.messages.admin.onlyForPlayers)
+            .message(LiteBukkitMessages.PLAYER_NOT_FOUND, this.pluginConfig.messagesSettings.playerNotFound)
+            .message(LiteBukkitMessages.PLAYER_ONLY, this.pluginConfig.messagesSettings.admin.onlyForPlayers)
 
-            .invalidUsage(new InvalidUsageHandlerImpl(this.pluginConfig, notificationAnnouncer))
-            .missingPermission(new MissingPermissionHandlerImpl(this.pluginConfig, notificationAnnouncer))
+            .invalidUsage(new InvalidUsageHandlerImpl(this.pluginConfig, noticeService))
+            .missingPermission(new MissingPermissionHandlerImpl(this.pluginConfig, noticeService))
 
             .commands(
-                new FightTagCommand(this.fightManager, notificationAnnouncer, this.pluginConfig),
-                new FightTagOutCommand(this.fightTagOutService, notificationAnnouncer, this.pluginConfig),
-                new EternalCombatReloadCommand(configService, notificationAnnouncer)
+                new FightTagCommand(this.fightManager, noticeService, this.pluginConfig),
+                new FightTagOutCommand(this.fightTagOutService, noticeService, this.pluginConfig),
+                new EternalCombatReloadCommand(configService, noticeService)
             )
 
-            .result(Notice.class, (invocation, result, chain) -> notificationAnnouncer.create()
+            .result(Notice.class, (invocation, result, chain) -> noticeService.create()
                 .viewer(invocation.sender())
                 .notice(result)
                 .send())
 
             .build();
 
-        FightTask fightTask = new FightTask(server, this.pluginConfig, this.fightManager, notificationAnnouncer);
+        FightTask fightTask = new FightTask(server, this.pluginConfig, this.fightManager, noticeService);
         this.getServer().getScheduler().runTaskTimer(this, fightTask, 20L, 20L);
 
         new Metrics(this, BSTATS_METRICS_ID);
@@ -167,15 +170,15 @@ public final class CombatPlugin extends JavaPlugin implements EternalCombatApi {
         Stream.of(
             new DropController(this.dropService, this.dropKeepInventoryService, this.pluginConfig.drop, this.fightManager),
             new FightTagController(this.fightManager, this.pluginConfig),
-            new LogoutController(this.fightManager, this.logoutService, notificationAnnouncer, this.pluginConfig),
+            new LogoutController(this.fightManager, this.logoutService, noticeService, this.pluginConfig),
             new FightUnTagController(this.fightManager, this.pluginConfig, this.logoutService),
-            new FightActionBlockerController(this.fightManager, notificationAnnouncer, this.pluginConfig, server),
-            new FightPearlController(this.pluginConfig.pearl, notificationAnnouncer, this.fightManager, this.fightPearlService),
+            new FightActionBlockerController(this.fightManager, noticeService, this.pluginConfig, server),
+            new FightPearlController(this.pluginConfig.pearl, noticeService, this.fightManager, this.fightPearlService),
             new UpdaterNotificationController(updaterService, this.pluginConfig, this.audienceProvider, miniMessage),
-            new KnockbackRegionController(notificationAnnouncer, this.regionProvider, this.fightManager, knockbackService, server),
+            new KnockbackRegionController(noticeService, this.regionProvider, this.fightManager, knockbackService, server),
             new FightEffectController(this.pluginConfig.effect, this.fightEffectService, this.fightManager, this.getServer()),
             new FightTagOutController(this.fightTagOutService),
-            new FightMessageController(this.fightManager, notificationAnnouncer, this.pluginConfig, this.getServer()),
+            new FightMessageController(this.fightManager, noticeService, this.pluginConfig, this.getServer()),
             new BorderTriggerController(borderService, pluginConfig.border, fightManager, server),
             new ParticleController(borderService, pluginConfig.border.particle, scheduler, server),
             new BorderBlockController(borderService, pluginConfig.border.block, scheduler, server)

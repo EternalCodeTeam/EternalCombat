@@ -1,7 +1,7 @@
 package com.eternalcode.combat.handler;
 
 import com.eternalcode.combat.config.implementation.PluginConfig;
-import com.eternalcode.combat.notification.NotificationAnnouncer;
+import com.eternalcode.combat.notification.NoticeService;
 import dev.rollczi.litecommands.handler.result.ResultHandlerChain;
 import dev.rollczi.litecommands.invocation.Invocation;
 import dev.rollczi.litecommands.permission.MissingPermissions;
@@ -11,9 +11,9 @@ import org.bukkit.command.CommandSender;
 public class MissingPermissionHandlerImpl implements MissingPermissionsHandler<CommandSender> {
 
     private final PluginConfig config;
-    private final NotificationAnnouncer announcer;
+    private final NoticeService announcer;
 
-    public MissingPermissionHandlerImpl(PluginConfig config, NotificationAnnouncer announcer) {
+    public MissingPermissionHandlerImpl(PluginConfig config, NoticeService announcer) {
         this.config = config;
         this.announcer = announcer;
     }
@@ -29,7 +29,7 @@ public class MissingPermissionHandlerImpl implements MissingPermissionsHandler<C
 
         this.announcer.create()
             .viewer(invocation.sender())
-            .notice(this.config.messages.noPermission)
+            .notice(this.config.messagesSettings.noPermission)
             .placeholder("{PERMISSION}", joinedText)
             .send();
 

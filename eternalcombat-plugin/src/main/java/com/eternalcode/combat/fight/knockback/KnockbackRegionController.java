@@ -2,7 +2,7 @@ package com.eternalcode.combat.fight.knockback;
 
 import com.eternalcode.combat.fight.FightManager;
 import com.eternalcode.combat.fight.event.FightTagEvent;
-import com.eternalcode.combat.notification.NotificationAnnouncer;
+import com.eternalcode.combat.notification.NoticeService;
 import com.eternalcode.combat.region.Region;
 import com.eternalcode.combat.region.RegionProvider;
 import java.time.Duration;
@@ -18,13 +18,13 @@ import org.bukkit.event.player.PlayerTeleportEvent;
 
 public class KnockbackRegionController implements Listener {
 
-    private final NotificationAnnouncer announcer;
+    private final NoticeService announcer;
     private final RegionProvider regionProvider;
     private final FightManager fightManager;
     private final KnockbackService knockbackService;
     private final Server server;
 
-    public KnockbackRegionController(NotificationAnnouncer announcer, RegionProvider regionProvider, FightManager fightManager, KnockbackService knockbackService, Server server) {
+    public KnockbackRegionController(NoticeService announcer, RegionProvider regionProvider, FightManager fightManager, KnockbackService knockbackService, Server server) {
         this.announcer = announcer;
         this.regionProvider = regionProvider;
         this.fightManager = fightManager;
@@ -66,7 +66,7 @@ public class KnockbackRegionController implements Listener {
 
             this.announcer.create()
                 .player(player.getUniqueId())
-                .notice(config -> config.messages.cantEnterOnRegion)
+                .notice(config -> config.messagesSettings.cantEnterOnRegion)
                 .send();
         }
     }
@@ -84,7 +84,7 @@ public class KnockbackRegionController implements Listener {
             event.setCancelled(true);
             this.announcer.create()
                 .player(player.getUniqueId())
-                .notice(config -> config.messages.cantEnterOnRegion)
+                .notice(config -> config.messagesSettings.cantEnterOnRegion)
                 .send();
         }
     }
@@ -107,7 +107,7 @@ public class KnockbackRegionController implements Listener {
 
         this.announcer.create()
             .player(player.getUniqueId())
-            .notice(config -> config.messages.cantEnterOnRegion)
+            .notice(config -> config.messagesSettings.cantEnterOnRegion)
             .send();
     }
 

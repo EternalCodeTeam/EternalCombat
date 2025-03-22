@@ -12,13 +12,13 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 
-public final class NotificationAnnouncer extends BukkitMultification<PluginConfig> {
+public final class NoticeService extends BukkitMultification<PluginConfig> {
 
     private final AudienceProvider audienceProvider;
     private final PluginConfig pluginConfig;
     private final MiniMessage miniMessage;
 
-    public NotificationAnnouncer(AudienceProvider audienceProvider, PluginConfig pluginConfig, MiniMessage miniMessage) {
+    public NoticeService(AudienceProvider audienceProvider, PluginConfig pluginConfig, MiniMessage miniMessage) {
         this.audienceProvider = audienceProvider;
         this.pluginConfig = pluginConfig;
         this.miniMessage = miniMessage;
