@@ -3,7 +3,7 @@ plugins {
     `eternalcombat-repositories`
 
     id("net.minecrell.plugin-yml.bukkit")
-    id("io.github.goooler.shadow")
+    id("com.gradleup.shadow")
     id("xyz.jpenilla.run-paper")
 }
 
