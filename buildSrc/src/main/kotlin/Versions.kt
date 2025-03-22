@@ -8,7 +8,7 @@ object Versions {
 
     const val JETBRAINS_ANNOTATIONS = "26.0.2"
 
-    const val ETERNALCODE_COMMONS = "1.1.3"
+    const val ETERNALCODE_COMMONS = "1.1.6"
     const val MULTIFICATION = "1.2.1"
     const val PACKETS_EVENTS = "2.7.0"
 
@@ -20,9 +20,7 @@ object Versions {
     const val OKAERI_CONFIGS_SERDES_COMMONS = "5.0.6"
     const val OKAERI_CONFIGS_SERDES_BUKKIT = "5.0.6"
 
-    const val PANDA_UTILITIES = "0.5.2-alpha"
     const val GIT_CHECK = "1.0.0"
-    const val APACHE_COMMONS = "2.16.1"
 
     const val CAFFEINE = "3.2.0"
 

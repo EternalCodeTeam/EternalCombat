@@ -47,7 +47,7 @@ public class BorderServiceImpl implements BorderService {
             return;
         }
 
-        scheduler.async(() -> {
+        scheduler.runAsync(() -> {
             BorderResult borderResult = result.get();
             Set<BorderPoint> points = borderResult.collect();
 
@@ -69,7 +69,7 @@ public class BorderServiceImpl implements BorderService {
         World world = player.getWorld();
         UUID uniqueId = player.getUniqueId();
         
-        scheduler.async(() -> {
+        scheduler.runAsync(() -> {
             Set<BorderPoint> removed = this.activeBorderIndex.removePoints(world.getName(), uniqueId);
             if (!removed.isEmpty()) {
                 eventCaller.publishEvent(new BorderHideAsyncEvent(player, removed));

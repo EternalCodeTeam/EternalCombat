@@ -25,7 +25,7 @@ public final class KnockbackService {
     }
 
     public void knockbackLater(Region region, Player player, Duration duration) {
-        this.scheduler.laterSync(() -> this.knockback(region, player), duration);
+        this.scheduler.runLater(() -> this.knockback(region, player), duration);
     }
 
     public void forceKnockbackLater(Player player, Region region) {
@@ -34,7 +34,7 @@ public final class KnockbackService {
         }
 
         insideRegion.put(player.getUniqueId(), region);
-        scheduler.laterSync(() -> {
+        scheduler.runLaterAsync(() -> {
             insideRegion.remove(player.getUniqueId());
             Location playerLocation = player.getLocation();
             if (!region.contains(playerLocation)) {

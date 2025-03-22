@@ -36,7 +36,7 @@ class BorderTriggerIndex {
     }
 
     private void updateWorld(String world, Collection<Region> regions) {
-        this.scheduler.async(() -> {
+        this.scheduler.runAsync(() -> {
             List<BorderTrigger> triggers = new ArrayList<>();
             for (Region region : regions) {
                 Location min = region.getMin();
@@ -56,7 +56,7 @@ class BorderTriggerIndex {
 
     static BorderTriggerIndex started(Server server, Scheduler scheduler, RegionProvider provider, BorderSettings settings) {
         BorderTriggerIndex index = new BorderTriggerIndex(server, scheduler, provider, settings);
-        scheduler.timerSync(() -> index.updateWorlds(), Duration.ZERO, settings.indexRefreshDelay());
+        scheduler.timerAsync(() -> index.updateWorlds(), Duration.ZERO, settings.indexRefreshDelay());
         return index;
     }
 
