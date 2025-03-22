@@ -27,14 +27,8 @@ dependencies {
     implementation("eu.okaeri:okaeri-configs-serdes-commons:${Versions.OKAERI_CONFIGS_SERDES_COMMONS}")
     implementation("eu.okaeri:okaeri-configs-serdes-bukkit:${Versions.OKAERI_CONFIGS_SERDES_BUKKIT}")
 
-    // Panda utilities
-    implementation("org.panda-lang:panda-utilities:${Versions.PANDA_UTILITIES}")
-
     // GitCheck
     implementation("com.eternalcode:gitcheck:${Versions.GIT_CHECK}")
-
-    // commons
-    implementation("commons-io:commons-io:${Versions.APACHE_COMMONS}")
 
     // bstats
     implementation("org.bstats:bstats-bukkit:${Versions.B_STATS_BUKKIT}")
@@ -77,32 +71,31 @@ tasks {
 tasks.shadowJar {
     archiveFileName.set("EternalCombat v${project.version}.jar")
 
-    dependsOn("test")
-
     exclude(
         "org/intellij/lang/annotations/**",
         "org/jetbrains/annotations/**",
         "META-INF/**",
         "kotlin/**",
-        "javax/**"
+        "javax/**",
+        "org/checkerframework/**",
+        "com/google/errorprone/**",
     )
 
     val prefix = "com.eternalcode.combat.libs"
     listOf(
-        "panda.std",
-        "panda.utilities",
-        "org.panda-lang",
         "eu.okaeri",
         "net.kyori",
         "org.bstats",
+        "org.yaml",
         "dev.rollczi.litecommands",
         "com.eternalcode.gitcheck",
         "org.json.simple",
-        "org.apache.commons",
-        "javassist",
         "com.github.benmanes.caffeine",
         "com.eternalcode.commons",
-        "com.eternalcode.multification"
+        "com.eternalcode.multification",
+        "io.papermc",
+        "com.github.retrooper",
+        "io.github.retrooper"
     ).forEach { pack ->
         relocate(pack, "$prefix.$pack")
     }
