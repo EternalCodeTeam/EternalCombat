@@ -6,7 +6,7 @@ object Versions {
     const val JUNIT_JUPITER_PARAMS = "5.12.1"
     const val JUNIT_JUPITER_ENGINE = "5.12.1"
 
-    const val JETBRAINS_ANNOTATIONS = "24.1.0"
+    const val JETBRAINS_ANNOTATIONS = "26.0.2"
 
     const val ETERNALCODE_COMMONS = "1.1.3"
     const val MULTIFICATION = "1.2.1"
