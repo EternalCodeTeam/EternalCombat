@@ -8,7 +8,9 @@ public class DropSettings extends OkaeriConfig {
     @Comment({
         "# UNCHANGED - The default way of item drop defined by the engine",
         "# PERCENT - Drops a fixed percentage of items",
-        "# PLAYERS_HEALTH - Drops inverted percentage of the player's health (i.e. if the player has, for example, 80% HP, he will drop 20% of items. Only works when the player escapes from combat by quiting game)"
+        "# PLAYERS_HEALTH - Drops inverted percentage of the player's health (i.e. if the player has, for example, 80% HP, he will drop 20% of items. Only works when the player escapes from combat by quiting game)",
+        "# ",
+        "# ** REQUIRES RESTART IN ORDER TO TAKE EFFECT **"
     })
     public DropType dropType = DropType.UNCHANGED;
 
