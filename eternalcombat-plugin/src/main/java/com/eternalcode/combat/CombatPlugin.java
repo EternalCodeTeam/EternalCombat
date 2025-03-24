@@ -92,6 +92,7 @@ public final class CombatPlugin extends JavaPlugin implements EternalCombatApi {
     @Override
     public void onLoad() {
         PacketEvents.setAPI(SpigotPacketEventsBuilder.build(this));
+        PacketEvents.getAPI().getSettings().checkForUpdates(false);
         PacketEvents.getAPI().load();
     }
 
