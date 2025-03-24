@@ -107,6 +107,8 @@ public final class CombatPlugin extends JavaPlugin implements EternalCombatApi {
         EventCaller eventCaller = new EventCaller(server);
         Scheduler scheduler = new BukkitSchedulerImpl(this);
 
+        PacketEvents.getAPI().init();
+
         this.pluginConfig = configService.create(PluginConfig.class, new File(dataFolder, "config.yml"));
 
         this.fightManager = new FightManagerImpl(eventCaller);

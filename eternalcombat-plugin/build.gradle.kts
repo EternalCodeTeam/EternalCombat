@@ -1,3 +1,5 @@
+import net.minecrell.pluginyml.bukkit.BukkitPluginDescription
+
 plugins {
     `eternalcombat-java`
     `eternalcombat-repositories`
@@ -58,7 +60,17 @@ bukkit {
     apiVersion = "1.13"
     prefix = "EternalCombat"
     name = "EternalCombat"
-    softDepend = listOf("WorldGuard", "PlaceholderAPI")
+    load = BukkitPluginDescription.PluginLoadOrder.POSTWORLD
+    softDepend = listOf(
+        "WorldGuard",
+        "PlaceholderAPI",
+        "ProtocolLib",
+        "ProtocolSupport",
+        "ViaVersion",
+        "ViaBackwards",
+        "ViaRewind",
+        "Geyser-Spigot"
+    )
     version = "${project.version}"
 }
 
@@ -93,10 +105,11 @@ tasks.shadowJar {
         "com.github.benmanes.caffeine",
         "com.eternalcode.commons",
         "com.eternalcode.multification",
-        "io.papermc",
-        "com.github.retrooper",
-        "io.github.retrooper"
+        "io.papermc"
     ).forEach { pack ->
         relocate(pack, "$prefix.$pack")
     }
+
+    relocate("com.github.retrooper.packetevents", "$prefix.packetevents.api")
+    relocate("io.github.retrooper.packetevents", "$prefix.packetevents.impl")
 }
