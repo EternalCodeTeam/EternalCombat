@@ -129,8 +129,9 @@ public class FightTagCommand {
 
         if (!this.fightManager.isInCombat(targetUniqueId)) {
             this.noticeService.create()
-                .viewer(sender)
                 .notice(this.config.messagesSettings.admin.adminPlayerNotInCombat)
+                .placeholder("{PLAYER}", target.getName())
+                .viewer(sender)
                 .send();
             return;
         }
