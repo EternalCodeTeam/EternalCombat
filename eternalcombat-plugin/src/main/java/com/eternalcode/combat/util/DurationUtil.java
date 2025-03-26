@@ -41,6 +41,6 @@ public class DurationUtil {
     }
 
     public static String format(Duration duration) {
-        return format(duration, false);
+        return format(duration, true);
     }
 }
