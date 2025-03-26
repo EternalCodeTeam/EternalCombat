@@ -34,7 +34,7 @@ public final class KnockbackService {
         }
 
         insideRegion.put(player.getUniqueId(), region);
-        scheduler.runLaterAsync(() -> {
+        scheduler.runLater(() -> {
             insideRegion.remove(player.getUniqueId());
             Location playerLocation = player.getLocation();
             if (!region.contains(playerLocation)) {
