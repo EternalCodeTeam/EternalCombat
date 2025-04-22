@@ -37,6 +37,10 @@ public class DurationUtil {
             return WITHOUT_MILLIS_FORMAT.format(duration);
         }
 
+        if (duration.toMillis() > ONE_SECOND.toMillis()) {
+            return WITHOUT_MILLIS_FORMAT.format(duration);
+        }
+
         return STANDARD_FORMAT.format(duration);
     }
 
