@@ -19,7 +19,7 @@ public enum CauseOfTag {
     COMMAND,
 
     /**
-     * Crystal explosion caused the tag.
+     * Crystal or anchor explosion caused the tag.
      */
     CRYSTAL,
 
