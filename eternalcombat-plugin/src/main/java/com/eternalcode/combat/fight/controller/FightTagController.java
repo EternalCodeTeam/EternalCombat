@@ -144,11 +144,7 @@ public class FightTagController implements Listener {
             return true;
         }
 
-        if (player.isOp() && this.config.admin.excludeAdminsFromCombat) {
-            return true;
-        }
-
-        return false;
+        return player.isOp() && this.config.admin.excludeAdminsFromCombat;
     }
 
 }
