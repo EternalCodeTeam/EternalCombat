@@ -31,6 +31,11 @@ public class FightTagController implements Listener {
 
     @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
     void onEntityDamageByEntity(EntityDamageByEntityEvent event) {
+        // Thorns are ignored because both users should be in combat from hitting each other
+        if (event.getCause().equals(EntityDamageEvent.DamageCause.THORNS)) {
+            return;
+        }
+
         if (!(event.getEntity() instanceof Player attackedPlayerByPerson)) {
             return;
         }
@@ -139,10 +144,7 @@ public class FightTagController implements Listener {
             return true;
         }
 
-        if (player.isOp() && this.config.admin.excludeAdminsFromCombat) {
-            return true;
-        }
-
-        return false;
+        return player.isOp() && this.config.admin.excludeAdminsFromCombat;
     }
+
 }
