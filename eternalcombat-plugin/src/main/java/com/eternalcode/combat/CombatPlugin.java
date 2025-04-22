@@ -6,7 +6,8 @@ import com.eternalcode.combat.border.BorderServiceImpl;
 import com.eternalcode.combat.border.animation.block.BorderBlockController;
 import com.eternalcode.combat.border.animation.particle.ParticleController;
 import com.eternalcode.combat.bridge.BridgeService;
-import com.eternalcode.combat.crystal.CrystalPop;
+import com.eternalcode.combat.crystalpvp.RespawnAnchorListener;
+import com.eternalcode.combat.crystalpvp.EndCrystalListener;
 import com.eternalcode.combat.fight.drop.DropKeepInventoryService;
 import com.eternalcode.combat.fight.FightManager;
 import com.eternalcode.combat.fight.drop.DropService;
@@ -183,7 +184,8 @@ public final class CombatPlugin extends JavaPlugin implements EternalCombatApi {
             new BorderTriggerController(borderService, this.pluginConfig.border, this.fightManager, server),
             new ParticleController(borderService, this.pluginConfig.border.particle, scheduler, server),
             new BorderBlockController(borderService, this.pluginConfig.border.block, scheduler, server),
-            new CrystalPop(this, this.fightManager, this.pluginConfig)
+            new EndCrystalListener(this, this.fightManager, this.pluginConfig),
+            new RespawnAnchorListener(this, this.fightManager, this.pluginConfig)
         ).forEach(listener -> this.getServer().getPluginManager().registerEvents(listener, this));
 
         EternalCombatProvider.initialize(this);

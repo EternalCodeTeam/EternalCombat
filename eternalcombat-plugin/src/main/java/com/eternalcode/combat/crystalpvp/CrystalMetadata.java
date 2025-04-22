@@ -1,4 +1,4 @@
-package com.eternalcode.combat.crystal;
+package com.eternalcode.combat.crystalpvp;
 
 import java.util.Optional;
 import java.util.UUID;
