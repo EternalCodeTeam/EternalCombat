@@ -67,6 +67,11 @@ public class ParticleController implements Listener {
 
         for (UUID uuid : this.playersToUpdate) {
             Player player = this.server.getPlayer(uuid);
+            if (player == null || !player.isOnline()) {
+                this.playersToUpdate.remove(uuid);
+                continue;
+            }
+
             Set<BorderPoint> border = this.borderService.getActiveBorder(player);
 
             if (border.isEmpty()) {
