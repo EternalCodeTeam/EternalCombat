@@ -124,7 +124,7 @@ public class FightTagCommand {
 
     @Execute(name = "untag")
     @Permission("eternalcombat.untag")
-    void untag(@Context Player sender, @Arg Player target) {
+    void untag(@Context CommandSender sender, @Arg Player target) {
         UUID targetUniqueId = target.getUniqueId();
 
         if (!this.fightManager.isInCombat(targetUniqueId)) {
@@ -145,6 +145,23 @@ public class FightTagCommand {
         this.noticeService.create()
             .notice(this.config.messagesSettings.admin.adminUntagPlayer)
             .placeholder("{PLAYER}", target.getName())
+            .viewer(sender)
+            .send();
+    }
+
+    @Execute(name = "untagall")
+    @Permission("eternalcombat.untagall")
+    void untagAll(@Context CommandSender sender) {
+        int combatPlayersSize = this.fightManager.getFights().size();
+        this.fightManager.untagAll();
+
+        for (FightTag fight : fightManager.getFights()) {
+            this.fightManager.untag(fight.getTaggedPlayer(), CauseOfUnTag.COMMAND);
+        }
+
+        this.noticeService.create()
+            .notice(this.config.messagesSettings.admin.adminUntagAll)
+            .placeholder("{COUNT}", String.valueOf(combatPlayersSize))
             .viewer(sender)
             .send();
     }
