@@ -26,47 +26,47 @@ public class LogoutController implements Listener {
 
     @EventHandler(priority = EventPriority.LOWEST)
     void onQuitLowest(PlayerQuitEvent event) {
-        if (config.combat.quitPunishmentEventPriority == EventPriority.LOWEST) {
+        if (this.config.combat.quitPunishmentEventPriority == EventPriority.LOWEST) {
             handle(event);
         }
     }
 
     @EventHandler(priority = EventPriority.LOW)
     void onQuitLow(PlayerQuitEvent event) {
-        if (config.combat.quitPunishmentEventPriority == EventPriority.LOW) {
+        if (this.config.combat.quitPunishmentEventPriority == EventPriority.LOW) {
             handle(event);
         }
     }
 
     @EventHandler(priority = EventPriority.NORMAL)
     void onQuitNormal(PlayerQuitEvent event) {
-        if (config.combat.quitPunishmentEventPriority == EventPriority.NORMAL) {
+        if (this.config.combat.quitPunishmentEventPriority == EventPriority.NORMAL) {
             handle(event);
         }
     }
 
     @EventHandler(priority = EventPriority.HIGH)
     void onQuitHigh(PlayerQuitEvent event) {
-        if (config.combat.quitPunishmentEventPriority == EventPriority.HIGH) {
+        if (this.config.combat.quitPunishmentEventPriority == EventPriority.HIGH) {
             handle(event);
         }
     }
 
     @EventHandler(priority = EventPriority.HIGHEST)
     void onQuitHighest(PlayerQuitEvent event) {
-        if (config.combat.quitPunishmentEventPriority == EventPriority.HIGHEST) {
+        if (this.config.combat.quitPunishmentEventPriority == EventPriority.HIGHEST) {
             handle(event);
         }
     }
 
     @EventHandler(priority = EventPriority.MONITOR)
     void onQuitMonitor(PlayerQuitEvent event) {
-        if (config.combat.quitPunishmentEventPriority == EventPriority.MONITOR) {
+        if (this.config.combat.quitPunishmentEventPriority == EventPriority.MONITOR) {
             handle(event);
         }
     }
 
-    private void handle(PlayerQuitEvent event) {
+    void handle(PlayerQuitEvent event) {
         Player player = event.getPlayer();
 
         if (!this.fightManager.isInCombat(player.getUniqueId())) {
