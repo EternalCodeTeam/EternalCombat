@@ -23,7 +23,7 @@ public class LogoutController implements Listener {
     private final NoticeService noticeService;
     private final PluginConfig config;
 
-    private final Set<UUID> shouldPunishOnQuit = Collections.newSetFromMap(new ConcurrentHashMap<>());
+    private final Set<UUID> shouldNotPunishOnQuit = Collections.newSetFromMap(new ConcurrentHashMap<>());
 
     public LogoutController(FightManager fightManager, LogoutService logoutService, NoticeService noticeService, PluginConfig config) {
         this.fightManager = fightManager;
@@ -41,14 +41,19 @@ public class LogoutController implements Listener {
             return;
         }
 
-        String reason = event.getReason();
+        String reason = event.getReason().trim();
         List<String> whitelist = this.config.combat.whitelistedKickReasons;
 
-        if (whitelist.isEmpty() || whitelist.contains(reason)) {
+        if (whitelist.isEmpty()) {
             return;
         }
 
-        this.shouldPunishOnQuit.add(uuid);
+        for (String whitelisted : whitelist) {
+            if (reason.toLowerCase().contains(whitelisted.toLowerCase())) {
+                this.shouldNotPunishOnQuit.add(uuid);
+                return;
+            }
+        }
     }
 
     @EventHandler(priority = EventPriority.LOWEST)
@@ -100,7 +105,7 @@ public class LogoutController implements Listener {
             return;
         }
 
-        if (!this.shouldPunishOnQuit.remove(player.getUniqueId())) {
+        if (this.shouldNotPunishOnQuit.remove(player.getUniqueId())) {
             return;
         }
 
