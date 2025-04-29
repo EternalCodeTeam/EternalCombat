@@ -48,7 +48,7 @@ public class LogoutController implements Listener {
     @EventHandler(priority = EventPriority.HIGH)
     void onQuitHigh(PlayerQuitEvent event) {
         if (this.config.combat.quitPunishmentEventPriority == EventPriority.HIGH) {
-            handle(event);
+            this.handle(event);
         }
     }
 
