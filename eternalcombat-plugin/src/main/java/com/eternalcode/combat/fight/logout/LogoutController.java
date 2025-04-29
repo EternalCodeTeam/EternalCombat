@@ -7,7 +7,14 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
+import org.bukkit.event.player.PlayerKickEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
+
+import java.util.Collections;
+import java.util.List;
+import java.util.Set;
+import java.util.UUID;
+import java.util.concurrent.ConcurrentHashMap;
 
 public class LogoutController implements Listener {
 
@@ -16,12 +23,32 @@ public class LogoutController implements Listener {
     private final NoticeService noticeService;
     private final PluginConfig config;
 
+    private final Set<UUID> shouldPunishOnQuit = Collections.newSetFromMap(new ConcurrentHashMap<>());
 
     public LogoutController(FightManager fightManager, LogoutService logoutService, NoticeService noticeService, PluginConfig config) {
         this.fightManager = fightManager;
         this.logoutService = logoutService;
         this.noticeService = noticeService;
         this.config = config;
+    }
+
+    @EventHandler(priority = EventPriority.LOWEST)
+    private void onKick(PlayerKickEvent event) {
+        Player player = event.getPlayer();
+        UUID uuid = player.getUniqueId();
+
+        if (!this.fightManager.isInCombat(uuid)) {
+            return;
+        }
+
+        String reason = event.getReason();
+        List<String> whitelist = this.config.combat.whitelistedKickReasons;
+
+        if (whitelist.isEmpty() || whitelist.contains(reason)) {
+            return;
+        }
+
+        this.shouldPunishOnQuit.add(uuid);
     }
 
     @EventHandler(priority = EventPriority.LOWEST)
@@ -70,6 +97,10 @@ public class LogoutController implements Listener {
         Player player = event.getPlayer();
 
         if (!this.fightManager.isInCombat(player.getUniqueId())) {
+            return;
+        }
+
+        if (!this.shouldPunishOnQuit.remove(player.getUniqueId())) {
             return;
         }
 

@@ -82,4 +82,13 @@ public class CombatSettings extends OkaeriConfig {
         "# Default: NORMAL"
     })
     public EventPriority quitPunishmentEventPriority = EventPriority.NORMAL;
+
+    @Comment({
+        "# List of kick reasons where players will NOT be punished for combat logging.",
+        "# If this list is empty, players are NEVER punished for leaving via a kick.",
+        "# If reasons are listed, only kicks matching these reasons will be ignored (no punishment).",
+        "# Example reasons could be: 'Timed out', 'Kicked for inactivity', etc.",
+        "# If you always want to punish put whitelistedKickReasons: [] as a list"
+    })
+    public List<String> whitelistedKickReasons = List.of("Kicked for inactivity", "Timed out", "Server is restarting");
 }
