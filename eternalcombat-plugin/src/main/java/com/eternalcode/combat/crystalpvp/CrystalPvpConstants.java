@@ -37,6 +37,10 @@ public class CrystalPvpConstants {
     }
 
     public static Optional<UUID> getDamagerUUIDFromRespawnAnchor(EntityDamageByBlockEvent event) {
+        if (!CrystalPvpConstants.hasDamagerBlockState()) {
+            return Optional.empty();
+        }
+
         BlockState state = ReflectUtil.invokeMethod(event, "getDamagerBlockState");
         if (state == null) {
             return Optional.empty();
@@ -52,6 +56,17 @@ public class CrystalPvpConstants {
             .map(meta -> (CrystalMetadata) meta)
             .findFirst()
             .flatMap(metadata -> metadata.getDamager());
+    }
+
+    static boolean hasDamagerBlockState() {
+        boolean hasMethod = false;
+        try {
+            hasMethod = EntityDamageByBlockEvent.class.getDeclaredMethod("getDamagerBlockState") != null;
+        }
+        catch (NoSuchMethodException e) {
+            // Method does not exist
+        }
+        return hasMethod;
     }
 
     static void handleCombatTag(
