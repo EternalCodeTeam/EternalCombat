@@ -20,8 +20,8 @@ public class CrystalPvpConstants {
     private CrystalPvpConstants() {
     }
 
-    public static final String CRYSTAL_METADATA = "eternalcombat:crystal-pvp";
-    public static final String ANCHOR_METADATA = "eternalcombat:crystal-pvp";
+    public static final String CRYSTAL_METADATA = "eternalcombat:crystal";
+    public static final String ANCHOR_METADATA = "eternalcombat:anchor";
 
     public static Optional<UUID> getDamagerUUIDFromEndCrystal(EntityDamageByEntityEvent event) {
         if (event.getDamager() instanceof EnderCrystal enderCrystal) {

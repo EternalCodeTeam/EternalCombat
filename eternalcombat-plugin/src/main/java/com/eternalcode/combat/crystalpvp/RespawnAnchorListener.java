@@ -33,10 +33,6 @@ public class RespawnAnchorListener implements Listener {
 
     @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
     void onAnchorInteract(PlayerInteractEvent event) {
-        if (!this.pluginConfig.crystalPvp.tagFromRespawnAnchor) {
-            return;
-        }
-
         Block block = event.getClickedBlock();
         if (block == null) {
             return;
@@ -82,6 +78,9 @@ public class RespawnAnchorListener implements Listener {
 
     @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
     void onAnchorExplosion(EntityDamageByBlockEvent event) {
+        if (!this.pluginConfig.crystalPvp.tagFromRespawnAnchor) {
+            return;
+        }
 
         if (!(event.getEntity() instanceof Player player)) {
             return;
