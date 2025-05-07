@@ -2,8 +2,6 @@ package com.eternalcode.combat.crystalpvp;
 
 import com.eternalcode.combat.config.implementation.PluginConfig;
 import com.eternalcode.combat.fight.FightManager;
-import com.eternalcode.combat.fight.event.CauseOfTag;
-import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 import org.bukkit.entity.Arrow;
@@ -13,16 +11,14 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
-import org.bukkit.metadata.MetadataValue;
 import org.bukkit.plugin.Plugin;
+import static com.eternalcode.combat.crystalpvp.CrystalPvpConstants.CRYSTAL_METADATA;
 
 public class EndCrystalListener implements Listener {
 
     private final Plugin plugin;
     private final FightManager fightManager;
     private final PluginConfig pluginConfig;
-
-    private static final String CRYSTAL_METADATA = "eternalcombat:wao";
 
     public EndCrystalListener(Plugin plugin, FightManager fightManager, PluginConfig pluginConfig) {
         this.plugin = plugin;
@@ -33,13 +29,15 @@ public class EndCrystalListener implements Listener {
     @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
     void onPlayerDamageCrystal(EntityDamageByEntityEvent event) {
         if (event.getEntity() instanceof EnderCrystal enderCrystal) {
-            if (event.getDamager() instanceof Player player) {
-                enderCrystal.setMetadata(CRYSTAL_METADATA, new CrystalMetadata(this.plugin, player.getUniqueId()));
-            }
-
             if (event.getDamager() instanceof Arrow arrow && arrow.getShooter() instanceof Player player) {
                 enderCrystal.setMetadata(CRYSTAL_METADATA, new CrystalMetadata(this.plugin, player.getUniqueId()));
             }
+
+            if (!(event.getDamager() instanceof Player player)) {
+                return;
+            }
+
+            enderCrystal.setMetadata(CRYSTAL_METADATA, new CrystalMetadata(this.plugin, player.getUniqueId()));
         }
     }
 
@@ -49,33 +47,15 @@ public class EndCrystalListener implements Listener {
             return;
         }
 
-        if (event.getDamager() instanceof EnderCrystal enderCrystal && event.getEntity() instanceof Player player) {
-            List<MetadataValue> damager = enderCrystal.getMetadata(CRYSTAL_METADATA);
+        Optional<UUID> optionalDamagerUUID = CrystalPvpConstants.getDamagerUUIDFromEndCrystal(event);
 
-            UUID uniqueId = player.getUniqueId();
+        if (optionalDamagerUUID.isEmpty()) {
+            return;
+        }
 
-            Optional<UUID> optionalUniqueId = damager
-                    .stream()
-                    .filter(source -> source instanceof CrystalMetadata)
-                    .map(meta -> (CrystalMetadata) meta)
-                    .findFirst()
-                    .flatMap(metadata -> metadata.getDamager());
-
-            if (optionalUniqueId.isPresent()) {
-                UUID damagerUniqueId = optionalUniqueId.get();
-                if (!damagerUniqueId.equals(uniqueId)) {
-                    this.fightManager.tag(
-                            damagerUniqueId,
-                            this.pluginConfig.settings.combatTimerDuration,
-                            CauseOfTag.CRYSTAL
-                    );
-                    this.fightManager.tag(
-                            uniqueId,
-                            this.pluginConfig.settings.combatTimerDuration,
-                            CauseOfTag.CRYSTAL
-                    );
-                }
-            }
+        if (event.getEntity() instanceof Player player) {
+            CrystalPvpConstants.handleCombatTag(optionalDamagerUUID, player, this.fightManager, this.pluginConfig);
         }
     }
+
 }

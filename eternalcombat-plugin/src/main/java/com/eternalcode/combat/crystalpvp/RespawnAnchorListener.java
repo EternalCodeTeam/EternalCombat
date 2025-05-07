@@ -2,13 +2,10 @@ package com.eternalcode.combat.crystalpvp;
 
 import com.eternalcode.combat.config.implementation.PluginConfig;
 import com.eternalcode.combat.fight.FightManager;
-import com.eternalcode.combat.fight.event.CauseOfTag;
-import com.eternalcode.combat.util.ReflectUtil;
 import java.util.Optional;
 import java.util.UUID;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
-import org.bukkit.block.BlockState;
 import org.bukkit.block.data.type.RespawnAnchor;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -19,6 +16,7 @@ import org.bukkit.event.entity.EntityDamageByBlockEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.Plugin;
+import static com.eternalcode.combat.crystalpvp.CrystalPvpConstants.ANCHOR_METADATA;
 
 public class RespawnAnchorListener implements Listener {
 
@@ -26,7 +24,6 @@ public class RespawnAnchorListener implements Listener {
     private final FightManager fightManager;
     private final PluginConfig pluginConfig;
 
-    private static final String ANCHOR_METADATA = "eternalcombat:wao";
 
     public RespawnAnchorListener(Plugin plugin, FightManager fightManager, PluginConfig pluginConfig) {
         this.plugin = plugin;
@@ -52,7 +49,6 @@ public class RespawnAnchorListener implements Listener {
 
         if (type.equals(Material.RESPAWN_ANCHOR)) {
             if (block.getBlockData() instanceof RespawnAnchor respawnAnchor) {
-
                 if (respawnAnchor.getCharges() > 0 && event.getAction().equals(Action.RIGHT_CLICK_BLOCK)) {
                     ItemStack item = event.getItem();
                     if (item == null) {
@@ -86,39 +82,18 @@ public class RespawnAnchorListener implements Listener {
 
     @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
     void onAnchorExplosion(EntityDamageByBlockEvent event) {
-        BlockState state = ReflectUtil.invokeMethod(event, "getDamagerBlockState");
-        if (state == null ) {
+
+        if (!(event.getEntity() instanceof Player player)) {
             return;
         }
 
-        Material type = state.getType();
-        if (!type.equals(Material.RESPAWN_ANCHOR) || !(event.getEntity() instanceof Player player)) {
+        Optional<UUID> optionalDamagerUniqueId = CrystalPvpConstants.getDamagerUUIDFromRespawnAnchor(event);
+
+        if (optionalDamagerUniqueId.isEmpty()) {
             return;
         }
 
-        Optional<UUID> damagerOptional = state.getMetadata(ANCHOR_METADATA).stream()
-            .filter(source -> source instanceof CrystalMetadata)
-            .map(meta -> (CrystalMetadata) meta)
-            .findFirst()
-            .flatMap(metadata -> metadata.getDamager());
-
-        if (damagerOptional.isEmpty()) {
-            return;
-        }
-
-        UUID damager = damagerOptional.get();
-        if (!damager.equals(player.getUniqueId())) {
-            this.fightManager.tag(
-                damager,
-                this.pluginConfig.settings.combatTimerDuration,
-                CauseOfTag.CRYSTAL
-            );
-            this.fightManager.tag(
-                player.getUniqueId(),
-                this.pluginConfig.settings.combatTimerDuration,
-                CauseOfTag.CRYSTAL
-            );
-        }
+        CrystalPvpConstants.handleCombatTag(optionalDamagerUniqueId, player, this.fightManager, this.pluginConfig);
     }
 
 }

@@ -11,6 +11,10 @@ public final class ReflectUtil {
     @SuppressWarnings("unchecked")
     public static  <T> T invokeMethod(Object object, String name) {
         try {
+            if (object == null) {
+                return null;
+            }
+
             Method method = object.getClass().getDeclaredMethod(name);
             method.setAccessible(true);
             return (T) method.invoke(object);
