@@ -41,11 +41,10 @@ public class CrystalPvpConstants {
             return Optional.empty();
         }
 
-        BlockState state = ReflectUtil.invokeMethod(event, "getDamagerBlockState");
-        if (state == null) {
+        Object maybeState = ReflectUtil.invokeMethod(event, "getDamagerBlockState");
+        if (!(maybeState instanceof BlockState state)) {
             return Optional.empty();
         }
-
         Material type = state.getType();
         if (!type.equals(Material.RESPAWN_ANCHOR)) {
             return Optional.empty();
