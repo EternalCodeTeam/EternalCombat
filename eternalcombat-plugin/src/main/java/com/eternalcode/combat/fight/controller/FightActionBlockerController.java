@@ -18,6 +18,7 @@ import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.EntityToggleGlideEvent;
 import org.bukkit.event.inventory.InventoryOpenEvent;
 import org.bukkit.event.player.PlayerCommandPreprocessEvent;
+import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.event.player.PlayerToggleFlightEvent;
 
 import java.util.List;
@@ -108,6 +109,26 @@ public class FightActionBlockerController implements Listener {
             event.setCancelled(true);
         }
     }
+
+    @EventHandler
+    void onMoveWhileGliding(PlayerMoveEvent event) {
+        if (!this.config.combat.disableElytraUsage) {
+            return;
+        }
+
+        Player player = event.getPlayer();
+        UUID uniqueId = player.getUniqueId();
+
+        if (!this.fightManager.isInCombat(uniqueId)) {
+            return;
+        }
+
+        if (player.isGliding()) {
+            player.setGliding(false);
+        }
+    }
+
+
 
     @EventHandler
     void onFly(PlayerToggleFlightEvent event) {
