@@ -56,13 +56,6 @@ public class FightTagController implements Listener {
             return;
         }
 
-        boolean attackerBypass = attacker.hasPermission("eternalcombat.bypass.attacker");
-        boolean victimBypass = attackedPlayerByPerson.hasPermission("eternalcombat.bypass.victim");
-
-        if (attackerBypass && victimBypass) {
-            return;
-        }
-
         if (this.cannotBeTagged(attacker)) {
             return;
         }
@@ -87,13 +80,8 @@ public class FightTagController implements Listener {
         UUID attackedUniqueId = attackedPlayerByPerson.getUniqueId();
         UUID attackerUniqueId = attacker.getUniqueId();
 
-        if (!victimBypass) {
-            this.fightManager.tag(attackedUniqueId, combatTime, CauseOfTag.PLAYER, attackerUniqueId);
-        }
-
-        if (!attackerBypass) {
-            this.fightManager.tag(attackerUniqueId, combatTime, CauseOfTag.PLAYER, attackedUniqueId);
-        }
+        this.fightManager.tag(attackedUniqueId, combatTime, CauseOfTag.PLAYER, attackerUniqueId);
+        this.fightManager.tag(attackerUniqueId, combatTime, CauseOfTag.PLAYER, attackedUniqueId);
     }
 
 
@@ -158,6 +146,10 @@ public class FightTagController implements Listener {
     }
 
     private boolean cannotBeTagged(Player player) {
+        boolean hasBypass = player.hasPermission("eternalcombat.bypass");
+        if (hasBypass) {
+            return true;
+        }
         if (player.getGameMode().equals(GameMode.CREATIVE) && this.config.admin.excludeCreativePlayersFromCombat) {
             return true;
         }
