@@ -1,11 +1,10 @@
 package com.eternalcode.combat.fight.drop;
 
+import com.eternalcode.combat.event.DynamicListener;
 import com.eternalcode.combat.fight.FightManager;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
-import org.bukkit.event.EventPriority;
-import org.bukkit.event.Listener;
 import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.player.PlayerRespawnEvent;
 import org.bukkit.inventory.ItemStack;
@@ -16,7 +15,7 @@ import java.util.List;
 import java.util.UUID;
 import java.util.concurrent.ThreadLocalRandom;
 
-public class DropController implements Listener {
+public class DropController implements DynamicListener<PlayerDeathEvent> {
 
     private final DropService dropService;
     private final DropKeepInventoryService keepInventoryManager;
@@ -30,83 +29,15 @@ public class DropController implements Listener {
         this.fightManager = fightManager;
     }
 
-    @EventHandler(priority = EventPriority.LOWEST)
-    public void onDeathLowest(PlayerDeathEvent event) {
-        if (this.dropSettings.dropEventPriority == EventPriority.LOWEST) {
-            this.handleDeath(event);
-        }
-    }
-
-    @EventHandler(priority = EventPriority.LOW)
-    public void onDeathLow(PlayerDeathEvent event) {
-        if (this.dropSettings.dropEventPriority == EventPriority.LOW) {
-            this.handleDeath(event);
-        }
-    }
-
-    @EventHandler(priority = EventPriority.NORMAL)
-    public void onDeathNormal(PlayerDeathEvent event) {
-        if (this.dropSettings.dropEventPriority == EventPriority.NORMAL) {
-            this.handleDeath(event);
-        }
-    }
-
-    @EventHandler(priority = EventPriority.HIGH)
-    public void onDeathHigh(PlayerDeathEvent event) {
-        if (this.dropSettings.dropEventPriority == EventPriority.HIGH) {
-            this.handleDeath(event);
-        }
-    }
-
-    @EventHandler(priority = EventPriority.HIGHEST)
-    public void onDeathHighest(PlayerDeathEvent event) {
-        if (this.dropSettings.dropEventPriority == EventPriority.HIGHEST) {
-            this.handleDeath(event);
-        }
-    }
-
-    @EventHandler(priority = EventPriority.MONITOR)
-    public void onDeathMonitor(PlayerDeathEvent event) {
-        if (this.dropSettings.dropEventPriority == EventPriority.MONITOR) {
-            this.handleDeath(event);
-        }
-    }
-
-    private void handleDeath(PlayerDeathEvent event) {
+    @Override
+    public void onEvent(PlayerDeathEvent event) {
         Player player = event.getEntity();
         UUID uuid = player.getUniqueId();
         DropType dropType = this.dropSettings.dropType;
         boolean inCombat = this.fightManager.isInCombat(uuid);
 
-        if (this.dropSettings.headDropEnabled && this.dropSettings.headDropChance > 0.0) {
-            boolean shouldDrop = (!this.dropSettings.headDropOnlyInCombat || inCombat)
-                && ThreadLocalRandom.current().nextDouble(0, 100) <= this.dropSettings.headDropChance;
-
-            if (shouldDrop) {
-                ItemStack head = new ItemStack(Material.PLAYER_HEAD);
-                SkullMeta meta = (SkullMeta) head.getItemMeta();
-
-                if (meta != null) {
-                    meta.setOwningPlayer(player);
-                    String killerName = player.getKiller() != null ? player.getKiller().getName() : "Unknown";
-
-                    String displayName = this.dropSettings.headDropDisplayName
-                        .replace("{PLAYER}", player.getName())
-                        .replace("{KILLER}", killerName);
-                    meta.setDisplayName(displayName);
-
-                    if (!this.dropSettings.headDropLore.isEmpty()) {
-                        List<String> lore = this.dropSettings.headDropLore.stream()
-                            .map(line -> line.replace("{PLAYER}", player.getName()).replace("{KILLER}", killerName))
-                            .toList();
-                        meta.setLore(lore);
-                    }
-
-                    head.setItemMeta(meta);
-                }
-
-                event.getDrops().add(head);
-            }
+        if (shouldHeadDrop(inCombat)) {
+            addHeadDrop(event, player);
         }
 
         if (dropType == DropType.UNCHANGED || !inCombat) {
@@ -136,6 +67,43 @@ public class DropController implements Listener {
         if (this.dropSettings.affectExperience) {
             event.setDroppedExp(drop.getDroppedExp());
         }
+    }
+
+    private boolean shouldHeadDrop(boolean isCombat) {
+        if (this.dropSettings.headDropOnlyInCombat && !isCombat) {
+            return false;
+        }
+
+        if (!this.dropSettings.headDropEnabled || this.dropSettings.headDropChance <= 0.0) {
+            return false;
+        }
+
+        return ThreadLocalRandom.current().nextDouble(0, 100) <= this.dropSettings.headDropChance;
+    }
+
+    private void addHeadDrop(PlayerDeathEvent event, Player player) {
+        ItemStack head = new ItemStack(Material.PLAYER_HEAD);
+
+        if (head.getItemMeta() instanceof SkullMeta meta) {
+            String killerName = player.getKiller() != null ? player.getKiller().getName() : "Unknown";
+            String displayName = this.dropSettings.headDropDisplayName
+                .replace("{PLAYER}", player.getName())
+                .replace("{KILLER}", killerName);
+
+            meta.setOwningPlayer(player);
+            meta.setDisplayName(displayName);
+
+            if (!this.dropSettings.headDropLore.isEmpty()) {
+                List<String> lore = this.dropSettings.headDropLore.stream()
+                    .map(line -> line.replace("{PLAYER}", player.getName()).replace("{KILLER}", killerName))
+                    .toList();
+                meta.setLore(lore);
+            }
+
+            head.setItemMeta(meta);
+        }
+
+        event.getDrops().add(head);
     }
 
     @EventHandler

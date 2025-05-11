@@ -1,12 +1,12 @@
 package com.eternalcode.combat.fight.logout;
 
 import com.eternalcode.combat.config.implementation.PluginConfig;
+import com.eternalcode.combat.event.DynamicListener;
 import com.eternalcode.combat.fight.FightManager;
 import com.eternalcode.combat.notification.NoticeService;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
-import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerKickEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 
@@ -16,7 +16,7 @@ import java.util.Set;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 
-public class LogoutController implements Listener {
+public class LogoutController implements DynamicListener<PlayerQuitEvent> {
 
     private final FightManager fightManager;
     private final LogoutService logoutService;
@@ -56,49 +56,8 @@ public class LogoutController implements Listener {
         }
     }
 
-    @EventHandler(priority = EventPriority.LOWEST)
-    void onQuitLowest(PlayerQuitEvent event) {
-        if (this.config.combat.quitPunishmentEventPriority == EventPriority.LOWEST) {
-            this.handle(event);
-        }
-    }
-
-    @EventHandler(priority = EventPriority.LOW)
-    void onQuitLow(PlayerQuitEvent event) {
-        if (this.config.combat.quitPunishmentEventPriority == EventPriority.LOW) {
-            this.handle(event);
-        }
-    }
-
-    @EventHandler(priority = EventPriority.NORMAL)
-    void onQuitNormal(PlayerQuitEvent event) {
-        if (this.config.combat.quitPunishmentEventPriority == EventPriority.NORMAL) {
-            this.handle(event);
-        }
-    }
-
-    @EventHandler(priority = EventPriority.HIGH)
-    void onQuitHigh(PlayerQuitEvent event) {
-        if (this.config.combat.quitPunishmentEventPriority == EventPriority.HIGH) {
-            this.handle(event);
-        }
-    }
-
-    @EventHandler(priority = EventPriority.HIGHEST)
-    void onQuitHighest(PlayerQuitEvent event) {
-        if (this.config.combat.quitPunishmentEventPriority == EventPriority.HIGHEST) {
-            this.handle(event);
-        }
-    }
-
-    @EventHandler(priority = EventPriority.MONITOR)
-    void onQuitMonitor(PlayerQuitEvent event) {
-        if (this.config.combat.quitPunishmentEventPriority == EventPriority.MONITOR) {
-            this.handle(event);
-        }
-    }
-
-    void handle(PlayerQuitEvent event) {
+    @Override
+    public void onEvent(PlayerQuitEvent event) {
         Player player = event.getPlayer();
 
         if (!this.fightManager.isInCombat(player.getUniqueId())) {
