@@ -19,6 +19,7 @@ import java.time.Duration;
 import java.util.UUID;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+import org.bukkit.server.Server;
 
 @Command(name = "combatlog", aliases = "combat")
 public class FightTagCommand {
@@ -26,11 +27,21 @@ public class FightTagCommand {
     private final FightManager fightManager;
     private final NoticeService noticeService;
     private final PluginConfig config;
+    private final Server server;
+    private final FightTagOutService fightTagOutService;
 
-    public FightTagCommand(FightManager fightManager, NoticeService noticeService, PluginConfig config) {
+    public FightTagCommand(
+        FightManager fightManager,
+        NoticeService noticeService,
+        PluginConfig config,
+        Server server,
+        FightTagOutService fightTagOutService
+    ) {
         this.fightManager = fightManager;
         this.noticeService = noticeService;
         this.config = config;
+        this.server = server;
+        this.fightTagOutService = fightTagOutService;
     }
 
     @Execute(name = "status")
@@ -151,11 +162,19 @@ public class FightTagCommand {
 
     private void tagoutReasonHandler(CommandSender sender, CancelTagReason cancelReason, MessagesSettings messagesSettings) {
         if (cancelReason == CancelTagReason.TAGOUT) {
+            Player target = this.server.getPlayer(event.getPlayer());
+            if (target == null) {
+                return;
+            }
+
+            Duration remainingTime = this.fightTagOutService.getRemainingTime(target.getUniqueId());
+            
             this.noticeService.create()
                 .notice(messagesSettings.admin.adminTagOutCanceled)
+                .placeholder("{PLAYER}", target.getName())
+                .placeholder("{TIME}", DurationUtil.format(remainingTime))
                 .viewer(sender)
                 .send();
-
         }
     }
 }

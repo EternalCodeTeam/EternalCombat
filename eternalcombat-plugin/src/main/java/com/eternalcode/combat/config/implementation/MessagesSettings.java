@@ -192,9 +192,11 @@ public class MessagesSettings extends OkaeriConfig {
 
         @Comment({
             "# Message displayed when an admin attempts to tag a player who has tag-out enabled.",
-            "# This message informs the admin that the player cannot be tagged at this time."
+            "# This message informs the admin that the player cannot be tagged at this time.",
+            "# The {PLAYER} placeholder is replaced with the player's name.",
+            "# The {TIME} placeholder is replaced with the remaining protection time."
         })
         public Notice adminTagOutCanceled =
-            Notice.chat("<gradient:red:dark_red>❌ Player has tag-out protection!</gradient>");
+            Notice.chat("<gradient:red:dark_red>❌ <white>{PLAYER}</white> has tag-out protection for <white>{TIME}</white>!</gradient>");
     }
 }

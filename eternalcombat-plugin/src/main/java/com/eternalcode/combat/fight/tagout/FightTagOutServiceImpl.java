@@ -34,4 +34,20 @@ public class FightTagOutServiceImpl implements FightTagOutService {
         return now.isBefore(endTime);
     }
 
+    @Override
+    public Duration getRemainingTime(UUID player) {
+        Instant endTime = this.tagOuts.get(player);
+
+        if (endTime == null) {
+            return Duration.ZERO;
+        }
+
+        Instant now = Instant.now();
+        if (now.isAfter(endTime)) {
+            return Duration.ZERO;
+        }
+
+        return Duration.between(now, endTime);
+    }
+
 }
