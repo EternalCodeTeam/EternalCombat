@@ -5,6 +5,7 @@ import java.util.UUID;
 
 public interface FightTagOutService {
 
+    Duration getRemainingTime(UUID player);
     boolean isTaggedOut(UUID player);
 
     void unTagOut(UUID player);

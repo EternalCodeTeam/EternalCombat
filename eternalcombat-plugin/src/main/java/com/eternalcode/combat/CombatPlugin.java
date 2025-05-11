@@ -144,7 +144,8 @@ public final class CombatPlugin extends JavaPlugin implements EternalCombatApi {
             .missingPermission(new MissingPermissionHandlerImpl(this.pluginConfig, noticeService))
 
             .commands(
-                new FightTagCommand(this.fightManager, noticeService, this.pluginConfig),
+                new FightTagCommand(this.fightManager, noticeService, this.pluginConfig, server,
+                    this.fightTagOutService),
                 new FightTagOutCommand(this.fightTagOutService, noticeService, this.pluginConfig),
                 new EternalCombatReloadCommand(configService, noticeService)
             )
