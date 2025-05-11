@@ -39,6 +39,9 @@ import com.eternalcode.combat.fight.pearl.FightPearlServiceImpl;
 import com.eternalcode.combat.fight.tagout.FightTagOutController;
 import com.eternalcode.combat.fight.tagout.FightTagOutServiceImpl;
 import com.eternalcode.combat.fight.tagout.FightTagOutCommand;
+import com.eternalcode.combat.head.PlayerHeadController;
+import com.eternalcode.combat.head.PlayerHeadService;
+import com.eternalcode.combat.head.PlayerHeadServiceImpl;
 import com.eternalcode.combat.notification.NoticeService;
 import com.eternalcode.combat.fight.knockback.KnockbackRegionController;
 import com.eternalcode.combat.region.RegionProvider;
@@ -161,6 +164,8 @@ public final class CombatPlugin extends JavaPlugin implements EternalCombatApi {
 
         new Metrics(this, BSTATS_METRICS_ID);
 
+        PlayerHeadService playerHeadService = new PlayerHeadServiceImpl(pluginConfig);
+
         Stream.of(
             new PercentDropModifier(this.pluginConfig.drop),
             new PlayersHealthDropModifier(this.pluginConfig.drop, this.logoutService)
@@ -181,7 +186,8 @@ public final class CombatPlugin extends JavaPlugin implements EternalCombatApi {
             new FightMessageController(this.fightManager, noticeService, this.pluginConfig, this.getServer()),
             new BorderTriggerController(borderService, pluginConfig.border, fightManager, server),
             new ParticleController(borderService, pluginConfig.border.particle, scheduler, server),
-            new BorderBlockController(borderService, pluginConfig.border.block, scheduler, server)
+            new BorderBlockController(borderService, pluginConfig.border.block, scheduler, server),
+            new PlayerHeadController(playerHeadService)
         ).forEach(listener -> this.getServer().getPluginManager().registerEvents(listener, this));
 
         EternalCombatProvider.initialize(this);
