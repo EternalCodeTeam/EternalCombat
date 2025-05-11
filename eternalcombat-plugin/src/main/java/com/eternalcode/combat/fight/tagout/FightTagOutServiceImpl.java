@@ -49,5 +49,4 @@ public class FightTagOutServiceImpl implements FightTagOutService {
 
         return Duration.between(now, endTime);
     }
-
 }

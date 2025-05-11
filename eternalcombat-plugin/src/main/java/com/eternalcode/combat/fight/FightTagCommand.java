@@ -7,7 +7,9 @@ import com.eternalcode.combat.fight.event.CauseOfTag;
 import com.eternalcode.combat.fight.event.CauseOfUnTag;
 import com.eternalcode.combat.fight.event.FightTagEvent;
 import com.eternalcode.combat.fight.event.FightUntagEvent;
+import com.eternalcode.combat.fight.tagout.FightTagOutService;
 import com.eternalcode.combat.notification.NoticeService;
+import com.eternalcode.combat.util.DurationUtil;
 import dev.rollczi.litecommands.annotations.argument.Arg;
 import dev.rollczi.litecommands.annotations.command.Command;
 import dev.rollczi.litecommands.annotations.context.Context;
@@ -17,9 +19,9 @@ import dev.rollczi.litecommands.annotations.priority.Priority;
 import dev.rollczi.litecommands.annotations.priority.PriorityValue;
 import java.time.Duration;
 import java.util.UUID;
+import org.bukkit.Server;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
-import org.bukkit.server.Server;
 
 @Command(name = "combatlog", aliases = "combat")
 public class FightTagCommand {
@@ -30,13 +32,7 @@ public class FightTagCommand {
     private final Server server;
     private final FightTagOutService fightTagOutService;
 
-    public FightTagCommand(
-        FightManager fightManager,
-        NoticeService noticeService,
-        PluginConfig config,
-        Server server,
-        FightTagOutService fightTagOutService
-    ) {
+    public FightTagCommand(FightManager fightManager, NoticeService noticeService, PluginConfig config, Server server, FightTagOutService fightTagOutService) {
         this.fightManager = fightManager;
         this.noticeService = noticeService;
         this.config = config;
@@ -72,7 +68,7 @@ public class FightTagCommand {
         if (event.isCancelled()) {
             CancelTagReason cancelReason = event.getCancelReason();
 
-            this.tagoutReasonHandler(sender, cancelReason, this.config.messagesSettings);
+            this.tagoutReasonHandler(sender, cancelReason, this.config.messagesSettings, event);
 
             return;
         }
@@ -107,7 +103,7 @@ public class FightTagCommand {
         if (firstTagEvent.isCancelled()) {
             CancelTagReason cancelReason = firstTagEvent.getCancelReason();
 
-            this.tagoutReasonHandler(sender, cancelReason, messagesSettings);
+            this.tagoutReasonHandler(sender, cancelReason, messagesSettings, firstTagEvent);
 
             return;
         }
@@ -115,7 +111,7 @@ public class FightTagCommand {
         if (secondTagEvent.isCancelled()) {
             CancelTagReason cancelReason = secondTagEvent.getCancelReason();
 
-            this.tagoutReasonHandler(sender, cancelReason, messagesSettings);
+            this.tagoutReasonHandler(sender, cancelReason, messagesSettings, secondTagEvent);
 
             return;
         }
@@ -160,7 +156,7 @@ public class FightTagCommand {
             .send();
     }
 
-    private void tagoutReasonHandler(CommandSender sender, CancelTagReason cancelReason, MessagesSettings messagesSettings) {
+    private void tagoutReasonHandler(CommandSender sender, CancelTagReason cancelReason, MessagesSettings messagesSettings, FightTagEvent event) {
         if (cancelReason == CancelTagReason.TAGOUT) {
             Player target = this.server.getPlayer(event.getPlayer());
             if (target == null) {
