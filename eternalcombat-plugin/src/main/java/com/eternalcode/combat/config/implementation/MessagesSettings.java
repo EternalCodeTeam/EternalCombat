@@ -30,6 +30,11 @@ public class MessagesSettings extends OkaeriConfig {
         .build();
 
     @Comment({
+        "# Would you like to display milliseconds instead of seconds in combat notification "
+    })
+    public boolean withoutMillis = true;
+
+    @Comment({
         "# Message displayed when a player lacks permission to execute a command.",
         "# The {PERMISSION} placeholder is replaced with the required permission."
     })
@@ -55,7 +60,7 @@ public class MessagesSettings extends OkaeriConfig {
         "# This message informs the player that they can safely leave the server."
     })
     public Notice playerUntagged = Notice.chat(
-        "<gradient:#00ff00:#00b300>✌ <white>Combat ended!</white> You can now safely leave!</u></gradient>");
+        "<gradient:#00ff00:#00b300>✌ <white>Combat ended!</white> You can now safely leave!</gradient>");
 
     @Comment({
         "# Broadcast message displayed when a player logs out during combat.",
