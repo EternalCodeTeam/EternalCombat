@@ -1,21 +1,20 @@
 package com.eternalcode.combat.head;
 
 import com.eternalcode.combat.config.implementation.PluginConfig;
+import java.util.Random;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.SkullMeta;
 
-import java.util.Random;
-
 public class PlayerHeadServiceImpl implements PlayerHeadService {
 
+    private static final Random RANDOM = new Random();
+
     private final PluginConfig config;
-    private final Random random;
 
     public PlayerHeadServiceImpl(PluginConfig config) {
         this.config = config;
-        this.random = new Random();
     }
 
     @Override
@@ -28,7 +27,7 @@ public class PlayerHeadServiceImpl implements PlayerHeadService {
             return false;
         }
 
-        if (this.random.nextDouble() * 100 > this.config.playerHead.dropChance) {
+        if (RANDOM.nextDouble() * 100 > this.config.playerHead.dropChance) {
             return false;
         }
 
