@@ -105,6 +105,12 @@ public class PluginConfig extends OkaeriConfig {
     })
     public MessagesSettings messagesSettings = new MessagesSettings();
 
+    @Comment({
+        "# Player head drop settings",
+        "# This section contains settings for player head drops on death"
+    })
+    public PlayerHeadSettings playerHead = new PlayerHeadSettings();
+
     public static class Settings extends OkaeriConfig {
         @Comment({
             "# Notify players about new plugin updates when they join the server.",
@@ -125,5 +131,34 @@ public class PluginConfig extends OkaeriConfig {
         public List<String> ignoredWorlds = List.of(
             "your_world"
         );
+    }
+
+    public static class PlayerHeadSettings extends OkaeriConfig {
+        @Comment({
+            "# Whether to enable player head drops on death",
+            "# When enabled, players have a chance to drop their head when killed"
+        })
+        public boolean enabled = true;
+
+        @Comment({
+            "# The chance (in percentage) for a player to drop their head when killed",
+            "# Value must be between 0 and 100",
+            "# Example: 25.5 means 25.5% chance to drop head"
+        })
+        public double dropChance = 25.0;
+
+        @Comment({
+            "# Whether to only drop heads when killed by another player",
+            "# If true, heads will only drop on PvP deaths",
+            "# If false, heads can drop from any death (fall, mob, etc.)"
+        })
+        public boolean onlyOnPvPDeath = true;
+
+        @Comment({
+            "# Whether to drop the head of the killer instead of the victim",
+            "# If true, the killer's head will drop",
+            "# If false, the victim's head will drop"
+        })
+        public boolean dropKillerHead = false;
     }
 }
