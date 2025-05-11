@@ -25,7 +25,6 @@ dependencies {
     implementation("dev.rollczi:litecommands-bukkit:${Versions.LITE_COMMANDS}")
 
     // Okaeri configs
-    implementation("eu.okaeri:okaeri-configs-yaml-bukkit:${Versions.OKAERI_CONFIGS_YAML_BUKKIT}")
     implementation("eu.okaeri:okaeri-configs-serdes-commons:${Versions.OKAERI_CONFIGS_SERDES_COMMONS}")
     implementation("eu.okaeri:okaeri-configs-serdes-bukkit:${Versions.OKAERI_CONFIGS_SERDES_BUKKIT}")
 
