@@ -28,7 +28,7 @@ import com.eternalcode.combat.fight.controller.FightMessageController;
 import com.eternalcode.combat.fight.controller.FightTagController;
 import com.eternalcode.combat.fight.controller.FightUnTagController;
 import com.eternalcode.combat.fight.effect.FightEffectController;
-import com.eternalcode.combat.event.EventCaller;
+import com.eternalcode.combat.event.EventManager;
 import com.eternalcode.combat.fight.FightManagerImpl;
 import com.eternalcode.combat.fight.FightTask;
 import com.eternalcode.combat.fight.effect.FightEffectServiceImpl;
@@ -61,6 +61,8 @@ import net.kyori.adventure.text.minimessage.MiniMessage;
 import org.bstats.bukkit.Metrics;
 import org.bukkit.Server;
 import org.bukkit.command.CommandSender;
+import org.bukkit.event.entity.PlayerDeathEvent;
+import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.io.File;
@@ -105,14 +107,14 @@ public final class CombatPlugin extends JavaPlugin implements EternalCombatApi {
 
         ConfigService configService = new ConfigService();
 
-        EventCaller eventCaller = new EventCaller(server);
+        EventManager eventManager = new EventManager(this);
         Scheduler scheduler = new BukkitSchedulerImpl(this);
 
         PacketEvents.getAPI().init();
 
         this.pluginConfig = configService.create(PluginConfig.class, new File(dataFolder, "config.yml"));
 
-        this.fightManager = new FightManagerImpl(eventCaller);
+        this.fightManager = new FightManagerImpl(eventManager);
         this.fightPearlService = new FightPearlServiceImpl(this.pluginConfig.pearl);
         this.fightTagOutService = new FightTagOutServiceImpl();
         this.fightEffectService = new FightEffectServiceImpl();
@@ -131,7 +133,7 @@ public final class CombatPlugin extends JavaPlugin implements EternalCombatApi {
         BridgeService bridgeService = new BridgeService(this.pluginConfig, server.getPluginManager(), this.getLogger(), this);
         bridgeService.init(this.fightManager, server);
         this.regionProvider = bridgeService.getRegionProvider();
-        BorderService borderService = new BorderServiceImpl(scheduler, server, regionProvider, eventCaller, pluginConfig.border);
+        BorderService borderService = new BorderServiceImpl(scheduler, server, regionProvider, eventManager, pluginConfig.border);
         KnockbackService knockbackService = new KnockbackService(this.pluginConfig, scheduler);
 
         NoticeService noticeService = new NoticeService(this.audienceProvider, this.pluginConfig, miniMessage);
@@ -166,11 +168,8 @@ public final class CombatPlugin extends JavaPlugin implements EternalCombatApi {
             new PlayersHealthDropModifier(this.pluginConfig.drop, this.logoutService)
         ).forEach(this.dropService::registerModifier);
 
-
-        Stream.of(
-            new DropController(this.dropService, this.dropKeepInventoryService, this.pluginConfig.drop, this.fightManager),
+        eventManager.subscribe(
             new FightTagController(this.fightManager, this.pluginConfig),
-            new LogoutController(this.fightManager, this.logoutService, noticeService, this.pluginConfig),
             new FightUnTagController(this.fightManager, this.pluginConfig, this.logoutService),
             new FightActionBlockerController(this.fightManager, noticeService, this.pluginConfig, server),
             new FightPearlController(this.pluginConfig.pearl, noticeService, this.fightManager, this.fightPearlService),
@@ -182,7 +181,19 @@ public final class CombatPlugin extends JavaPlugin implements EternalCombatApi {
             new BorderTriggerController(borderService, pluginConfig.border, fightManager, server),
             new ParticleController(borderService, pluginConfig.border.particle, scheduler, server),
             new BorderBlockController(borderService, pluginConfig.border.block, scheduler, server)
-        ).forEach(listener -> this.getServer().getPluginManager().registerEvents(listener, this));
+        );
+
+        eventManager.subscribe(
+            PlayerDeathEvent.class,
+            this.pluginConfig.drop.dropEventPriority,
+            new DropController(dropService, dropKeepInventoryService, pluginConfig.drop, fightManager)
+        );
+
+        eventManager.subscribe(
+            PlayerQuitEvent.class,
+            this.pluginConfig.combat.quitPunishmentEventPriority,
+            new LogoutController(this.fightManager, this.logoutService, noticeService, this.pluginConfig)
+        );
 
         EternalCombatProvider.initialize(this);
 

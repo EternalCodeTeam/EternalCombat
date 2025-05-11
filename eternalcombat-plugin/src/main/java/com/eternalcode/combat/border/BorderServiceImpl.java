@@ -2,7 +2,7 @@ package com.eternalcode.combat.border;
 
 import com.eternalcode.combat.border.event.BorderHideAsyncEvent;
 import com.eternalcode.combat.border.event.BorderShowAsyncEvent;
-import com.eternalcode.combat.event.EventCaller;
+import com.eternalcode.combat.event.EventManager;
 import com.eternalcode.combat.region.RegionProvider;
 import com.eternalcode.commons.scheduler.Scheduler;
 import dev.rollczi.litecommands.shared.Lazy;
@@ -19,16 +19,16 @@ import org.bukkit.entity.Player;
 public class BorderServiceImpl implements BorderService {
 
     private final Scheduler scheduler;
-    private final EventCaller eventCaller;
+    private final EventManager eventManager;
 
     private final BorderSettings settings;
 
     private final BorderTriggerIndex borderIndexes;
     private final BorderActivePointsIndex activeBorderIndex = new BorderActivePointsIndex();
 
-    public BorderServiceImpl(Scheduler scheduler, Server server, RegionProvider provider, EventCaller eventCaller, BorderSettings settings) {
+    public BorderServiceImpl(Scheduler scheduler, Server server, RegionProvider provider, EventManager eventManager, BorderSettings settings) {
         this.scheduler = scheduler;
-        this.eventCaller = eventCaller;
+        this.eventManager = eventManager;
         this.settings = settings;
         this.borderIndexes = BorderTriggerIndex.started(server, scheduler, provider, settings);
     }
@@ -52,14 +52,14 @@ public class BorderServiceImpl implements BorderService {
             Set<BorderPoint> points = borderResult.collect();
 
             if (!points.isEmpty()) {
-                BorderShowAsyncEvent event = eventCaller.publishEvent(new BorderShowAsyncEvent(player, points));
+                BorderShowAsyncEvent event = eventManager.publishEvent(new BorderShowAsyncEvent(player, points));
                 points = event.getPoints();
             }
 
             Set<BorderPoint> removed = this.activeBorderIndex.putPoints(world, player.getUniqueId(), points);
 
             if (!removed.isEmpty()) {
-                eventCaller.publishEvent(new BorderHideAsyncEvent(player, removed));
+                eventManager.publishEvent(new BorderHideAsyncEvent(player, removed));
             }
         });
     }
@@ -72,7 +72,7 @@ public class BorderServiceImpl implements BorderService {
         scheduler.runAsync(() -> {
             Set<BorderPoint> removed = this.activeBorderIndex.removePoints(world.getName(), uniqueId);
             if (!removed.isEmpty()) {
-                eventCaller.publishEvent(new BorderHideAsyncEvent(player, removed));
+                eventManager.publishEvent(new BorderHideAsyncEvent(player, removed));
             }
         });
     }

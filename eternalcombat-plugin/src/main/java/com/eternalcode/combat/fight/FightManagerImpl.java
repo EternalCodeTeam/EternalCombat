@@ -1,6 +1,6 @@
 package com.eternalcode.combat.fight;
 
-import com.eternalcode.combat.event.EventCaller;
+import com.eternalcode.combat.event.EventManager;
 
 import com.eternalcode.combat.fight.event.CauseOfTag;
 import com.eternalcode.combat.fight.event.CauseOfUnTag;
@@ -19,10 +19,10 @@ import org.jetbrains.annotations.Nullable;
 public class FightManagerImpl implements FightManager {
 
     private final Map<UUID, FightTag> fights = new ConcurrentHashMap<>();
-    private final EventCaller eventCaller;
+    private final EventManager eventManager;
 
-    public FightManagerImpl(EventCaller eventCaller) {
-        this.eventCaller = eventCaller;
+    public FightManagerImpl(EventManager eventManager) {
+        this.eventManager = eventManager;
     }
 
     @Override
@@ -38,7 +38,7 @@ public class FightManagerImpl implements FightManager {
 
     @Override
     public FightUntagEvent untag(UUID player, CauseOfUnTag causeOfUnTag) {
-        FightUntagEvent event = this.eventCaller.publishEvent(new FightUntagEvent(player, causeOfUnTag));
+        FightUntagEvent event = this.eventManager.publishEvent(new FightUntagEvent(player, causeOfUnTag));
         if (event.isCancelled()) {
             return event;
         }
@@ -55,7 +55,7 @@ public class FightManagerImpl implements FightManager {
     @ApiStatus.Experimental
     @Override
     public FightTagEvent tag(UUID target, Duration delay, CauseOfTag causeOfTag, @Nullable UUID tagger) {
-        FightTagEvent event = this.eventCaller.publishEvent(new FightTagEvent(target, causeOfTag));
+        FightTagEvent event = this.eventManager.publishEvent(new FightTagEvent(target, causeOfTag));
 
         if (event.isCancelled()) {
             return event;
