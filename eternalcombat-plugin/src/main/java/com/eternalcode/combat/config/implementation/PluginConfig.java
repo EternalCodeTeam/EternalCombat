@@ -1,6 +1,7 @@
 package com.eternalcode.combat.config.implementation;
 
 import com.eternalcode.combat.border.BorderSettings;
+import com.eternalcode.combat.crystalpvp.CrystalPvpSettings;
 import com.eternalcode.combat.fight.drop.DropSettings;
 import com.eternalcode.combat.fight.effect.FightEffectSettings;
 import com.eternalcode.combat.fight.knockback.KnockbackSettings;
@@ -69,6 +70,12 @@ public class PluginConfig extends OkaeriConfig {
         "# Configure restrictions and behaviors for block placement while players are in combat."
     })
     public BlockPlacementSettings blockPlacement = new BlockPlacementSettings();
+
+    @Comment({
+        " ",
+
+    })
+    public CrystalPvpSettings crystalPvp = new CrystalPvpSettings();
 
     @Comment({
         " ",
