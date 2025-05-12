@@ -119,6 +119,11 @@ public class PluginConfig extends OkaeriConfig {
         public Duration combatTimerDuration = Duration.ofSeconds(20);
 
         @Comment({
+            "# Should plugin kill players on combat log?",
+        })
+        public boolean shouldPlayerBeKilledOnCombatLog = true;
+
+        @Comment({
             "# List of worlds where combat logging is disabled.",
             "# Players in these worlds will not be tagged or affected by combat rules."
         })
