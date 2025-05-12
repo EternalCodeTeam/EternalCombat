@@ -6,6 +6,7 @@ import com.eternalcode.combat.config.implementation.BlockPlacementSettings;
 import com.eternalcode.combat.fight.FightManager;
 import com.eternalcode.combat.fight.event.FightUntagEvent;
 import com.eternalcode.combat.notification.NoticeService;
+import java.util.concurrent.atomic.AtomicBoolean;
 import org.bukkit.GameMode;
 import org.bukkit.Material;
 import org.bukkit.Server;
@@ -194,14 +195,21 @@ public class FightActionBlockerController implements Listener {
             return;
         }
 
-        String command = event.getMessage().split(" ")[0].substring(1).toLowerCase();
+        String message = event.getMessage();
 
-        boolean isMatchCommand = this.config.commands.restrictedCommands.stream()
-            .anyMatch(command::startsWith);
+        String fullCommand = message.substring(1);
+
+        AtomicBoolean isAnyMatch = new AtomicBoolean(false);
+
+        this.config.commands.restrictedCommands.forEach(restrictedCommand -> {
+            if (fullCommand.startsWith(restrictedCommand)) {
+                isAnyMatch.set(true);
+            }
+        });
 
         WhitelistBlacklistMode mode = this.config.commands.commandRestrictionMode;
 
-        boolean shouldCancel = mode.shouldBlock(isMatchCommand);
+        boolean shouldCancel = mode.shouldBlock(isAnyMatch.get());
 
         if (shouldCancel) {
             event.setCancelled(true);
