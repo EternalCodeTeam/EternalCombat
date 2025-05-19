@@ -16,7 +16,10 @@ import dev.rollczi.litecommands.annotations.permission.Permission;
 import dev.rollczi.litecommands.annotations.priority.Priority;
 import dev.rollczi.litecommands.annotations.priority.PriorityValue;
 import java.time.Duration;
+import java.util.Set;
 import java.util.UUID;
+import java.util.stream.Collectors;
+
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
@@ -124,7 +127,7 @@ public class FightTagCommand {
 
     @Execute(name = "untag")
     @Permission("eternalcombat.untag")
-    void untag(@Context Player sender, @Arg Player target) {
+    void untag(@Context CommandSender sender, @Arg Player target) {
         UUID targetUniqueId = target.getUniqueId();
 
         if (!this.fightManager.isInCombat(targetUniqueId)) {
@@ -145,6 +148,23 @@ public class FightTagCommand {
         this.noticeService.create()
             .notice(this.config.messagesSettings.admin.adminUntagPlayer)
             .placeholder("{PLAYER}", target.getName())
+            .viewer(sender)
+            .send();
+    }
+
+    @Execute(name = "untagall")
+    @Permission("eternalcombat.untagall")
+    void untagAll(@Context CommandSender sender) {
+        int combatPlayersSize = this.fightManager.getFights().size();
+
+        this.fightManager.getFights().stream()
+            .map(FightTag::getTaggedPlayer)
+            .collect(Collectors.toSet())
+            .forEach(uuid -> this.fightManager.untag(uuid, CauseOfUnTag.COMMAND));
+
+        this.noticeService.create()
+            .notice(this.config.messagesSettings.admin.adminUntagAll)
+            .placeholder("{COUNT}", String.valueOf(combatPlayersSize))
             .viewer(sender)
             .send();
     }

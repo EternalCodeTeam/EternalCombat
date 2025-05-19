@@ -5,6 +5,7 @@ import eu.okaeri.configs.OkaeriConfig;
 import eu.okaeri.configs.annotation.Comment;
 import java.util.List;
 import org.bukkit.entity.EntityType;
+import org.bukkit.event.EventPriority;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
 
@@ -72,4 +73,23 @@ public class CombatSettings extends OkaeriConfig {
         EntityType.ENDER_PEARL,
         EntityType.EGG
     );
+
+    @Comment({
+        "# The event priority at which quit punishments should be handled.",
+        "# This determines when the plugin processes combat log punishment during PlayerQuitEvent.",
+        "# Options: LOWEST, LOW, NORMAL, HIGH, HIGHEST, MONITOR",
+        "# Tip: Set to LOWEST or LOW if you want quit punishments to happen before most other plugins.",
+        "# Default: NORMAL"
+    })
+    public EventPriority quitPunishmentEventPriority = EventPriority.NORMAL;
+
+    @Comment({
+        "# List of kick reasons where players will NOT be punished for combat logging.",
+        "# If this list is empty, players are ALWAYS punished when kicked during combat.",
+        "# If one of the listed phrases is found in the kick reason (case-insensitive),",
+        "# the player will NOT be punished.",
+        "# Example: 'Timed out', 'Kicked for inactivity', etc.",
+        "# To always punish players on kick, set: whitelistedKickReasons: []"
+    })
+    public List<String> whitelistedKickReasons = List.of("Kicked for inactivity", "Timed out", "Server is restarting");
 }

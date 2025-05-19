@@ -134,6 +134,13 @@ public class MessagesSettings extends OkaeriConfig {
             "<gradient:#00ff88:#00b300>✌ <gray>Removed</gray> <white>{PLAYER}</white> <gray>from combat</gray></gradient>");
 
         @Comment({
+            "# Message displayed to an admin when they remove a player from combat.",
+            "# The {PLAYER} placeholder is replaced with the player's name."
+        })
+        public Notice adminUntagAll = Notice.chat(
+            "<gradient:#00ff88:#00b300>✌ <gray>Removed</gray> <white>{COUNT}</white> <gray> players from combat</gray></gradient>");
+
+        @Comment({
             "# Message displayed when an admin attempts to untag a player who is not in combat.",
             "# This message informs the admin that the player is not currently in combat."
         })
