@@ -10,10 +10,10 @@ object Versions {
 
     const val ETERNALCODE_COMMONS = "1.1.6"
     const val MULTIFICATION = "1.2.1"
-    const val PACKETS_EVENTS = "2.7.0"
+    const val PACKETS_EVENTS = "2.8.0"
 
-    const val ADVENTURE_PLATFORM_BUKKIT = "4.3.4"
-    const val ADVENTURE_API = "4.19.0"
+    const val ADVENTURE_PLATFORM_BUKKIT = "4.4.0"
+    const val ADVENTURE_API = "4.21.0"
 
     const val LITE_COMMANDS = "3.9.7"
     const val OKAERI_CONFIGS_YAML_BUKKIT = "5.0.6"
