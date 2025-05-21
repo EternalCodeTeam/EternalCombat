@@ -66,11 +66,11 @@ public class BridgeService {
         this.initialize(
             "WorldGuard",
             () -> {
-                WorldGuardRegionProvider wg = new WorldGuardRegionProvider(
+                WorldGuardRegionProvider worldGuardRegionProvider = new WorldGuardRegionProvider(
                     this.pluginConfig.regions.blockedRegions,
                     this.pluginConfig
                 );
-                providers.add(wg);
+                providers.add(worldGuardRegionProvider);
             },
             () -> this.logger.warning("WorldGuard not found; skipping WorldGuardRegionProvider.")
         );
@@ -94,9 +94,9 @@ public class BridgeService {
         );
     }
 
-    private void initialize(String pluginName, BridgeInitializer init, Runnable onFailure) {
+    private void initialize(String pluginName, BridgeInitializer initializer, Runnable onFailure) {
         if (this.pluginManager.isPluginEnabled(pluginName)) {
-            init.initialize();
+            initializer.initialize();
             this.logger.info("Initialized " + pluginName + " bridge.");
         }
         else {
