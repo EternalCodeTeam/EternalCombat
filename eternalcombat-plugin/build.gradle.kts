@@ -45,11 +45,14 @@ dependencies {
 
     // PlaceholderAPI
     compileOnly("me.clip:placeholderapi:${Versions.PLACEHOLDER_API}")
+    
+    // Lands
+    compileOnly("com.github.angeschossen:LandsAPI:7.15.4")
 
     // Multification
     implementation("com.eternalcode:multification-bukkit:${Versions.MULTIFICATION}")
     implementation("com.eternalcode:multification-okaeri:${Versions.MULTIFICATION}")
-    implementation("com.github.retrooper:packetevents-spigot:${Versions.PACKETS_EVENTS}")
+    compileOnly("com.github.retrooper:packetevents-spigot:${Versions.PACKETS_EVENTS}")
     implementation("io.papermc:paperlib:${Versions.PAPERLIB}")
 }
 
@@ -61,14 +64,10 @@ bukkit {
     name = "EternalCombat"
     load = BukkitPluginDescription.PluginLoadOrder.POSTWORLD
     softDepend = listOf(
-        "WorldGuard",
-        "PlaceholderAPI",
-        "ProtocolLib",
-        "ProtocolSupport",
-        "ViaVersion",
-        "ViaBackwards",
-        "ViaRewind",
-        "Geyser-Spigot"
+        "Lands"
+    )
+    depend = listOf(
+        "PacketEvents",
     )
     version = "${project.version}"
 }
@@ -108,7 +107,4 @@ tasks.shadowJar {
     ).forEach { pack ->
         relocate(pack, "$prefix.$pack")
     }
-
-    relocate("com.github.retrooper.packetevents", "$prefix.packetevents.api")
-    relocate("io.github.retrooper.packetevents", "$prefix.packetevents.impl")
 }
