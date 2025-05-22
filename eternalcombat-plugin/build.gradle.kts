@@ -67,7 +67,7 @@ bukkit {
         "Lands"
     )
     depend = listOf(
-        "PacketEvents",
+        "packetevents",
     )
     version = "${project.version}"
 }

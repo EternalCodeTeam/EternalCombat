@@ -26,8 +26,11 @@ class LandChunksRegion implements Region {
             _maxZ = Math.max(_maxZ, bz);
         }
 
+        // Convert chunk coordinates to block coordinates
         this.minX = _minX;
         this.minZ = _minZ;
+
+        // Add 15 to include the full chunk (16 blocks per chunk, but we start at 0)
         this.maxX = _maxX + 15;
         this.maxZ = _maxZ + 15;
     }
@@ -36,12 +39,13 @@ class LandChunksRegion implements Region {
     public Location getCenter() {
         double cx = (this.minX + this.maxX) / 2.0;
         double cz = (this.minZ + this.maxZ) / 2.0;
-        return new Location(this.world, cx, 64, cz);
+        double cy = (this.world.getMinHeight() + this.world.getMaxHeight()) / 2.0;
+        return new Location(this.world, cx, cy, cz);
     }
 
     @Override
     public Location getMin() {
-        return new Location(this.world, this.minX, 0, this.minZ);
+        return new Location(this.world, this.minX, this.world.getMinHeight(), this.minZ);
     }
 
     @Override
