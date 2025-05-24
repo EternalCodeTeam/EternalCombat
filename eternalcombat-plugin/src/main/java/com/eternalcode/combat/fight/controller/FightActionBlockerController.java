@@ -23,6 +23,7 @@ import org.bukkit.event.player.PlayerToggleFlightEvent;
 
 import java.util.List;
 import java.util.UUID;
+import org.bukkit.util.StringUtil;
 
 public class FightActionBlockerController implements Listener {
 
@@ -215,14 +216,14 @@ public class FightActionBlockerController implements Listener {
             return;
         }
 
-        String command = event.getMessage().split(" ")[0].substring(1).toLowerCase();
+        String command = event.getMessage().substring(1);
 
-        boolean isMatchCommand = this.config.commands.restrictedCommands.stream()
-            .anyMatch(command::startsWith);
+        boolean isAnyMatch = this.config.commands.restrictedCommands.stream()
+            .anyMatch(restrictedCommand -> StringUtil.startsWithIgnoreCase(command, restrictedCommand));
 
         WhitelistBlacklistMode mode = this.config.commands.commandRestrictionMode;
 
-        boolean shouldCancel = mode.shouldBlock(isMatchCommand);
+        boolean shouldCancel = mode.shouldBlock(isAnyMatch);
 
         if (shouldCancel) {
             event.setCancelled(true);
