@@ -2,9 +2,9 @@ object Versions {
 
     const val SPIGOT_API = "1.17.1-R0.1-SNAPSHOT"
 
-    const val JUNIT_JUPITER_API = "5.12.1"
-    const val JUNIT_JUPITER_PARAMS = "5.12.1"
-    const val JUNIT_JUPITER_ENGINE = "5.12.1"
+    const val JUNIT_JUPITER_API = "5.13.1"
+    const val JUNIT_JUPITER_PARAMS = "5.13.1"
+    const val JUNIT_JUPITER_ENGINE = "5.13.1"
 
     const val JETBRAINS_ANNOTATIONS = "26.0.2"
 
@@ -15,7 +15,7 @@ object Versions {
     const val ADVENTURE_PLATFORM_BUKKIT = "4.4.0"
     const val ADVENTURE_API = "4.21.0"
 
-    const val LITE_COMMANDS = "3.9.7"
+    const val LITE_COMMANDS = "3.10.0"
     const val OKAERI_CONFIGS_YAML_BUKKIT = "5.0.6"
     const val OKAERI_CONFIGS_SERDES_COMMONS = "5.0.6"
     const val OKAERI_CONFIGS_SERDES_BUKKIT = "5.0.6"
