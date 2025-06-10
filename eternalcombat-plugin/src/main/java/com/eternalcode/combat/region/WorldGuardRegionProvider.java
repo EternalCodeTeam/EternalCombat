@@ -13,6 +13,7 @@ import com.sk89q.worldguard.protection.regions.RegionContainer;
 import com.sk89q.worldguard.protection.regions.RegionQuery;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.Optional;
 import java.util.Set;
 import java.util.TreeSet;
@@ -121,18 +122,9 @@ public class WorldGuardRegionProvider implements RegionProvider {
 
         return protectedRegions
             .stream()
-            .sorted((region1, region2) -> {
-                int priority1 = region1.getPriority();
-                int priority2 = region2.getPriority();
-
-                if (priority1 == priority2) {
-                    return 0;
-                } else if (priority1 > priority2) {
-                    return 1;
-                } else {
-                    return -1;
-                }
-            }).findFirst().get();
+            .sorted(Comparator.comparingInt(ProtectedRegion::getPriority).reversed())
+            .findFirst()
+            .get();
     }
 
 }
