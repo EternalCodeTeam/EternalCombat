@@ -122,7 +122,7 @@ public class WorldGuardRegionProvider implements RegionProvider {
 
         return protectedRegions
             .stream()
-            .sorted(Comparator.comparingInt(ProtectedRegion::getPriority).reversed())
+            .sorted(Comparator.comparingInt(ProtectedRegion::getPriority))
             .findFirst()
             .get();
     }
