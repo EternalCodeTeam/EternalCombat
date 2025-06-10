@@ -13,7 +13,9 @@ import com.sk89q.worldguard.protection.regions.RegionContainer;
 import com.sk89q.worldguard.protection.regions.RegionQuery;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.Optional;
+import java.util.Set;
 import java.util.TreeSet;
 import org.bukkit.Location;
 
@@ -36,12 +38,14 @@ public class WorldGuardRegionProvider implements RegionProvider {
         RegionQuery regionQuery = this.regionContainer.createQuery();
         ApplicableRegionSet applicableRegions = regionQuery.getApplicableRegions(BukkitAdapter.adapt(location));
 
-        for (ProtectedRegion region : applicableRegions.getRegions()) {
-            if (!this.isCombatRegion(region)) {
-                continue;
-            }
+        ProtectedRegion highestPriorityRegion = this.highestPriorityRegion(applicableRegions);
 
-            return Optional.of(new WorldGuardRegion(location.getWorld(), region));
+        if (highestPriorityRegion == null) {
+            return Optional.empty();
+        }
+
+        if (this.isCombatRegion(highestPriorityRegion)) {
+            return Optional.of(new WorldGuardRegion(location.getWorld(), highestPriorityRegion));
         }
 
         return Optional.empty();
@@ -102,6 +106,25 @@ public class WorldGuardRegionProvider implements RegionProvider {
             BlockVector3 max = this.region.getMaximumPoint();
             return new Location(this.context, max.getX(), max.getY(), max.getZ());
         }
+    }
+
+    ProtectedRegion highestPriorityRegion(ApplicableRegionSet applicableRegions) {
+
+        Set<ProtectedRegion> protectedRegions = applicableRegions.getRegions();
+
+        if (protectedRegions.isEmpty()) {
+            return null;
+        }
+
+        if (protectedRegions.size() == 1) {
+            return protectedRegions.iterator().next();
+        }
+
+        return protectedRegions
+            .stream()
+            .sorted(Comparator.comparingInt(ProtectedRegion::getPriority))
+            .findFirst()
+            .get();
     }
 
 }
