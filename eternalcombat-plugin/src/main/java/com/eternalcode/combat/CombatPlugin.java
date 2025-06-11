@@ -125,15 +125,13 @@ public final class CombatPlugin extends JavaPlugin implements EternalCombatApi {
             server.getPluginManager(),
             this.getLogger(),
             this,
-            eventManager,
-            this.fightManager,
-            noticeService
+            this.fightManager
         );
         bridgeService.init(server);
 
         this.regionProvider = bridgeService.getRegionProvider();
-        BorderService borderService = new BorderServiceImpl(scheduler, server, regionProvider, eventManager, pluginConfig.border);
-        KnockbackService knockbackService = new KnockbackService(pluginConfig, scheduler);
+        BorderService borderService = new BorderServiceImpl(scheduler, server, regionProvider, eventManager, () -> pluginConfig.border);
+        KnockbackService knockbackService = new KnockbackService(pluginConfig, scheduler, regionProvider);
 
         this.liteCommands = LiteBukkitFactory.builder(FALLBACK_PREFIX, this, server)
             .message(LiteBukkitMessages.PLAYER_NOT_FOUND, pluginConfig.messagesSettings.playerNotFound)
@@ -175,9 +173,9 @@ public final class CombatPlugin extends JavaPlugin implements EternalCombatApi {
             new FightEffectController(pluginConfig.effect, this.fightEffectService, this.fightManager, this.getServer()),
             new FightTagOutController(this.fightTagOutService),
             new FightMessageController(this.fightManager, noticeService, pluginConfig, this.getServer()),
-            new BorderTriggerController(borderService, pluginConfig.border, fightManager, server),
-            new ParticleController(borderService, pluginConfig.border.particle, scheduler, server),
-            new BorderBlockController(borderService, pluginConfig.border.block, scheduler, server)
+            new BorderTriggerController(borderService, () -> pluginConfig.border, fightManager, server),
+            new ParticleController(borderService, () -> pluginConfig.border.particle, scheduler, server),
+            new BorderBlockController(borderService, () -> pluginConfig.border.block, scheduler, server)
         );
 
         eventManager.subscribe(

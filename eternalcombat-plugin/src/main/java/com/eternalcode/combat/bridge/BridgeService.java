@@ -1,15 +1,13 @@
 package com.eternalcode.combat.bridge;
 
-import com.eternalcode.combat.bridge.lands.LandsBridgeInitializer;
+import com.eternalcode.combat.region.lands.LandsRegionProvider;
 import com.eternalcode.combat.bridge.placeholder.FightTagPlaceholder;
 import com.eternalcode.combat.config.implementation.PluginConfig;
-import com.eternalcode.combat.event.EventManager;
 import com.eternalcode.combat.fight.FightManager;
-import com.eternalcode.combat.notification.NoticeService;
 import com.eternalcode.combat.region.CompositeRegionProvider;
-import com.eternalcode.combat.region.DefaultRegionProvider;
+import com.eternalcode.combat.region.bukkit.DefaultRegionProvider;
 import com.eternalcode.combat.region.RegionProvider;
-import com.eternalcode.combat.region.WorldGuardRegionProvider;
+import com.eternalcode.combat.region.worldgurad.WorldGuardRegionProvider;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Logger;
@@ -20,32 +18,26 @@ import org.bukkit.plugin.PluginManager;
 
 public class BridgeService {
 
-    private final PluginConfig pluginConfig;
+    private final PluginConfig config;
     private final PluginManager pluginManager;
     private final Logger logger;
     private final Plugin plugin;
-    private final EventManager eventManager;
     private final FightManager fightManager;
-    private final NoticeService noticeService;
 
     private RegionProvider regionProvider;
 
     public BridgeService(
-        PluginConfig pluginConfig,
+        PluginConfig config,
         PluginManager pluginManager,
         Logger logger,
         Plugin plugin,
-        EventManager eventManager,
-        FightManager fightManager,
-        NoticeService noticeService
+        FightManager fightManager
     ) {
-        this.pluginConfig = pluginConfig;
+        this.config = config;
         this.pluginManager = pluginManager;
         this.logger = logger;
         this.plugin = plugin;
-        this.eventManager = eventManager;
         this.fightManager = fightManager;
-        this.noticeService = noticeService;
     }
 
     public void init(Server server) {
@@ -53,30 +45,18 @@ public class BridgeService {
 
         this.initialize(
             "Lands",
-            () -> {
-                LandsBridgeInitializer landsInit = new LandsBridgeInitializer(
-                    this.plugin, this.eventManager, this.fightManager, this.noticeService
-                );
-                landsInit.initialize();
-                providers.add(landsInit.getRegionProvider());
-            },
+            () -> providers.add(new LandsRegionProvider(plugin)),
             () -> this.logger.warning("Lands not found; skipping LandsRegionProvider.")
         );
 
         this.initialize(
             "WorldGuard",
-            () -> {
-                WorldGuardRegionProvider worldGuardRegionProvider = new WorldGuardRegionProvider(
-                    this.pluginConfig.regions.blockedRegions,
-                    this.pluginConfig
-                );
-                providers.add(worldGuardRegionProvider);
-            },
+            () -> providers.add( new WorldGuardRegionProvider(this.config)),
             () -> this.logger.warning("WorldGuard not found; skipping WorldGuardRegionProvider.")
         );
 
         if (providers.isEmpty()) {
-            providers.add(new DefaultRegionProvider(this.pluginConfig.regions.restrictedRegionRadius));
+            providers.add(new DefaultRegionProvider(this.config.regions.restrictedRegionRadius));
             this.logger.warning("No region plugin found; using DefaultRegionProvider.");
         }
 
