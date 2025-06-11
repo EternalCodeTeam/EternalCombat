@@ -1,6 +1,7 @@
 package com.eternalcode.combat.border;
 
 import com.eternalcode.combat.fight.FightManager;
+import com.eternalcode.combat.fight.event.FightTagEvent;
 import com.eternalcode.combat.fight.event.FightUntagEvent;
 import java.util.function.Supplier;
 import org.bukkit.Location;
@@ -58,6 +59,20 @@ public class BorderTriggerController implements Listener {
         }
 
         borderService.updateBorder(player, event.getTo());
+    }
+
+    @EventHandler(ignoreCancelled = true, priority = EventPriority.MONITOR)
+    void onFightStart(FightTagEvent event) {
+        if (!border.get().isEnabled()) {
+            return;
+        }
+
+        Player player = server.getPlayer(event.getPlayer());
+        if (player == null) {
+            return;
+        }
+
+        borderService.updateBorder(player, player.getLocation());
     }
 
     @EventHandler(ignoreCancelled = true, priority = EventPriority.MONITOR)
