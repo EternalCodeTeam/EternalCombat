@@ -1,4 +1,4 @@
-package com.eternalcode.combat.region.worldgurad;
+package com.eternalcode.combat.region.worldguard;
 
 import com.eternalcode.combat.region.Point;
 import com.eternalcode.combat.region.Region;

@@ -5,8 +5,6 @@ import com.eternalcode.combat.region.Region;
 import com.eternalcode.combat.region.RegionProvider;
 import me.angeschossen.lands.api.LandsIntegration;
 import me.angeschossen.lands.api.land.Land;
-import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.World;
 
@@ -29,11 +27,9 @@ public class LandsRegionProvider implements RegionProvider {
         int chunkZ = location.getBlockZ() >> 4;
         Land land = this.lands.getLandByChunk(location.getWorld(), chunkX, chunkZ);
         if (land == null) {
-            Bukkit.broadcastMessage(ChatColor.RED + "" + location.getBlockX() + " " + location.getBlockY() + " " + location.getBlockZ());
             return Optional.empty();
         }
 
-        Bukkit.broadcastMessage(ChatColor.GREEN + "" + location.getBlockX() + " " + location.getBlockY() + " " + location.getBlockZ() + " -> " + land.getName());
         return Optional.of(new ChunkRegion(location.getWorld(), chunkX, chunkZ));
     }
 

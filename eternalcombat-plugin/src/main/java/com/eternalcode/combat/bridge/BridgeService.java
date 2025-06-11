@@ -7,7 +7,7 @@ import com.eternalcode.combat.fight.FightManager;
 import com.eternalcode.combat.region.CompositeRegionProvider;
 import com.eternalcode.combat.region.bukkit.DefaultRegionProvider;
 import com.eternalcode.combat.region.RegionProvider;
-import com.eternalcode.combat.region.worldgurad.WorldGuardRegionProvider;
+import com.eternalcode.combat.region.worldguard.WorldGuardRegionProvider;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Logger;

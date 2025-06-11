@@ -57,7 +57,7 @@ public final class KnockbackService {
         Optional<Region> otherRegion = regionProvider.getRegion(location);
         if (otherRegion.isPresent()) {
             Region region = otherRegion.get();
-            return generate(playerLocation, minX.less(region.getMin()), maxX.greater(region.getMax()));
+            return generate(playerLocation, minX.min(region.getMin()), maxX.max(region.getMax()));
         }
 
         return location;
