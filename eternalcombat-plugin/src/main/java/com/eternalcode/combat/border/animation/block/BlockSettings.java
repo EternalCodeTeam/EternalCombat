@@ -17,14 +17,14 @@ public class BlockSettings extends OkaeriConfig {
     public BlockType type = BlockType.RAINBOW_GLASS;
 
     @Comment({
-        "# Delay between each async animation update",
+        "# Delay between each async animation update (need restart to apply)",
         "# Lower values will decrease performance but will make the animation smoother",
         "# Higher values will increase performance"
     })
     public Duration updateDelay = Duration.ofMillis(250);
 
     @Comment({
-        "# Delay between each chunk cache update",
+        "# Delay between each chunk cache update (need restart to apply)",
         "# Lower values will decrease performance",
         "# Higher values will increase performance but may cause overlapping existing blocks (this does not modify the world)"
     })

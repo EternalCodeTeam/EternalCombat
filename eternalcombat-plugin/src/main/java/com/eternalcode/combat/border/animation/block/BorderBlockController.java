@@ -21,6 +21,7 @@ import java.util.Map.Entry;
 import java.util.Set;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.function.Supplier;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import org.bukkit.ChunkSnapshot;
@@ -40,25 +41,25 @@ public class BorderBlockController implements Listener {
     public static final int MINECRAFT_CHUNK_SHIFT = 4;
 
     private final BorderService borderService;
-    private final BlockSettings settings;
+    private final Supplier<BlockSettings> settings;
     private final Server server;
 
     private final Set<UUID> playersToUpdate = ConcurrentHashMap.newKeySet();
     private final Map<UUID, Object> lockedPlayers = new ConcurrentHashMap<>();
     private final ChunkCache chunkCache;
 
-    public BorderBlockController(BorderService borderService, BlockSettings settings, Scheduler scheduler, Server server) {
+    public BorderBlockController(BorderService borderService, Supplier<BlockSettings> settings, Scheduler scheduler, Server server) {
         this.borderService = borderService;
         this.settings = settings;
         this.server = server;
-        this.chunkCache = new ChunkCache(settings);
+        this.chunkCache = new ChunkCache(settings.get());
 
-        scheduler.timerAsync(() -> this.updatePlayers(), settings.updateDelay, settings.updateDelay);
+        scheduler.timerAsync(() -> this.updatePlayers(), settings.get().updateDelay, settings.get().updateDelay);
     }
 
     @EventHandler
     void onBorderShowAsyncEvent(BorderShowAsyncEvent event) {
-        if (!settings.enabled) {
+        if (!settings.get().enabled) {
             return;
         }
 
@@ -72,7 +73,7 @@ public class BorderBlockController implements Listener {
 
     @EventHandler
     void onBorderHideAsyncEvent(BorderHideAsyncEvent event) {
-        if (!settings.enabled) {
+        if (!settings.get().enabled) {
             return;
         }
 
@@ -88,7 +89,7 @@ public class BorderBlockController implements Listener {
     }
 
     private void updatePlayers() {
-        if (!settings.enabled) {
+        if (!settings.get().enabled) {
             return;
         }
 
@@ -188,7 +189,7 @@ public class BorderBlockController implements Listener {
     }
 
     private EncodedBlock toEncodedBlock(BorderPoint point) {
-        StateType type = settings.type.getStateType(point);
+        StateType type = settings.get().type.getStateType(point);
         WrappedBlockState state = WrappedBlockState.getDefaultState(SERVER_VERSION, type);
         return new EncodedBlock(state.getGlobalId(), point.x(), point.y(), point.z());
     }

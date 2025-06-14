@@ -1,9 +1,11 @@
-package com.eternalcode.combat.region;
+package com.eternalcode.combat.region.bukkit;
 
+import com.eternalcode.combat.region.Point;
+import com.eternalcode.combat.region.Region;
+import com.eternalcode.combat.region.RegionProvider;
 import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
-import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.World;
 
@@ -40,13 +42,13 @@ public class DefaultRegionProvider implements RegionProvider {
         Location min = new Location(world, x - this.radius, world.getMinHeight(), z - this.radius);
         Location max = new Location(world, x + this.radius - 1, world.getMaxHeight() - 1, z + this.radius - 1);
 
-        return new DefaultSpawnRegion(min, max, spawnLocation);
+        return new DefaultSpawnRegion(min, max, new Point(world, x, z));
     }
 
-    private record DefaultSpawnRegion(Location min, Location max, Location center) implements Region {
+    private record DefaultSpawnRegion(Location min, Location max, Point point) implements Region {
         @Override
-        public Location getCenter() {
-            return this.center;
+        public Point getCenter() {
+            return this.point;
         }
 
         @Override

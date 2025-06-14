@@ -28,8 +28,8 @@ public class ParticleSettings extends OkaeriConfig {
         "# You can set hex color e.g. \"#ca4c45\" or use \"RAINBOW\" to generate rainbow gradient based on x and z coordinates."
     })
     public ParticleColor color = ParticleColor.RAINBOW;
-    public int count = 5;
-    public float scale = 1.0F;
+    public int count = 1;
+    public float scale = 1.7F;
     public float maxSpeed  = 0.0F;
     public float offsetX = 0.2F;
     public float offsetY = 0.2F;
