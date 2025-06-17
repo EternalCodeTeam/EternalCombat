@@ -5,6 +5,7 @@ import com.eternalcode.combat.border.animation.particle.ParticleSettings;
 import eu.okaeri.configs.OkaeriConfig;
 import eu.okaeri.configs.annotation.Comment;
 import java.time.Duration;
+import org.jetbrains.annotations.ApiStatus;
 
 public class BorderSettings extends OkaeriConfig {
 
@@ -25,6 +26,7 @@ public class BorderSettings extends OkaeriConfig {
     })
     public ParticleSettings particle = new ParticleSettings();
 
+    @ApiStatus.Internal
     public Duration indexRefreshDelay() {
         return Duration.ofSeconds(1);
     }

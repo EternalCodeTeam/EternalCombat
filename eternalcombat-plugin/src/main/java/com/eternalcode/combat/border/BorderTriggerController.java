@@ -1,7 +1,9 @@
 package com.eternalcode.combat.border;
 
 import com.eternalcode.combat.fight.FightManager;
+import com.eternalcode.combat.fight.event.FightTagEvent;
 import com.eternalcode.combat.fight.event.FightUntagEvent;
+import java.util.function.Supplier;
 import org.bukkit.Location;
 import org.bukkit.Server;
 import org.bukkit.entity.Player;
@@ -14,11 +16,11 @@ import org.bukkit.event.player.PlayerTeleportEvent;
 public class BorderTriggerController implements Listener {
 
     private final BorderService borderService;
-    private final BorderSettings border;
+    private final Supplier<BorderSettings> border;
     private final FightManager fightManager;
     private final Server server;
 
-    public BorderTriggerController(BorderService borderService, BorderSettings border, FightManager fightManager, Server server) {
+    public BorderTriggerController(BorderService borderService, Supplier<BorderSettings> border, FightManager fightManager, Server server) {
         this.borderService = borderService;
         this.border = border;
         this.fightManager = fightManager;
@@ -27,7 +29,7 @@ public class BorderTriggerController implements Listener {
 
     @EventHandler(ignoreCancelled = true, priority = EventPriority.MONITOR)
     void onMove(PlayerMoveEvent event) {
-        if (!border.isEnabled()) {
+        if (!border.get().isEnabled()) {
             return;
         }
 
@@ -47,7 +49,7 @@ public class BorderTriggerController implements Listener {
 
     @EventHandler(ignoreCancelled = true, priority = EventPriority.MONITOR)
     void onTeleport(PlayerTeleportEvent event) {
-        if (!border.isEnabled()) {
+        if (!border.get().isEnabled()) {
             return;
         }
 
@@ -60,8 +62,22 @@ public class BorderTriggerController implements Listener {
     }
 
     @EventHandler(ignoreCancelled = true, priority = EventPriority.MONITOR)
+    void onFightStart(FightTagEvent event) {
+        if (!border.get().isEnabled()) {
+            return;
+        }
+
+        Player player = server.getPlayer(event.getPlayer());
+        if (player == null) {
+            return;
+        }
+
+        borderService.updateBorder(player, player.getLocation());
+    }
+
+    @EventHandler(ignoreCancelled = true, priority = EventPriority.MONITOR)
     void onFightEnd(FightUntagEvent event) {
-        if (!border.isEnabled()) {
+        if (!border.get().isEnabled()) {
             return;
         }
 
