@@ -17,12 +17,12 @@ object Versions {
 
     const val LITE_COMMANDS = "3.10.0"
     const val OKAERI_CONFIGS_YAML_BUKKIT = "5.0.6"
-    const val OKAERI_CONFIGS_SERDES_COMMONS = "5.0.6"
-    const val OKAERI_CONFIGS_SERDES_BUKKIT = "5.0.6"
+    const val OKAERI_CONFIGS_SERDES_COMMONS = "5.0.9"
+    const val OKAERI_CONFIGS_SERDES_BUKKIT = "5.0.9"
 
     const val GIT_CHECK = "1.0.0"
 
-    const val CAFFEINE = "3.2.0"
+    const val CAFFEINE = "3.2.1"
 
     const val B_STATS_BUKKIT = "3.1.0"
     const val WORLD_GUARD_BUKKIT = "7.0.9"
