@@ -7,8 +7,10 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.player.PlayerRespawnEvent;
+import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
+import org.bukkit.inventory.enchantments.Enchantment;
 import org.bukkit.inventory.meta.SkullMeta;
 
 import java.util.List;
@@ -65,7 +67,7 @@ public class DropController implements DynamicListener<PlayerDeathEvent> {
         this.keepInventoryManager.addItems(uuid, result.removedItems());
 
         if (this.dropSettings.affectExperience) {
-            event.setDroppedExp(drop.getDroppedExp());
+            event.setDroppedExp(result.droppedExp());
         }
     }
 
@@ -99,6 +101,9 @@ public class DropController implements DynamicListener<PlayerDeathEvent> {
                     .toList();
                 meta.setLore(lore);
             }
+
+            meta.addEnchant(Enchantment.LURE, 1, true);
+            meta.addItemFlags(ItemFlag.HIDE_ENCHANTS);
 
             head.setItemMeta(meta);
         }
