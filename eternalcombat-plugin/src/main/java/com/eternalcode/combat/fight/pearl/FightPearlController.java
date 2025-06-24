@@ -11,10 +11,9 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
-import org.bukkit.event.block.Action;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
-import org.bukkit.event.player.PlayerInteractEvent;
+import org.bukkit.event.entity.ProjectileLaunchEvent;
 import org.bukkit.inventory.ItemStack;
 
 public class FightPearlController implements Listener {
@@ -36,38 +35,39 @@ public class FightPearlController implements Listener {
         this.fightPearlService = fightPearlService;
     }
 
-    @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = false)
-    public void onPearlThrow(PlayerInteractEvent event) {
-        if (!isPearlRightClick(event)) {
+    @EventHandler(priority = EventPriority.HIGHEST)
+    public void onPearlThrow(ProjectileLaunchEvent event) {
+        if (!(event.getEntity() instanceof EnderPearl)) {
             return;
         }
 
-        Player player = event.getPlayer();
+        if (!(event.getEntity().getShooter() instanceof Player player)) {
+            return;
+        }
+
         UUID playerId = player.getUniqueId();
 
-        if (!fightManager.isInCombat(playerId)) {
+        if (!this.fightManager.isInCombat(playerId)) {
             return;
         }
 
-        // Check if pearls are completely disabled during combat
-        if (settings.pearlThrowDisabledDuringCombat) {
+        if (this.settings.pearlThrowDisabledDuringCombat) {
             event.setCancelled(true);
-            noticeService.create()
+            this.noticeService.create()
                 .player(playerId)
-                .notice(settings.pearlThrowBlockedDuringCombat)
+                .notice(this.settings.pearlThrowBlockedDuringCombat)
                 .send();
             return;
         }
 
-        // Handle cooldown if enabled
-        if (settings.pearlCooldownEnabled) {
+        if (this.settings.pearlCooldownEnabled) {
             handlePearlCooldown(event, player, playerId);
         }
     }
 
     @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
     public void onPearlDamage(EntityDamageByEntityEvent event) {
-        if (settings.pearlThrowDamageEnabled) {
+        if (this.settings.pearlThrowDamageEnabled) {
             return;
         }
 
@@ -80,43 +80,25 @@ public class FightPearlController implements Listener {
         event.setDamage(0.0);
     }
 
-    private void handlePearlCooldown(PlayerInteractEvent event, Player player, UUID playerId) {
-        // If delay is zero, block completely
-        if (settings.pearlThrowDelay.isZero()) {
-            event.setCancelled(true);
-            noticeService.create()
-                .player(playerId)
-                .notice(settings.pearlThrowBlockedDuringCombat)
-                .send();
+    private void handlePearlCooldown(ProjectileLaunchEvent event, Player player, UUID playerId) {
+        if (this.settings.pearlThrowDelay.isZero()) {
             return;
         }
 
-        // Check if player has active delay
-        if (fightPearlService.hasDelay(playerId)) {
+        if (this.fightPearlService.hasDelay(playerId)) {
             event.setCancelled(true);
-            Duration remainingDelay = fightPearlService.getRemainingDelay(playerId);
+            Duration remainingDelay = this.fightPearlService.getRemainingDelay(playerId);
 
-            noticeService.create()
+            this.noticeService.create()
                 .player(playerId)
-                .notice(settings.pearlThrowBlockedDelayDuringCombat)
+                .notice(this.settings.pearlThrowBlockedDelayDuringCombat)
                 .placeholder("{TIME}", DurationUtil.format(remainingDelay))
                 .send();
             return;
         }
 
-        // Apply cooldown
-        fightPearlService.markDelay(playerId);
-        int cooldownTicks = (int) (settings.pearlThrowDelay.toMillis() / 50);
+        this.fightPearlService.markDelay(playerId);
+        int cooldownTicks = (int) (this.settings.pearlThrowDelay.toMillis() / 50);
         player.setCooldown(Material.ENDER_PEARL, cooldownTicks);
-    }
-
-    private boolean isPearlRightClick(PlayerInteractEvent event) {
-        ItemStack item = event.getItem();
-        if (item == null || item.getType() != Material.ENDER_PEARL) {
-            return false;
-        }
-
-        Action action = event.getAction();
-        return action == Action.RIGHT_CLICK_AIR || action == Action.RIGHT_CLICK_BLOCK;
     }
 }
