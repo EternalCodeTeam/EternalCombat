@@ -181,7 +181,7 @@ public final class CombatPlugin extends JavaPlugin implements EternalCombatApi {
         eventManager.subscribe(
             PlayerDeathEvent.class,
             pluginConfig.drop.dropEventPriority,
-            new DropController(dropService, dropKeepInventoryService, pluginConfig.drop, fightManager)
+            new DropController(dropService, dropKeepInventoryService, pluginConfig.drop, fightManager, miniMessage)
         );
 
         eventManager.subscribe(

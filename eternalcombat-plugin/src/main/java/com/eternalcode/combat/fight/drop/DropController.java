@@ -2,11 +2,15 @@ package com.eternalcode.combat.fight.drop;
 
 import com.eternalcode.combat.event.DynamicListener;
 import com.eternalcode.combat.fight.FightManager;
+import com.eternalcode.commons.adventure.AdventureUtil;
+import net.kyori.adventure.text.minimessage.MiniMessage;
 import org.bukkit.Material;
+import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.player.PlayerRespawnEvent;
+import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
 import org.bukkit.inventory.meta.SkullMeta;
@@ -21,12 +25,19 @@ public class DropController implements DynamicListener<PlayerDeathEvent> {
     private final DropKeepInventoryService keepInventoryManager;
     private final DropSettings dropSettings;
     private final FightManager fightManager;
+    private final MiniMessage miniMessage;
 
-    public DropController(DropService dropService, DropKeepInventoryService keepInventoryManager, DropSettings dropSettings, FightManager fightManager) {
+    public DropController(
+        DropService dropService,
+        DropKeepInventoryService keepInventoryManager,
+        DropSettings dropSettings,
+        FightManager fightManager, MiniMessage miniMessage
+    ) {
         this.dropService = dropService;
         this.keepInventoryManager = keepInventoryManager;
         this.dropSettings = dropSettings;
         this.fightManager = fightManager;
+        this.miniMessage = miniMessage;
     }
 
     @Override
@@ -65,16 +76,20 @@ public class DropController implements DynamicListener<PlayerDeathEvent> {
         this.keepInventoryManager.addItems(uuid, result.removedItems());
 
         if (this.dropSettings.affectExperience) {
-            event.setDroppedExp(drop.getDroppedExp());
+            event.setDroppedExp(result.droppedExp());
         }
     }
 
-    private boolean shouldHeadDrop(boolean isCombat) {
-        if (this.dropSettings.headDropOnlyInCombat && !isCombat) {
+    private boolean shouldHeadDrop(boolean inCombat) {
+        if (!this.dropSettings.headDropEnabled) {
             return false;
         }
 
-        if (!this.dropSettings.headDropEnabled || this.dropSettings.headDropChance <= 0.0) {
+        if (this.dropSettings.headDropOnlyInCombat && inCombat) {
+            return true;
+        }
+
+        if (this.dropSettings.headDropChance <= 0.0) {
             return false;
         }
 
@@ -91,14 +106,21 @@ public class DropController implements DynamicListener<PlayerDeathEvent> {
                 .replace("{KILLER}", killerName);
 
             meta.setOwningPlayer(player);
-            meta.setDisplayName(displayName);
+            meta.setDisplayName(AdventureUtil.SECTION_SERIALIZER.serialize(miniMessage.deserialize(displayName)));
 
             if (!this.dropSettings.headDropLore.isEmpty()) {
                 List<String> lore = this.dropSettings.headDropLore.stream()
-                    .map(line -> line.replace("{PLAYER}", player.getName()).replace("{KILLER}", killerName))
+                    .map(line -> line
+                        .replace("{PLAYER}", player.getName())
+                        .replace("{KILLER}", killerName))
+                    .map(line -> AdventureUtil.SECTION_SERIALIZER.serialize(miniMessage.deserialize(line)))
                     .toList();
+
                 meta.setLore(lore);
             }
+
+            meta.addEnchant(Enchantment.LURE, 1, true);
+            meta.addItemFlags(ItemFlag.HIDE_ENCHANTS);
 
             head.setItemMeta(meta);
         }

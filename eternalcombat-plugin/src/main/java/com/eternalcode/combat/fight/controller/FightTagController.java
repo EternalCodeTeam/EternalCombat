@@ -146,15 +146,17 @@ public class FightTagController implements Listener {
     }
 
     private boolean cannotBeTagged(Player player) {
-        boolean hasBypass = player.hasPermission("eternalcombat.bypass");
-        if (hasBypass) {
-            return true;
-        }
-        if (player.getGameMode().equals(GameMode.CREATIVE) && this.config.admin.excludeCreativePlayersFromCombat) {
+        if (this.config.admin.excludeAdminsFromCombat && player.hasPermission("eternalcombat.bypass")) {
             return true;
         }
 
-        return player.isOp() && this.config.admin.excludeAdminsFromCombat;
+        if (this.config.admin.excludeAdminsFromCombat && player.isOp()) {
+            return true;
+        }
+
+        return this.config.admin.excludeCreativePlayersFromCombat && player.getGameMode() == GameMode.CREATIVE;
     }
+
+
 
 }
