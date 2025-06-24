@@ -12,13 +12,18 @@ public class FightPearlSettings extends OkaeriConfig {
     @Comment({ "# Is pearl damage to be enabled?", "# This will work globally" })
     public boolean pearlThrowDamageEnabled = true;
 
-    @Comment("# Set true, If you want to lock pearls during the combat")
-    public boolean pearlThrowBlocked = false;
+    @Comment({
+        "# Set true, If you want to disable throwing pearls during combat",
+        "# This will work globally, but can be overridden by region settings"
+    })
+    public boolean pearlThrowDisabledDuringCombat = true;
+
+    @Comment("# Set true, If you want add cooldown to pearls")
+    public boolean pearlCooldownEnabled = false;
 
     @Comment({
         "# Block throwing pearls with delay?",
-        "# If you set this to for example 3s, player will have to wait 3 seconds before throwing another pearl",
-        "# Set to 0 to disable"
+        "# If you set this to for example 3s, player will have to wait 3 seconds before throwing another pearl"
     })
     public Duration pearlThrowDelay = Duration.ofSeconds(3);
 
