@@ -22,7 +22,7 @@ object Versions {
 
     const val GIT_CHECK = "1.0.0"
 
-    const val CAFFEINE = "3.2.0"
+    const val CAFFEINE = "3.2.1"
 
     const val B_STATS_BUKKIT = "3.1.0"
     const val WORLD_GUARD_BUKKIT = "7.0.9"
