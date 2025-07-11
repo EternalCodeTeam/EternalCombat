@@ -13,7 +13,7 @@
 
 ### Information
 
-EternalCombat 2.0 has been tested on Minecraft versions **1.17.1 to 1.21.4**, but it should work seamlessly on most
+EternalCombat 2.0 has been tested on Minecraft versions **1.17.1 to 1.21.5**, but it should work seamlessly on most
 other versions too.
 If you run into any compatibility issues, please let us know in
 the [Issues tab](https://github.com/EternalCodeTeam/EternalCombat/issues).
@@ -66,6 +66,7 @@ Control who can use EternalCombat’s powerful features with these permissions:
 | `eternalcombat.untag`          | Remove a player from combat with `/combatlog untag <player>`.            |
 | `eternalcombat.reload`         | Reload the plugin with `/combatlog reload`.                              |
 | `eternalcombat.receiveupdates` | Receive notifications about new plugin versions on join.                 |
+| `eternalcombat.bypass`         | Bypass combat tagging, need's `excludeAdminsFromCombat` to be enabled    |
 
 ## PlaceholderAPI
 
@@ -113,7 +114,7 @@ With Maven:
 With Gradle:
 
 ```kts
-compileOnly("com.eternalcode:eternalcombat-api:2.1.0")
+compileOnly("com.eternalcode:eternalcombat-api:2.1.1")
 ```
 
 With Maven:
@@ -123,7 +124,7 @@ With Maven:
 <dependency>
     <groupId>com.eternalcode</groupId>
     <artifactId>eternalcombat-api</artifactId>
-    <version>2.1.0</version>
+    <version>2.1.1</version>
     <scope>provided</scope>
 </dependency>
 ```
