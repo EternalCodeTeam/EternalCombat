@@ -43,10 +43,6 @@ public class EndCrystalListener implements Listener {
 
     @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
     void onDamage(EntityDamageByEntityEvent event) {
-        if (event.isCancelled()) {
-            return;
-        }
-
         if (!this.pluginConfig.crystalPvp.tagFromCrystals) {
             return;
         }

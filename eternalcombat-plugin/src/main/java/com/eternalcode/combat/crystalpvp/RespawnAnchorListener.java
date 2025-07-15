@@ -75,10 +75,6 @@ public class RespawnAnchorListener implements Listener {
 
     @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
     void onAnchorExplosion(EntityDamageByBlockEvent event) {
-        if (event.isCancelled()) {
-            return;
-        }
-
         if (!this.pluginConfig.crystalPvp.tagFromRespawnAnchor) {
             return;
         }
