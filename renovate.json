@@ -2,51 +2,64 @@
     "$schema": "https://docs.renovatebot.com/renovate-schema.json",
     "dependencyDashboard": true,
     "extends": [
-        "config:base"
+        "config:recommended"
     ],
-    "groupName": "all dependencies",
-    "groupSlug": "all",
     "lockFileMaintenance": {
         "enabled": false
     },
-    "separateMajorMinor": true,
     "pruneStaleBranches": true,
     "commitMessagePrefix": "dependency:",
+    "separateMinorPatch": true,
+    "separateMultipleMajor": true,
     "packageRules": [
         {
-            "groupName": "patch",
-            "matchPackagePatterns": [
-                "*"
+            "matchUpdateTypes": [
+                "patch"
             ],
-            "excludePackagePatterns": ["org.spigotmc*"],
-            "updateTypes": ["patch"],
-            "automerge": true
+            "automerge": true,
+            "labels": [
+                "🔄 dependencies"
+            ],
+            "matchPackageNames": [
+                "*",
+                "!/org.spigotmc*/"
+            ]
         },
         {
-            "groupName": "minor",
-            "matchPackagePatterns": [
-                "*"
+            "matchUpdateTypes": [
+                "minor"
             ],
-            "excludePackagePatterns": ["org.spigotmc*"],
-            "updateTypes": ["minor"],
-            "automerge": true
+            "automerge": true,
+            "labels": [
+                "🔄 dependencies"
+            ],
+            "matchPackageNames": [
+                "*",
+                "!/org.spigotmc*/"
+            ]
         },
         {
-            "groupName": "all-major",
-            "matchPackagePatterns": [
-                "*"
+            "matchUpdateTypes": [
+                "major"
             ],
-            "updateTypes": ["major"],
-            "excludePackagePatterns": ["org.spigotmc*"],
-            "automerge": false
+            "automerge": false,
+            "labels": [
+                "🔄 dependencies"
+            ],
+            "matchPackageNames": [
+                "*",
+                "!/org.spigotmc*/"
+            ]
         },
         {
-            "groupName": "spigotmc",
-            "matchPackagePatterns": [
-                "org.spigotmc*"
-            ],
             "allowedVersions": "/^\\d+\\.\\d+(\\.\\d+)?-R\\d+\\.\\d+-SNAPSHOT$/",
-            "automerge": false
+            "automerge": false,
+            "labels": [
+                "🔄 dependencies"
+            ],
+            "matchPackageNames": [
+                "/org.spigotmc*/"
+            ]
         }
     ]
 }

@@ -18,10 +18,12 @@ import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.EntityToggleGlideEvent;
 import org.bukkit.event.inventory.InventoryOpenEvent;
 import org.bukkit.event.player.PlayerCommandPreprocessEvent;
+import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.event.player.PlayerToggleFlightEvent;
 
 import java.util.List;
 import java.util.UUID;
+import org.bukkit.util.StringUtil;
 
 public class FightActionBlockerController implements Listener {
 
@@ -110,6 +112,26 @@ public class FightActionBlockerController implements Listener {
     }
 
     @EventHandler
+    void onMoveWhileGliding(PlayerMoveEvent event) {
+        if (!this.config.combat.disableElytraUsage) {
+            return;
+        }
+
+        Player player = event.getPlayer();
+        UUID uniqueId = player.getUniqueId();
+
+        if (!this.fightManager.isInCombat(uniqueId)) {
+            return;
+        }
+
+        if (player.isGliding()) {
+            player.setGliding(false);
+        }
+    }
+
+
+
+    @EventHandler
     void onFly(PlayerToggleFlightEvent event) {
         if (!this.config.combat.disableFlying) {
             return;
@@ -194,14 +216,14 @@ public class FightActionBlockerController implements Listener {
             return;
         }
 
-        String command = event.getMessage().split(" ")[0].substring(1).toLowerCase();
+        String command = event.getMessage().substring(1);
 
-        boolean isMatchCommand = this.config.commands.restrictedCommands.stream()
-            .anyMatch(command::startsWith);
+        boolean isAnyMatch = this.config.commands.restrictedCommands.stream()
+            .anyMatch(restrictedCommand -> StringUtil.startsWithIgnoreCase(command, restrictedCommand));
 
         WhitelistBlacklistMode mode = this.config.commands.commandRestrictionMode;
 
-        boolean shouldCancel = mode.shouldBlock(isMatchCommand);
+        boolean shouldCancel = mode.shouldBlock(isAnyMatch);
 
         if (shouldCancel) {
             event.setCancelled(true);

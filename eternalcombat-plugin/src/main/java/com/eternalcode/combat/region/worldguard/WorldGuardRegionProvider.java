@@ -1,8 +1,9 @@
-package com.eternalcode.combat.region;
+package com.eternalcode.combat.region.worldguard;
 
 import com.eternalcode.combat.config.implementation.PluginConfig;
+import com.eternalcode.combat.region.Region;
+import com.eternalcode.combat.region.RegionProvider;
 import com.sk89q.worldedit.bukkit.BukkitAdapter;
-import com.sk89q.worldedit.math.BlockVector3;
 import com.sk89q.worldguard.WorldGuard;
 import com.sk89q.worldguard.protection.ApplicableRegionSet;
 import com.sk89q.worldguard.protection.flags.Flags;
@@ -13,12 +14,13 @@ import com.sk89q.worldguard.protection.regions.RegionContainer;
 import com.sk89q.worldguard.protection.regions.RegionQuery;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.Optional;
 import java.util.TreeSet;
 import org.bukkit.Location;
 
-import java.util.List;
 import org.bukkit.World;
+import org.jetbrains.annotations.Nullable;
 
 public class WorldGuardRegionProvider implements RegionProvider {
 
@@ -26,8 +28,8 @@ public class WorldGuardRegionProvider implements RegionProvider {
     private final TreeSet<String> regions = new TreeSet<>(String.CASE_INSENSITIVE_ORDER);
     private final PluginConfig pluginConfig;
 
-    public WorldGuardRegionProvider(List<String> regions, PluginConfig pluginConfig) {
-        this.regions.addAll(regions);
+    public WorldGuardRegionProvider(PluginConfig pluginConfig) {
+        this.regions.addAll(pluginConfig.regions.blockedRegions);
         this.pluginConfig = pluginConfig;
     }
 
@@ -36,12 +38,14 @@ public class WorldGuardRegionProvider implements RegionProvider {
         RegionQuery regionQuery = this.regionContainer.createQuery();
         ApplicableRegionSet applicableRegions = regionQuery.getApplicableRegions(BukkitAdapter.adapt(location));
 
-        for (ProtectedRegion region : applicableRegions.getRegions()) {
-            if (!this.isCombatRegion(region)) {
-                continue;
-            }
+        ProtectedRegion highestPriorityRegion = this.highestPriorityRegion(applicableRegions);
 
-            return Optional.of(new WorldGuardRegion(location.getWorld(), region));
+        if (highestPriorityRegion == null) {
+            return Optional.empty();
+        }
+
+        if (this.isCombatRegion(highestPriorityRegion)) {
+            return Optional.of(new WorldGuardRegion(location.getWorld(), highestPriorityRegion));
         }
 
         return Optional.empty();
@@ -78,30 +82,11 @@ public class WorldGuardRegionProvider implements RegionProvider {
         return false;
     }
 
-    private record WorldGuardRegion(World context, ProtectedRegion region) implements Region {
-        @Override
-        public Location getCenter() {
-            BlockVector3 min = this.region.getMinimumPoint();
-            BlockVector3 max = this.region.getMaximumPoint();
-
-            double x = (double) (min.getX() + max.getX()) / 2;
-            double z = (double) (min.getZ() + max.getZ()) / 2;
-            double y = (double) (min.getY() + max.getY()) / 2;
-
-            return new Location(this.context, x, y, z);
-        }
-
-        @Override
-        public Location getMin() {
-            BlockVector3 min = this.region.getMinimumPoint();
-            return new Location(this.context, min.getX(), min.getY(), min.getZ());
-        }
-
-        @Override
-        public Location getMax() {
-            BlockVector3 max = this.region.getMaximumPoint();
-            return new Location(this.context, max.getX(), max.getY(), max.getZ());
-        }
+    @Nullable
+    private ProtectedRegion highestPriorityRegion(ApplicableRegionSet applicableRegions) {
+        return applicableRegions.getRegions().stream()
+            .min(Comparator.comparingInt(ProtectedRegion::getPriority))
+            .orElse(null);
     }
 
 }

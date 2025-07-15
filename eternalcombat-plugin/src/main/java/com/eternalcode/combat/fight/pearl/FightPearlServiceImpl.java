@@ -10,32 +10,41 @@ import java.util.UUID;
 public class FightPearlServiceImpl implements FightPearlService {
 
     private final FightPearlSettings pearlSettings;
-    private final Cache<UUID, Instant> pearlDelays;
+    private final Cache<UUID, Instant> pearlStartTimes;
 
     public FightPearlServiceImpl(FightPearlSettings pearlSettings) {
         this.pearlSettings = pearlSettings;
-        this.pearlDelays = Caffeine.newBuilder()
+        this.pearlStartTimes = Caffeine.newBuilder()
             .expireAfterWrite(pearlSettings.pearlThrowDelay)
             .build();
     }
 
     @Override
     public void markDelay(UUID uuid) {
-        this.pearlDelays.put(uuid, Instant.now().plus(this.pearlSettings.pearlThrowDelay));
+        this.pearlStartTimes.put(uuid, Instant.now());
     }
 
     @Override
     public boolean hasDelay(UUID uuid) {
-        return Instant.now().isBefore(this.getDelay(uuid));
+        return this.pearlStartTimes.getIfPresent(uuid) != null;
     }
 
     @Override
     public Duration getRemainingDelay(UUID uuid) {
-        return Duration.between(Instant.now(), this.getDelay(uuid));
+        Instant startTime = this.pearlStartTimes.getIfPresent(uuid);
+        if (startTime == null) {
+            return Duration.ZERO;
+        }
+
+        Duration elapsed = Duration.between(startTime, Instant.now());
+        Duration remaining = this.pearlSettings.pearlThrowDelay.minus(elapsed);
+
+        return remaining.isNegative() ? Duration.ZERO : remaining;
     }
 
     @Override
     public Instant getDelay(UUID uuid) {
-        return this.pearlDelays.asMap().getOrDefault(uuid, Instant.MIN);
+        Instant startTime = this.pearlStartTimes.getIfPresent(uuid);
+        return startTime != null ? startTime.plus(this.pearlSettings.pearlThrowDelay) : Instant.MIN;
     }
 }
