@@ -73,7 +73,8 @@ public class PluginConfig extends OkaeriConfig {
 
     @Comment({
         " ",
-
+        "# Settings related to crystal PvP.",
+        "# Configure behaviors, restrictions, and features specific to crystal PvP combat."
     })
     public CrystalPvpSettings crystalPvp = new CrystalPvpSettings();
 

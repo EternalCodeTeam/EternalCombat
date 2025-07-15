@@ -48,37 +48,42 @@ public class RespawnAnchorListener implements Listener {
                 if (respawnAnchor.getCharges() > 0 && event.getAction().equals(Action.RIGHT_CLICK_BLOCK)) {
                     ItemStack item = event.getItem();
                     if (item == null) {
-                        block.setMetadata(
-                            ANCHOR_METADATA,
-                            new CrystalMetadata(this.plugin, event.getPlayer().getUniqueId())
-                        );
+                        addMetaData(event, block);
                         return;
                     }
 
                     if (item.getType() != Material.GLOWSTONE) {
-                        block.setMetadata(
-                            ANCHOR_METADATA,
-                            new CrystalMetadata(this.plugin, event.getPlayer().getUniqueId())
-                        );
+                        addMetaData(event, block);
                         return;
                     }
                 }
 
-                if (respawnAnchor.getCharges() == respawnAnchor.getMaximumCharges() && event
-                    .getAction()
-                    .equals(Action.RIGHT_CLICK_BLOCK)) {
-                    block.setMetadata(
-                        ANCHOR_METADATA,
-                        new CrystalMetadata(this.plugin, event.getPlayer().getUniqueId())
-                    );
+                if (respawnAnchor.getCharges() == respawnAnchor.getMaximumCharges()
+                    && event.getAction().equals(Action.RIGHT_CLICK_BLOCK)) {
+                    addMetaData(event, block);
                 }
             }
         }
     }
 
+    private void addMetaData(PlayerInteractEvent event, Block block) {
+        block.setMetadata(
+            ANCHOR_METADATA,
+            new CrystalMetadata(this.plugin, event.getPlayer().getUniqueId())
+        );
+    }
+
     @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
     void onAnchorExplosion(EntityDamageByBlockEvent event) {
+        if (event.isCancelled()) {
+            return;
+        }
+
         if (!this.pluginConfig.crystalPvp.tagFromRespawnAnchor) {
+            return;
+        }
+
+        if (pluginConfig.settings.ignoredWorlds.contains(event.getEntity().getWorld().getName())) {
             return;
         }
 
@@ -86,7 +91,7 @@ public class RespawnAnchorListener implements Listener {
             return;
         }
 
-        Optional<UUID> optionalDamagerUniqueId = CrystalPvpConstants.getDamagerUUIDFromRespawnAnchor(event);
+        Optional<UUID> optionalDamagerUniqueId = CrystalPvpConstants.getDamagerUniqueIdFromRespawnAnchor(event);
 
         if (optionalDamagerUniqueId.isEmpty()) {
             return;

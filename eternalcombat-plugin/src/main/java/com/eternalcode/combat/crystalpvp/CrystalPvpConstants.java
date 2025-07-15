@@ -23,7 +23,7 @@ public class CrystalPvpConstants {
     public static final String CRYSTAL_METADATA = "eternalcombat:crystal";
     public static final String ANCHOR_METADATA = "eternalcombat:anchor";
 
-    public static Optional<UUID> getDamagerUUIDFromEndCrystal(EntityDamageByEntityEvent event) {
+    public static Optional<UUID> getDamagerUniqueIdFromEndCrystal(EntityDamageByEntityEvent event) {
         if (event.getDamager() instanceof EnderCrystal enderCrystal) {
             List<MetadataValue> metadataValues = enderCrystal.getMetadata(CRYSTAL_METADATA);
             return metadataValues
@@ -36,7 +36,7 @@ public class CrystalPvpConstants {
         return Optional.empty();
     }
 
-    public static Optional<UUID> getDamagerUUIDFromRespawnAnchor(EntityDamageByBlockEvent event) {
+    public static Optional<UUID> getDamagerUniqueIdFromRespawnAnchor(EntityDamageByBlockEvent event) {
         if (!CrystalPvpConstants.hasDamagerBlockState()) {
             return Optional.empty();
         }

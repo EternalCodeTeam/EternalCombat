@@ -43,18 +43,31 @@ public class EndCrystalListener implements Listener {
 
     @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
     void onDamage(EntityDamageByEntityEvent event) {
+        if (event.isCancelled()) {
+            return;
+        }
+
         if (!this.pluginConfig.crystalPvp.tagFromCrystals) {
             return;
         }
 
-        Optional<UUID> optionalDamagerUUID = CrystalPvpConstants.getDamagerUUIDFromEndCrystal(event);
+        if (pluginConfig.settings.ignoredWorlds.contains(event.getEntity().getWorld().getName())) {
+            return;
+        }
+
+        Optional<UUID> optionalDamagerUUID = CrystalPvpConstants.getDamagerUniqueIdFromEndCrystal(event);
 
         if (optionalDamagerUUID.isEmpty()) {
             return;
         }
 
         if (event.getEntity() instanceof Player player) {
-            CrystalPvpConstants.handleCombatTag(optionalDamagerUUID, player, this.fightManager, this.pluginConfig);
+            CrystalPvpConstants.handleCombatTag(
+                optionalDamagerUUID,
+                player,
+                this.fightManager,
+                this.pluginConfig
+            );
         }
     }
 

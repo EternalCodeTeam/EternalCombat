@@ -74,11 +74,11 @@ public class FightUnTagController implements Listener {
         EntityDamageEvent lastDamageCause = player.getLastDamageCause();
 
         if (lastDamageCause instanceof EntityDamageByBlockEvent damageByBlockEvent) {
-            return CrystalPvpConstants.getDamagerUUIDFromRespawnAnchor(damageByBlockEvent);
+            return CrystalPvpConstants.getDamagerUniqueIdFromRespawnAnchor(damageByBlockEvent);
         }
 
         if (lastDamageCause instanceof EntityDamageByEntityEvent damageByEntityEvent) {
-            return CrystalPvpConstants.getDamagerUUIDFromEndCrystal(damageByEntityEvent);
+            return CrystalPvpConstants.getDamagerUniqueIdFromEndCrystal(damageByEntityEvent);
         }
 
         return Optional.empty();
