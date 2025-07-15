@@ -23,6 +23,20 @@ public class CrystalPvpConstants {
     public static final String CRYSTAL_METADATA = "eternalcombat:crystal";
     public static final String ANCHOR_METADATA = "eternalcombat:anchor";
 
+    private static final boolean HAS_DAMAGER_BLOCK_STATE = checkForDamagerBlockState();
+
+    private static boolean checkForDamagerBlockState() {
+        try {
+            return EntityDamageByBlockEvent.class.getDeclaredMethod("getDamagerBlockState") != null;
+        } catch (NoSuchMethodException e) {
+            return false;
+        }
+    }
+
+    static boolean hasDamagerBlockState() {
+        return HAS_DAMAGER_BLOCK_STATE;
+    }
+
     public static Optional<UUID> getDamagerUniqueIdFromEndCrystal(EntityDamageByEntityEvent event) {
         if (event.getDamager() instanceof EnderCrystal enderCrystal) {
             List<MetadataValue> metadataValues = enderCrystal.getMetadata(CRYSTAL_METADATA);
@@ -55,17 +69,6 @@ public class CrystalPvpConstants {
             .map(meta -> (CrystalMetadata) meta)
             .findFirst()
             .flatMap(metadata -> metadata.getDamager());
-    }
-
-    static boolean hasDamagerBlockState() {
-        boolean hasMethod = false;
-        try {
-            hasMethod = EntityDamageByBlockEvent.class.getDeclaredMethod("getDamagerBlockState") != null;
-        }
-        catch (NoSuchMethodException e) {
-            // Method does not exist
-        }
-        return hasMethod;
     }
 
     static void handleCombatTag(
