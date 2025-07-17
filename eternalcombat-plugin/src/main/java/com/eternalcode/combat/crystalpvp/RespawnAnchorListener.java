@@ -34,35 +34,25 @@ public class RespawnAnchorListener implements Listener {
     @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
     void onAnchorInteract(PlayerInteractEvent event) {
         Block block = event.getClickedBlock();
-        if (block == null) {
+        if (block == null || block.getType() != Material.RESPAWN_ANCHOR) {
             return;
         }
 
-        Material type = block.getType();
-        if (type == null) {
+        if (!(block.getBlockData() instanceof RespawnAnchor respawnAnchor)) {
             return;
         }
 
-        if (type.equals(Material.RESPAWN_ANCHOR)) {
-            if (block.getBlockData() instanceof RespawnAnchor respawnAnchor) {
-                if (respawnAnchor.getCharges() > 0 && event.getAction().equals(Action.RIGHT_CLICK_BLOCK)) {
-                    ItemStack item = event.getItem();
-                    if (item == null) {
-                        addMetaData(event, block);
-                        return;
-                    }
+        if (event.getAction() != Action.RIGHT_CLICK_BLOCK) {
+            return;
+        }
 
-                    if (item.getType() != Material.GLOWSTONE) {
-                        addMetaData(event, block);
-                        return;
-                    }
-                }
+        int charges = respawnAnchor.getCharges();
 
-                if (respawnAnchor.getCharges() == respawnAnchor.getMaximumCharges()
-                    && event.getAction().equals(Action.RIGHT_CLICK_BLOCK)) {
-                    addMetaData(event, block);
-                }
-            }
+        ItemStack item = event.getItem();
+        boolean isGlowstone = item != null && item.getType() == Material.GLOWSTONE;
+
+        if ((charges > 0 && !isGlowstone) || charges == respawnAnchor.getMaximumCharges()) {
+            addMetaData(event, block);
         }
     }
 

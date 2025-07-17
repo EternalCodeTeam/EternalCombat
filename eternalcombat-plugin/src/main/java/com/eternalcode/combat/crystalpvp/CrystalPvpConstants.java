@@ -28,7 +28,8 @@ public class CrystalPvpConstants {
     private static boolean checkForDamagerBlockState() {
         try {
             return EntityDamageByBlockEvent.class.getDeclaredMethod("getDamagerBlockState") != null;
-        } catch (NoSuchMethodException e) {
+        }
+        catch (NoSuchMethodException e) {
             return false;
         }
     }
