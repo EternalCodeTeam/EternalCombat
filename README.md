@@ -27,6 +27,11 @@ Install EternalCombat and dive in now!
 Take your server’s PvP experience to epic heights with **EternalCombat 2.0**! Our robust combat logging system ensures
 fair, heart-pounding battles that keep players on their toes. Here’s a rundown of what makes it stand out:
 
+- **Crystal PvP support**  
+  Engage in intense Crystal PvP battles without worrying about players logging out mid-fight! EternalCombat keeps
+  everyone in the game until the last anchor hit. Check it out:  
+  ![](/assets/crystals.gif)
+
 - **Combat Logging**  
   No more dodging fights by logging out! Once players are in combat, they’re committed until the showdown ends. Watch it
   in action:  
