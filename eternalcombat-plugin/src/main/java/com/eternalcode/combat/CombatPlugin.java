@@ -6,6 +6,8 @@ import com.eternalcode.combat.border.BorderServiceImpl;
 import com.eternalcode.combat.border.animation.block.BorderBlockController;
 import com.eternalcode.combat.border.animation.particle.ParticleController;
 import com.eternalcode.combat.bridge.BridgeService;
+import com.eternalcode.combat.crystalpvp.RespawnAnchorListener;
+import com.eternalcode.combat.crystalpvp.EndCrystalListener;
 import com.eternalcode.combat.fight.drop.DropKeepInventoryService;
 import com.eternalcode.combat.fight.FightManager;
 import com.eternalcode.combat.fight.drop.DropService;
@@ -175,7 +177,9 @@ public final class CombatPlugin extends JavaPlugin implements EternalCombatApi {
             new FightMessageController(this.fightManager, noticeService, pluginConfig, this.getServer()),
             new BorderTriggerController(borderService, () -> pluginConfig.border, fightManager, server),
             new ParticleController(borderService, () -> pluginConfig.border.particle, scheduler, server),
-            new BorderBlockController(borderService, () -> pluginConfig.border.block, scheduler, server)
+            new BorderBlockController(borderService, () -> pluginConfig.border.block, scheduler, server),
+            new EndCrystalListener(this, this.fightManager, pluginConfig),
+            new RespawnAnchorListener(this, this.fightManager, pluginConfig)
         );
 
         eventManager.subscribe(
