@@ -1,6 +1,6 @@
 <div align="center">
 
-![](/assets/readme-banner.png)
+![Readme banner](/assets/readme-banner.png)
 
 [![Available on SpigotMC](https://raw.githubusercontent.com/vLuckyyy/badges/main/available-on-spigotmc.svg)](https://www.spigotmc.org/resources/eternalcombat-%E2%9C%94%EF%B8%8F-enchance-your-combat-system-with-eternalcombat.109056/)
 [![Available on Modrinth](https://raw.githubusercontent.com/vLuckyyy/badges/main/avaiable-on-modrinth.svg)](https://modrinth.com/plugin/eternalcombat)
@@ -34,17 +34,17 @@ fair, heart-pounding battles that keep players on their toes. Here’s a rundown
 - **Combat Logging**  
   No more dodging fights by logging out! Once players are in combat, they’re committed until the showdown ends. Watch it
   in action:  
-  ![](/assets/combatlog.gif)
+  ![Combat log anti logout feature](/assets/combatlog.gif)
 
 - **Spawn Protection (Configurable)**  
   Stop players from fleeing to safety! Block access to spawn or safe zones during combat – tweak it to fit your server’s
   rules. See how it works:  
-  ![](/assets/border.gif)
+  ![Border around protected region](/assets/border.gif)
 
 - **Crystal PvP support**  
   Engage in intense Crystal PvP battles without worrying about players logging out mid-fight! EternalCombat keeps
   everyone in the game until the last anchor hit. Check it out:  
-  ![](/assets/crystals.gif)
+  ![Crystal PvP showcase](/assets/crystals.gif)
 
 - **Fully Customizable Combat**  
   Tailor the combat experience to your liking with a ton of options! From disabling elytra to setting drop rates for
