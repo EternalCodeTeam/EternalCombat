@@ -6,20 +6,11 @@ import com.eternalcode.combat.border.BorderTriggerController;
 import com.eternalcode.combat.border.animation.block.BorderBlockController;
 import com.eternalcode.combat.border.animation.particle.ParticleController;
 import com.eternalcode.combat.bridge.BridgeService;
-import com.eternalcode.combat.crystalpvp.RespawnAnchorListener;
-import com.eternalcode.combat.crystalpvp.EndCrystalListener;
-import com.eternalcode.combat.fight.drop.DropKeepInventoryService;
-import com.eternalcode.combat.fight.FightManager;
-import com.eternalcode.combat.fight.drop.DropService;
-import com.eternalcode.combat.fight.effect.FightEffectService;
-import com.eternalcode.combat.fight.knockback.KnockbackService;
-import com.eternalcode.combat.fight.tagout.FightTagOutService;
-import com.eternalcode.combat.fight.pearl.FightPearlService;
-import com.eternalcode.combat.handler.InvalidUsageHandlerImpl;
-import com.eternalcode.combat.handler.MissingPermissionHandlerImpl;
 import com.eternalcode.combat.config.ConfigService;
 import com.eternalcode.combat.config.implementation.PluginConfig;
-import com.eternalcode.combat.event.EventCaller;
+import com.eternalcode.combat.crystalpvp.EndCrystalListener;
+import com.eternalcode.combat.crystalpvp.RespawnAnchorListener;
+import com.eternalcode.combat.event.EventManager;
 import com.eternalcode.combat.fight.FightManager;
 import com.eternalcode.combat.fight.FightManagerImpl;
 import com.eternalcode.combat.fight.FightTagCommand;
@@ -38,9 +29,6 @@ import com.eternalcode.combat.fight.drop.impl.PercentDropModifier;
 import com.eternalcode.combat.fight.drop.impl.PlayersHealthDropModifier;
 import com.eternalcode.combat.fight.effect.FightEffectController;
 import com.eternalcode.combat.fight.effect.FightEffectService;
-import com.eternalcode.combat.event.EventManager;
-import com.eternalcode.combat.fight.FightManagerImpl;
-import com.eternalcode.combat.fight.FightTask;
 import com.eternalcode.combat.fight.effect.FightEffectServiceImpl;
 import com.eternalcode.combat.fight.knockback.KnockbackRegionController;
 import com.eternalcode.combat.fight.knockback.KnockbackService;
@@ -212,7 +200,7 @@ public final class CombatPlugin extends JavaPlugin implements EternalCombatApi {
             this.dropService = new DropServiceImpl();
             this.dropKeepInventoryService = new DropKeepInventoryServiceImpl();
             Bukkit.getPluginManager().registerEvents(new DropController(this.dropService,
-                this.dropKeepInventoryService, pluginConfig.drop, this.fightManager), this);
+                this.dropKeepInventoryService, pluginConfig.drop, this.fightManager, miniMessage), this);
 
             Stream.of(
                 new PercentDropModifier(pluginConfig.drop),
