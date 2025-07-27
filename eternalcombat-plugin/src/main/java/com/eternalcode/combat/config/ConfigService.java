@@ -12,9 +12,9 @@ import eu.okaeri.configs.OkaeriConfig;
 import eu.okaeri.configs.serdes.OkaeriSerdesPack;
 import eu.okaeri.configs.serdes.SerdesRegistry;
 import eu.okaeri.configs.serdes.commons.SerdesCommons;
-import eu.okaeri.configs.yaml.bukkit.YamlBukkitConfigurer;
 import eu.okaeri.configs.yaml.bukkit.serdes.SerdesBukkit;
 
+import eu.okaeri.configs.yaml.snakeyaml.YamlSnakeYamlConfigurer;
 import java.io.File;
 import java.util.HashSet;
 import java.util.Set;
@@ -26,11 +26,11 @@ public class ConfigService {
     public <T extends OkaeriConfig> T create(Class<T> config, File file) {
         T configFile = ConfigManager.create(config);
 
-        YamlBukkitConfigurer yamlBukkitConfigurer = new YamlBukkitConfigurer();
+        YamlSnakeYamlConfigurer configurer = new YamlSnakeYamlConfigurer();
         NoticeResolverRegistry noticeRegistry = NoticeResolverDefaults.createRegistry()
             .registerResolver(new SoundBukkitResolver());
 
-        configFile.withConfigurer(yamlBukkitConfigurer,
+        configFile.withConfigurer(configurer,
             new SerdesCommons(),
             new SerdesBukkit(),
             new MultificationSerdesPack(noticeRegistry),

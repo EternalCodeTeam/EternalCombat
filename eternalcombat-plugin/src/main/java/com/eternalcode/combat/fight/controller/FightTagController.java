@@ -31,6 +31,11 @@ public class FightTagController implements Listener {
 
     @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
     void onEntityDamageByEntity(EntityDamageByEntityEvent event) {
+        // Thorns are ignored because both users should be in combat from hitting each other
+        if (event.getCause().equals(EntityDamageEvent.DamageCause.THORNS)) {
+            return;
+        }
+
         if (!(event.getEntity() instanceof Player attackedPlayerByPerson)) {
             return;
         }
@@ -50,10 +55,6 @@ public class FightTagController implements Listener {
         if (attacker == null) {
             return;
         }
-
-        Duration combatTime = this.config.settings.combatTimerDuration;
-        UUID attackedUniqueId = attackedPlayerByPerson.getUniqueId();
-        UUID attackerUniqueId = attacker.getUniqueId();
 
         if (this.cannotBeTagged(attacker)) {
             return;
@@ -75,9 +76,14 @@ public class FightTagController implements Listener {
             }
         }
 
+        Duration combatTime = this.config.settings.combatTimerDuration;
+        UUID attackedUniqueId = attackedPlayerByPerson.getUniqueId();
+        UUID attackerUniqueId = attacker.getUniqueId();
+
         this.fightManager.tag(attackedUniqueId, combatTime, CauseOfTag.PLAYER, attackerUniqueId);
         this.fightManager.tag(attackerUniqueId, combatTime, CauseOfTag.PLAYER, attackedUniqueId);
     }
+
 
     @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
     void onEntityDamage(EntityDamageEvent event) {
@@ -97,8 +103,12 @@ public class FightTagController implements Listener {
             return;
         }
 
-        Duration combatTime = this.config.settings.combatTimerDuration;
+        boolean hasBypass = player.hasPermission("eternalcombat.bypass");
+        if (hasBypass) {
+            return;
+        }
 
+        Duration combatTime = this.config.settings.combatTimerDuration;
         UUID uuid = player.getUniqueId();
 
         List<EntityDamageEvent.DamageCause> damageCauses = this.config.combat.loggedDamageCauses;
@@ -114,6 +124,7 @@ public class FightTagController implements Listener {
 
         this.fightManager.tag(uuid, combatTime, CauseOfTag.NON_PLAYER);
     }
+
 
     @Nullable
     Player getDamager(EntityDamageByEntityEvent event) {
@@ -135,14 +146,17 @@ public class FightTagController implements Listener {
     }
 
     private boolean cannotBeTagged(Player player) {
-        if (player.getGameMode().equals(GameMode.CREATIVE) && this.config.admin.excludeCreativePlayersFromCombat) {
+        if (this.config.admin.excludeAdminsFromCombat && player.hasPermission("eternalcombat.bypass")) {
             return true;
         }
 
-        if (player.isOp() && this.config.admin.excludeAdminsFromCombat) {
+        if (this.config.admin.excludeAdminsFromCombat && player.isOp()) {
             return true;
         }
 
-        return false;
+        return this.config.admin.excludeCreativePlayersFromCombat && player.getGameMode() == GameMode.CREATIVE;
     }
+
+
+
 }

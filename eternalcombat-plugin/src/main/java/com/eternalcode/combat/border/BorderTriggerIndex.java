@@ -9,6 +9,7 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.function.Supplier;
 import org.bukkit.Location;
 import org.bukkit.Server;
 import org.bukkit.World;
@@ -18,11 +19,11 @@ class BorderTriggerIndex {
     private final Server server;
     private final Scheduler scheduler;
     private final RegionProvider provider;
-    private final BorderSettings settings;
+    private final Supplier<BorderSettings> settings;
 
     private final Map<String, BorderTriggerIndexBucket> borderIndexes = new HashMap<>();
 
-    private BorderTriggerIndex(Server server, Scheduler scheduler, RegionProvider provider, BorderSettings settings) {
+    private BorderTriggerIndex(Server server, Scheduler scheduler, RegionProvider provider, Supplier<BorderSettings> settings) {
         this.server = server;
         this.scheduler = scheduler;
         this.provider = provider;
@@ -36,7 +37,8 @@ class BorderTriggerIndex {
     }
 
     private void updateWorld(String world, Collection<Region> regions) {
-        this.scheduler.async(() -> {
+        this.scheduler.runAsync(() -> {
+            int distanceRounded = settings.get().distanceRounded();
             List<BorderTrigger> triggers = new ArrayList<>();
             for (Region region : regions) {
                 Location min = region.getMin();
@@ -45,7 +47,7 @@ class BorderTriggerIndex {
                 triggers.add(new BorderTrigger(
                     min.getBlockX(), min.getBlockY(), min.getBlockZ(),
                     max.getBlockX() + 1, max.getBlockY() + 1, max.getBlockZ() + 1,
-                    settings.distanceRounded()
+                    distanceRounded
                 ));
             }
 
@@ -54,9 +56,9 @@ class BorderTriggerIndex {
         });
     }
 
-    static BorderTriggerIndex started(Server server, Scheduler scheduler, RegionProvider provider, BorderSettings settings) {
+    static BorderTriggerIndex started(Server server, Scheduler scheduler, RegionProvider provider, Supplier<BorderSettings> settings) {
         BorderTriggerIndex index = new BorderTriggerIndex(server, scheduler, provider, settings);
-        scheduler.timerSync(() -> index.updateWorlds(), Duration.ZERO, settings.indexRefreshDelay());
+        scheduler.timerAsync(() -> index.updateWorlds(), Duration.ZERO, settings.get().indexRefreshDelay());
         return index;
     }
 

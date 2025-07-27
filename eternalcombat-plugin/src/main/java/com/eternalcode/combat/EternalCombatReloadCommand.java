@@ -22,11 +22,11 @@ public class EternalCombatReloadCommand {
         .build();
 
     private final ConfigService configService;
-    private final NoticeService announcer;
+    private final NoticeService noticeService;
 
-    public EternalCombatReloadCommand(ConfigService configService, NoticeService announcer) {
+    public EternalCombatReloadCommand(ConfigService configService, NoticeService noticeService) {
         this.configService = configService;
-        this.announcer = announcer;
+        this.noticeService = noticeService;
     }
 
     @Async
@@ -36,7 +36,7 @@ public class EternalCombatReloadCommand {
         this.configService.reload();
 
         Duration elapsed = stopwatch.elapsed();
-        this.announcer.create()
+        this.noticeService.create()
             .viewer(sender)
             .notice(RELOAD_MESSAGE)
             .placeholder("{TIME}", String.valueOf(elapsed.toMillis()))
