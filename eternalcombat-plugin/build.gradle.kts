@@ -1,9 +1,11 @@
+import net.minecrell.pluginyml.bukkit.BukkitPluginDescription
+
 plugins {
     `eternalcombat-java`
     `eternalcombat-repositories`
 
     id("net.minecrell.plugin-yml.bukkit")
-    id("io.github.goooler.shadow")
+    id("com.gradleup.shadow")
     id("xyz.jpenilla.run-paper")
 }
 
@@ -23,18 +25,11 @@ dependencies {
     implementation("dev.rollczi:litecommands-bukkit:${Versions.LITE_COMMANDS}")
 
     // Okaeri configs
-    implementation("eu.okaeri:okaeri-configs-yaml-bukkit:${Versions.OKAERI_CONFIGS_YAML_BUKKIT}")
     implementation("eu.okaeri:okaeri-configs-serdes-commons:${Versions.OKAERI_CONFIGS_SERDES_COMMONS}")
     implementation("eu.okaeri:okaeri-configs-serdes-bukkit:${Versions.OKAERI_CONFIGS_SERDES_BUKKIT}")
 
-    // Panda utilities
-    implementation("org.panda-lang:panda-utilities:${Versions.PANDA_UTILITIES}")
-
     // GitCheck
     implementation("com.eternalcode:gitcheck:${Versions.GIT_CHECK}")
-
-    // commons
-    implementation("commons-io:commons-io:${Versions.APACHE_COMMONS}")
 
     // bstats
     implementation("org.bstats:bstats-bukkit:${Versions.B_STATS_BUKKIT}")
@@ -50,11 +45,14 @@ dependencies {
 
     // PlaceholderAPI
     compileOnly("me.clip:placeholderapi:${Versions.PLACEHOLDER_API}")
+    
+    // Lands
+    compileOnly("com.github.angeschossen:LandsAPI:7.15.20")
 
     // Multification
     implementation("com.eternalcode:multification-bukkit:${Versions.MULTIFICATION}")
     implementation("com.eternalcode:multification-okaeri:${Versions.MULTIFICATION}")
-    implementation("com.github.retrooper:packetevents-spigot:${Versions.PACKETS_EVENTS}")
+    compileOnly("com.github.retrooper:packetevents-spigot:${Versions.PACKETS_EVENTS}")
     implementation("io.papermc:paperlib:${Versions.PAPERLIB}")
 }
 
@@ -64,45 +62,49 @@ bukkit {
     apiVersion = "1.13"
     prefix = "EternalCombat"
     name = "EternalCombat"
-    softDepend = listOf("WorldGuard", "PlaceholderAPI")
+    load = BukkitPluginDescription.PluginLoadOrder.POSTWORLD
+    softDepend = listOf(
+        "Lands"
+    )
+    depend = listOf(
+        "packetevents",
+    )
     version = "${project.version}"
 }
 
 tasks {
     runServer {
         minecraftVersion("1.21.4")
+        downloadPlugins.url("https://github.com/retrooper/packetevents/releases/download/v2.8.0/packetevents-spigot-2.8.0.jar")
     }
 }
 
 tasks.shadowJar {
     archiveFileName.set("EternalCombat v${project.version}.jar")
 
-    dependsOn("test")
-
     exclude(
         "org/intellij/lang/annotations/**",
         "org/jetbrains/annotations/**",
         "META-INF/**",
         "kotlin/**",
-        "javax/**"
+        "javax/**",
+        "org/checkerframework/**",
+        "com/google/errorprone/**",
     )
 
     val prefix = "com.eternalcode.combat.libs"
     listOf(
-        "panda.std",
-        "panda.utilities",
-        "org.panda-lang",
         "eu.okaeri",
         "net.kyori",
         "org.bstats",
+        "org.yaml",
         "dev.rollczi.litecommands",
         "com.eternalcode.gitcheck",
         "org.json.simple",
-        "org.apache.commons",
-        "javassist",
         "com.github.benmanes.caffeine",
         "com.eternalcode.commons",
-        "com.eternalcode.multification"
+        "com.eternalcode.multification",
+        "io.papermc"
     ).forEach { pack ->
         relocate(pack, "$prefix.$pack")
     }

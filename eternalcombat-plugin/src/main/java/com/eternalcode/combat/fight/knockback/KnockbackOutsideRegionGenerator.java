@@ -8,27 +8,11 @@ import java.util.NavigableMap;
 import java.util.Set;
 import java.util.TreeMap;
 import org.bukkit.Location;
-import org.bukkit.World;
 
 class KnockbackOutsideRegionGenerator {
 
-    private record Point2D(int x, int z) {
-
-        Location toLocation(Location location) {
-            World world = location.getWorld();
-            int y = world.getHighestBlockYAt(x, z) + 1;
-
-            return new Location(world, x, y, z, location.getYaw(), location.getPitch());
-        }
-
-        private static Point2D from(Location location) {
-            return new Point2D(location.getBlockX(), location.getBlockZ());
-        }
-
-    }
-
-    static Location generate(Location min, Location max, Location playerLocation) {
-        NavigableMap<Double, List<Point2D>> points = generatePoints(Point2D.from(min), Point2D.from(max), Point2D.from(playerLocation));
+    static Location generate(Point2D min, Point2D max, Location playerLocation) {
+        NavigableMap<Double, List<Point2D>> points = generatePoints(min, max, Point2D.from(playerLocation));
         NavigableMap<Double, Double> distances = new TreeMap<>();
         double totalWeight = 0;
 

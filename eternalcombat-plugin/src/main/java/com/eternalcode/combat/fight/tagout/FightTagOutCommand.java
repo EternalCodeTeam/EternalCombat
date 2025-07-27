@@ -17,16 +17,16 @@ import org.bukkit.entity.Player;
 public class FightTagOutCommand {
 
     private final FightTagOutService fightTagOutService;
-    private final NoticeService announcer;
+    private final NoticeService noticeService;
     private final PluginConfig config;
 
     public FightTagOutCommand(
         FightTagOutService fightTagOutService,
-        NoticeService announcer,
+        NoticeService noticeService,
         PluginConfig config
     ) {
         this.fightTagOutService = fightTagOutService;
-        this.announcer = announcer;
+        this.noticeService = noticeService;
         this.config = config;
     }
 
@@ -36,7 +36,7 @@ public class FightTagOutCommand {
 
         this.fightTagOutService.tagOut(targetUniqueId, time);
 
-        this.announcer.create()
+        this.noticeService.create()
             .notice(this.config.messagesSettings.admin.adminTagOutSelf)
             .placeholder("{TIME}", DurationUtil.format(time))
             .viewer(sender)
@@ -50,14 +50,14 @@ public class FightTagOutCommand {
 
         this.fightTagOutService.tagOut(targetUniqueId, time);
 
-        this.announcer.create()
+        this.noticeService.create()
             .notice(this.config.messagesSettings.admin.adminTagOut)
             .placeholder("{PLAYER}", target.getName())
             .placeholder("{TIME}", DurationUtil.format(time))
             .viewer(sender)
             .send();
 
-        this.announcer.create()
+        this.noticeService.create()
             .notice(this.config.messagesSettings.admin.playerTagOut)
             .placeholder("{TIME}", DurationUtil.format(time))
             .player(target.getUniqueId())
@@ -73,14 +73,14 @@ public class FightTagOutCommand {
 
 
         if (!targetUniqueId.equals(sender.getUniqueId())) {
-            this.announcer.create()
+            this.noticeService.create()
                 .notice(this.config.messagesSettings.admin.adminTagOutOff)
                 .placeholder("{PLAYER}", target.getName())
                 .viewer(sender)
                 .send();
         }
 
-        this.announcer.create()
+        this.noticeService.create()
             .notice(this.config.messagesSettings.admin.playerTagOutOff)
             .player(targetUniqueId)
             .send();
@@ -92,7 +92,7 @@ public class FightTagOutCommand {
 
         this.fightTagOutService.unTagOut(senderUniqueId);
 
-        this.announcer.create()
+        this.noticeService.create()
             .notice(this.config.messagesSettings.admin.playerTagOutOff)
             .viewer(sender)
             .send();

@@ -18,21 +18,23 @@ import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.EntityToggleGlideEvent;
 import org.bukkit.event.inventory.InventoryOpenEvent;
 import org.bukkit.event.player.PlayerCommandPreprocessEvent;
+import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.event.player.PlayerToggleFlightEvent;
 
 import java.util.List;
 import java.util.UUID;
+import org.bukkit.util.StringUtil;
 
 public class FightActionBlockerController implements Listener {
 
     private final FightManager fightManager;
-    private final NoticeService announcer;
+    private final NoticeService noticeService;
     private final PluginConfig config;
     private final Server server;
 
-    public FightActionBlockerController(FightManager fightManager, NoticeService announcer, PluginConfig config, Server server) {
+    public FightActionBlockerController(FightManager fightManager, NoticeService noticeService, PluginConfig config, Server server) {
         this.fightManager = fightManager;
-        this.announcer = announcer;
+        this.noticeService = noticeService;
         this.config = config;
         this.server = server;
     }
@@ -59,7 +61,7 @@ public class FightActionBlockerController implements Listener {
 
         if (isPlacementBlocked && specificBlocksToPreventPlacing.isEmpty()) {
             event.setCancelled(true);
-            this.announcer.create()
+            this.noticeService.create()
                 .player(uniqueId)
                 .notice(this.config.messagesSettings.blockPlacingBlockedDuringCombat)
                 .placeholder("{Y}", String.valueOf(this.config.blockPlacement.blockPlacementYCoordinate))
@@ -73,7 +75,7 @@ public class FightActionBlockerController implements Listener {
         if (isPlacementBlocked && isBlockInDisabledList) {
             event.setCancelled(true);
 
-            this.announcer.create()
+            this.noticeService.create()
                 .player(uniqueId)
                 .notice(this.config.messagesSettings.blockPlacingBlockedDuringCombat)
                 .placeholder("{Y}", String.valueOf(this.config.blockPlacement.blockPlacementYCoordinate))
@@ -108,6 +110,26 @@ public class FightActionBlockerController implements Listener {
             event.setCancelled(true);
         }
     }
+
+    @EventHandler
+    void onMoveWhileGliding(PlayerMoveEvent event) {
+        if (!this.config.combat.disableElytraUsage) {
+            return;
+        }
+
+        Player player = event.getPlayer();
+        UUID uniqueId = player.getUniqueId();
+
+        if (!this.fightManager.isInCombat(uniqueId)) {
+            return;
+        }
+
+        if (player.isGliding()) {
+            player.setGliding(false);
+        }
+    }
+
+
 
     @EventHandler
     void onFly(PlayerToggleFlightEvent event) {
@@ -178,7 +200,7 @@ public class FightActionBlockerController implements Listener {
 
         event.setCancelled(true);
 
-        this.announcer.create()
+        this.noticeService.create()
             .player(uniqueId)
             .notice(this.config.messagesSettings.inventoryBlockedDuringCombat)
             .send();
@@ -194,18 +216,18 @@ public class FightActionBlockerController implements Listener {
             return;
         }
 
-        String command = event.getMessage().split(" ")[0].substring(1).toLowerCase();
+        String command = event.getMessage().substring(1);
 
-        boolean isMatchCommand = this.config.commands.restrictedCommands.stream()
-            .anyMatch(command::startsWith);
+        boolean isAnyMatch = this.config.commands.restrictedCommands.stream()
+            .anyMatch(restrictedCommand -> StringUtil.startsWithIgnoreCase(command, restrictedCommand));
 
         WhitelistBlacklistMode mode = this.config.commands.commandRestrictionMode;
 
-        boolean shouldCancel = mode.shouldBlock(isMatchCommand);
+        boolean shouldCancel = mode.shouldBlock(isAnyMatch);
 
         if (shouldCancel) {
             event.setCancelled(true);
-            this.announcer.create()
+            this.noticeService.create()
                 .player(playerUniqueId)
                 .notice(this.config.messagesSettings.commandDisabledDuringCombat)
                 .send();

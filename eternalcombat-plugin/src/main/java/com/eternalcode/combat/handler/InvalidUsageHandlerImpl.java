@@ -12,11 +12,11 @@ import org.bukkit.command.CommandSender;
 public class InvalidUsageHandlerImpl implements InvalidUsageHandler<CommandSender> {
 
     private final PluginConfig config;
-    private final NoticeService announcer;
+    private final NoticeService noticeService;
 
-    public InvalidUsageHandlerImpl(PluginConfig config, NoticeService announcer) {
+    public InvalidUsageHandlerImpl(PluginConfig config, NoticeService noticeService) {
         this.config = config;
-        this.announcer = announcer;
+        this.noticeService = noticeService;
     }
 
     @Override
@@ -28,7 +28,7 @@ public class InvalidUsageHandlerImpl implements InvalidUsageHandler<CommandSende
         Schematic schematic = commandSenderInvalidUsage.getSchematic();
 
         for (String usage : schematic.all()) {
-            this.announcer.create()
+            this.noticeService.create()
                 .viewer(invocation.sender())
                 .notice(this.config.messagesSettings.invalidCommandUsage)
                 .placeholder("{USAGE}", usage)

@@ -18,14 +18,14 @@ import org.bukkit.event.player.PlayerTeleportEvent;
 
 public class KnockbackRegionController implements Listener {
 
-    private final NoticeService announcer;
+    private final NoticeService noticeService;
     private final RegionProvider regionProvider;
     private final FightManager fightManager;
     private final KnockbackService knockbackService;
     private final Server server;
 
-    public KnockbackRegionController(NoticeService announcer, RegionProvider regionProvider, FightManager fightManager, KnockbackService knockbackService, Server server) {
-        this.announcer = announcer;
+    public KnockbackRegionController(NoticeService noticeService, RegionProvider regionProvider, FightManager fightManager, KnockbackService knockbackService, Server server) {
+        this.noticeService = noticeService;
         this.regionProvider = regionProvider;
         this.fightManager = fightManager;
         this.knockbackService = knockbackService;
@@ -64,7 +64,7 @@ public class KnockbackRegionController implements Listener {
                 this.knockbackService.knockbackLater(region, player, Duration.ofMillis(50));
             }
 
-            this.announcer.create()
+            this.noticeService.create()
                 .player(player.getUniqueId())
                 .notice(config -> config.messagesSettings.cantEnterOnRegion)
                 .send();
@@ -82,7 +82,7 @@ public class KnockbackRegionController implements Listener {
 
         if (this.regionProvider.isInRegion(targetLocation)) {
             event.setCancelled(true);
-            this.announcer.create()
+            this.noticeService.create()
                 .player(player.getUniqueId())
                 .notice(config -> config.messagesSettings.cantEnterOnRegion)
                 .send();
@@ -105,7 +105,7 @@ public class KnockbackRegionController implements Listener {
         this.knockbackService.knockback(region, player);
         this.knockbackService.forceKnockbackLater(player, region);
 
-        this.announcer.create()
+        this.noticeService.create()
             .player(player.getUniqueId())
             .notice(config -> config.messagesSettings.cantEnterOnRegion)
             .send();

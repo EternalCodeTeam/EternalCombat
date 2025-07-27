@@ -30,6 +30,11 @@ public class MessagesSettings extends OkaeriConfig {
         .build();
 
     @Comment({
+        "# Would you like to display milliseconds instead of seconds in combat notification "
+    })
+    public boolean withoutMillis = true;
+
+    @Comment({
         "# Message displayed when a player lacks permission to execute a command.",
         "# The {PERMISSION} placeholder is replaced with the required permission."
     })
@@ -55,7 +60,7 @@ public class MessagesSettings extends OkaeriConfig {
         "# This message informs the player that they can safely leave the server."
     })
     public Notice playerUntagged = Notice.chat(
-        "<gradient:#00ff00:#00b300>✌ <white>Combat ended!</white> You can now safely leave!</u></gradient>");
+        "<gradient:#00ff00:#00b300>✌ <white>Combat ended!</white> You can now safely leave!</gradient>");
 
     @Comment({
         "# Broadcast message displayed when a player logs out during combat.",
@@ -127,6 +132,13 @@ public class MessagesSettings extends OkaeriConfig {
         })
         public Notice adminUntagPlayer = Notice.chat(
             "<gradient:#00ff88:#00b300>✌ <gray>Removed</gray> <white>{PLAYER}</white> <gray>from combat</gray></gradient>");
+
+        @Comment({
+            "# Message displayed to an admin when they remove a player from combat.",
+            "# The {PLAYER} placeholder is replaced with the player's name."
+        })
+        public Notice adminUntagAll = Notice.chat(
+            "<gradient:#00ff88:#00b300>✌ <gray>Removed</gray> <white>{COUNT}</white> <gray> players from combat</gray></gradient>");
 
         @Comment({
             "# Message displayed when an admin attempts to untag a player who is not in combat.",

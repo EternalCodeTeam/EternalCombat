@@ -44,10 +44,10 @@ class BorderTriggerIndexBucket {
     }
 
     private void withTrigger(BorderTrigger trigger) {
-        int minX = trigger.min().x() >> CHUNK_SHIFT;
-        int minZ = trigger.min().z() >> CHUNK_SHIFT;
-        int maxX = trigger.max().x() >> CHUNK_SHIFT;
-        int maxZ = trigger.max().z() >> CHUNK_SHIFT;
+        int minX = trigger.triggerMin().x() >> CHUNK_SHIFT;
+        int minZ = trigger.triggerMin().z() >> CHUNK_SHIFT;
+        int maxX = trigger.triggerMax().x() >> CHUNK_SHIFT;
+        int maxZ = trigger.triggerMax().z() >> CHUNK_SHIFT;
 
         int startX = Math.min(minX, maxX);
         int startZ = Math.min(minZ, maxZ);

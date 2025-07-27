@@ -16,7 +16,10 @@ import dev.rollczi.litecommands.annotations.permission.Permission;
 import dev.rollczi.litecommands.annotations.priority.Priority;
 import dev.rollczi.litecommands.annotations.priority.PriorityValue;
 import java.time.Duration;
+import java.util.Set;
 import java.util.UUID;
+import java.util.stream.Collectors;
+
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
@@ -24,12 +27,12 @@ import org.bukkit.entity.Player;
 public class FightTagCommand {
 
     private final FightManager fightManager;
-    private final NoticeService announcer;
+    private final NoticeService noticeService;
     private final PluginConfig config;
 
-    public FightTagCommand(FightManager fightManager, NoticeService announcer, PluginConfig config) {
+    public FightTagCommand(FightManager fightManager, NoticeService noticeService, PluginConfig config) {
         this.fightManager = fightManager;
-        this.announcer = announcer;
+        this.noticeService = noticeService;
         this.config = config;
     }
 
@@ -38,7 +41,7 @@ public class FightTagCommand {
     void status(@Context CommandSender sender, @Arg Player target) {
         UUID targetUniqueId = target.getUniqueId();
 
-        this.announcer.create()
+        this.noticeService.create()
             .notice(this.fightManager.isInCombat(targetUniqueId)
                 ? this.config.messagesSettings.admin.playerInCombat
                 : this.config.messagesSettings.admin.playerNotInCombat
@@ -66,7 +69,7 @@ public class FightTagCommand {
             return;
         }
 
-        this.announcer.create()
+        this.noticeService.create()
             .notice(this.config.messagesSettings.admin.adminTagPlayer)
             .placeholder("{PLAYER}", target.getName())
             .viewer(sender)
@@ -82,7 +85,7 @@ public class FightTagCommand {
 
         if (sender.equals(firstTarget) || sender.equals(secondTarget)) {
 
-            this.announcer.create()
+            this.noticeService.create()
                 .notice(messagesSettings.admin.adminCannotTagSelf)
                 .viewer(sender)
                 .send();
@@ -113,7 +116,7 @@ public class FightTagCommand {
             return;
         }
 
-        this.announcer.create()
+        this.noticeService.create()
             .notice(messagesSettings.admin.adminTagMultiplePlayers)
             .placeholder("{FIRST_PLAYER}", firstTarget.getName())
             .placeholder("{SECOND_PLAYER}", secondTarget.getName())
@@ -124,13 +127,14 @@ public class FightTagCommand {
 
     @Execute(name = "untag")
     @Permission("eternalcombat.untag")
-    void untag(@Context Player sender, @Arg Player target) {
+    void untag(@Context CommandSender sender, @Arg Player target) {
         UUID targetUniqueId = target.getUniqueId();
 
         if (!this.fightManager.isInCombat(targetUniqueId)) {
-            this.announcer.create()
-                .viewer(sender)
+            this.noticeService.create()
                 .notice(this.config.messagesSettings.admin.adminPlayerNotInCombat)
+                .placeholder("{PLAYER}", target.getName())
+                .viewer(sender)
                 .send();
             return;
         }
@@ -141,16 +145,33 @@ public class FightTagCommand {
         }
 
 
-        this.announcer.create()
+        this.noticeService.create()
             .notice(this.config.messagesSettings.admin.adminUntagPlayer)
             .placeholder("{PLAYER}", target.getName())
             .viewer(sender)
             .send();
     }
 
+    @Execute(name = "untagall")
+    @Permission("eternalcombat.untagall")
+    void untagAll(@Context CommandSender sender) {
+        int combatPlayersSize = this.fightManager.getFights().size();
+
+        this.fightManager.getFights().stream()
+            .map(FightTag::getTaggedPlayer)
+            .collect(Collectors.toSet())
+            .forEach(uuid -> this.fightManager.untag(uuid, CauseOfUnTag.COMMAND));
+
+        this.noticeService.create()
+            .notice(this.config.messagesSettings.admin.adminUntagAll)
+            .placeholder("{COUNT}", String.valueOf(combatPlayersSize))
+            .viewer(sender)
+            .send();
+    }
+
     private void tagoutReasonHandler(CommandSender sender, CancelTagReason cancelReason, MessagesSettings messagesSettings) {
         if (cancelReason == CancelTagReason.TAGOUT) {
-            this.announcer.create()
+            this.noticeService.create()
                 .notice(messagesSettings.admin.adminTagOutCanceled)
                 .viewer(sender)
                 .send();

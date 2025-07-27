@@ -14,13 +14,13 @@ import org.bukkit.event.Listener;
 public class FightMessageController implements Listener {
 
     private final FightManager fightManager;
-    private final NoticeService announcer;
+    private final NoticeService noticeService;
     private final PluginConfig config;
     private final Server server;
 
-    public FightMessageController(FightManager fightManager, NoticeService announcer, PluginConfig config, Server server) {
+    public FightMessageController(FightManager fightManager, NoticeService noticeService, PluginConfig config, Server server) {
         this.fightManager = fightManager;
-        this.announcer = announcer;
+        this.noticeService = noticeService;
         this.config = config;
         this.server = server;
     }
@@ -37,7 +37,7 @@ public class FightMessageController implements Listener {
             return;
         }
 
-        this.announcer.create()
+        this.noticeService.create()
             .player(player.getUniqueId())
             .notice(this.config.messagesSettings.playerTagged)
             .send();
@@ -51,7 +51,7 @@ public class FightMessageController implements Listener {
             throw new IllegalStateException("Player cannot be null!");
         }
 
-        this.announcer.create()
+        this.noticeService.create()
             .player(player.getUniqueId())
             .notice(this.config.messagesSettings.playerUntagged)
             .send();

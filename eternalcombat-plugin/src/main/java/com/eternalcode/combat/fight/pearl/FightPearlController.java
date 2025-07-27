@@ -3,103 +3,102 @@ package com.eternalcode.combat.fight.pearl;
 import com.eternalcode.combat.fight.FightManager;
 import com.eternalcode.combat.notification.NoticeService;
 import com.eternalcode.combat.util.DurationUtil;
+import java.time.Duration;
+import java.util.UUID;
 import org.bukkit.Material;
 import org.bukkit.entity.EnderPearl;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
-import org.bukkit.event.block.Action;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
-import org.bukkit.event.player.PlayerInteractEvent;
+import org.bukkit.event.entity.ProjectileLaunchEvent;
 import org.bukkit.inventory.ItemStack;
-
-import java.time.Duration;
-import java.util.UUID;
 
 public class FightPearlController implements Listener {
 
     private final FightPearlSettings settings;
-    private final NoticeService announcer;
+    private final NoticeService noticeService;
     private final FightManager fightManager;
     private final FightPearlService fightPearlService;
 
-    public FightPearlController(FightPearlSettings settings, NoticeService announcer, FightManager fightManager, FightPearlService fightPearlService) {
+    public FightPearlController(
+        FightPearlSettings settings,
+        NoticeService noticeService,
+        FightManager fightManager,
+        FightPearlService fightPearlService
+    ) {
         this.settings = settings;
-        this.announcer = announcer;
+        this.noticeService = noticeService;
         this.fightManager = fightManager;
         this.fightPearlService = fightPearlService;
     }
 
-    @EventHandler
-    void onInteract(PlayerInteractEvent event) {
-        Player player = event.getPlayer();
-        UUID uniqueId = player.getUniqueId();
-
-        if (!this.settings.pearlThrowBlocked) {
+    @EventHandler(priority = EventPriority.HIGHEST)
+    public void onPearlThrow(ProjectileLaunchEvent event) {
+        if (!(event.getEntity() instanceof EnderPearl)) {
             return;
         }
 
-        if (!this.fightManager.isInCombat(uniqueId)) {
+        if (!(event.getEntity().getShooter() instanceof Player player)) {
             return;
         }
 
-        ItemStack item = event.getItem();
-        if (item == null || item.getType() != Material.ENDER_PEARL) {
+        UUID playerId = player.getUniqueId();
+
+        if (!this.fightManager.isInCombat(playerId)) {
             return;
         }
 
-        Action action = event.getAction();
-        if (action != Action.RIGHT_CLICK_AIR && action != Action.RIGHT_CLICK_BLOCK) {
-            return;
-        }
-
-        if (this.settings.pearlThrowDelay.isZero()) {
+        if (this.settings.pearlThrowDisabledDuringCombat) {
             event.setCancelled(true);
-            this.announcer.create()
-                .player(uniqueId)
+            this.noticeService.create()
+                .player(playerId)
                 .notice(this.settings.pearlThrowBlockedDuringCombat)
                 .send();
-
             return;
         }
 
-        if (this.fightPearlService.hasDelay(uniqueId)) {
-            event.setCancelled(true);
-
-            Duration remainingPearlDelay = this.fightPearlService.getRemainingDelay(uniqueId);
-
-            this.announcer.create()
-                .player(uniqueId)
-                .notice(this.settings.pearlThrowBlockedDelayDuringCombat)
-                .placeholder("{TIME}", DurationUtil.format(remainingPearlDelay))
-                .send();
-
-            return;
+        if (this.settings.pearlCooldownEnabled) {
+            handlePearlCooldown(event, player, playerId);
         }
-
-        this.fightPearlService.markDelay(uniqueId);
     }
 
     @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
-    void onEntityDamage(EntityDamageByEntityEvent event) {
+    public void onPearlDamage(EntityDamageByEntityEvent event) {
         if (this.settings.pearlThrowDamageEnabled) {
             return;
         }
 
-        if (!(event.getEntity() instanceof Player)) {
+        if (!(event.getEntity() instanceof Player) ||
+            !(event.getDamager() instanceof EnderPearl) ||
+            event.getCause() != EntityDamageEvent.DamageCause.FALL) {
             return;
         }
 
-        if (!(event.getDamager() instanceof EnderPearl)) {
+        event.setDamage(0.0);
+    }
+
+    private void handlePearlCooldown(ProjectileLaunchEvent event, Player player, UUID playerId) {
+        if (this.settings.pearlThrowDelay.isZero()) {
             return;
         }
 
-        if (event.getCause() != EntityDamageEvent.DamageCause.FALL) {
+        if (this.fightPearlService.hasDelay(playerId)) {
+            event.setCancelled(true);
+            Duration remainingDelay = this.fightPearlService.getRemainingDelay(playerId);
+
+            this.noticeService.create()
+                .player(playerId)
+                .notice(this.settings.pearlThrowBlockedDelayDuringCombat)
+                .placeholder("{TIME}", DurationUtil.format(remainingDelay))
+                .send();
             return;
         }
 
-        event.setDamage(0.0D);
+        this.fightPearlService.markDelay(playerId);
+        int cooldownTicks = (int) (this.settings.pearlThrowDelay.toMillis() / 50);
+        player.setCooldown(Material.ENDER_PEARL, cooldownTicks);
     }
 }

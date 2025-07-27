@@ -13,6 +13,7 @@ import java.time.Duration;
 import java.util.Set;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.function.Supplier;
 import org.bukkit.Server;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -24,11 +25,11 @@ public class ParticleController implements Listener {
     private static final PlayerManager PLAYER_MANAGER = PACKET_EVENTS_API.getPlayerManager();
 
     private final BorderService borderService;
-    private final ParticleSettings particleSettings;
+    private final Supplier<ParticleSettings> particleSettings;
     private final Server server;
     private final Set<UUID> playersToUpdate = ConcurrentHashMap.newKeySet();
 
-    public ParticleController(BorderService borderService, ParticleSettings particleSettings, Scheduler scheduler, Server server) {
+    public ParticleController(BorderService borderService, Supplier<ParticleSettings> particleSettings, Scheduler scheduler, Server server) {
         this.borderService = borderService;
         this.particleSettings = particleSettings;
         this.server = server;
@@ -37,7 +38,7 @@ public class ParticleController implements Listener {
 
     @EventHandler
     void onBorderShowAsyncEvent(BorderShowAsyncEvent event) {
-        if (!particleSettings.enabled) {
+        if (!particleSettings.get().enabled) {
             return;
         }
 
@@ -50,7 +51,7 @@ public class ParticleController implements Listener {
 
     @EventHandler
     void onBorderHideAsyncEvent(BorderHideAsyncEvent event) {
-        if (!particleSettings.enabled) {
+        if (!particleSettings.get().enabled) {
             return;
         }
 
@@ -61,12 +62,17 @@ public class ParticleController implements Listener {
     }
 
     private void updatePlayers() {
-        if (!particleSettings.enabled) {
+        if (!particleSettings.get().enabled) {
             return;
         }
 
         for (UUID uuid : this.playersToUpdate) {
             Player player = this.server.getPlayer(uuid);
+            if (player == null || !player.isOnline()) {
+                this.playersToUpdate.remove(uuid);
+                continue;
+            }
+
             Set<BorderPoint> border = this.borderService.getActiveBorder(player);
 
             if (border.isEmpty()) {
@@ -81,7 +87,7 @@ public class ParticleController implements Listener {
     }
 
     private void playParticle(Player player, BorderPoint point) {
-        WrapperPlayServerParticle particle = particleSettings.getParticle(point);
+        WrapperPlayServerParticle particle = particleSettings.get().getParticle(point);
 
         PLAYER_MANAGER.sendPacket(player, particle);
     }

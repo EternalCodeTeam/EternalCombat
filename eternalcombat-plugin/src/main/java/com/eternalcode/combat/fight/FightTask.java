@@ -15,13 +15,13 @@ public class FightTask implements Runnable {
     private final Server server;
     private final PluginConfig config;
     private final FightManager fightManager;
-    private final NoticeService announcer;
+    private final NoticeService noticeService;
 
-    public FightTask(Server server, PluginConfig config, FightManager fightManager,  NoticeService announcer) {
+    public FightTask(Server server, PluginConfig config, FightManager fightManager,  NoticeService noticeService) {
         this.server = server;
         this.config = config;
         this.fightManager = fightManager;
-        this.announcer = announcer;
+        this.noticeService = noticeService;
     }
 
     @Override
@@ -42,10 +42,10 @@ public class FightTask implements Runnable {
 
             Duration remaining = fightTag.getRemainingDuration();
 
-            this.announcer.create()
+            this.noticeService.create()
                 .player(player.getUniqueId())
                 .notice(this.config.messagesSettings.combatNotification)
-                .placeholder("{TIME}", DurationUtil.format(remaining))
+                .placeholder("{TIME}", DurationUtil.format(remaining, this.config.messagesSettings.withoutMillis))
                 .send();
 
         }
