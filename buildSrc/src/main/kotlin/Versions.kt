@@ -12,7 +12,7 @@ object Versions {
     const val MULTIFICATION = "1.2.1"
     const val PACKETS_EVENTS = "2.8.0"
 
-    const val ADVENTURE_PLATFORM_BUKKIT = "4.4.0"
+    const val ADVENTURE_PLATFORM_BUKKIT = "4.4.1-SNAPSHOT"
     const val ADVENTURE_API = "4.23.0"
 
     const val LITE_COMMANDS = "3.10.0"
