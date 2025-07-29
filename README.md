@@ -1,6 +1,6 @@
 <div align="center">
 
-![Readme banner](/assets/readme-banner.png)
+![Readme banner](https://github.com/EternalCodeTeam/EternalCombat/blob/master/assets/readme-banner.png?raw=true)
 
 [![Available on SpigotMC](https://raw.githubusercontent.com/vLuckyyy/badges/main/available-on-spigotmc.svg)](https://www.spigotmc.org/resources/eternalcombat-%E2%9C%94%EF%B8%8F-enchance-your-combat-system-with-eternalcombat.109056/)
 [![Available on Modrinth](https://raw.githubusercontent.com/vLuckyyy/badges/main/avaiable-on-modrinth.svg)](https://modrinth.com/plugin/eternalcombat)
@@ -16,7 +16,7 @@
 ## EternalCombat requires PacketEvents plugin to work.
 You can download it from [here](https://modrinth.com/plugin/packetevents)
 
-EternalCombat 2.0 has been tested on Minecraft versions **1.17.1 to 1.21.5**, but it should work seamlessly on most
+EternalCombat 2.0 has been tested on Minecraft versions **1.17.1 to 1.21.8**, but it should work seamlessly on most
 other versions too.
 If you run into any compatibility issues, please let us know in
 the [Issues tab](https://github.com/EternalCodeTeam/EternalCombat/issues).
@@ -34,17 +34,17 @@ fair, heart-pounding battles that keep players on their toes. Here’s a rundown
 - **Combat Logging**  
   No more dodging fights by logging out! Once players are in combat, they’re committed until the showdown ends. Watch it
   in action:  
-  ![Combat log anti logout feature](/assets/combatlog.gif)
+  ![Combat log anti logout feature](https://github.com/EternalCodeTeam/EternalCombat/blob/master/assets/combatlog.gif?raw=true)
 
 - **Spawn Protection (Configurable)**  
   Stop players from fleeing to safety! Block access to spawn or safe zones during combat – tweak it to fit your server’s
   rules. See how it works:  
-  ![Border around protected region](/assets/border.gif)
+  ![Border around protected region](https://github.com/EternalCodeTeam/EternalCombat/blob/master/assets/border.gif?raw=true)
 
 - **Crystal PvP support**  
   Engage in intense Crystal PvP battles without worrying about players logging out mid-fight! EternalCombat keeps
   everyone in the game until the last anchor hit. Check it out:  
-  ![Crystal PvP showcase](/assets/crystals.gif)
+  ![Crystal PvP showcase](https://github.com/EternalCodeTeam/EternalCombat/blob/master/assets/crystals.gif?raw=true)
 
 - **Fully Customizable Combat**  
   Tailor the combat experience to your liking with a ton of options! From disabling elytra to setting drop rates for
@@ -141,8 +141,8 @@ With Maven:
 ### Contributing
 
 We’d love your help to make EternalCombat even better!
-Check out our [contributing guide](.github/CONTRIBUTING.md) for
-details on how to get involved and our [code of conduct](./.github/CODE_OF_CONDUCT.md).
+Check out our [contributing guide](https://github.com/EternalCodeTeam/EternalCombat/blob/master/.github/CONTRIBUTING.md) for
+details on how to get involved and our [code of conduct](https://github.com/EternalCodeTeam/EternalCombat/blob/master/.github/CODE_OF_CONDUCT.md).
 
 ### Reporting Issues
 
