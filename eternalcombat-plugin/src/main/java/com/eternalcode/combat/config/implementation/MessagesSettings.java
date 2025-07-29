@@ -20,13 +20,9 @@ public class MessagesSettings extends OkaeriConfig {
         "# Configure the combat log notification displayed to players.",
         "# You can use the {TIME} variable to display the remaining combat time.",
         " ",
-        "# BossBar progress: Set to -1.0 to show the remaining combat time as a progress bar.",
-        "# BossBar colors: https://javadoc.io/static/net.kyori/adventure-api/4.14.0/net/kyori/adventure/bossbar/BossBar.Color.html",
-        "# BossBar overlays: https://javadoc.io/static/net.kyori/adventure-api/4.14.0/net/kyori/adventure/bossbar/BossBar.Overlay.html"
     })
     public Notice combatNotification = BukkitNotice.builder()
-        .actionBar("<bold>Combat ends in: <red>{TIME}</red></bold>")
-        .sound(Sound.ENTITY_EXPERIENCE_ORB_PICKUP, SoundCategory.PLAYERS, 2.0F, 1.0F)
+        .actionBar("Combat ends in: <red>{TIME}</red>")
         .build();
 
     @Comment({
