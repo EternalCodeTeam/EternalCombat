@@ -10,7 +10,7 @@ object Versions {
 
     const val ETERNALCODE_COMMONS = "1.1.6"
     const val MULTIFICATION = "1.2.1"
-    const val PACKETS_EVENTS = "2.8.0"
+    const val PACKETS_EVENTS = "2.9.4"
 
     const val ADVENTURE_PLATFORM_BUKKIT = "4.4.1-SNAPSHOT"
     const val ADVENTURE_API = "4.23.0"
