@@ -50,15 +50,11 @@ public class FightTagPlaceholder extends PlaceholderExpansion {
 
     @Override
     public String onRequest(OfflinePlayer player, String identifier) {
-        if (identifier.equals("remaining_seconds")) {
+        if (identifier.equals("remaining_seconds") || identifier.equals("remaining_millis")) {
             return this.getFightTag(player)
-                .map(fightTagInter -> DurationUtil.format(fightTagInter.getRemainingDuration()))
-                .orElse("");
-        }
-
-        if (identifier.equals("remaining_millis")) {
-            return this.getFightTag(player)
-                .map(fightTag -> DurationParser.TIME_UNITS.format(fightTag.getRemainingDuration()))
+                .map(fightTagInter -> identifier.equals("remaining_millis")
+                                      ? DurationParser.TIME_UNITS.format(fightTagInter.getRemainingDuration())
+                                      : DurationUtil.format(fightTagInter.getRemainingDuration()))
                 .orElse("");
         }
 
@@ -73,6 +69,7 @@ public class FightTagPlaceholder extends PlaceholderExpansion {
                 .map(tagger -> String.format("%.2f", tagger.getHealth()))
                 .orElse("");
         }
+
         if (identifier.equals("isInCombat") || identifier.equals("isInCombat_formatted")) {
             Player onlinePlayer = player.getPlayer();
             boolean inCombat = onlinePlayer != null && this.fightManager.isInCombat(onlinePlayer.getUniqueId());

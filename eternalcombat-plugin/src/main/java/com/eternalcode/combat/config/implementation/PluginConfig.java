@@ -109,9 +109,9 @@ public class PluginConfig extends OkaeriConfig {
     @Comment({
         " ",
         "# Settings related to placeholders used in the plugin.",
-        "# Now only for isInCombat_formatted"
+        "# Configure default values returned by placeholders"
     })
-    public PlaceholderSettings placeholder = new PlaceholderSettings();
+    public PlaceholderSettings placeholders = new PlaceholderSettings();
 
     @Comment({
         " ",
