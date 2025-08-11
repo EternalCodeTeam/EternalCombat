@@ -1,5 +1,6 @@
 package com.eternalcode.combat.bridge.placeholder;
 
+import com.eternalcode.combat.config.implementation.PlaceholderSettings;
 import com.eternalcode.combat.fight.FightManager;
 import com.eternalcode.combat.fight.FightTag;
 import com.eternalcode.combat.util.DurationUtil;
@@ -14,12 +15,14 @@ import org.jetbrains.annotations.NotNull;
 
 public class FightTagPlaceholder extends PlaceholderExpansion {
 
+    private static final String IDENTIFIER = "eternalcombat";
+    private final PlaceholderSettings placeholderSettings;
     private final FightManager fightManager;
     private final Server server;
     private final Plugin plugin;
-    private static final String IDENTIFIER = "eternalcombat";
 
-    public FightTagPlaceholder(FightManager fightManager, Server server, Plugin plugin) {
+    public FightTagPlaceholder(PlaceholderSettings placeholderSettings, FightManager fightManager, Server server, Plugin plugin) {
+        this.placeholderSettings = placeholderSettings;
         this.fightManager = fightManager;
         this.server = server;
         this.plugin = plugin;
@@ -29,7 +32,6 @@ public class FightTagPlaceholder extends PlaceholderExpansion {
     public boolean canRegister() {
         return true;
     }
-
 
     @Override
     public @NotNull String getIdentifier() {
@@ -70,6 +72,16 @@ public class FightTagPlaceholder extends PlaceholderExpansion {
             return this.getTagger(player)
                 .map(tagger -> String.format("%.2f", tagger.getHealth()))
                 .orElse("");
+        }
+        if (identifier.equals("isInCombat")) {
+            return this.getFightTag(player)
+                .map(fightTag -> "true")
+                .orElse("false");
+        }
+        if (identifier.equals("isInCombat_formatted")) {
+            return this.getFightTag(player)
+                .map(fightTag -> this.placeholderSettings.isInCombatFormattedTrue)
+                .orElse(this.placeholderSettings.isInCombatFormattedFalse);
         }
 
         return null;

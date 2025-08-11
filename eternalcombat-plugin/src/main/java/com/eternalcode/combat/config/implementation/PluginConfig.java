@@ -108,6 +108,13 @@ public class PluginConfig extends OkaeriConfig {
 
     @Comment({
         " ",
+        "# Settings related to placeholders used in the plugin.",
+        "# Now only for isInCombat_formatted"
+    })
+    public PlaceholderSettings placeholder = new PlaceholderSettings();
+
+    @Comment({
+        " ",
         "# Customize the messages displayed by the plugin.",
         "# Modify these to change the text and formatting of notifications and alerts."
     })
