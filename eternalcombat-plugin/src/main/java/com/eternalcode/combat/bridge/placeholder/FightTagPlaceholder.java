@@ -73,15 +73,17 @@ public class FightTagPlaceholder extends PlaceholderExpansion {
                 .map(tagger -> String.format("%.2f", tagger.getHealth()))
                 .orElse("");
         }
-        if (identifier.equals("isInCombat")) {
-            return this.getFightTag(player)
-                .map(fightTag -> "true")
-                .orElse("false");
-        }
-        if (identifier.equals("isInCombat_formatted")) {
-            return this.getFightTag(player)
-                .map(fightTag -> this.placeholderSettings.isInCombatFormattedTrue)
-                .orElse(this.placeholderSettings.isInCombatFormattedFalse);
+        if (identifier.equals("isInCombat") || identifier.equals("isInCombat_formatted")) {
+            Player onlinePlayer = player.getPlayer();
+            boolean inCombat = onlinePlayer != null && this.fightManager.isInCombat(onlinePlayer.getUniqueId());
+
+            if (identifier.equals("isInCombat")) {
+                return String.valueOf(inCombat);
+            }
+
+            return inCombat
+                ? this.placeholderSettings.isInCombatFormattedTrue
+                : this.placeholderSettings.isInCombatFormattedFalse;
         }
 
         return null;
