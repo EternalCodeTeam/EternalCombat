@@ -6,7 +6,6 @@ import eu.okaeri.configs.annotation.Comment;
 import java.util.List;
 import org.bukkit.entity.EntityType;
 import org.bukkit.event.EventPriority;
-import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
 
 public class CombatSettings extends OkaeriConfig {
@@ -33,6 +32,12 @@ public class CombatSettings extends OkaeriConfig {
         "# Flying players will fall to the ground if this is enabled."
     })
     public boolean disableFlying = true;
+
+    @Comment({
+        "# Prevent players from busting themself why fling with fireworks",
+        "# This setting blocks usage of fireworks to bust elytra flight during combat"
+    })
+    public boolean disableFireworks = true;
 
     @Comment({
         "# Prevent players from opening their inventory during combat.",

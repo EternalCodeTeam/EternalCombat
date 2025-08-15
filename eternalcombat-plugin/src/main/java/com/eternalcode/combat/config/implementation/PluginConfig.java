@@ -1,7 +1,6 @@
 package com.eternalcode.combat.config.implementation;
 
 import com.eternalcode.combat.border.BorderSettings;
-import com.eternalcode.combat.crystalpvp.CrystalPvpSettings;
 import com.eternalcode.combat.fight.drop.DropSettings;
 import com.eternalcode.combat.fight.effect.FightEffectSettings;
 import com.eternalcode.combat.fight.knockback.KnockbackSettings;
