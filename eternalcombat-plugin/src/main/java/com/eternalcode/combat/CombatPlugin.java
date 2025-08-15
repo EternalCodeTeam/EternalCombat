@@ -181,7 +181,7 @@ public final class CombatPlugin extends JavaPlugin implements EternalCombatApi {
             new BorderBlockController(borderService, () -> pluginConfig.border.block, scheduler, server),
             new EndCrystalListener(this, this.fightManager, pluginConfig),
             new RespawnAnchorListener(this, this.fightManager, pluginConfig),
-            new FireworkController(this.fightManager, pluginConfig)
+            new FireworkController(this.fightManager, pluginConfig, noticeService)
         );
 
         eventManager.subscribe(
