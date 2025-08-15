@@ -34,8 +34,8 @@ public class CombatSettings extends OkaeriConfig {
     public boolean disableFlying = true;
 
     @Comment({
-        "# Prevent players from busting themself why fling with fireworks",
-        "# This setting blocks usage of fireworks to bust elytra flight during combat"
+        "# Prevent players from boosting themselves while flying with fireworks",
+        "# This setting blocks usage of fireworks to boost elytra flight during combat"
     })
     public boolean disableFireworks = true;
 
