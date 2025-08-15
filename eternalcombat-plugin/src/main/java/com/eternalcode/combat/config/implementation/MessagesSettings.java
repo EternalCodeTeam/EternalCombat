@@ -4,8 +4,6 @@ import com.eternalcode.multification.bukkit.notice.BukkitNotice;
 import com.eternalcode.multification.notice.Notice;
 import eu.okaeri.configs.OkaeriConfig;
 import eu.okaeri.configs.annotation.Comment;
-import org.bukkit.Sound;
-import org.bukkit.SoundCategory;
 
 public class MessagesSettings extends OkaeriConfig {
 
@@ -93,6 +91,11 @@ public class MessagesSettings extends OkaeriConfig {
     public Notice blockPlacingBlockedDuringCombat =
         Notice.chat("<gradient:red:yellow>⚠ Block placement <white>{MODE} Y:{Y}</white> is restricted!</gradient>");
 
+    @Comment({
+        "# Message sent to the player using fireworks when fireworks during elytra flight are disabled"
+    })
+    public Notice fireworksDisabled = Notice.chat("<gradient:red:yellow>⚠ You can't use fireworks during combat ⚠</gradient>");
+    
     @Comment({
         "# Message displayed when a player attempts to enter a restricted region during combat.",
         "# This message informs the player that they cannot enter the region while in combat."

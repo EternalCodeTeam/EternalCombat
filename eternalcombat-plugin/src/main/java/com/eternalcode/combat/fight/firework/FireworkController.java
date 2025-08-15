@@ -2,6 +2,7 @@ package com.eternalcode.combat.fight.firework;
 
 import com.eternalcode.combat.config.implementation.PluginConfig;
 import com.eternalcode.combat.fight.FightManager;
+import com.eternalcode.combat.notification.NoticeService;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -10,14 +11,18 @@ import org.bukkit.event.block.Action;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
 
+import java.util.UUID;
+
 public class FireworkController implements Listener {
 
     private final FightManager fightManager;
     private final PluginConfig pluginConfig;
+    private final NoticeService noticeService;
 
-    public FireworkController(FightManager fightManager, PluginConfig pluginConfig) {
+    public FireworkController(FightManager fightManager, PluginConfig pluginConfig, NoticeService noticeService) {
         this.fightManager = fightManager;
         this.pluginConfig = pluginConfig;
+        this.noticeService = noticeService;
     }
 
     @EventHandler
@@ -28,7 +33,9 @@ public class FireworkController implements Listener {
 
         Player player = event.getPlayer();
 
-        if (!this.fightManager.isInCombat(player.getUniqueId())) {
+        UUID uniqueId = player.getUniqueId();
+
+        if (!this.fightManager.isInCombat(uniqueId)) {
             return;
         }
 
@@ -43,6 +50,7 @@ public class FireworkController implements Listener {
         ItemStack item = event.getItem();
         if (item != null && item.getType() == Material.FIREWORK_ROCKET) {
             event.setCancelled(true);
+            this.noticeService.player(uniqueId, config -> this.pluginConfig.messagesSettings.fireworksDisabled);
         }
     }
 }
