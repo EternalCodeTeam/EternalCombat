@@ -94,7 +94,7 @@ public class MessagesSettings extends OkaeriConfig {
     @Comment({
         "# Message sent to the player using fireworks when fireworks during elytra flight are disabled"
     })
-    public Notice fireworksDisabled = Notice.chat("<gradient:red:yellow>⚠ You can't use fireworks during combat ⚠</gradient>");
+    public Notice fireworksDisabled = Notice.actionbar("<gradient:red:yellow>⚠ You can't use fireworks during combat ⚠</gradient>");
     
     @Comment({
         "# Message displayed when a player attempts to enter a restricted region during combat.",
