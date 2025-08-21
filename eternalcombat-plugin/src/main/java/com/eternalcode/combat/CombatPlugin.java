@@ -12,6 +12,7 @@ import com.eternalcode.combat.fight.drop.DropKeepInventoryService;
 import com.eternalcode.combat.fight.FightManager;
 import com.eternalcode.combat.fight.drop.DropService;
 import com.eternalcode.combat.fight.effect.FightEffectService;
+import com.eternalcode.combat.fight.firework.FireworkController;
 import com.eternalcode.combat.fight.knockback.KnockbackService;
 import com.eternalcode.combat.fight.tagout.FightTagOutService;
 import com.eternalcode.combat.fight.pearl.FightPearlService;
@@ -179,7 +180,8 @@ public final class CombatPlugin extends JavaPlugin implements EternalCombatApi {
             new ParticleController(borderService, () -> pluginConfig.border.particle, scheduler, server),
             new BorderBlockController(borderService, () -> pluginConfig.border.block, scheduler, server),
             new EndCrystalListener(this, this.fightManager, pluginConfig),
-            new RespawnAnchorListener(this, this.fightManager, pluginConfig)
+            new RespawnAnchorListener(this, this.fightManager, pluginConfig),
+            new FireworkController(this.fightManager, pluginConfig, noticeService)
         );
 
         eventManager.subscribe(
