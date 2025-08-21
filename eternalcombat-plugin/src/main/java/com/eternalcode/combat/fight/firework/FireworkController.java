@@ -32,7 +32,6 @@ public class FireworkController implements Listener {
         }
 
         Player player = event.getPlayer();
-
         UUID uniqueId = player.getUniqueId();
 
         if (!this.fightManager.isInCombat(uniqueId)) {
