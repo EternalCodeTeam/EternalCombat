@@ -69,7 +69,7 @@ public class BridgeService {
 
         initialize(
             "PlaceholderAPI",
-            () -> new FightTagPlaceholder(this.config.placeholders, this.fightManager, server, this.plugin).register(),
+            () -> new FightTagPlaceholder(this.config, this.fightManager, server, this.plugin).register(),
             () -> this.logger.warning("PlaceholderAPI not found; skipping placeholders.")
         );
     }
