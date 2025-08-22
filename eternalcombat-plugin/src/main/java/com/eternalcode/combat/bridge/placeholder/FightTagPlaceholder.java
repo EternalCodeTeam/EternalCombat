@@ -39,7 +39,7 @@ public class FightTagPlaceholder extends PlaceholderExpansion {
             case "opponent_health" -> this.handleOpponentHealth(player);
             case "isInCombat" -> this.handleIsInCombat(player);
             case "isInCombat_formatted" -> this.handleIsInCombatFormatted(player);
-            default -> "";
+            default -> null;
         };
     }
 
@@ -91,11 +91,7 @@ public class FightTagPlaceholder extends PlaceholderExpansion {
     private Optional<FightTag> getFightTag(OfflinePlayer player) {
         Player onlinePlayer = player.getPlayer();
 
-        if (onlinePlayer == null) {
-            return Optional.empty();
-        }
-
-        if (!this.fightManager.isInCombat(onlinePlayer.getUniqueId())) {
+        if (onlinePlayer == null || !this.fightManager.isInCombat(onlinePlayer.getUniqueId())) {
             return Optional.empty();
         }
 
