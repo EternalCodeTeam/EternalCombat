@@ -18,7 +18,7 @@ object Versions {
     const val LITE_COMMANDS = "3.10.4"
     const val OKAERI_CONFIGS_YAML_BUKKIT = "5.0.6"
     const val OKAERI_CONFIGS_SERDES_COMMONS = "5.0.9"
-    const val OKAERI_CONFIGS_SERDES_BUKKIT = "5.0.6"
+    const val OKAERI_CONFIGS_SERDES_BUKKIT = "5.0.9"
 
     const val GIT_CHECK = "1.0.0"
 
