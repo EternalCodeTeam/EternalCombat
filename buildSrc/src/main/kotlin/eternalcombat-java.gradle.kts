@@ -3,12 +3,12 @@ plugins {
 }
 
 group = "com.eternalcode"
-version = "2.2.0"
+version = "2.3.0-SNAPSHOT"
 
 tasks.compileJava {
     options.compilerArgs = listOf("-Xlint:deprecation", "-parameters")
     options.encoding = "UTF-8"
-    options.release = 17
+    options.release = 21
 }
 
 java {
