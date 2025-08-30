@@ -4,6 +4,7 @@ import com.eternalcode.combat.config.implementation.PluginConfig;
 import com.eternalcode.combat.region.Point;
 import com.eternalcode.combat.region.Region;
 import com.eternalcode.combat.region.RegionProvider;
+import com.eternalcode.commons.bukkit.scheduler.MinecraftScheduler;
 import com.eternalcode.commons.scheduler.Scheduler;
 import java.time.Duration;
 import java.util.HashMap;
@@ -18,12 +19,12 @@ import org.bukkit.util.Vector;
 public final class KnockbackService {
 
     private final PluginConfig config;
-    private final Scheduler scheduler;
+    private final MinecraftScheduler scheduler;
     private final RegionProvider regionProvider;
 
     private final Map<UUID, Region> insideRegion = new HashMap<>();
 
-    public KnockbackService(PluginConfig config, Scheduler scheduler, RegionProvider regionProvider) {
+    public KnockbackService(PluginConfig config, MinecraftScheduler scheduler, RegionProvider regionProvider) {
         this.config = config;
         this.scheduler = scheduler;
         this.regionProvider = regionProvider;
@@ -39,7 +40,8 @@ public final class KnockbackService {
         }
 
         insideRegion.put(player.getUniqueId(), region);
-        scheduler.runLater(() -> {
+
+        scheduler.runLater(player.getLocation(), () -> {
             insideRegion.remove(player.getUniqueId());
             Location playerLocation = player.getLocation();
             if (!region.contains(playerLocation) && !regionProvider.isInRegion(playerLocation)) {

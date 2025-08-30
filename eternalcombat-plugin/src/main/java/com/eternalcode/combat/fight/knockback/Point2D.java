@@ -7,7 +7,7 @@ record Point2D(int x, int z) {
 
     Location toLocation(Location location) {
         World world = location.getWorld();
-        int y = world.getHighestBlockYAt(x, z) + 1;
+        double y = location.getY();
 
         return new Location(world, x, y, z, location.getYaw(), location.getPitch());
     }
