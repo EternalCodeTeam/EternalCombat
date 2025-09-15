@@ -2,6 +2,7 @@ package com.eternalcode.combat.border;
 
 import com.eternalcode.combat.region.Region;
 import com.eternalcode.combat.region.RegionProvider;
+import com.eternalcode.commons.bukkit.scheduler.MinecraftScheduler;
 import com.eternalcode.commons.scheduler.Scheduler;
 import java.time.Duration;
 import java.util.ArrayList;
@@ -17,13 +18,13 @@ import org.bukkit.World;
 class BorderTriggerIndex {
 
     private final Server server;
-    private final Scheduler scheduler;
+    private final MinecraftScheduler scheduler;
     private final RegionProvider provider;
     private final Supplier<BorderSettings> settings;
 
     private final Map<String, BorderTriggerIndexBucket> borderIndexes = new HashMap<>();
 
-    private BorderTriggerIndex(Server server, Scheduler scheduler, RegionProvider provider, Supplier<BorderSettings> settings) {
+    private BorderTriggerIndex(Server server, MinecraftScheduler scheduler, RegionProvider provider, Supplier<BorderSettings> settings) {
         this.server = server;
         this.scheduler = scheduler;
         this.provider = provider;
@@ -56,7 +57,7 @@ class BorderTriggerIndex {
         });
     }
 
-    static BorderTriggerIndex started(Server server, Scheduler scheduler, RegionProvider provider, Supplier<BorderSettings> settings) {
+    static BorderTriggerIndex started(Server server, MinecraftScheduler scheduler, RegionProvider provider, Supplier<BorderSettings> settings) {
         BorderTriggerIndex index = new BorderTriggerIndex(server, scheduler, provider, settings);
         scheduler.timerAsync(() -> index.updateWorlds(), Duration.ZERO, settings.get().indexRefreshDelay());
         return index;

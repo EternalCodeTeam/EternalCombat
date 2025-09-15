@@ -4,6 +4,7 @@ import com.eternalcode.combat.border.event.BorderHideAsyncEvent;
 import com.eternalcode.combat.border.event.BorderShowAsyncEvent;
 import com.eternalcode.combat.event.EventManager;
 import com.eternalcode.combat.region.RegionProvider;
+import com.eternalcode.commons.bukkit.scheduler.MinecraftScheduler;
 import com.eternalcode.commons.scheduler.Scheduler;
 import dev.rollczi.litecommands.shared.Lazy;
 import java.util.ArrayList;
@@ -19,7 +20,7 @@ import org.bukkit.entity.Player;
 
 public class BorderServiceImpl implements BorderService {
 
-    private final Scheduler scheduler;
+    private final MinecraftScheduler scheduler;
     private final EventManager eventManager;
 
     private final Supplier<BorderSettings> settings;
@@ -27,7 +28,7 @@ public class BorderServiceImpl implements BorderService {
     private final BorderTriggerIndex borderIndexes;
     private final BorderActivePointsIndex activeBorderIndex = new BorderActivePointsIndex();
 
-    public BorderServiceImpl(Scheduler scheduler, Server server, RegionProvider provider, EventManager eventManager, Supplier<BorderSettings> settings) {
+    public BorderServiceImpl(MinecraftScheduler scheduler, Server server, RegionProvider provider, EventManager eventManager, Supplier<BorderSettings> settings) {
         this.scheduler = scheduler;
         this.eventManager = eventManager;
         this.settings = settings;
