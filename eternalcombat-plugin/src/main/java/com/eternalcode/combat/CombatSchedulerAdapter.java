@@ -10,6 +10,10 @@ public final class CombatSchedulerAdapter {
 
     private static final String FOLIA_CLASS = "io.papermc.paper.threadedregions.RegionizedServer";
 
+    private CombatSchedulerAdapter() {
+        throw new IllegalStateException("You can't instantiate this class");
+    }
+
     public static MinecraftScheduler getAdaptiveScheduler(Plugin plugin) {
         Logger logger = plugin.getLogger();
 
