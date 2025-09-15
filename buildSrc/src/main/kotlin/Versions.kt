@@ -15,7 +15,7 @@ object Versions {
     const val ADVENTURE_PLATFORM_BUKKIT = "4.4.1"
     const val ADVENTURE_API = "4.24.0"
 
-    const val LITE_COMMANDS = "3.10.4"
+    const val LITE_COMMANDS = "3.10.5"
     const val OKAERI_CONFIGS_YAML_BUKKIT = "5.0.6"
     const val OKAERI_CONFIGS_SERDES_COMMONS = "5.0.13"
     const val OKAERI_CONFIGS_SERDES_BUKKIT = "5.0.9"
