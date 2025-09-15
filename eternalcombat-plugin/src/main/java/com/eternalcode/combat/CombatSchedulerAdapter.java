@@ -6,7 +6,7 @@ import com.eternalcode.commons.folia.scheduler.FoliaSchedulerImpl;
 import java.util.logging.Logger;
 import org.bukkit.plugin.Plugin;
 
-public class CombatSchedulerAdapter {
+public final class CombatSchedulerAdapter {
 
     private static final String FOLIA_CLASS = "io.papermc.paper.threadedregions.RegionizedServer";
 
