@@ -8,12 +8,12 @@ object Versions {
 
     const val JETBRAINS_ANNOTATIONS = "26.0.2"
 
-    const val ETERNALCODE_COMMONS = "1.3.0"
+    const val ETERNALCODE_COMMONS = "1.3.1"
     const val MULTIFICATION = "1.2.1"
     const val PACKETS_EVENTS = "2.9.4"
 
     const val ADVENTURE_PLATFORM_BUKKIT = "4.4.1"
-    const val ADVENTURE_API = "4.23.0"
+    const val ADVENTURE_API = "4.24.0"
 
     const val LITE_COMMANDS = "3.10.5"
     const val OKAERI_CONFIGS_YAML_BUKKIT = "5.0.6"
