@@ -5,7 +5,7 @@ import com.eternalcode.combat.region.Point;
 import com.eternalcode.combat.region.Region;
 import com.eternalcode.combat.region.RegionProvider;
 import com.eternalcode.commons.bukkit.scheduler.MinecraftScheduler;
-import com.eternalcode.commons.scheduler.Scheduler;
+import io.papermc.lib.PaperLib;
 import java.time.Duration;
 import java.util.HashMap;
 import java.util.Map;
@@ -13,7 +13,7 @@ import java.util.Optional;
 import java.util.UUID;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
-import org.bukkit.event.player.PlayerTeleportEvent;
+import org.bukkit.event.player.PlayerTeleportEvent.TeleportCause;
 import org.bukkit.util.Vector;
 
 public final class KnockbackService {
@@ -41,17 +41,19 @@ public final class KnockbackService {
 
         insideRegion.put(player.getUniqueId(), region);
 
-        scheduler.runLater(player.getLocation(), () -> {
-            insideRegion.remove(player.getUniqueId());
-            Location playerLocation = player.getLocation();
-            if (!region.contains(playerLocation) && !regionProvider.isInRegion(playerLocation)) {
-                return;
-            }
+        scheduler.runLater(
+            player.getLocation(), () -> {
+                insideRegion.remove(player.getUniqueId());
+                Location playerLocation = player.getLocation();
+                if (!region.contains(playerLocation) && !regionProvider.isInRegion(playerLocation)) {
+                    return;
+                }
 
-            Location location = generate(playerLocation, Point2D.from(region.getMin()), Point2D.from(region.getMax()));
+                Location location =
+                    generate(playerLocation, Point2D.from(region.getMin()), Point2D.from(region.getMax()));
 
-            player.teleport(location, PlayerTeleportEvent.TeleportCause.PLUGIN);
-        }, this.config.knockback.forceDelay);
+                PaperLib.teleportAsync(player, location, TeleportCause.PLUGIN);
+            }, this.config.knockback.forceDelay);
     }
 
     private Location generate(Location playerLocation, Point2D minX, Point2D maxX) {
@@ -75,5 +77,4 @@ public final class KnockbackService {
 
         player.setVelocity(knockbackVector.multiply(configuredVector));
     }
-
 }
