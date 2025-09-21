@@ -4,7 +4,8 @@ import com.eternalcode.combat.config.implementation.PluginConfig;
 import com.eternalcode.combat.region.Point;
 import com.eternalcode.combat.region.Region;
 import com.eternalcode.combat.region.RegionProvider;
-import com.eternalcode.commons.scheduler.Scheduler;
+import com.eternalcode.commons.bukkit.scheduler.MinecraftScheduler;
+import io.papermc.lib.PaperLib;
 import java.time.Duration;
 import java.util.HashMap;
 import java.util.Map;
@@ -12,18 +13,18 @@ import java.util.Optional;
 import java.util.UUID;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
-import org.bukkit.event.player.PlayerTeleportEvent;
+import org.bukkit.event.player.PlayerTeleportEvent.TeleportCause;
 import org.bukkit.util.Vector;
 
 public final class KnockbackService {
 
     private final PluginConfig config;
-    private final Scheduler scheduler;
+    private final MinecraftScheduler scheduler;
     private final RegionProvider regionProvider;
 
     private final Map<UUID, Region> insideRegion = new HashMap<>();
 
-    public KnockbackService(PluginConfig config, Scheduler scheduler, RegionProvider regionProvider) {
+    public KnockbackService(PluginConfig config, MinecraftScheduler scheduler, RegionProvider regionProvider) {
         this.config = config;
         this.scheduler = scheduler;
         this.regionProvider = regionProvider;
@@ -39,17 +40,20 @@ public final class KnockbackService {
         }
 
         insideRegion.put(player.getUniqueId(), region);
-        scheduler.runLater(() -> {
-            insideRegion.remove(player.getUniqueId());
-            Location playerLocation = player.getLocation();
-            if (!region.contains(playerLocation) && !regionProvider.isInRegion(playerLocation)) {
-                return;
-            }
 
-            Location location = generate(playerLocation, Point2D.from(region.getMin()), Point2D.from(region.getMax()));
+        scheduler.runLater(
+            player.getLocation(), () -> {
+                insideRegion.remove(player.getUniqueId());
+                Location playerLocation = player.getLocation();
+                if (!region.contains(playerLocation) && !regionProvider.isInRegion(playerLocation)) {
+                    return;
+                }
 
-            player.teleport(location, PlayerTeleportEvent.TeleportCause.PLUGIN);
-        }, this.config.knockback.forceDelay);
+                Location location =
+                    generate(playerLocation, Point2D.from(region.getMin()), Point2D.from(region.getMax()));
+
+                PaperLib.teleportAsync(player, location, TeleportCause.PLUGIN);
+            }, this.config.knockback.forceDelay);
     }
 
     private Location generate(Location playerLocation, Point2D minX, Point2D maxX) {
@@ -73,5 +77,4 @@ public final class KnockbackService {
 
         player.setVelocity(knockbackVector.multiply(configuredVector));
     }
-
 }
