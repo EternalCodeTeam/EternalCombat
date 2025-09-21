@@ -11,7 +11,7 @@ public final class CombatSchedulerAdapter {
     private static final String FOLIA_CLASS = "io.papermc.paper.threadedregions.RegionizedServer";
 
     private CombatSchedulerAdapter() {
-        throw new IllegalStateException("You can't instantiate this class");
+        throw new UnsupportedOperationException("This is an utility class and cannot be instantiated");
     }
 
     public static MinecraftScheduler getAdaptiveScheduler(Plugin plugin) {
