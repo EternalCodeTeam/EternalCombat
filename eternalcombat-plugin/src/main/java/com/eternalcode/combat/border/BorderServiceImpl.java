@@ -3,7 +3,9 @@ package com.eternalcode.combat.border;
 import com.eternalcode.combat.border.event.BorderHideAsyncEvent;
 import com.eternalcode.combat.border.event.BorderShowAsyncEvent;
 import com.eternalcode.combat.event.EventManager;
+import com.eternalcode.combat.region.Region;
 import com.eternalcode.combat.region.RegionProvider;
+import com.eternalcode.combat.region.access.RegionEntryGuard;
 import com.eternalcode.commons.scheduler.Scheduler;
 import dev.rollczi.litecommands.shared.Lazy;
 import java.util.ArrayList;
@@ -21,22 +23,36 @@ public class BorderServiceImpl implements BorderService {
 
     private final Scheduler scheduler;
     private final EventManager eventManager;
+    private final RegionProvider regionProvider;
+    private final RegionEntryGuard regionEntryGuard;
 
     private final Supplier<BorderSettings> settings;
 
     private final BorderTriggerIndex borderIndexes;
     private final BorderActivePointsIndex activeBorderIndex = new BorderActivePointsIndex();
 
-    public BorderServiceImpl(Scheduler scheduler, Server server, RegionProvider provider, EventManager eventManager, Supplier<BorderSettings> settings) {
+    public BorderServiceImpl(Scheduler scheduler, Server server, RegionProvider provider, EventManager eventManager, Supplier<BorderSettings> settings, RegionEntryGuard regionEntryGuard) {
         this.scheduler = scheduler;
         this.eventManager = eventManager;
+        this.regionProvider = provider;
+        this.regionEntryGuard = regionEntryGuard;
         this.settings = settings;
         this.borderIndexes = BorderTriggerIndex.started(server, scheduler, provider, settings);
     }
 
     @Override
     public void updateBorder(Player player, Location location) {
-        Optional<BorderResult> result = resolveBorder(location);
+        // Zawsze sprawdź uprawnienia gracza - nawet jeśli BorderTriggerIndex nie ma triggerów
+        Optional<Region> regionOptional = this.regionProvider.getRegion(location);
+        if (regionOptional.isPresent() && this.regionEntryGuard.canEnter(player, regionOptional.get())) {
+            // Gracz może wejść - usuń wszystkie aktywne bordery
+            if (this.activeBorderIndex.hasPoints(player.getWorld().getName(), player.getUniqueId())) {
+                this.clearBorder(player);
+            }
+            return;
+        }
+
+        Optional<BorderResult> result = resolveBorder(player, location);
         String world = player.getWorld().getName();
 
         if (result.isEmpty()) {
@@ -83,12 +99,14 @@ public class BorderServiceImpl implements BorderService {
         return this.activeBorderIndex.getPoints(player.getWorld().getName(), player.getUniqueId());
     }
 
-    private Optional<BorderResult> resolveBorder(Location location) {
+    private Optional<BorderResult> resolveBorder(Player player, Location location) {
         List<BorderTrigger> triggered = borderIndexes.getTriggered(location);
 
         if (triggered.isEmpty()) {
             return Optional.empty();
         }
+
+        // Uprawnienia już sprawdzone w updateBorder()
 
         BorderLazyResult result = new BorderLazyResult();
         for (BorderTrigger trigger : triggered) {

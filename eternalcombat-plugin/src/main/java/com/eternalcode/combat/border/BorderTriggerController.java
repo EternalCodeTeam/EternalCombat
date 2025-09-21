@@ -27,6 +27,7 @@ public class BorderTriggerController implements Listener {
         this.server = server;
     }
 
+
     @EventHandler(ignoreCancelled = true, priority = EventPriority.MONITOR)
     void onMove(PlayerMoveEvent event) {
         if (!border.get().isEnabled()) {
@@ -58,7 +59,9 @@ public class BorderTriggerController implements Listener {
             return;
         }
 
-        borderService.updateBorder(player, event.getTo());
+        Location targetLocation = event.getTo();
+
+        borderService.updateBorder(player, targetLocation);
     }
 
     @EventHandler(ignoreCancelled = true, priority = EventPriority.MONITOR)
@@ -72,6 +75,7 @@ public class BorderTriggerController implements Listener {
             return;
         }
 
+        // Sprawdź uprawnienia przed pokazaniem bordera
         borderService.updateBorder(player, player.getLocation());
     }
 

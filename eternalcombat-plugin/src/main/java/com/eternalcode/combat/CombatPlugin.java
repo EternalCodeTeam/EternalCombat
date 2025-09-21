@@ -45,6 +45,8 @@ import com.eternalcode.combat.fight.tagout.FightTagOutCommand;
 import com.eternalcode.combat.notification.NoticeService;
 import com.eternalcode.combat.fight.knockback.KnockbackRegionController;
 import com.eternalcode.combat.region.RegionProvider;
+import com.eternalcode.combat.region.access.RegionAccessConfig;
+import com.eternalcode.combat.region.access.RegionEntryGuard;
 import com.eternalcode.combat.updater.UpdaterNotificationController;
 import com.eternalcode.combat.updater.UpdaterService;
 import com.eternalcode.commons.adventure.AdventureLegacyColorPostProcessor;
@@ -102,6 +104,7 @@ public final class CombatPlugin extends JavaPlugin implements EternalCombatApi {
         Scheduler scheduler = new BukkitSchedulerImpl(this);
 
         PluginConfig pluginConfig = configService.create(PluginConfig.class, new File(dataFolder, "config.yml"));
+        RegionAccessConfig regionAccessConfig = configService.create(RegionAccessConfig.class, new File(dataFolder, "region-access.yml"));
 
         this.fightManager = new FightManagerImpl(eventManager);
         this.fightPearlService = new FightPearlServiceImpl(pluginConfig.pearl);
@@ -128,12 +131,15 @@ public final class CombatPlugin extends JavaPlugin implements EternalCombatApi {
             server.getPluginManager(),
             this.getLogger(),
             this,
-            this.fightManager
+            this.fightManager,
+            regionAccessConfig
         );
         bridgeService.init(server);
 
         this.regionProvider = bridgeService.getRegionProvider();
-        BorderService borderService = new BorderServiceImpl(scheduler, server, regionProvider, eventManager, () -> pluginConfig.border);
+        RegionEntryGuard regionEntryGuard = bridgeService.getRegionEntryGuard();
+        
+        BorderService borderService = new BorderServiceImpl(scheduler, server, regionProvider, eventManager, () -> pluginConfig.border, regionEntryGuard);
         KnockbackService knockbackService = new KnockbackService(pluginConfig, scheduler, regionProvider);
 
         this.liteCommands = LiteBukkitFactory.builder(FALLBACK_PREFIX, this, server)
@@ -172,7 +178,7 @@ public final class CombatPlugin extends JavaPlugin implements EternalCombatApi {
             new FightActionBlockerController(this.fightManager, noticeService, pluginConfig, server),
             new FightPearlController(pluginConfig.pearl, noticeService, this.fightManager, this.fightPearlService),
             new UpdaterNotificationController(updaterService, pluginConfig, this.audienceProvider, miniMessage),
-            new KnockbackRegionController(noticeService, this.regionProvider, this.fightManager, knockbackService, server),
+            new KnockbackRegionController(noticeService, this.regionProvider, this.fightManager, knockbackService, server, regionEntryGuard),
             new FightEffectController(pluginConfig.effect, this.fightEffectService, this.fightManager, this.getServer()),
             new FightTagOutController(this.fightTagOutService),
             new FightMessageController(this.fightManager, noticeService, pluginConfig, this.getServer()),
