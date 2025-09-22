@@ -68,8 +68,10 @@ public class LogoutController implements DynamicListener<PlayerQuitEvent> {
             return;
         }
 
-        this.logoutService.punishForLogout(player);
-        player.setHealth(0.0);
+        if (!this.config.combat.disableCombatPunishment) {
+            this.logoutService.punishForLogout(player);
+            player.setHealth(0.0);
+        }
 
         this.noticeService.create()
             .notice(this.config.messagesSettings.playerLoggedOutDuringCombat)

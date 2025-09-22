@@ -74,8 +74,8 @@ bukkit {
 
 tasks {
     runServer {
-        minecraftVersion("1.21.4")
-        downloadPlugins.url("https://github.com/retrooper/packetevents/releases/download/v2.8.0/packetevents-spigot-2.8.0.jar")
+        minecraftVersion("1.21.8")
+        downloadPlugins.url("https://github.com/retrooper/packetevents/releases/download/v2.9.5/packetevents-spigot-2.9.5.jar")
     }
 }
 

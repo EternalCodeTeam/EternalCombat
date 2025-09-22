@@ -46,6 +46,12 @@ public class CombatSettings extends OkaeriConfig {
     public boolean disableInventoryAccess = false;
 
     @Comment({
+        "# Disable combat punishment for players who leave the server during combat.",
+        "# Set to 'true' to disable combat punishment for players who leave the server during combat."
+    })
+    public boolean disableCombatPunishment = false;
+
+    @Comment({
         "# Enable or disable combat logging for damage caused by non-player entities.",
         "# Set to 'true' to log damage from non-player sources, or 'false' to disable this feature."
     })
