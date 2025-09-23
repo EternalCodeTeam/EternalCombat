@@ -15,24 +15,11 @@ public class RegionEntryGuard {
     }
 
     public boolean canEnter(Player player, Region region) {
-        // Sprawdź uprawnienia bypass na poziomie głównym
-        if (player.hasPermission(config.bypassPermission)) {
-            return true;
-        }
-
         if (controllers.isEmpty()) {
             return config.defaultAllow;
         }
 
-        return controllers.stream()
-            .anyMatch(controller -> {
-                try {
-                    return controller.canEnter(player, region);
-                }
-                catch (Exception exception) {
-                    return false;
-                }
-            });
+        return controllers.stream().allMatch(controller -> controller.canEnter(player, region));
     }
 }
 

@@ -27,10 +27,6 @@ public class LandsRegionAccessAdapter implements RegionAccessController {
             return false;
         }
 
-        if (player.hasPermission(config.bypassPermission)) {
-            return true;
-        }
-
         LandPlayer landPlayer = lands.getLandPlayer(player.getUniqueId());
         if (landPlayer == null) {
             return false;
@@ -48,14 +44,18 @@ public class LandsRegionAccessAdapter implements RegionAccessController {
         );
 
         if (targetLand == null) {
+            return false;
+        }
+
+        boolean isOwner = landPlayer.getLands().contains(targetLand);
+        if (isOwner) {
             return true;
         }
 
-        if (landPlayer.getLands().contains(targetLand)) {
-            return true;
-        }
+        boolean atWar = areNationsAtWar(landPlayer, targetLand);
+        boolean result = atWar;
 
-        return areNationsAtWar(landPlayer, targetLand);
+        return result;
     }
 
     private boolean areNationsAtWar(LandPlayer landPlayer, Land targetLand) {

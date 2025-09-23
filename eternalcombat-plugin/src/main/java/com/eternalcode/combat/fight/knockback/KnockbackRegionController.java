@@ -35,7 +35,7 @@ public class KnockbackRegionController implements Listener {
         this.regionEntryGuard = regionEntryGuard;
     }
 
-    private boolean canEnterDuringWar(Player player, Location targetLocation) {
+    private boolean shouldKnockback(Player player, Location targetLocation) {
         Optional<Region> regionOptional = this.regionProvider.getRegion(targetLocation);
         return regionOptional.filter(region -> this.regionEntryGuard.canEnter(player, region)).isPresent();
     }
@@ -63,9 +63,8 @@ public class KnockbackRegionController implements Listener {
                 return;
             }
 
-            // Sprawdź, czy gracz może wejść na teren podczas wojny
-            if (this.canEnterDuringWar(player, locationTo)) {
-                return; // Pozwól na wejście - państwa są w wojnie
+            if (!this.shouldKnockback(player, locationTo)) {
+                return;
             }
 
             Region region = regionOptional.get();
@@ -94,9 +93,8 @@ public class KnockbackRegionController implements Listener {
         Location targetLocation = event.getTo();
 
         if (this.regionProvider.isInRegion(targetLocation)) {
-            // Sprawdź, czy gracz może wejść na teren podczas wojny
-            if (this.canEnterDuringWar(player, targetLocation)) {
-                return; // Pozwól na teleport - państwa są w wojnie
+            if (!this.shouldKnockback(player, targetLocation)) {
+                return;
             }
 
             event.setCancelled(true);
@@ -119,9 +117,8 @@ public class KnockbackRegionController implements Listener {
             return;
         }
 
-        // Sprawdź, czy gracz może przebywać na terenie podczas wojny
-        if (this.canEnterDuringWar(player, player.getLocation())) {
-            return; // Pozwól na tagowanie - państwa są w wojnie
+        if (!this.shouldKnockback(player, player.getLocation())) {
+            return;
         }
 
         Region region = regionOptional.get();

@@ -13,9 +13,6 @@ public class DefaultRegionAccessController implements RegionAccessController {
 
     @Override
     public boolean canEnter(Player player, Region region) {
-        if (player.hasPermission(config.bypassPermission)) {
-            return true;
-        }
         return config.defaultAllow;
     }
 }
