@@ -85,7 +85,7 @@ public class WorldGuardRegionProvider implements RegionProvider {
     @Nullable
     private ProtectedRegion highestPriorityRegion(ApplicableRegionSet applicableRegions) {
         return applicableRegions.getRegions().stream()
-            .min(Comparator.comparingInt(ProtectedRegion::getPriority))
+            .max(Comparator.comparingInt(ProtectedRegion::getPriority))
             .orElse(null);
     }
 
