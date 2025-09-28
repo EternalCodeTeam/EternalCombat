@@ -23,6 +23,7 @@ dependencies {
 
     // litecommands
     implementation("dev.rollczi:litecommands-bukkit:${Versions.LITE_COMMANDS}")
+    implementation("dev.rollczi:litecommands-folia:${Versions.LITE_COMMANDS}")
 
     // Okaeri configs
     implementation("eu.okaeri:okaeri-configs-serdes-commons:${Versions.OKAERI_CONFIGS_SERDES_COMMONS}")
@@ -37,8 +38,10 @@ dependencies {
     // caffeine
     implementation("com.github.ben-manes.caffeine:caffeine:${Versions.CAFFEINE}")
 
-    implementation("com.eternalcode:eternalcode-commons-bukkit:${Versions.ETERNALCODE_COMMONS}")
     implementation("com.eternalcode:eternalcode-commons-adventure:${Versions.ETERNALCODE_COMMONS}")
+    implementation("com.eternalcode:eternalcode-commons-bukkit:${Versions.ETERNALCODE_COMMONS}")
+    implementation("com.eternalcode:eternalcode-commons-shared:${Versions.ETERNALCODE_COMMONS}")
+    implementation("com.eternalcode:eternalcode-commons-folia:${Versions.ETERNALCODE_COMMONS}")
 
     // worldguard
     compileOnly("com.sk89q.worldguard:worldguard-bukkit:${Versions.WORLD_GUARD_BUKKIT}")
@@ -70,6 +73,8 @@ bukkit {
         "packetevents",
     )
     version = "${project.version}"
+
+    foliaSupported = true
 }
 
 tasks {
@@ -104,7 +109,7 @@ tasks.shadowJar {
         "com.github.benmanes.caffeine",
         "com.eternalcode.commons",
         "com.eternalcode.multification",
-        "io.papermc"
+        "io.papermc.lib"
     ).forEach { pack ->
         relocate(pack, "$prefix.$pack")
     }
