@@ -9,6 +9,17 @@ plugins {
     id("xyz.jpenilla.run-paper")
 }
 
+configurations.all {
+    resolutionStrategy {
+        eachDependency {
+            if (requested.group == "com.google.code.gson" && requested.name == "gson") {
+                useVersion("2.11.0")
+                because("WorldGuard requires strictly gson 2.11.0")
+            }
+        }
+    }
+}
+
 dependencies {
     implementation(project(":eternalcombat-api"))
 
