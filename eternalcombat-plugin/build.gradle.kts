@@ -50,7 +50,7 @@ dependencies {
     compileOnly("me.clip:placeholderapi:${Versions.PLACEHOLDER_API}")
     
     // Lands
-    compileOnly("com.github.angeschossen:LandsAPI:7.15.20")
+    compileOnly("com.github.angeschossen:LandsAPI:7.17.2")
 
     // Multification
     implementation("com.eternalcode:multification-bukkit:${Versions.MULTIFICATION}")
