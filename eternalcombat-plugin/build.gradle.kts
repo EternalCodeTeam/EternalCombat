@@ -9,6 +9,17 @@ plugins {
     id("xyz.jpenilla.run-paper")
 }
 
+configurations.all {
+    resolutionStrategy {
+        eachDependency {
+            if (requested.group == "com.google.code.gson" && requested.name == "gson") {
+                useVersion("2.11.0")
+                because("WorldGuard requires strictly gson 2.11.0")
+            }
+        }
+    }
+}
+
 dependencies {
     implementation(project(":eternalcombat-api"))
 
@@ -29,9 +40,6 @@ dependencies {
     implementation("eu.okaeri:okaeri-configs-serdes-commons:${Versions.OKAERI_CONFIGS_SERDES_COMMONS}")
     implementation("eu.okaeri:okaeri-configs-serdes-bukkit:${Versions.OKAERI_CONFIGS_SERDES_BUKKIT}")
 
-    // GitCheck
-    implementation("com.eternalcode:gitcheck:${Versions.GIT_CHECK}")
-
     // bstats
     implementation("org.bstats:bstats-bukkit:${Versions.B_STATS_BUKKIT}")
 
@@ -42,6 +50,7 @@ dependencies {
     implementation("com.eternalcode:eternalcode-commons-bukkit:${Versions.ETERNALCODE_COMMONS}")
     implementation("com.eternalcode:eternalcode-commons-shared:${Versions.ETERNALCODE_COMMONS}")
     implementation("com.eternalcode:eternalcode-commons-folia:${Versions.ETERNALCODE_COMMONS}")
+    implementation("com.eternalcode:eternalcode-commons-updater:${Versions.ETERNALCODE_COMMONS}")
 
     // worldguard
     compileOnly("com.sk89q.worldguard:worldguard-bukkit:${Versions.WORLD_GUARD_BUKKIT}")
