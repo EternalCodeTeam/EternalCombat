@@ -13,7 +13,7 @@ object Versions {
     const val PACKETS_EVENTS = "2.9.5"
 
     const val ADVENTURE_PLATFORM_BUKKIT = "4.4.1"
-    const val ADVENTURE_API = "4.24.0"
+    const val ADVENTURE_API = "4.25.0"
 
     const val LITE_COMMANDS = "3.10.5"
     const val OKAERI_CONFIGS_SERDES_COMMONS = "5.0.13"
