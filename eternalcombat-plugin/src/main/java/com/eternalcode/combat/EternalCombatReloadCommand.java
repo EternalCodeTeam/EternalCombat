@@ -14,7 +14,6 @@ import java.time.Duration;
 import org.bukkit.command.CommandSender;
 
 @Command(name = "combatlog", aliases = "combat")
-@Permission("eternalcombat.reload")
 public class EternalCombatReloadCommand {
 
     private static final Notice RELOAD_MESSAGE = BukkitNotice.builder()
@@ -31,6 +30,7 @@ public class EternalCombatReloadCommand {
 
     @Async
     @Execute(name = "reload")
+    @Permission("eternalcombat.reload")
     void execute(@Context CommandSender sender) {
         Stopwatch stopwatch = Stopwatch.createStarted();
         this.configService.reload();

@@ -107,6 +107,13 @@ public class PluginConfig extends OkaeriConfig {
 
     @Comment({
         " ",
+        "# Settings related to placeholders used in the plugin.",
+        "# Configure default values returned by placeholders"
+    })
+    public PlaceholderSettings placeholders = new PlaceholderSettings();
+
+    @Comment({
+        " ",
         "# Customize the messages displayed by the plugin.",
         "# Modify these to change the text and formatting of notifications and alerts."
     })
