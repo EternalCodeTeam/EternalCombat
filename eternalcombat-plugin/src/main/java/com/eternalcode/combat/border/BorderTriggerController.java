@@ -41,6 +41,7 @@ public class BorderTriggerController implements Listener {
 
         Player player = event.getPlayer();
         if (!fightManager.isInCombat(player.getUniqueId())) {
+            borderService.clearBorder(player);
             return;
         }
 
