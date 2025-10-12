@@ -16,6 +16,8 @@ import org.bukkit.plugin.Plugin;
 
 public class BorderTriggerController implements Listener {
 
+    private static final long CLEAR_BORDER_DELAY_TICKS = 5L;
+
     private final BorderService borderService;
     private final Supplier<BorderSettings> border;
     private final FightManager fightManager;
@@ -95,6 +97,6 @@ public class BorderTriggerController implements Listener {
             return;
         }
 
-        this.server.getScheduler().runTaskLater(this.plugin,() -> this.borderService.clearBorder(player), 5);
+        this.server.getScheduler().runTaskLater(this.plugin,() -> this.borderService.clearBorder(player), CLEAR_BORDER_DELAY_TICKS);
     }
 }
