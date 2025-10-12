@@ -17,7 +17,7 @@ import org.bukkit.event.player.PlayerTeleportEvent;
 
 public class BorderTriggerController implements Listener {
 
-    private static final long SCHEDULE_BORDER_CLEAR_DELAY_MILLIS = 250;
+    private static final long BORDER_WORK_AROUND_DELAY_MILLIS = 250;
 
     private final BorderService borderService;
     private final Supplier<BorderSettings> border;
@@ -98,10 +98,11 @@ public class BorderTriggerController implements Listener {
             return;
         }
 
+        // Due to race condition in PlayerMoveEvent and FightUntagEvent - border can be triggered after death and untag of player - solution delayed removal of border
         this.scheduler.runLater(() -> {
             if (!this.fightManager.isInCombat(player.getUniqueId())) {
                 this.borderService.clearBorder(player);
             }
-        }, Duration.ofMillis(SCHEDULE_BORDER_CLEAR_DELAY_MILLIS));
+        }, Duration.ofMillis(BORDER_WORK_AROUND_DELAY_MILLIS));
     }
 }
