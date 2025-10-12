@@ -12,6 +12,7 @@ import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.event.player.PlayerTeleportEvent;
+import org.bukkit.plugin.Plugin;
 
 public class BorderTriggerController implements Listener {
 
@@ -19,12 +20,20 @@ public class BorderTriggerController implements Listener {
     private final Supplier<BorderSettings> border;
     private final FightManager fightManager;
     private final Server server;
+    private final Plugin plugin;
 
-    public BorderTriggerController(BorderService borderService, Supplier<BorderSettings> border, FightManager fightManager, Server server) {
+    public BorderTriggerController(
+        BorderService borderService,
+        Supplier<BorderSettings> border,
+        FightManager fightManager,
+        Server server,
+        Plugin plugin
+    ) {
         this.borderService = borderService;
         this.border = border;
         this.fightManager = fightManager;
         this.server = server;
+        this.plugin = plugin;
     }
 
     @EventHandler(ignoreCancelled = true, priority = EventPriority.MONITOR)
@@ -41,7 +50,6 @@ public class BorderTriggerController implements Listener {
 
         Player player = event.getPlayer();
         if (!fightManager.isInCombat(player.getUniqueId())) {
-            borderService.clearBorder(player);
             return;
         }
 
@@ -87,7 +95,6 @@ public class BorderTriggerController implements Listener {
             return;
         }
 
-        borderService.clearBorder(player);
+        this.server.getScheduler().runTaskLater(this.plugin,() -> this.borderService.clearBorder(player), 5);
     }
-
 }
