@@ -74,9 +74,12 @@ bukkit {
 
 tasks {
     runServer {
-        minecraftVersion("1.21.4")
-        downloadPlugins.url("https://www.spigotmc.org/resources/packetevents-api.80279/download?version=599651")
-        downloadPlugins.url("https://www.spigotmc.org/resources/placeholderapi.6245/download?version=541946")
+        minecraftVersion("1.21")
+
+        downloadPlugins {
+            modrinth("packetevents", Versions.PACKETS_EVENTS)
+            modrinth("placeholderapi", Versions.PLACEHOLDER_API)
+        }
     }
 }
 

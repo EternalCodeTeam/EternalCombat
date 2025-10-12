@@ -68,7 +68,7 @@ public class FightTagPlaceholder extends PlaceholderExpansion {
     }
 
     private String handleIsInCombat(OfflinePlayer player) {
-        return this.isPlayerInCombat(player).toString();
+        return String.valueOf(this.isPlayerInCombat(player));
     }
 
     private String handleIsInCombatFormatted(OfflinePlayer player) {
