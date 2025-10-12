@@ -12,6 +12,7 @@ import com.eternalcode.combat.fight.drop.DropKeepInventoryService;
 import com.eternalcode.combat.fight.FightManager;
 import com.eternalcode.combat.fight.drop.DropService;
 import com.eternalcode.combat.fight.effect.FightEffectService;
+import com.eternalcode.combat.fight.firework.FireworkController;
 import com.eternalcode.combat.fight.knockback.KnockbackService;
 import com.eternalcode.combat.fight.tagout.FightTagOutService;
 import com.eternalcode.combat.fight.pearl.FightPearlService;
@@ -48,13 +49,15 @@ import com.eternalcode.combat.updater.UpdaterNotificationController;
 import com.eternalcode.combat.updater.UpdaterService;
 import com.eternalcode.commons.adventure.AdventureLegacyColorPostProcessor;
 import com.eternalcode.commons.adventure.AdventureLegacyColorPreProcessor;
-import com.eternalcode.commons.bukkit.scheduler.BukkitSchedulerImpl;
+import com.eternalcode.commons.bukkit.scheduler.MinecraftScheduler;
 import com.eternalcode.commons.scheduler.Scheduler;
 import com.eternalcode.multification.notice.Notice;
 import com.google.common.base.Stopwatch;
 import dev.rollczi.litecommands.LiteCommands;
 import dev.rollczi.litecommands.bukkit.LiteBukkitFactory;
 import dev.rollczi.litecommands.bukkit.LiteBukkitMessages;
+import dev.rollczi.litecommands.folia.FoliaExtension;
+import java.time.Duration;
 import net.kyori.adventure.platform.AudienceProvider;
 import net.kyori.adventure.platform.bukkit.BukkitAudiences;
 import net.kyori.adventure.text.minimessage.MiniMessage;
@@ -98,9 +101,9 @@ public final class CombatPlugin extends JavaPlugin implements EternalCombatApi {
         ConfigService configService = new ConfigService();
 
         EventManager eventManager = new EventManager(this);
-        Scheduler scheduler = new BukkitSchedulerImpl(this);
-
         PluginConfig pluginConfig = configService.create(PluginConfig.class, new File(dataFolder, "config.yml"));
+
+        MinecraftScheduler scheduler = CombatSchedulerAdapter.getAdaptiveScheduler(this);
 
         this.fightManager = new FightManagerImpl(eventManager);
         this.fightPearlService = new FightPearlServiceImpl(pluginConfig.pearl);
@@ -148,6 +151,8 @@ public final class CombatPlugin extends JavaPlugin implements EternalCombatApi {
                 new EternalCombatReloadCommand(configService, noticeService)
             )
 
+            .extension(new FoliaExtension(this))
+
             .result(Notice.class, (invocation, result, chain) -> noticeService.create()
                 .viewer(invocation.sender())
                 .notice(result)
@@ -156,7 +161,7 @@ public final class CombatPlugin extends JavaPlugin implements EternalCombatApi {
             .build();
 
         FightTask fightTask = new FightTask(server, pluginConfig, this.fightManager, noticeService);
-        this.getServer().getScheduler().runTaskTimer(this, fightTask, 20L, 20L);
+        scheduler.timer(fightTask, Duration.ofSeconds(1), Duration.ofSeconds(1));
 
         new Metrics(this, BSTATS_METRICS_ID);
 
@@ -179,7 +184,8 @@ public final class CombatPlugin extends JavaPlugin implements EternalCombatApi {
             new ParticleController(borderService, () -> pluginConfig.border.particle, scheduler, server),
             new BorderBlockController(borderService, () -> pluginConfig.border.block, scheduler, server),
             new EndCrystalListener(this, this.fightManager, pluginConfig),
-            new RespawnAnchorListener(this, this.fightManager, pluginConfig)
+            new RespawnAnchorListener(this, this.fightManager, pluginConfig),
+            new FireworkController(this.fightManager, pluginConfig, noticeService)
         );
 
         eventManager.subscribe(

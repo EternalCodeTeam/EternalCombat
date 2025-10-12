@@ -1,35 +1,33 @@
 package com.eternalcode.combat.updater;
 
-import com.eternalcode.gitcheck.GitCheck;
-import com.eternalcode.gitcheck.GitCheckResult;
-import com.eternalcode.gitcheck.git.GitRepository;
-import com.eternalcode.gitcheck.git.GitTag;
-import dev.rollczi.litecommands.shared.Lazy;
+import com.eternalcode.commons.updater.UpdateResult;
+import com.eternalcode.commons.updater.Version;
+import com.eternalcode.commons.updater.impl.ModrinthUpdateChecker;
+import com.github.benmanes.caffeine.cache.AsyncLoadingCache;
+import com.github.benmanes.caffeine.cache.Caffeine;
 import org.bukkit.plugin.PluginDescriptionFile;
 
+import java.time.Duration;
 import java.util.concurrent.CompletableFuture;
 
 public class UpdaterService {
 
-    private static final GitRepository GIT_REPOSITORY = GitRepository.of("EternalCodeTeam", "EternalCombat");
+    private static final String MODRINTH_PROJECT_ID = "EternalCombat";
+    private static final String CACHE_KEY = "modrinth-update";
 
-    private final GitCheck gitCheck = new GitCheck();
-    private final Lazy<GitCheckResult> gitCheckResult;
+    private final AsyncLoadingCache<String, UpdateResult> updateCache;
 
     public UpdaterService(PluginDescriptionFile descriptionFile) {
-        this.gitCheckResult = new Lazy<>(() -> {
-            String version = descriptionFile.getVersion();
+        Version currentVersion = new Version(descriptionFile.getVersion());
+        ModrinthUpdateChecker updateChecker = new ModrinthUpdateChecker();
 
-            return this.gitCheck.checkRelease(GIT_REPOSITORY, GitTag.of("v" + version));
-        });
+        this.updateCache = Caffeine.newBuilder()
+            .expireAfterWrite(Duration.ofHours(1))
+            .buildAsync(key -> updateChecker.check(MODRINTH_PROJECT_ID, currentVersion));
     }
 
-    public CompletableFuture<Boolean> isUpToDate() {
-        return CompletableFuture.supplyAsync(() -> {
-            GitCheckResult result = this.gitCheckResult.get();
-
-            return result.isUpToDate();
-        });
+    CompletableFuture<UpdateResult> checkForUpdate() {
+        return this.updateCache.get(CACHE_KEY);
     }
 
 }

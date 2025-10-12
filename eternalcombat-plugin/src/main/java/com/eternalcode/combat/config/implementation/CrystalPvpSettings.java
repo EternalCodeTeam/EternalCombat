@@ -1,4 +1,4 @@
-package com.eternalcode.combat.crystalpvp;
+package com.eternalcode.combat.config.implementation;
 
 import eu.okaeri.configs.OkaeriConfig;
 import eu.okaeri.configs.annotation.Comment;

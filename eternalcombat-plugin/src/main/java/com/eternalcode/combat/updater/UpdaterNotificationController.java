@@ -1,6 +1,7 @@
 package com.eternalcode.combat.updater;
 
 import com.eternalcode.combat.config.implementation.PluginConfig;
+import com.eternalcode.commons.concurrent.FutureHandler;
 import net.kyori.adventure.audience.Audience;
 import net.kyori.adventure.platform.AudienceProvider;
 import net.kyori.adventure.text.minimessage.MiniMessage;
@@ -9,12 +10,9 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
 
-import java.util.concurrent.CompletableFuture;
-
 public class UpdaterNotificationController implements Listener {
 
     private static final String NEW_VERSION_AVAILABLE = "<b><gradient:#8a1212:#fc6b03>EternalCombat:</gradient></b> <color:#fce303>New version of EternalCombat is available, please update!";
-    private static final String RECEIVE_UPDATES_PERMISSION = "eternalcombat.receiveupdates";
 
     private final UpdaterService updaterService;
     private final PluginConfig pluginConfig;
@@ -33,23 +31,21 @@ public class UpdaterNotificationController implements Listener {
         Player player = event.getPlayer();
         Audience audience = this.audienceProvider.player(player.getUniqueId());
 
-        if (!player.hasPermission(RECEIVE_UPDATES_PERMISSION) || !this.pluginConfig.settings.notifyAboutUpdates) {
+        if (!shouldNotify(player)) {
             return;
         }
 
-        CompletableFuture<Boolean> upToDate = this.updaterService.isUpToDate();
+        this.updaterService.checkForUpdate()
+            .thenAccept(result -> {
+                if (result.isUpdateAvailable()) {
+                    audience.sendMessage(this.miniMessage.deserialize(NEW_VERSION_AVAILABLE));
+                }
+            })
+            .exceptionally(FutureHandler::handleException);
+    }
 
-        upToDate.whenComplete((isUpToDate, throwable) -> {
-            if (throwable != null) {
-                throwable.printStackTrace();
-
-                return;
-            }
-
-            if (!isUpToDate) {
-                audience.sendMessage(this.miniMessage.deserialize(NEW_VERSION_AVAILABLE));
-            }
-        });
+    private boolean shouldNotify(Player player) {
+        return player.hasPermission("eternalcombat.receiveupdates") && this.pluginConfig.settings.notifyAboutUpdates;
     }
 
 }

@@ -16,7 +16,7 @@
 ## EternalCombat requires PacketEvents plugin to work.
 You can download it from [here](https://modrinth.com/plugin/packetevents)
 
-EternalCombat 2.0 has been tested on Minecraft versions **1.17.1 to 1.21.8**, but it should work seamlessly on most
+EternalCombat 2.0 has been tested on Minecraft versions **1.17.1 to 1.21.9**, but it should work seamlessly on most
 other versions too.
 If you run into any compatibility issues, please let us know in
 the [Issues tab](https://github.com/EternalCodeTeam/EternalCombat/issues).
@@ -123,7 +123,7 @@ With Maven:
 With Gradle:
 
 ```kts
-compileOnly("com.eternalcode:eternalcombat-api:2.2.0")
+compileOnly("com.eternalcode:eternalcombat-api:2.3.0")
 ```
 
 With Maven:
@@ -133,7 +133,7 @@ With Maven:
 <dependency>
     <groupId>com.eternalcode</groupId>
     <artifactId>eternalcombat-api</artifactId>
-    <version>2.2.0</version>
+    <version>2.3.0</version>
     <scope>provided</scope>
 </dependency>
 ```

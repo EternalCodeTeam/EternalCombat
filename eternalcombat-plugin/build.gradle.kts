@@ -9,6 +9,17 @@ plugins {
     id("xyz.jpenilla.run-paper")
 }
 
+configurations.all {
+    resolutionStrategy {
+        eachDependency {
+            if (requested.group == "com.google.code.gson" && requested.name == "gson") {
+                useVersion("2.11.0")
+                because("WorldGuard requires strictly gson 2.11.0")
+            }
+        }
+    }
+}
+
 dependencies {
     implementation(project(":eternalcombat-api"))
 
@@ -23,13 +34,11 @@ dependencies {
 
     // litecommands
     implementation("dev.rollczi:litecommands-bukkit:${Versions.LITE_COMMANDS}")
+    implementation("dev.rollczi:litecommands-folia:${Versions.LITE_COMMANDS}")
 
     // Okaeri configs
     implementation("eu.okaeri:okaeri-configs-serdes-commons:${Versions.OKAERI_CONFIGS_SERDES_COMMONS}")
     implementation("eu.okaeri:okaeri-configs-serdes-bukkit:${Versions.OKAERI_CONFIGS_SERDES_BUKKIT}")
-
-    // GitCheck
-    implementation("com.eternalcode:gitcheck:${Versions.GIT_CHECK}")
 
     // bstats
     implementation("org.bstats:bstats-bukkit:${Versions.B_STATS_BUKKIT}")
@@ -37,8 +46,11 @@ dependencies {
     // caffeine
     implementation("com.github.ben-manes.caffeine:caffeine:${Versions.CAFFEINE}")
 
-    implementation("com.eternalcode:eternalcode-commons-bukkit:${Versions.ETERNALCODE_COMMONS}")
     implementation("com.eternalcode:eternalcode-commons-adventure:${Versions.ETERNALCODE_COMMONS}")
+    implementation("com.eternalcode:eternalcode-commons-bukkit:${Versions.ETERNALCODE_COMMONS}")
+    implementation("com.eternalcode:eternalcode-commons-shared:${Versions.ETERNALCODE_COMMONS}")
+    implementation("com.eternalcode:eternalcode-commons-folia:${Versions.ETERNALCODE_COMMONS}")
+    implementation("com.eternalcode:eternalcode-commons-updater:${Versions.ETERNALCODE_COMMONS}")
 
     // worldguard
     compileOnly("com.sk89q.worldguard:worldguard-bukkit:${Versions.WORLD_GUARD_BUKKIT}")
@@ -47,7 +59,7 @@ dependencies {
     compileOnly("me.clip:placeholderapi:${Versions.PLACEHOLDER_API}")
     
     // Lands
-    compileOnly("com.github.angeschossen:LandsAPI:7.15.20")
+    compileOnly("com.github.angeschossen:LandsAPI:7.17.2")
 
     // Multification
     implementation("com.eternalcode:multification-bukkit:${Versions.MULTIFICATION}")
@@ -70,16 +82,13 @@ bukkit {
         "packetevents",
     )
     version = "${project.version}"
+
+    foliaSupported = true
 }
 
 tasks {
     runServer {
-        minecraftVersion("1.21")
-
-        downloadPlugins {
-            modrinth("packetevents", Versions.PACKETS_EVENTS)
-            modrinth("placeholderapi", Versions.PLACEHOLDER_API)
-        }
+        minecraftVersion("1.21.9")
     }
 }
 
@@ -108,7 +117,7 @@ tasks.shadowJar {
         "com.github.benmanes.caffeine",
         "com.eternalcode.commons",
         "com.eternalcode.multification",
-        "io.papermc"
+        "io.papermc.lib"
     ).forEach { pack ->
         relocate(pack, "$prefix.$pack")
     }
