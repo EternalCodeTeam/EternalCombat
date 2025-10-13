@@ -3,6 +3,8 @@ package com.eternalcode.combat.border;
 import com.eternalcode.combat.fight.FightManager;
 import com.eternalcode.combat.fight.event.FightTagEvent;
 import com.eternalcode.combat.fight.event.FightUntagEvent;
+import com.eternalcode.commons.bukkit.scheduler.MinecraftScheduler;
+import java.time.Duration;
 import java.util.function.Supplier;
 import org.bukkit.Location;
 import org.bukkit.Server;
@@ -15,16 +17,26 @@ import org.bukkit.event.player.PlayerTeleportEvent;
 
 public class BorderTriggerController implements Listener {
 
+    private static final long BORDER_WORK_AROUND_DELAY_MILLIS = 250;
+
     private final BorderService borderService;
     private final Supplier<BorderSettings> border;
     private final FightManager fightManager;
     private final Server server;
+    private final MinecraftScheduler scheduler;
 
-    public BorderTriggerController(BorderService borderService, Supplier<BorderSettings> border, FightManager fightManager, Server server) {
+    public BorderTriggerController(
+        BorderService borderService,
+        Supplier<BorderSettings> border,
+        FightManager fightManager,
+        Server server,
+        MinecraftScheduler scheduler
+    ) {
         this.borderService = borderService;
         this.border = border;
         this.fightManager = fightManager;
         this.server = server;
+        this.scheduler = scheduler;
     }
 
     @EventHandler(ignoreCancelled = true, priority = EventPriority.MONITOR)
@@ -86,7 +98,11 @@ public class BorderTriggerController implements Listener {
             return;
         }
 
-        borderService.clearBorder(player);
+        // Due to race condition in PlayerMoveEvent and FightUntagEvent - border can be triggered after death and untag of player - solution delayed removal of border
+        this.scheduler.runLater(() -> {
+            if (!this.fightManager.isInCombat(player.getUniqueId())) {
+                this.borderService.clearBorder(player);
+            }
+        }, Duration.ofMillis(BORDER_WORK_AROUND_DELAY_MILLIS));
     }
-
 }
