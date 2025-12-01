@@ -16,7 +16,6 @@ import com.github.retrooper.packetevents.util.Vector3i;
 import com.github.retrooper.packetevents.wrapper.play.server.WrapperPlayServerMultiBlockChange;
 import com.github.retrooper.packetevents.wrapper.play.server.WrapperPlayServerMultiBlockChange.EncodedBlock;
 import java.util.Collection;
-import java.util.Locale;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
@@ -31,6 +30,7 @@ import org.bukkit.Server;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
+import org.bukkit.event.player.PlayerQuitEvent;
 
 public class BorderBlockController implements Listener {
 
@@ -66,11 +66,15 @@ public class BorderBlockController implements Listener {
         }
 
         Player player = event.getPlayer();
-        Set<BorderPoint> borderPoints = this.filterPassablePoints(player, event.getPoints());
+        UUID playerId = player.getUniqueId();
 
-        event.setPoints(borderPoints);
-        this.showBlocks(player, borderPoints);
-        this.playersToUpdate.add(player.getUniqueId());
+        synchronized (this.getLock(playerId)) {
+            Set<BorderPoint> borderPoints = this.filterPassablePoints(player, event.getPoints());
+
+            event.setPoints(borderPoints);
+            this.showBlocks(player, borderPoints);
+            this.playersToUpdate.add(playerId);
+        }
     }
 
     @EventHandler
@@ -80,7 +84,7 @@ public class BorderBlockController implements Listener {
         }
 
         UUID playerId = event.getPlayer().getUniqueId();
-
+        
         Object lock = this.getLock(playerId);
 
         synchronized (lock) {
@@ -92,6 +96,15 @@ public class BorderBlockController implements Listener {
                 this.originalBlocks.remove(playerId);
             }
         }
+    }
+
+    @EventHandler
+    void onPlayerQuit(PlayerQuitEvent event) {
+        UUID playerId = event.getPlayer().getUniqueId();
+
+        this.playersToUpdate.remove(playerId);
+        this.originalBlocks.remove(playerId);
+        this.lockedPlayers.remove(playerId);
     }
 
     private void updatePlayers() {
@@ -112,16 +125,18 @@ public class BorderBlockController implements Listener {
 
     private void updatePlayer(UUID uuid, Player player) {
         Object lock = this.getLock(uuid);
-        
+
         synchronized (lock) {
             Set<BorderPoint> border = this.borderService.getActiveBorder(player);
 
             if (border.isEmpty()) {
                 this.playersToUpdate.remove(uuid);
+                this.originalBlocks.remove(uuid);
                 return;
             }
 
-            this.showBlocks(player, border);
+            Set<BorderPoint> passablePoints = this.filterPassablePoints(player, border);
+            this.showBlocks(player, passablePoints);
         }
     }
 
@@ -170,10 +185,10 @@ public class BorderBlockController implements Listener {
 
         ChunkLocation chunk = entry.getKey();
 
-        return entry.getValue().stream().filter(point -> this.isPassableAndSave(point, chunk, snapshot, savedBlocks));
+        return entry.getValue().stream().filter(point -> this.trySavePassableBlock(point, chunk, snapshot, savedBlocks));
     }
 
-    private boolean isPassableAndSave(BorderPoint point, ChunkLocation chunk, ChunkSnapshot snapshot, Map<BorderPoint, Integer> savedBlocks) {
+    private boolean trySavePassableBlock(BorderPoint point, ChunkLocation chunk, ChunkSnapshot snapshot, Map<BorderPoint, Integer> savedBlocks) {
         if (savedBlocks.containsKey(point)) {
             return true;
         }
