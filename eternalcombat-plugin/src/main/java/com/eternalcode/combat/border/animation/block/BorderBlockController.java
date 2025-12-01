@@ -193,7 +193,7 @@ public class BorderBlockController implements Listener {
     }
 
     private int resolveBlockId(Material material) {
-        StateType stateType = StateTypes.getByName("minecraft:" + material.name().toLowerCase(Locale.ROOT));
+        StateType stateType = StateTypes.getByName(material.getKey().toString());
 
         if (stateType == null) {
             return AIR_ID;
