@@ -80,7 +80,8 @@ public class BorderBlockController implements Listener {
         }
 
         UUID playerId = event.getPlayer().getUniqueId();
-        Object lock = this.lockedPlayers.computeIfAbsent(playerId, k -> new Object());
+
+        Object lock = this.getLock(playerId);
 
         synchronized (lock) {
             this.restoreBlocks(event.getPlayer(), event.getPoints());
@@ -110,7 +111,8 @@ public class BorderBlockController implements Listener {
     }
 
     private void updatePlayer(UUID uuid, Player player) {
-        Object lock = this.lockedPlayers.computeIfAbsent(uuid, k -> new Object());
+        Object lock = this.getLock(uuid);
+        
         synchronized (lock) {
             Set<BorderPoint> border = this.borderService.getActiveBorder(player);
 
@@ -227,4 +229,7 @@ public class BorderBlockController implements Listener {
         ));
     }
 
+    private Object getLock(UUID uuid) {
+        return this.lockedPlayers.computeIfAbsent(uuid, k -> new Object());
+    }
 }
