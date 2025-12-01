@@ -30,6 +30,7 @@ import org.bukkit.Server;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
+import org.bukkit.event.player.PlayerQuitEvent;
 
 public class BorderBlockController implements Listener {
 
@@ -46,6 +47,7 @@ public class BorderBlockController implements Listener {
 
     private final Set<UUID> playersToUpdate = ConcurrentHashMap.newKeySet();
     private final Map<UUID, Object> lockedPlayers = new ConcurrentHashMap<>();
+    private final Map<UUID, Map<BorderPoint, Integer>> originalBlocks = new ConcurrentHashMap<>();
     private final ChunkCache chunkCache;
 
     public BorderBlockController(BorderService borderService, Supplier<BlockSettings> settings, Scheduler scheduler, Server server) {
@@ -54,42 +56,59 @@ public class BorderBlockController implements Listener {
         this.server = server;
         this.chunkCache = new ChunkCache(settings.get());
 
-        scheduler.timerAsync(() -> this.updatePlayers(), settings.get().updateDelay, settings.get().updateDelay);
+        scheduler.timerAsync(this::updatePlayers, settings.get().updateDelay, settings.get().updateDelay);
     }
 
     @EventHandler
     void onBorderShowAsyncEvent(BorderShowAsyncEvent event) {
-        if (!settings.get().enabled) {
+        if (!this.settings.get().enabled) {
             return;
         }
 
         Player player = event.getPlayer();
-        Set<BorderPoint> borderPoints = this.getPointsWithoutAir(player, event.getPoints());
+        UUID playerId = player.getUniqueId();
 
-        event.setPoints(borderPoints);
-        this.showBlocks(player, borderPoints);
-        this.playersToUpdate.add(player.getUniqueId());
+        synchronized (this.getLock(playerId)) {
+            Set<BorderPoint> borderPoints = this.filterPassablePoints(player, event.getPoints());
+
+            event.setPoints(borderPoints);
+            this.showBlocks(player, borderPoints);
+            this.playersToUpdate.add(playerId);
+        }
     }
 
     @EventHandler
     void onBorderHideAsyncEvent(BorderHideAsyncEvent event) {
-        if (!settings.get().enabled) {
+        if (!this.settings.get().enabled) {
             return;
         }
 
-        Object lock = lockedPlayers.computeIfAbsent(event.getPlayer().getUniqueId(), k -> new Object());
+        UUID playerId = event.getPlayer().getUniqueId();
+        
+        Object lock = this.getLock(playerId);
+
         synchronized (lock) {
-            this.hideBlocks(event.getPlayer(), event.getPoints());
+            this.restoreBlocks(event.getPlayer(), event.getPoints());
 
             Set<BorderPoint> border = this.borderService.getActiveBorder(event.getPlayer());
             if (border.isEmpty()) {
-                this.playersToUpdate.remove(event.getPlayer().getUniqueId());
+                this.playersToUpdate.remove(playerId);
+                this.originalBlocks.remove(playerId);
             }
         }
     }
 
+    @EventHandler
+    void onPlayerQuit(PlayerQuitEvent event) {
+        UUID playerId = event.getPlayer().getUniqueId();
+
+        this.playersToUpdate.remove(playerId);
+        this.originalBlocks.remove(playerId);
+        this.lockedPlayers.remove(playerId);
+    }
+
     private void updatePlayers() {
-        if (!settings.get().enabled) {
+        if (!this.settings.get().enabled) {
             return;
         }
 
@@ -105,93 +124,127 @@ public class BorderBlockController implements Listener {
     }
 
     private void updatePlayer(UUID uuid, Player player) {
-        Object lock = lockedPlayers.computeIfAbsent(uuid, k -> new Object());
+        Object lock = this.getLock(uuid);
+
         synchronized (lock) {
             Set<BorderPoint> border = this.borderService.getActiveBorder(player);
 
             if (border.isEmpty()) {
                 this.playersToUpdate.remove(uuid);
+                this.originalBlocks.remove(uuid);
                 return;
             }
 
-            this.showBlocks(player, border);
+            Set<BorderPoint> passablePoints = this.filterPassablePoints(player, border);
+            this.showBlocks(player, passablePoints);
         }
     }
 
     private void showBlocks(Player player, Collection<BorderPoint> blocks) {
-        this.splitByChunks(blocks).entrySet().stream()
-            .map(chunkBlocks -> toMultiBlockChangePacket(chunkBlocks))
-            .forEach(change -> PLAYER_MANAGER.sendPacket(player, change));
+        this.splitByChunkSection(blocks).forEach((chunkPos, chunkPoints) -> {
+            EncodedBlock[] encodedBlocks = chunkPoints.stream()
+                .map(this::toBorderBlock)
+                .toArray(EncodedBlock[]::new);
+
+            PLAYER_MANAGER.sendPacket(player, new WrapperPlayServerMultiBlockChange(chunkPos, true, encodedBlocks));
+        });
     }
 
-    private WrapperPlayServerMultiBlockChange toMultiBlockChangePacket(Entry<Vector3i, Set<BorderPoint>> chunkBlocks) {
-        EncodedBlock[] encodedBlocks = chunkBlocks.getValue().stream()
-            .map(borderPoint -> this.toEncodedBlock(borderPoint))
-            .toArray(value -> new EncodedBlock[value]);
+    private void restoreBlocks(Player player, Collection<BorderPoint> blocks) {
+        UUID playerId = player.getUniqueId();
+        Map<BorderPoint, Integer> savedBlocks = this.originalBlocks.get(playerId);
 
-        return new WrapperPlayServerMultiBlockChange(chunkBlocks.getKey(), true, encodedBlocks);
+        this.splitByChunkSection(blocks).forEach((chunkPos, chunkPoints) -> {
+            EncodedBlock[] encodedBlocks = chunkPoints.stream()
+                .map(point -> this.toOriginalBlock(point, savedBlocks))
+                .toArray(EncodedBlock[]::new);
+
+            PLAYER_MANAGER.sendPacket(player, new WrapperPlayServerMultiBlockChange(chunkPos, true, encodedBlocks));
+        });
+
+        if (savedBlocks != null) {
+            blocks.forEach(savedBlocks::remove);
+        }
     }
 
-    private void hideBlocks(Player player, Collection<BorderPoint> blocks) {
-        this.splitByChunks(blocks).entrySet().stream()
-            .map(chunkBlocks -> toMultiAirChangePacket(chunkBlocks))
-            .forEach(change -> PLAYER_MANAGER.sendPacket(player, change));
-    }
+    private Set<BorderPoint> filterPassablePoints(Player player, Collection<BorderPoint> points) {
+        UUID playerId = player.getUniqueId();
+        Map<BorderPoint, Integer> savedBlocks = this.originalBlocks.computeIfAbsent(playerId, key -> new ConcurrentHashMap<>());
 
-    private WrapperPlayServerMultiBlockChange toMultiAirChangePacket(Entry<Vector3i, Set<BorderPoint>> chunkBlocks) {
-        EncodedBlock[] encodedBlocks = chunkBlocks.getValue().stream()
-            .map(point -> new EncodedBlock(AIR_ID, point.x(), point.y(), point.z()))
-            .toArray(value -> new EncodedBlock[value]);
-
-        return new WrapperPlayServerMultiBlockChange(chunkBlocks.getKey(), true, encodedBlocks);
-    }
-
-    private Set<BorderPoint> getPointsWithoutAir(Player player, Collection<BorderPoint> blocks) {
-        Map<ChunkLocation, Set<BorderPoint>> chunksToProcess = blocks.stream()
-            .map(borderPoint -> borderPoint.toInclusive())
-            .collect(Collectors.groupingBy(
-                inclusive -> new ChunkLocation(inclusive.x() >> MINECRAFT_CHUNK_SHIFT, inclusive.z() >> MINECRAFT_CHUNK_SHIFT),
-                Collectors.toSet()
-            ));
-
-        return chunksToProcess.entrySet().stream()
-            .flatMap(entry -> getPointsWithoutAirOnChunk(player, entry))
+        return this.groupByChunk(points).entrySet().stream()
+            .flatMap(entry -> this.filterChunkPoints(player, entry, savedBlocks))
             .collect(Collectors.toSet());
     }
 
-    private Stream<BorderPoint> getPointsWithoutAirOnChunk(Player player, Entry<ChunkLocation, Set<BorderPoint>> entry) {
-        ChunkSnapshot snapshot =  this.chunkCache.loadSnapshot(player, entry.getKey());
+    private Stream<BorderPoint> filterChunkPoints(Player player, Entry<ChunkLocation, Set<BorderPoint>> entry, Map<BorderPoint, Integer> savedBlocks) {
+        ChunkSnapshot snapshot = this.chunkCache.loadSnapshot(player, entry.getKey());
+
         if (snapshot == null) {
             return Stream.empty();
         }
 
-        return entry.getValue().stream()
-            .filter(point -> isAir(entry.getKey(), point, snapshot));
+        ChunkLocation chunk = entry.getKey();
+
+        return entry.getValue().stream().filter(point -> this.trySavePassableBlock(point, chunk, snapshot, savedBlocks));
     }
 
-    private static boolean isAir(ChunkLocation location, BorderPoint point, ChunkSnapshot chunk) {
-        int xInsideChunk = point.x() - (location.x() << MINECRAFT_CHUNK_SHIFT);
-        int zInsideChunk = point.z() - (location.z() << MINECRAFT_CHUNK_SHIFT);
-        Material material = chunk.getBlockType(xInsideChunk, point.y(), zInsideChunk);
+    private boolean trySavePassableBlock(BorderPoint point, ChunkLocation chunk, ChunkSnapshot snapshot, Map<BorderPoint, Integer> savedBlocks) {
+        if (savedBlocks.containsKey(point)) {
+            return true;
+        }
 
-        return material.isAir();
+        int localX = point.x() - (chunk.x() << MINECRAFT_CHUNK_SHIFT);
+        int localZ = point.z() - (chunk.z() << MINECRAFT_CHUNK_SHIFT);
+
+        Material material = snapshot.getBlockType(localX, point.y(), localZ);
+
+        if (material.isSolid()) {
+            return false;
+        }
+
+        savedBlocks.put(point, this.resolveBlockId(material));
+
+        return true;
     }
 
-    private Map<Vector3i, Set<BorderPoint>> splitByChunks(Collection<BorderPoint> blocks) {
-        return blocks.stream().collect(Collectors.groupingBy(
-            block -> new Vector3i(
-                block.x() >> MINECRAFT_CHUNK_SHIFT,
-                block.y() >> MINECRAFT_CHUNK_SHIFT,
-                block.z() >> MINECRAFT_CHUNK_SHIFT
-            ),
+    private int resolveBlockId(Material material) {
+        StateType stateType = StateTypes.getByName(material.getKey().toString());
+
+        if (stateType == null) {
+            return AIR_ID;
+        }
+
+        return WrappedBlockState.getDefaultState(SERVER_VERSION, stateType).getGlobalId();
+    }
+
+    private EncodedBlock toBorderBlock(BorderPoint point) {
+        StateType type = this.settings.get().type.getStateType(point);
+        int blockId = WrappedBlockState.getDefaultState(SERVER_VERSION, type).getGlobalId();
+
+        return new EncodedBlock(blockId, point.x(), point.y(), point.z());
+    }
+
+    private EncodedBlock toOriginalBlock(BorderPoint point, Map<BorderPoint, Integer> savedBlocks) {
+        int blockId = savedBlocks != null ? savedBlocks.getOrDefault(point, AIR_ID) : AIR_ID;
+
+        return new EncodedBlock(blockId, point.x(), point.y(), point.z());
+    }
+
+    private Map<ChunkLocation, Set<BorderPoint>> groupByChunk(Collection<BorderPoint> points) {
+        return points.stream().collect(Collectors.groupingBy(
+            point -> new ChunkLocation(point.x() >> MINECRAFT_CHUNK_SHIFT, point.z() >> MINECRAFT_CHUNK_SHIFT),
             Collectors.toSet()
         ));
     }
 
-    private EncodedBlock toEncodedBlock(BorderPoint point) {
-        StateType type = settings.get().type.getStateType(point);
-        WrappedBlockState state = WrappedBlockState.getDefaultState(SERVER_VERSION, type);
-        return new EncodedBlock(state.getGlobalId(), point.x(), point.y(), point.z());
+    private Map<Vector3i, Set<BorderPoint>> splitByChunkSection(Collection<BorderPoint> points) {
+        return points.stream().collect(Collectors.groupingBy(
+            point -> new Vector3i(point.x() >> MINECRAFT_CHUNK_SHIFT, point.y() >> MINECRAFT_CHUNK_SHIFT, point.z() >> MINECRAFT_CHUNK_SHIFT),
+            Collectors.toSet()
+        ));
     }
 
+    private Object getLock(UUID uuid) {
+        return this.lockedPlayers.computeIfAbsent(uuid, k -> new Object());
+    }
 }
