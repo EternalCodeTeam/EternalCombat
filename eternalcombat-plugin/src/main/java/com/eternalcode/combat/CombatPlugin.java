@@ -8,7 +8,7 @@ import com.eternalcode.combat.border.animation.particle.ParticleController;
 import com.eternalcode.combat.bridge.BridgeService;
 import com.eternalcode.combat.crystalpvp.RespawnAnchorListener;
 import com.eternalcode.combat.crystalpvp.EndCrystalListener;
-import com.eternalcode.combat.fight.FightBypassController;
+import com.eternalcode.combat.fight.controller.FightBypassController;
 import com.eternalcode.combat.fight.drop.DropKeepInventoryService;
 import com.eternalcode.combat.fight.FightManager;
 import com.eternalcode.combat.fight.drop.DropService;

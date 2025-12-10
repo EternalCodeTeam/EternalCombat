@@ -7,5 +7,4 @@ public enum CancelTagReason {
     ADMIN,
     CREATIVE_MODE,
 
-
 }

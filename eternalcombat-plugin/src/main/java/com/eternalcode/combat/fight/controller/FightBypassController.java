@@ -1,4 +1,4 @@
-package com.eternalcode.combat.fight;
+package com.eternalcode.combat.fight.controller;
 
 import com.eternalcode.combat.config.implementation.PluginConfig;
 import com.eternalcode.combat.fight.event.CancelTagReason;
