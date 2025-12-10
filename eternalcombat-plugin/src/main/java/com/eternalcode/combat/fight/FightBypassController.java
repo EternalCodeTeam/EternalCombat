@@ -35,11 +35,13 @@ public class FightBypassController implements Listener {
         if (player.hasPermission(BYPASS_PERMISSION)) {
             event.setCancelReason(CancelTagReason.PERMISSION_BYPASS);
             event.setCancelled(true);
+            return;
         }
 
         if (this.config.admin.excludeAdminsFromCombat && player.isOp()) {
             event.setCancelReason(CancelTagReason.ADMIN);
             event.setCancelled(true);
+            return;
         }
 
         if (this.config.admin.excludeCreativePlayersFromCombat && player.getGameMode() == GameMode.CREATIVE) {
