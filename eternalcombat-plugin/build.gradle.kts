@@ -88,10 +88,11 @@ bukkit {
 
 tasks {
     runServer {
-        minecraftVersion("1.21.8")
-        downloadPlugins.url("https://cdn.modrinth.com/data/1u6JkXh5/versions/Jk1z2u7n/worldedit-bukkit-7.3.16.jar")
-        downloadPlugins.url("https://github.com/retrooper/packetevents/releases/download/v2.9.5/packetevents-spigot-2.9.5.jar")
-        downloadPlugins.url("https://cdn.modrinth.com/data/DKY9btbd/versions/PO4MKx7e/worldguard-bukkit-7.0.14-dist.jar")
+        minecraftVersion("1.21.10")
+        downloadPlugins.url("https://cdn.modrinth.com/data/1u6JkXh5/versions/3ISh7ADm/worldedit-bukkit-7.3.17.jar")
+        downloadPlugins.url("https://cdn.modrinth.com/data/HYKaKraK/versions/7igcjlxa/packetevents-spigot-2.10.1.jar")
+        downloadPlugins.url("https://cdn.modrinth.com/data/DKY9btbd/versions/Cm1YG6Lt/worldguard-bukkit-7.0.15-beta-01.jar")
+        downloadPlugins.url("https://cdn.modrinth.com/data/Vebnzrzj/versions/OrIs0S6b/LuckPerms-Bukkit-5.5.17.jar")
     }
 }
 
