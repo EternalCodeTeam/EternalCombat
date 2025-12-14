@@ -15,7 +15,7 @@ public class FightTridentSettings extends OkaeriConfig {
     })
     public boolean tridentThrowDisabledDuringCombat = true;
 
-    @Comment("# Set true, If you want add cooldown to pearls")
+    @Comment("# Set true, If you want add cooldown to trident")
     public boolean tridentCooldownEnabled = false;
 
     @Comment("# Set true, If you want to reset timer when player uses trident")
@@ -23,7 +23,7 @@ public class FightTridentSettings extends OkaeriConfig {
 
     @Comment({
         "# Block throwing trident with delay?",
-        "# If you set this to for example 3s, player will have to wait 3 seconds before throwing another pearl"
+        "# If you set this to for example 3s, player will have to wait 3 seconds before throwing trident"
     })
     public Duration tridentThrowDelay = Duration.ofSeconds(3);
 
@@ -32,7 +32,7 @@ public class FightTridentSettings extends OkaeriConfig {
         .chat("<red>Throwing trident is prohibited during combat!")
         .build();
 
-    @Comment("# Message sent when player tries to throw ender pearl, but has delay")
+    @Comment("# Message sent when player tries to throw trident, but has delay")
     public Notice tridentThrowBlockedDelayDuringCombat = BukkitNotice.builder()
         .chat("<red>You must wait {TIME} before next throw!")
         .build();

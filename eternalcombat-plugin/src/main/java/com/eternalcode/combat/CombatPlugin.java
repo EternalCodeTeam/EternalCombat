@@ -18,6 +18,7 @@ import com.eternalcode.combat.fight.tagout.FightTagOutService;
 import com.eternalcode.combat.fight.pearl.FightPearlService;
 import com.eternalcode.combat.fight.trident.FightTridentController;
 import com.eternalcode.combat.fight.trident.FightTridentService;
+import com.eternalcode.combat.fight.trident.FightTridentServiceImpl;
 import com.eternalcode.combat.handler.InvalidUsageHandlerImpl;
 import com.eternalcode.combat.handler.MissingPermissionHandlerImpl;
 import com.eternalcode.combat.config.ConfigService;
@@ -109,6 +110,7 @@ public final class CombatPlugin extends JavaPlugin implements EternalCombatApi {
 
         this.fightManager = new FightManagerImpl(eventManager);
         this.fightPearlService = new FightPearlServiceImpl(pluginConfig.pearl);
+        this.fightTridentService = new FightTridentServiceImpl(pluginConfig.trident);
         this.fightTagOutService = new FightTagOutServiceImpl();
         this.fightEffectService = new FightEffectServiceImpl();
 
