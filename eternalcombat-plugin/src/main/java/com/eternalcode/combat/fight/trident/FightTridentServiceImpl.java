@@ -9,28 +9,28 @@ import java.util.UUID;
 
 public class FightTridentServiceImpl implements FightTridentService {
     private final FightTridentSettings tridentSettings;
-    private final Cache<UUID, Instant> pearlStartTimes;
+    private final Cache<UUID, Instant> tridentStartTimes;
 
     public FightTridentServiceImpl(FightTridentSettings pearlSettings) {
         this.tridentSettings = pearlSettings;
-        this.pearlStartTimes = Caffeine.newBuilder()
+        this.tridentStartTimes = Caffeine.newBuilder()
             .expireAfterWrite(pearlSettings.tridentThrowDelay)
             .build();
     }
 
     @Override
     public void markDelay(UUID uuid) {
-        this.pearlStartTimes.put(uuid, Instant.now());
+        this.tridentStartTimes.put(uuid, Instant.now());
     }
 
     @Override
     public boolean hasDelay(UUID uuid) {
-        return this.pearlStartTimes.getIfPresent(uuid) != null;
+        return this.tridentStartTimes.getIfPresent(uuid) != null;
     }
 
     @Override
     public Duration getRemainingDelay(UUID uuid) {
-        Instant startTime = this.pearlStartTimes.getIfPresent(uuid);
+        Instant startTime = this.tridentStartTimes.getIfPresent(uuid);
         if (startTime == null) {
             return Duration.ZERO;
         }
@@ -43,7 +43,7 @@ public class FightTridentServiceImpl implements FightTridentService {
 
     @Override
     public Instant getDelay(UUID uuid) {
-        Instant startTime = this.pearlStartTimes.getIfPresent(uuid);
+        Instant startTime = this.tridentStartTimes.getIfPresent(uuid);
         return startTime != null ? startTime.plus(this.tridentSettings.tridentThrowDelay) : Instant.MIN;
     }
 }
