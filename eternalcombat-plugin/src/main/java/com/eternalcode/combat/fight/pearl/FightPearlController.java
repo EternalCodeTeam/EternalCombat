@@ -1,6 +1,8 @@
 package com.eternalcode.combat.fight.pearl;
 
+import com.eternalcode.combat.config.implementation.PluginConfig;
 import com.eternalcode.combat.fight.FightManager;
+import com.eternalcode.combat.fight.event.CauseOfTag;
 import com.eternalcode.combat.notification.NoticeService;
 import com.eternalcode.combat.util.DurationUtil;
 import java.time.Duration;
@@ -14,7 +16,6 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.ProjectileLaunchEvent;
-import org.bukkit.inventory.ItemStack;
 
 public class FightPearlController implements Listener {
 
@@ -22,17 +23,20 @@ public class FightPearlController implements Listener {
     private final NoticeService noticeService;
     private final FightManager fightManager;
     private final FightPearlService fightPearlService;
+    private final PluginConfig config;
 
     public FightPearlController(
         FightPearlSettings settings,
         NoticeService noticeService,
         FightManager fightManager,
-        FightPearlService fightPearlService
+        FightPearlService fightPearlService,
+        PluginConfig config
     ) {
         this.settings = settings;
         this.noticeService = noticeService;
         this.fightManager = fightManager;
         this.fightPearlService = fightPearlService;
+        this.config = config;
     }
 
     @EventHandler(priority = EventPriority.HIGHEST)
@@ -62,6 +66,11 @@ public class FightPearlController implements Listener {
 
         if (this.settings.pearlCooldownEnabled) {
             handlePearlCooldown(event, player, playerId);
+        }
+
+        if (this.settings.pearlResetsTimerEnabled) {
+            Duration combatTime = this.config.settings.combatTimerDuration;
+            this.fightManager.tag(playerId, combatTime, CauseOfTag.CUSTOM);
         }
     }
 
