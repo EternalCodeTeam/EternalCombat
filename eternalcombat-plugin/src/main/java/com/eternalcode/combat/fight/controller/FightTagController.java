@@ -4,7 +4,6 @@ import com.eternalcode.combat.WhitelistBlacklistMode;
 import com.eternalcode.combat.config.implementation.PluginConfig;
 import com.eternalcode.combat.fight.FightManager;
 import com.eternalcode.combat.fight.event.CauseOfTag;
-import org.bukkit.GameMode;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Projectile;
@@ -56,14 +55,6 @@ public class FightTagController implements Listener {
             return;
         }
 
-        if (this.cannotBeTagged(attacker)) {
-            return;
-        }
-
-        if (this.cannotBeTagged(attackedPlayerByPerson)) {
-            return;
-        }
-
         if (this.config.combat.disableFlying) {
             if (attackedPlayerByPerson.isFlying()) {
                 attackedPlayerByPerson.setFlying(false);
@@ -96,15 +87,6 @@ public class FightTagController implements Listener {
         }
 
         if (this.isPlayerInDisabledWorld(player)) {
-            return;
-        }
-
-        if (this.cannotBeTagged(player)) {
-            return;
-        }
-
-        boolean hasBypass = player.hasPermission("eternalcombat.bypass");
-        if (hasBypass) {
             return;
         }
 
@@ -143,18 +125,6 @@ public class FightTagController implements Listener {
         String worldName = player.getWorld().getName();
 
         return this.config.settings.ignoredWorlds.contains(worldName);
-    }
-
-    private boolean cannotBeTagged(Player player) {
-        if (this.config.admin.excludeAdminsFromCombat && player.hasPermission("eternalcombat.bypass")) {
-            return true;
-        }
-
-        if (this.config.admin.excludeAdminsFromCombat && player.isOp()) {
-            return true;
-        }
-
-        return this.config.admin.excludeCreativePlayersFromCombat && player.getGameMode() == GameMode.CREATIVE;
     }
 
 
