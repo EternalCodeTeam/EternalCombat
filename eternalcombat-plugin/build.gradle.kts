@@ -59,7 +59,7 @@ dependencies {
     compileOnly("me.clip:placeholderapi:${Versions.PLACEHOLDER_API}")
     
     // Lands
-    compileOnly("com.github.angeschossen:LandsAPI:7.17.2")
+    compileOnly("com.github.angeschossen:LandsAPI:${Versions.LANDS_API}")
 
     // Multification
     implementation("com.eternalcode:multification-bukkit:${Versions.MULTIFICATION}")
@@ -89,10 +89,10 @@ bukkit {
 tasks {
     runServer {
         minecraftVersion("1.21.10")
-        downloadPlugins.modrinth("WorldEdit", "3ISh7ADm")
-        downloadPlugins.modrinth("PacketEvents", "7igcjlxa")
-        downloadPlugins.modrinth("WorldGuard", "Cm1YG6Lt")
-        downloadPlugins.modrinth("LuckPerms", "OrIs0S6b")
+        downloadPlugins.modrinth("WorldEdit", Versions.WORLDEDIT)
+        downloadPlugins.modrinth("PacketEvents", "${Versions.PACKETEVENTS}+spigot")
+        downloadPlugins.modrinth("WorldGuard", Versions.WORLDGUARD)
+        downloadPlugins.modrinth("LuckPerms", "v${Versions.LUCKPERMS}-bukkit")
     }
 }
 
