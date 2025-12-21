@@ -4,21 +4,18 @@ import com.eternalcode.combat.config.implementation.PluginConfig;
 import com.eternalcode.combat.fight.event.CancelTagReason;
 import com.eternalcode.combat.fight.event.FightTagEvent;
 import java.util.UUID;
-import org.bukkit.GameMode;
 import org.bukkit.Server;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 
-public class FightBypassController implements Listener {
-
-    private static final String BYPASS_PERMISSION = "eternalcombat.bypass";
+public class FightBypassAdminController implements Listener {
 
     private final Server server;
     private final PluginConfig config;
 
-    public FightBypassController(Server server, PluginConfig config) {
+    public FightBypassAdminController(Server server, PluginConfig config) {
         this.server = server;
         this.config = config;
     }
@@ -32,22 +29,9 @@ public class FightBypassController implements Listener {
             return;
         }
 
-        if (player.hasPermission(BYPASS_PERMISSION)) {
-            event.setCancelReason(CancelTagReason.PERMISSION_BYPASS);
-            event.setCancelled(true);
-            return;
-        }
-
         if (this.config.admin.excludeAdminsFromCombat && player.isOp()) {
             event.setCancelReason(CancelTagReason.ADMIN);
             event.setCancelled(true);
-            return;
-        }
-
-        if (this.config.admin.excludeCreativePlayersFromCombat && player.getGameMode() == GameMode.CREATIVE) {
-            event.setCancelReason(CancelTagReason.CREATIVE_MODE);
-            event.setCancelled(true);
         }
     }
-
 }

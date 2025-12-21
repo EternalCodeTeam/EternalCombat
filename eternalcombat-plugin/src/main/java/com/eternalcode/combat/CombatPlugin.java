@@ -8,7 +8,9 @@ import com.eternalcode.combat.border.animation.particle.ParticleController;
 import com.eternalcode.combat.bridge.BridgeService;
 import com.eternalcode.combat.crystalpvp.RespawnAnchorListener;
 import com.eternalcode.combat.crystalpvp.EndCrystalListener;
-import com.eternalcode.combat.fight.controller.FightBypassController;
+import com.eternalcode.combat.fight.controller.FightBypassAdminController;
+import com.eternalcode.combat.fight.controller.FightBypassCreativeController;
+import com.eternalcode.combat.fight.controller.FightBypassPermissionController;
 import com.eternalcode.combat.fight.drop.DropKeepInventoryService;
 import com.eternalcode.combat.fight.FightManager;
 import com.eternalcode.combat.fight.drop.DropService;
@@ -173,7 +175,9 @@ public final class CombatPlugin extends JavaPlugin implements EternalCombatApi {
         eventManager.subscribe(
             new FightTagController(this.fightManager, pluginConfig),
             new FightUnTagController(this.fightManager, pluginConfig, logoutService),
-            new FightBypassController(server, pluginConfig),
+            new FightBypassAdminController(server, pluginConfig),
+            new FightBypassPermissionController(server),
+            new FightBypassCreativeController(server, pluginConfig),
             new FightActionBlockerController(this.fightManager, noticeService, pluginConfig, server),
             new FightPearlController(pluginConfig.pearl, noticeService, this.fightManager, this.fightPearlService),
             new UpdaterNotificationController(updaterService, pluginConfig, this.audienceProvider, miniMessage),
