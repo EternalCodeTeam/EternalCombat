@@ -55,6 +55,14 @@ public class FightTagController implements Listener {
             return;
         }
 
+        UUID attackedUniqueId = attackedPlayerByPerson.getUniqueId();
+        UUID attackerUniqueId = attacker.getUniqueId();
+
+        // enderpearl on folia counts as attack on self
+        if (attackedUniqueId == attackerUniqueId) {
+            return;
+        }
+
         if (this.config.combat.disableFlying) {
             if (attackedPlayerByPerson.isFlying()) {
                 attackedPlayerByPerson.setFlying(false);
@@ -68,8 +76,6 @@ public class FightTagController implements Listener {
         }
 
         Duration combatTime = this.config.settings.combatTimerDuration;
-        UUID attackedUniqueId = attackedPlayerByPerson.getUniqueId();
-        UUID attackerUniqueId = attacker.getUniqueId();
 
         this.fightManager.tag(attackedUniqueId, combatTime, CauseOfTag.PLAYER, attackerUniqueId);
         this.fightManager.tag(attackerUniqueId, combatTime, CauseOfTag.PLAYER, attackedUniqueId);
@@ -126,7 +132,6 @@ public class FightTagController implements Listener {
 
         return this.config.settings.ignoredWorlds.contains(worldName);
     }
-
 
 
 }

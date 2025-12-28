@@ -1,4 +1,5 @@
 import net.minecrell.pluginyml.bukkit.BukkitPluginDescription
+import xyz.jpenilla.runpaper.task.RunServer
 
 plugins {
     `eternalcombat-java`
@@ -89,10 +90,17 @@ bukkit {
 tasks {
     runServer {
         minecraftVersion("1.21.10")
+
         downloadPlugins.modrinth("WorldEdit", Versions.WORLDEDIT)
-        downloadPlugins.modrinth("PacketEvents", "${Versions.PACKETEVENTS}+spigot")
+        downloadPlugins.modrinth("PacketEvents", Versions.PACKETEVENTS)
         downloadPlugins.modrinth("WorldGuard", Versions.WORLDGUARD)
-        downloadPlugins.modrinth("LuckPerms", "v${Versions.LUCKPERMS}-bukkit")
+        downloadPlugins.modrinth("LuckPerms", Versions.LUCKPERMS)
+    }
+
+    runPaper.folia.registerTask() {
+        minecraftVersion("1.21.8")
+
+        downloadPlugins.modrinth("PacketEvents", Versions.PACKETEVENTS)
     }
 }
 
