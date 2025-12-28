@@ -1,35 +1,23 @@
-package com.eternalcode.combat.fight.controller;
+package com.eternalcode.combat.fight.controller.bypass;
 
 import com.eternalcode.combat.config.implementation.PluginConfig;
 import com.eternalcode.combat.fight.event.CancelTagReason;
 import com.eternalcode.combat.fight.event.FightTagEvent;
-import java.util.UUID;
 import org.bukkit.GameMode;
 import org.bukkit.Server;
 import org.bukkit.entity.Player;
-import org.bukkit.event.EventHandler;
-import org.bukkit.event.EventPriority;
-import org.bukkit.event.Listener;
 
-public class FightBypassCreativeController implements Listener {
+public class FightBypassCreativeController extends AbstractFightBypassController {
 
-    private final Server server;
     private final PluginConfig config;
 
     public FightBypassCreativeController(Server server, PluginConfig config) {
-        this.server = server;
+        super(server);
         this.config = config;
     }
 
-    @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
-    void onFightTagEvent(FightTagEvent event) {
-        UUID uniqueId = event.getPlayer();
-
-        Player player = this.server.getPlayer(uniqueId);
-        if (player == null) {
-            return;
-        }
-
+    @Override
+    protected void handleBypass(FightTagEvent event, Player player) {
         if (this.config.admin.excludeCreativePlayersFromCombat && player.getGameMode() == GameMode.CREATIVE) {
             event.setCancelReason(CancelTagReason.CREATIVE_MODE);
             event.setCancelled(true);
