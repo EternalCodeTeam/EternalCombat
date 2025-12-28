@@ -4,7 +4,6 @@ import com.eternalcode.combat.WhitelistBlacklistMode;
 import com.eternalcode.combat.config.implementation.PluginConfig;
 import com.eternalcode.combat.fight.FightManager;
 import com.eternalcode.combat.fight.event.CauseOfTag;
-import org.bukkit.GameMode;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Projectile;
@@ -56,11 +55,11 @@ public class FightTagController implements Listener {
             return;
         }
 
-        if (this.cannotBeTagged(attacker)) {
-            return;
-        }
+        UUID attackedUniqueId = attackedPlayerByPerson.getUniqueId();
+        UUID attackerUniqueId = attacker.getUniqueId();
 
-        if (this.cannotBeTagged(attackedPlayerByPerson)) {
+        // enderpearl on folia counts as attack on self
+        if (attackedUniqueId.equals(attackerUniqueId)) {
             return;
         }
 
@@ -77,8 +76,6 @@ public class FightTagController implements Listener {
         }
 
         Duration combatTime = this.config.settings.combatTimerDuration;
-        UUID attackedUniqueId = attackedPlayerByPerson.getUniqueId();
-        UUID attackerUniqueId = attacker.getUniqueId();
 
         this.fightManager.tag(attackedUniqueId, combatTime, CauseOfTag.PLAYER, attackerUniqueId);
         this.fightManager.tag(attackerUniqueId, combatTime, CauseOfTag.PLAYER, attackedUniqueId);
@@ -96,15 +93,6 @@ public class FightTagController implements Listener {
         }
 
         if (this.isPlayerInDisabledWorld(player)) {
-            return;
-        }
-
-        if (this.cannotBeTagged(player)) {
-            return;
-        }
-
-        boolean hasBypass = player.hasPermission("eternalcombat.bypass");
-        if (hasBypass) {
             return;
         }
 
@@ -144,19 +132,6 @@ public class FightTagController implements Listener {
 
         return this.config.settings.ignoredWorlds.contains(worldName);
     }
-
-    private boolean cannotBeTagged(Player player) {
-        if (this.config.admin.excludeAdminsFromCombat && player.hasPermission("eternalcombat.bypass")) {
-            return true;
-        }
-
-        if (this.config.admin.excludeAdminsFromCombat && player.isOp()) {
-            return true;
-        }
-
-        return this.config.admin.excludeCreativePlayersFromCombat && player.getGameMode() == GameMode.CREATIVE;
-    }
-
 
 
 }
