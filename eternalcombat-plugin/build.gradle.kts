@@ -92,15 +92,15 @@ tasks {
         minecraftVersion("1.21.10")
 
         downloadPlugins.modrinth("WorldEdit", Versions.WORLDEDIT)
-        downloadPlugins.modrinth("PacketEvents", Versions.PACKETEVENTS)
+        downloadPlugins.modrinth("PacketEvents", "${Versions.PACKETEVENTS}+spigot")
         downloadPlugins.modrinth("WorldGuard", Versions.WORLDGUARD)
-        downloadPlugins.modrinth("LuckPerms", Versions.LUCKPERMS)
+        downloadPlugins.modrinth("LuckPerms", "v${Versions.LUCKPERMS}-bukkit")
     }
 
     runPaper.folia.registerTask() {
         minecraftVersion("1.21.8")
 
-        downloadPlugins.modrinth("PacketEvents", Versions.PACKETEVENTS)
+        downloadPlugins.modrinth("PacketEvents", "${Versions.PACKETEVENTS}+spigot")
     }
 }
 
