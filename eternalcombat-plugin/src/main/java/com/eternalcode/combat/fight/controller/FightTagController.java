@@ -59,7 +59,7 @@ public class FightTagController implements Listener {
         UUID attackerUniqueId = attacker.getUniqueId();
 
         // enderpearl on folia counts as attack on self
-        if (attackedUniqueId == attackerUniqueId) {
+        if (attackedUniqueId.equals(attackerUniqueId)) {
             return;
         }
 
