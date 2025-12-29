@@ -10,29 +10,29 @@ import java.time.Duration;
 public class FightTridentSettings extends OkaeriConfig {
 
     @Comment({
-        "# Set to true to disable throwing tridents during combat.",
+        "# Set true, If you want to disable throwing trident during combat",
         "# This will work globally, but can be overridden by region settings"
     })
-    public boolean tridentThrowDisabledDuringCombat = false;
+    public boolean tridentThrowDisabledDuringCombat = true;
 
-    @Comment("# Set to true so throwing trident will result in cooldown - delay between throws")
+    @Comment("# Set true, If you want add cooldown to trident")
     public boolean tridentCooldownEnabled = false;
 
-    @Comment("# Set to true, so the users will get combat log when they throw tridents")
-    public boolean tridentResetsTimer = false;
+    @Comment("# Set true, If you want to reset timer when player uses trident")
+    public boolean tridentResetsTimerEnabled = true;
 
     @Comment({
-        "# Should throwing trident be on cooldown?",
-        "# Setting this option to 3s will make players wait 3 seconds between trident throws"
+        "# Block throwing trident with delay?",
+        "# If you set this to for example 3s, player will have to wait 3 seconds before throwing trident"
     })
     public Duration tridentThrowDelay = Duration.ofSeconds(3);
 
-    @Comment("# Message sent to the player when throwing trident is disabled")
+    @Comment("# Message sent when player tries to throw trident, but are disabled")
     public Notice tridentThrowBlockedDuringCombat = BukkitNotice.builder()
         .chat("<red>Throwing trident is prohibited during combat!")
         .build();
 
-    @Comment("# Message marking delay between trident throws")
+    @Comment("# Message sent when player tries to throw trident, but has delay")
     public Notice tridentThrowBlockedDelayDuringCombat = BukkitNotice.builder()
         .chat("<red>You must wait {TIME} before next throw!")
         .build();

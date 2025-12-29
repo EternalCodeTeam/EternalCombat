@@ -7,15 +7,12 @@ import com.eternalcode.combat.fight.event.CauseOfTag;
 import com.eternalcode.combat.notification.NoticeService;
 import com.eternalcode.combat.util.DurationUtil;
 import org.bukkit.Material;
-import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerInteractEvent;
-import org.bukkit.event.player.PlayerRiptideEvent;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.meta.ItemMeta;
 
 import java.time.Duration;
 import java.util.UUID;
@@ -42,15 +39,12 @@ public class FightTridentController implements Listener {
         this.config = config;
     }
 
+
     @EventHandler(priority = EventPriority.HIGHEST)
     public void onTridentInteract(PlayerInteractEvent event) {
         ItemStack item = event.getItem();
 
         if (item == null || item.getType() != Material.TRIDENT) {
-            return;
-        }
-
-        if (!item.hasItemMeta() || !item.getItemMeta().hasEnchant(Enchantment.RIPTIDE)) {
             return;
         }
 
@@ -73,20 +67,10 @@ public class FightTridentController implements Listener {
         if (this.settings.tridentCooldownEnabled) {
             this.handleTridentCooldown(event, player, playerId);
         }
-    }
 
-    @EventHandler(priority = EventPriority.HIGHEST)
-    public void onTridentRiptide(PlayerRiptideEvent event) {
-        Player player = event.getPlayer();
-        UUID playerId = player.getUniqueId();
-
-        if (!this.fightManager.isInCombat(playerId)) {
-            return;
-        }
-
-        if (this.settings.tridentResetsTimer) {
+        if (this.settings.tridentResetsTimerEnabled) {
             Duration combatTime = this.config.settings.combatTimerDuration;
-            this.fightManager.tag(playerId, combatTime, CauseOfTag.NON_PLAYER);
+            this.fightManager.tag(playerId, combatTime, CauseOfTag.CUSTOM);
         }
     }
 
