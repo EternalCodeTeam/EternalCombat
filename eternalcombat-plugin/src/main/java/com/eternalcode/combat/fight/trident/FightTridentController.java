@@ -2,12 +2,10 @@ package com.eternalcode.combat.fight.trident;
 
 import com.eternalcode.combat.config.implementation.PluginConfig;
 import com.eternalcode.combat.fight.FightManager;
-
 import com.eternalcode.combat.fight.event.CauseOfTag;
 import com.eternalcode.combat.notification.NoticeService;
 import com.eternalcode.combat.util.DurationUtil;
 import org.bukkit.Material;
-import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -15,7 +13,6 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerRiptideEvent;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.meta.ItemMeta;
 
 import java.time.Duration;
 import java.util.UUID;
@@ -47,10 +44,6 @@ public class FightTridentController implements Listener {
         ItemStack item = event.getItem();
 
         if (item == null || item.getType() != Material.TRIDENT) {
-            return;
-        }
-
-        if (!item.hasItemMeta() || !item.getItemMeta().hasEnchant(Enchantment.RIPTIDE)) {
             return;
         }
 
