@@ -2,7 +2,6 @@ package com.eternalcode.combat.fight.trident;
 
 import com.eternalcode.combat.config.implementation.PluginConfig;
 import com.eternalcode.combat.fight.FightManager;
-
 import com.eternalcode.combat.fight.event.CauseOfTag;
 import com.eternalcode.combat.notification.NoticeService;
 import com.eternalcode.combat.util.DurationUtil;
