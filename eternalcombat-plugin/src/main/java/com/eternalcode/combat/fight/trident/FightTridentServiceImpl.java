@@ -2,7 +2,6 @@ package com.eternalcode.combat.fight.trident;
 
 import com.github.benmanes.caffeine.cache.Cache;
 import com.github.benmanes.caffeine.cache.Caffeine;
-import org.jetbrains.annotations.NotNull;
 
 import java.time.Duration;
 import java.time.Instant;
@@ -10,12 +9,12 @@ import java.util.UUID;
 
 public class FightTridentServiceImpl implements FightTridentService {
     private final FightTridentSettings tridentSettings;
-    private final Cache<@NotNull UUID, Instant> tridentStartTimes;
+    private final Cache<UUID, Instant> tridentStartTimes;
 
-    public FightTridentServiceImpl(FightTridentSettings tridentSettings) {
-        this.tridentSettings = tridentSettings;
+    public FightTridentServiceImpl(FightTridentSettings pearlSettings) {
+        this.tridentSettings = pearlSettings;
         this.tridentStartTimes = Caffeine.newBuilder()
-            .expireAfterWrite(tridentSettings.tridentThrowDelay)
+            .expireAfterWrite(pearlSettings.tridentThrowDelay)
             .build();
     }
 
