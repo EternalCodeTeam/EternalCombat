@@ -35,8 +35,29 @@ jobs:
         uses: gradle/gradle-build-action@093dfe9d598ec5a42246855d09b49dc76803c005
         with:
           arguments: shadowJar
-      - name: Upload a Build Artifact
+      - name: Set build label (release vs snapshot)
+        run: |
+          if [ "${{ github.ref_name }}" = "master" ]; then
+            echo "BUILD_LABEL=Release" >> $GITHUB_ENV
+            echo "SNAPSHOT_SUFFIX=" >> $GITHUB_ENV
+          else
+            echo "BUILD_LABEL=Snapshot" >> $GITHUB_ENV
+            echo "SNAPSHOT_SUFFIX=- Snapshot" >> $GITHUB_ENV
+          fi
+      - name: Determine branch name
+        run: |
+          if [ "${{ github.event_name }}" = "pull_request" ]; then
+          BRANCH_NAME="${{ github.head_ref }}"
+          else
+          BRANCH_NAME="${{ github.ref_name }}"
+          fi
+          
+          # Sanitize branch name (replace / with -)
+          SAFE_BRANCH_NAME=$(echo "$BRANCH_NAME" | tr '/' '-')
+          
+          echo "BRANCH_NAME=$SAFE_BRANCH_NAME" >> $GITHUB_ENV
+      - name: Upload build artifact
         uses: actions/upload-artifact@v4
         with:
-          name: 'Successfully build EternalCombat'
+          name: EternalCombat ${{ env.BRANCH_NAME }} ${{ env.SNAPSHOT_SUFFIX }} ${{ github.run_number }}
           path: eternalcombat-plugin/build/libs/*.jar
