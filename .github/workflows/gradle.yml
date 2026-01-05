@@ -32,9 +32,8 @@ jobs:
       - name: Make gradlew executable
         run: chmod +x gradlew
       - name: Build with Gradle
-        uses: gradle/gradle-build-action@093dfe9d598ec5a42246855d09b49dc76803c005
-        with:
-          arguments: shadowJar
+        uses: gradle/actions/setup-gradle@6f229686ee4375cc4a86b2514c89bac4930e82c4
+        run: ./gradlew shadowJar
       - name: Set build label (release vs snapshot)
         run: |
           if [ "${{ github.ref_name }}" = "master" ]; then
