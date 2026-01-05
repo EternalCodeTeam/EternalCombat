@@ -59,5 +59,5 @@ jobs:
       - name: Upload build artifact
         uses: actions/upload-artifact@v4
         with:
-          name: EternalCombat ${{ env.BRANCH_NAME }} ${{ env.SNAPSHOT_SUFFIX }} ${{ github.run_number }}
+          name: EternalCombat ${{ env.BRANCH_NAME }} ${{ env.SNAPSHOT_SUFFIX }}+${{ github.sha }}
           path: eternalcombat-plugin/build/libs/*.jar
