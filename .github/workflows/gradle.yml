@@ -55,8 +55,17 @@ jobs:
           SAFE_BRANCH_NAME=$(echo "$BRANCH_NAME" | tr '/' '-')
           
           echo "BRANCH_NAME=$SAFE_BRANCH_NAME" >> $GITHUB_ENV
+      - name: Set short commit SHA
+        run: |
+          if [ "${{ github.event_name }}" = "pull_request" ]; then
+            SHA="${{ github.event.pull_request.head.sha }}"
+          else
+            SHA="${{ github.sha }}"
+          fi
+
+          echo "SHORT_SHA=${SHA::7}" >> $GITHUB_ENV
       - name: Upload build artifact
         uses: actions/upload-artifact@v4
         with:
-          name: EternalCombat ${{ env.BRANCH_NAME }} ${{ env.SNAPSHOT_SUFFIX }}+${{ github.sha }}
+          name: EternalCombat ${{ env.BRANCH_NAME }} ${{ env.SNAPSHOT_SUFFIX }}+${{ env.SHORT_SHA }}
           path: eternalcombat-plugin/build/libs/*.jar
