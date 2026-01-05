@@ -31,8 +31,11 @@ jobs:
           restore-keys: '${{ runner.os }}-gradle-'    
       - name: Make gradlew executable
         run: chmod +x gradlew
-      - name: Build with Gradle
+      - name: Setup Gradle
         uses: gradle/actions/setup-gradle@6f229686ee4375cc4a86b2514c89bac4930e82c4
+        with:
+          gradle-version: 8.4
+      - name: Build with Gradle
         run: ./gradlew shadowJar
       - name: Set build label (release vs snapshot)
         run: |
