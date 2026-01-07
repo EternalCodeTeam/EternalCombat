@@ -24,7 +24,7 @@ object Versions {
     const val B_STATS_BUKKIT = "3.1.0"
     const val WORLD_GUARD_BUKKIT = "7.0.14"
 
-    const val PLACEHOLDER_API = "2.11.6"
+    const val PLACEHOLDER_API = "2.11.7"
     const val LANDS_API = "7.17.2"
     const val PAPERLIB = "1.0.8"
 
