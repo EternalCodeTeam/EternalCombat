@@ -31,9 +31,8 @@ jobs:
             const isPR = context.eventName === 'pull_request';
             const branch = (isPR ? context.payload.pull_request.head.ref : context.ref_name).replace(/\//g, '-');
             const sha = (isPR ? context.payload.pull_request.head.sha : context.sha).substring(0, 7);
-            const isMaster = context.ref === 'refs/heads/master';
             
-            const artifactName = `EternalCombat ${branch}${isMaster ? '' : ' - Snapshot'}+${sha}`;
+            const artifactName = `EternalCombat ${branch}+${sha}`;
             core.exportVariable('FULL_ARTIFACT_NAME', artifactName);
 
       - name: Build with Gradle
