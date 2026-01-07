@@ -73,6 +73,8 @@ Control who can use EternalCombat’s powerful features with these permissions:
 | `eternalcombat.status`         | Check a player’s combat status with `/combatlog status <player>`.        |
 | `eternalcombat.tag`            | Start a fight between players using `/combatlog tag <player> [player2]`. |
 | `eternalcombat.untag`          | Remove a player from combat with `/combatlog untag <player>`.            |
+| `eternalcombat.untagall`       | Remove all players from combat with `/combatlog untagall`.               |
+| `eternalcombat.stats`          | View combat statistics with `/combatlog stats`.                          |
 | `eternalcombat.reload`         | Reload the plugin with `/combatlog reload`.                              |
 | `eternalcombat.receiveupdates` | Receive notifications about new plugin versions on join.                 |
 | `eternalcombat.bypass`         | Bypass combat tagging, need's `excludeAdminsFromCombat` to be enabled    |
