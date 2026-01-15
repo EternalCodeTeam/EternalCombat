@@ -11,17 +11,19 @@ plugins {
 }
 
 val buildNumber = providers.environmentVariable("GITHUB_RUN_NUMBER").orNull
-if (buildNumber != null) {
+val isRelease = providers.environmentVariable("GITHUB_EVENT_NAME").orNull == "release"
+
+if (buildNumber != null && !isRelease) {
     version = "${project.version}-SNAPSHOT+$buildNumber"
 }
 
 logger.lifecycle("Minotaur: Building version: $version")
 
 modrinth {
-    token.set(System.getenv("MODRINTH_TOKEN"))
+    token.set(providers.environmentVariable("MODRINTH_TOKEN"))
     projectId.set("eternalcombat")
     versionNumber.set(project.version.toString())
-    versionType.set("beta")
+    versionType.set(if (isRelease) "release" else "beta")
     uploadFile.set(tasks.shadowJar) 
     gameVersions.addAll(listOf("1.19.4", "1.20.1", "1.20.4", "1.20.6", "1.21", "1.21.1"))
     loaders.addAll(listOf("paper", "spigot", "folia", "purpur"))
