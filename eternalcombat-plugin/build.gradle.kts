@@ -7,6 +7,25 @@ plugins {
     id("net.minecrell.plugin-yml.bukkit")
     id("com.gradleup.shadow")
     id("xyz.jpenilla.run-paper")
+    id("com.modrinth.minotaur") version "2.8.10"
+}
+
+val buildNumber = providers.environmentVariable("GITHUB_RUN_NUMBER").orNull
+if (buildNumber != null) {
+    version = "${project.version}-SNAPSHOT+$buildNumber"
+}
+
+logger.lifecycle("Minotaur: Building version: $version")
+
+modrinth {
+    token.set(providers.environmentVariable("MODRINTH_TOKEN"))
+    projectId.set("eternalcombat")
+    versionNumber.set(provider { project.version.toString() })
+    versionType.set("beta")
+    uploadFile.set(tasks.shadowJar) 
+    gameVersions.addAll(listOf("1.19.4", "1.20.1", "1.20.4", "1.20.6", "1.21", "1.21.1"))
+    loaders.addAll(listOf("paper", "spigot", "folia", "purpur"))
+    syncBodyFrom.set(rootProject.file("README.md").readText())
 }
 
 configurations.all {
