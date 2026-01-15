@@ -15,10 +15,10 @@ if (buildNumber != null) {
     version = "${project.version}-SNAPSHOT+$buildNumber"
 }
 
-println("Minotaur: Building version: $version")
+logger.lifecycle("Minotaur: Building version: $version")
 
 modrinth {
-    token.set(System.getenv("MODRINTH_TOKEN"))
+    token.set(providers.environmentVariable("MODRINTH_TOKEN"))
     projectId.set("eternalcombat")
     versionNumber.set(provider { project.version.toString() })
     versionType.set("beta")
