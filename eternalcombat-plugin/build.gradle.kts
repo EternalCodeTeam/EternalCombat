@@ -18,7 +18,7 @@ if (buildNumber != null) {
 logger.lifecycle("Minotaur: Building version: $version")
 
 modrinth {
-    token.set(providers.environmentVariable("MODRINTH_TOKEN"))
+    token.set(System.getenv("MODRINTH_TOKEN"))
     projectId.set("eternalcombat")
     versionNumber.set(project.version.toString())
     versionType.set("beta")
