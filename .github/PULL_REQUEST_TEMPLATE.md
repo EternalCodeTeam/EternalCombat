@@ -1,7 +1,7 @@
 ---
 name: Pull Request
 about: Submit a contribution to EternalCombat
-title: 'feat/fix: <title>'
+title: 'GH-{NUMBER} <title>'
 labels: []
 assignees: []
 ---
