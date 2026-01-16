@@ -17,6 +17,10 @@ if (buildNumber != null && !isRelease) {
     version = "${project.version}-SNAPSHOT+$buildNumber"
 }
 
+val changelogText: Provider<String?>? = providers.environmentVariable("CHANGELOG").orElse(providers.exec {
+    commandLine("git", "log", "-1", "--format=%B")
+}.standardOutput.asText)
+
 logger.lifecycle("Minotaur: Building version: $version")
 
 modrinth {
@@ -27,6 +31,7 @@ modrinth {
     uploadFile.set(tasks.shadowJar) 
     gameVersions.addAll(listOf("1.19.4", "1.20.1", "1.20.4", "1.20.6", "1.21", "1.21.1"))
     loaders.addAll(listOf("paper", "spigot", "folia", "purpur"))
+    changelog.set(changelogText)
     syncBodyFrom.set(rootProject.file("README.md").readText())
 }
 

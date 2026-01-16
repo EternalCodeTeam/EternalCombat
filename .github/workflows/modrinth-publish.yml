@@ -29,3 +29,4 @@ jobs:
         env:
           MODRINTH_TOKEN: ${{ secrets.MODRINTH_TOKEN }}
           GITHUB_EVENT_NAME: ${{ github.event_name }}
+          CHANGELOG: ${{ github.event_name == 'release' && github.event.release.body || github.event.head_commit.message }}
