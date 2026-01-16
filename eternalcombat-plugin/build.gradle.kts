@@ -17,7 +17,7 @@ if (buildNumber != null && !isRelease) {
     version = "${project.version}-SNAPSHOT+$buildNumber"
 }
 
-val changelogText: Provider<String?>? = providers.environmentVariable("CHANGELOG").orElse(providers.exec {
+val changelogText = providers.environmentVariable("CHANGELOG").orElse(providers.exec {
     commandLine("git", "log", "-1", "--format=%B")
 }.standardOutput.asText)
 
