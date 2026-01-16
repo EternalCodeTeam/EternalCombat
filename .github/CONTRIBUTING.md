@@ -1,36 +1,64 @@
-# Contributing to EternalCombat
+# 👋 Contributing to EternalCombat
 
-We welcome all contributions to the EternalCombat project!
+First off, thanks for taking the time to contribute! 🎉
+We love user contributions and want to make it as easy as possible for you to get involved.
 
-### How to Contribute
+## 🛠️ Development Setup
 
-1. Fork the repository.
-2. Create a new branch for your feature or bug fix.
-3. Make your changes, and test them thoroughly.
-4. Commit your changes and push them to your fork.
-5. Submit a pull request to the main repository.
+To start contributing, you'll need to set up your environment:
 
-### Code of Conduct
+1.  **Java 21**: We use Java 21 for development. Ensure you have a JDK 21 installed.
+2.  **IDE**: We recommend [IntelliJ IDEA](https://www.jetbrains.com/idea/) (Community or Ultimate).
+3.  **Git**: Ensure you have Git installed.
 
-We expect all contributors to follow our [code of conduct](CODE_OF_CONDUCT.md).
+### 📥 Getting the Code
 
-### Reporting Issues
+```bash
+# Fork the repository first!
+git clone https://github.com/YOUR-USERNAME/EternalCombat.git
+cd EternalCombat
+```
 
-If you find an issue with the plugin, please report it in
-the [Issues tab](https://github.com/EternalCodeTeam/EternalCombat/issues). Please provide as much information as
-possible, including the version of Minecraft and the plugin you are using, as well as any error messagesSettings or logs.
+### 🔨 Building the Project
 
-### Compatibility
+We use Gradle for building the project:
 
-CombatLog has been tested on versions 1.17.1 - 1.19.3, but probably works on most versions of Minecraft. If you find
-compatibility issues, please report them in the Issues tab. CombatLog uses java 11+, so you need to have it installed on
-your server.
+```bash
+# Build carefully
+./gradlew build
+```
 
-### Submitting a Pull Request
+## 🤝 How to Contribute
 
-When submitting a pull request, please make sure to follow these guidelines:
+1.  **Fork & Clone**: Fork the repo to your own account and clone it.
+2.  **Branch**: Create a new branch for your feature or fix.
+    ```bash
+    git checkout -b feat/my-awesome-feature
+    ```
+3.  **Code**: Hack away! 💻
+4.  **Test**: Run manual test by `runServer` to ensure you haven't broken anything.
+    ```bash
+    ./gradlew runServer
+    ```
+5**Push**: Push your changes to your fork.
+6**Pull Request**: Open a PR against the `master` branch.
 
-- Make sure that your code adheres to the plugin's existing coding style.
-- Test your changes thoroughly before submitting the pull request.
-- If your pull request is related to an existing issue, please reference the issue in your pull request.
-- Thank you for your contributions to the EternalCombat project!
+## 📏 Code Style
+
+Make sure that your code adheres to the plugin's existing coding style.
+
+## 🐛 Reporting Bugs
+
+If you find a bug, please use the **Bug Report** issue template.
+-   Check if the issue already exists.
+-   Provide a minimal reproduction if possible.
+-   Include logs and screenshots.
+
+## 💡 Feature Requests
+
+Have an idea? Use the **Feature Request** issue template.
+-   Explain *why* this feature is useful.
+-   Describe how it should look or behave.
+
+## 📄 License
+By contributing, you agree that your contributions will be licensed under the project's [License](../LICENSE).
