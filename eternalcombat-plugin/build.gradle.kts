@@ -14,7 +14,20 @@ val buildNumber = providers.environmentVariable("GITHUB_RUN_NUMBER").orNull
 val isRelease = providers.environmentVariable("GITHUB_EVENT_NAME").orNull == "release"
 
 if (buildNumber != null && !isRelease) {
-    version = "${project.version}-SNAPSHOT+$buildNumber"
+    val offset = try {
+        val description = providers.exec {
+            commandLine("git", "describe", "--tags", "--long")
+        }.standardOutput.asText.get().trim()
+        val parts = description.split("-")
+        if (parts.size >= 3) parts[parts.size - 2] else "0"
+    } catch (e: Exception) {
+        providers.exec {
+            commandLine("git", "rev-list", "--count", "HEAD")
+        }.standardOutput.asText.get().trim()
+    }
+    
+    val baseVersion = project.version.toString().replace("-SNAPSHOT", "")
+    version = "$baseVersion-SNAPSHOT+$offset"
 }
 
 val changelogText = providers.environmentVariable("CHANGELOG").orElse(providers.exec {
