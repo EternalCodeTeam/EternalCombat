@@ -40,8 +40,8 @@ We use Gradle for building the project:
     ```bash
     ./gradlew runServer
     ```
-5**Push**: Push your changes to your fork.
-6**Pull Request**: Open a PR against the `master` branch.
+5.  **Push**: Push your changes to your fork.
+6.  **Pull Request**: Open a PR against the `master` branch.
 
 ## 📏 Code Style
 
