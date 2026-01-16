@@ -21,9 +21,13 @@ if (buildNumber != null && !isRelease) {
         val parts = description.split("-")
         if (parts.size >= 3) parts[parts.size - 2] else "0"
     } catch (e: Exception) {
-        providers.exec {
-            commandLine("git", "rev-list", "--count", "HEAD")
-        }.standardOutput.asText.get().trim()
+        try {
+            providers.exec {
+                commandLine("git", "rev-list", "--count", "HEAD")
+            }.standardOutput.asText.get().trim()
+        } catch (e: Exception) {
+            "0"
+        }
     }
     
     val baseVersion = project.version.toString().replace("-SNAPSHOT", "")
