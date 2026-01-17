@@ -1,4 +1,5 @@
 import net.minecrell.pluginyml.bukkit.BukkitPluginDescription
+import io.papermc.hangarpublishplugin.model.Platforms
 
 plugins {
     `eternalcombat-java`
@@ -8,6 +9,7 @@ plugins {
     id("com.gradleup.shadow")
     id("xyz.jpenilla.run-paper")
     id("com.modrinth.minotaur") version "2.8.10"
+    id("io.papermc.hangar-publish-plugin") version "0.1.2"
 }
 
 val buildNumber = providers.environmentVariable("GITHUB_RUN_NUMBER").orNull
@@ -38,18 +40,46 @@ val changelogText = providers.environmentVariable("CHANGELOG").orElse(providers.
     commandLine("git", "log", "-1", "--format=%B")
 }.standardOutput.asText)
 
-logger.lifecycle("Minotaur: Building version: $version")
+logger.lifecycle("Building version: $version")
+
+val paperVersions = (property("paperVersion") as String)
+    .split(",")
+    .map { it.trim() }
+
+val hangarToken = providers.environmentVariable("HANGAR_API_TOKEN")
+    .orElse(providers.gradleProperty("hangarToken"))
+
+val projectVersion = project.version.toString()
+val releaseChannel = if (isRelease) "Release" else "Snapshot"
+val shadowJarTask = tasks.shadowJar
 
 modrinth {
     token.set(providers.environmentVariable("MODRINTH_TOKEN"))
     projectId.set("eternalcombat")
-    versionNumber.set(project.version.toString())
+    versionNumber.set(projectVersion)
     versionType.set(if (isRelease) "release" else "beta")
-    uploadFile.set(tasks.shadowJar) 
-    gameVersions.addAll(listOf("1.19.4", "1.20.1", "1.20.4", "1.20.6", "1.21", "1.21.1"))
+    uploadFile.set(shadowJarTask) 
+    gameVersions.addAll(paperVersions)
     loaders.addAll(listOf("paper", "spigot", "folia", "purpur"))
     changelog.set(changelogText)
     syncBodyFrom.set(rootProject.file("README.md").readText())
+}
+
+
+hangarPublish {
+    publications.register("plugin") {
+        version.set(projectVersion)
+        channel.set(releaseChannel)
+        changelog.set(changelogText)
+        id.set("eternalcombat")
+        apiKey.set(hangarToken)
+        platforms {
+            register(Platforms.PAPER) {
+                jar.set(shadowJarTask.flatMap { it.archiveFile })
+                platformVersions.set(paperVersions)
+            }
+        }
+    }
 }
 
 configurations.all {
