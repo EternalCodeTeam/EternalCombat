@@ -27,7 +27,7 @@ jobs:
         uses: gradle/actions/setup-gradle@v5
 
       - name: Set Variables & Build
-        uses: actions/github-script@v7
+        uses: actions/github-script@v8
         with:
           script: |
             const isPR = context.eventName === 'pull_request';
