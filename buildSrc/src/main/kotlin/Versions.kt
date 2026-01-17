@@ -9,7 +9,7 @@ object Versions {
     const val JETBRAINS_ANNOTATIONS = "26.0.2-1"
 
     const val ETERNALCODE_COMMONS = "1.3.2"
-    const val MULTIFICATION = "1.2.2"
+    const val MULTIFICATION = "1.2.4"
     const val PACKETS_EVENTS = "2.11.1"
 
     const val ADVENTURE_PLATFORM_BUKKIT = "4.4.1"
