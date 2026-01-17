@@ -9,7 +9,7 @@ plugins {
     id("com.gradleup.shadow")
     id("xyz.jpenilla.run-paper")
     id("com.modrinth.minotaur") version "2.8.10"
-    id("io.papermc.hangar-publish-plugin") version "0.1.2"
+    id("io.papermc.hangar-publish-plugin") version "0.1.4"
 }
 
 val buildNumber = providers.environmentVariable("GITHUB_RUN_NUMBER").orNull
