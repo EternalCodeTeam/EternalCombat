@@ -75,7 +75,7 @@ Control who can use EternalCombat’s powerful features with these permissions:
 | `eternalcombat.untag`          | Remove a player from combat with `/combatlog untag <player>`.            |
 | `eternalcombat.reload`         | Reload the plugin with `/combatlog reload`.                              |
 | `eternalcombat.receiveupdates` | Receive notifications about new plugin versions on join.                 |
-| `eternalcombat.bypass`         | Bypass combat tagging, need's `excludeAdminsFromCombat` to be enabled    |
+| `eternalcombat.bypass`         | Bypass combat tagging - users with this permission will not be tagged    |
 
 ## PlaceholderAPI
 
