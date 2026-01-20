@@ -6,5 +6,6 @@ public enum CancelTagReason {
     PERMISSION_BYPASS,
     ADMIN,
     CREATIVE_MODE,
+    PROTECTION,
 
 }
