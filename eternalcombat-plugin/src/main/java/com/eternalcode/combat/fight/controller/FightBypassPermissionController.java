@@ -1,5 +1,6 @@
 package com.eternalcode.combat.fight.controller;
 
+import com.eternalcode.combat.config.implementation.PluginConfig;
 import com.eternalcode.combat.fight.event.CancelTagReason;
 import com.eternalcode.combat.fight.event.FightTagEvent;
 import java.util.UUID;
@@ -14,9 +15,11 @@ public class FightBypassPermissionController implements Listener {
     private static final String BYPASS_PERMISSION = "eternalcombat.bypass";
 
     private final Server server;
+    private final PluginConfig config;
 
-    public FightBypassPermissionController(Server server) {
+    public FightBypassPermissionController(Server server, PluginConfig config) {
         this.server = server;
+        this.config = config;
     }
 
     @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
@@ -28,7 +31,7 @@ public class FightBypassPermissionController implements Listener {
             return;
         }
 
-        if (player.hasPermission(BYPASS_PERMISSION)) {
+        if (player.hasPermission(BYPASS_PERMISSION) && this.config.admin.excludeAdminsFromCombat) {
             event.setCancelReason(CancelTagReason.PERMISSION_BYPASS);
             event.setCancelled(true);
         }

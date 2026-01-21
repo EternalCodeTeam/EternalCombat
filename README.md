@@ -68,14 +68,14 @@ EternalCombat in full swing and learn why it’s a game-changer for your server!
 
 Control who can use EternalCombat’s powerful features with these permissions:
 
-| Permission                     | Description                                                              |
-|--------------------------------|--------------------------------------------------------------------------|
-| `eternalcombat.status`         | Check a player’s combat status with `/combatlog status <player>`.        |
-| `eternalcombat.tag`            | Start a fight between players using `/combatlog tag <player> [player2]`. |
-| `eternalcombat.untag`          | Remove a player from combat with `/combatlog untag <player>`.            |
-| `eternalcombat.reload`         | Reload the plugin with `/combatlog reload`.                              |
-| `eternalcombat.receiveupdates` | Receive notifications about new plugin versions on join.                 |
-| `eternalcombat.bypass`         | Bypass combat tagging - users with this permission will not be tagged    |
+| Permission                     | Description                                                                                           |
+|--------------------------------|-------------------------------------------------------------------------------------------------------|
+| `eternalcombat.status`         | Check a player’s combat status with `/combatlog status <player>`.                                     |
+| `eternalcombat.tag`            | Start a fight between players using `/combatlog tag <player> [player2]`.                              |
+| `eternalcombat.untag`          | Remove a player from combat with `/combatlog untag <player>`.                                         |
+| `eternalcombat.reload`         | Reload the plugin with `/combatlog reload`.                                                           |
+| `eternalcombat.receiveupdates` | Receive notifications about new plugin versions on join.                                              |
+| `eternalcombat.bypass`         | When exclude `excludeAdminsFromCombat` is set to `true` users with this permission will not be tagged |
 
 ## PlaceholderAPI
 
