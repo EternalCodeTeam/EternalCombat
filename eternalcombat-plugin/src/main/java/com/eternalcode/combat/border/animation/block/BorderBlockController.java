@@ -56,7 +56,7 @@ public class BorderBlockController implements Listener {
         this.server = server;
         this.chunkCache = new ChunkCache(settings.get());
 
-        scheduler.timerAsync(this::updatePlayers, settings.get().updateDelay, settings.get().updateDelay);
+        scheduler.timerAsync(() -> this.updatePlayers(), settings.get().updateDelay, settings.get().updateDelay);
     }
 
     @EventHandler
