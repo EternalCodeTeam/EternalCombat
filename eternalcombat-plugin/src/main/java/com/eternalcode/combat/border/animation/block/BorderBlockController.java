@@ -211,8 +211,9 @@ public class BorderBlockController implements Listener {
     }
 
     private Map<ChunkLocation, Set<BorderPoint>> groupByChunk(Collection<BorderPoint> points) {
-        return points.stream().collect(Collectors.groupingBy(
-            point -> new ChunkLocation(point.x() >> MINECRAFT_CHUNK_SHIFT, point.z() >> MINECRAFT_CHUNK_SHIFT),
+        return points.stream()
+            .map(borderPoint -> borderPoint.innerPoint())
+            .collect(Collectors.groupingBy(point -> new ChunkLocation(point.x() >> MINECRAFT_CHUNK_SHIFT, point.z() >> MINECRAFT_CHUNK_SHIFT),
             Collectors.toSet()
         ));
     }
