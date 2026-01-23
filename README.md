@@ -9,6 +9,15 @@
 [![Chat on Discord](https://raw.githubusercontent.com/vLuckyyy/badges/main//chat-with-us-on-discord.svg)](https://discord.com/invite/FQ7jmGBd6c)
 [![Read the Docs](https://raw.githubusercontent.com/vLuckyyy/badges/main/read-the-documentation.svg)](https://docs.eternalcode.pl/eternalcombat/introduction)
 [![Available on BStats](https://raw.githubusercontent.com/vLuckyyy/badges/main/available-on-bstats.svg)](https://bstats.org/plugin/bukkit/EternalCombat/17803)
+
+[Report Bug](https://github.com/EternalCodeTeam/EternalCombat/issues) • [Request Feature](https://github.com/EternalCodeTeam/EternalCombat/issues) • [Join Discord](https://discord.gg/eternalcode)
+
+<br>
+
+<a href="https://ko-fi.com/eternalcodeteam">
+  <img src="https://github.com/intergrav/devins-badges/blob/v3/assets/cozy/donate/kofi-plural-alt_64h.png?raw=true" height="64" alt="Support us on Ko-fi">
+</a>
+
 </div>
 
 ### Information
