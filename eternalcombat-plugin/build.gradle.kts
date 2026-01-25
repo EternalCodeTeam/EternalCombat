@@ -149,7 +149,8 @@ bukkit {
     name = "EternalCombat"
     load = BukkitPluginDescription.PluginLoadOrder.POSTWORLD
     softDepend = listOf(
-        "Lands"
+        "Lands",
+        "WorldGuard"
     )
     depend = listOf(
         "packetevents",
