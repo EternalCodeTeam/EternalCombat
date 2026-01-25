@@ -132,7 +132,7 @@ With Maven:
 With Gradle:
 
 ```kts
-compileOnly("com.eternalcode:eternalcombat-api:2.4.1")
+compileOnly("com.eternalcode:eternalcombat-api:2.5.0-SNAPSHOT")
 ```
 
 With Maven:
@@ -142,7 +142,7 @@ With Maven:
 <dependency>
     <groupId>com.eternalcode</groupId>
     <artifactId>eternalcombat-api</artifactId>
-    <version>2.4.1</version>
+    <version>2.5.0-SNAPSHOT</version>
     <scope>provided</scope>
 </dependency>
 ```
