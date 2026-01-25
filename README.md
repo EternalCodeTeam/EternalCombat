@@ -10,7 +10,7 @@
 [![Read the Docs](https://raw.githubusercontent.com/vLuckyyy/badges/main/read-the-documentation.svg)](https://docs.eternalcode.pl/eternalcombat/introduction)
 [![Available on BStats](https://raw.githubusercontent.com/vLuckyyy/badges/main/available-on-bstats.svg)](https://bstats.org/plugin/bukkit/EternalCombat/17803)
 
-[Report Bug](https://github.com/EternalCodeTeam/EternalCombat/issues) • [Request Feature](https://github.com/EternalCodeTeam/EternalCombat/issues) • [Join Discord](https://discord.gg/eternalcode)
+[Report Bug](https://github.com/EternalCodeTeam/EternalCombat/issues) • [Request Feature](https://github.com/EternalCodeTeam/EternalCombat/issues) • [Join Discord](https://discord.com/invite/FQ7jmGBd6c)
 
 <br>
 
