@@ -43,4 +43,8 @@ public class FightPearlSettings extends OkaeriConfig {
         .chat("<red>You must wait {TIME} before next throw!")
         .build();
 
+    @Comment("# Message sent when player tries to teleport with ender pearl, but are disabled")
+    public Notice pearlTeleportBlockedDuringCombat = BukkitNotice.builder()
+        .chat("<red>Teleporting through ender pearls is not allowed during combat!")
+        .build();
 }
