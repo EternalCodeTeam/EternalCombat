@@ -22,6 +22,12 @@ public class FightPearlSettings extends OkaeriConfig {
     public boolean pearlCooldownEnabled = false;
 
     @Comment({
+        "# Prevent players from using ender pearl stasis to avoid combat.",
+        "# This setting prevents the player from teleporting with a statis pearl during combat."
+    })
+    public boolean preventPearlStasis = false;
+
+    @Comment({
         "# Block throwing pearls with delay?",
         "# If you set this to for example 3s, player will have to wait 3 seconds before throwing another pearl"
     })

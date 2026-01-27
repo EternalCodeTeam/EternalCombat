@@ -162,7 +162,7 @@ bukkit {
 
 tasks {
     runServer {
-        minecraftVersion("1.21.10")
+        minecraftVersion("1.21.11")
         downloadPlugins.modrinth("WorldEdit", Versions.WORLDEDIT)
         downloadPlugins.modrinth("PacketEvents", "${Versions.PACKETEVENTS}+spigot")
         downloadPlugins.modrinth("WorldGuard", Versions.WORLDGUARD)
