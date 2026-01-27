@@ -91,11 +91,19 @@ public class FightPearlController implements Listener {
             return;
         }
 
-        if (!this.fightManager.isInCombat(event.getPlayer().getUniqueId())) {
+        Player player = event.getPlayer();
+        UUID playerId = player.getUniqueId();
+
+        if (!this.fightManager.isInCombat(playerId)) {
             return;
         }
 
         event.setCancelled(true);
+
+        this.noticeService.create()
+            .player(playerId)
+            .notice(this.settings.pearlTeleportBlockedDuringCombat)
+            .send();
     }
 
     private void handlePearlCooldown(ProjectileLaunchEvent event, Player player, UUID playerId) {
