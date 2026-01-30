@@ -7,12 +7,13 @@ import com.eternalcode.combat.notification.NoticeService;
 import com.eternalcode.combat.util.DurationUtil;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
+import org.bukkit.entity.Trident;
+import org.bukkit.event.Cancellable;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
-import org.bukkit.event.player.PlayerInteractEvent;
+import org.bukkit.event.entity.ProjectileLaunchEvent;
 import org.bukkit.event.player.PlayerRiptideEvent;
-import org.bukkit.inventory.ItemStack;
 
 import java.time.Duration;
 import java.util.UUID;
@@ -39,15 +40,16 @@ public class FightTridentController implements Listener {
         this.config = config;
     }
 
-    @EventHandler(priority = EventPriority.HIGHEST)
-    public void onTridentInteract(PlayerInteractEvent event) {
-        ItemStack item = event.getItem();
-
-        if (item == null || item.getType() != Material.TRIDENT) {
+    @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
+    public void onTridentThrow(ProjectileLaunchEvent event) {
+        if (!(event.getEntity() instanceof Trident trident)) {
             return;
         }
 
-        Player player = event.getPlayer();
+        if (!(trident.getShooter() instanceof Player player)) {
+            return;
+        }
+
         UUID playerId = player.getUniqueId();
 
         if (!this.fightManager.isInCombat(playerId)) {
@@ -65,6 +67,14 @@ public class FightTridentController implements Listener {
 
         if (this.settings.tridentCooldownEnabled) {
             this.handleTridentCooldown(event, player, playerId);
+            if (event.isCancelled()) {
+                return;
+            }
+        }
+
+        if (this.settings.tridentResetsTimer) {
+            Duration combatTime = this.config.settings.combatTimerDuration;
+            this.fightManager.tag(playerId, combatTime, CauseOfTag.NON_PLAYER);
         }
     }
 
@@ -77,19 +87,41 @@ public class FightTridentController implements Listener {
             return;
         }
 
+        Cancellable cancellable = event instanceof Cancellable ? (Cancellable) event : null;
+
+        if (this.settings.tridentThrowDisabledDuringCombat) {
+            if (cancellable != null) {
+                cancellable.setCancelled(true);
+            }
+            this.noticeService.create()
+                .player(playerId)
+                .notice(this.settings.tridentThrowBlockedDuringCombat)
+                .send();
+            return;
+        }
+
+        if (this.settings.tridentCooldownEnabled) {
+            this.handleTridentCooldown(cancellable, player, playerId);
+            if (cancellable != null && cancellable.isCancelled()) {
+                return;
+            }
+        }
+
         if (this.settings.tridentResetsTimer) {
             Duration combatTime = this.config.settings.combatTimerDuration;
             this.fightManager.tag(playerId, combatTime, CauseOfTag.NON_PLAYER);
         }
     }
 
-    private void handleTridentCooldown(PlayerInteractEvent event, Player player, UUID playerId) {
+    private void handleTridentCooldown(Cancellable cancellable, Player player, UUID playerId) {
         if (this.settings.tridentThrowDelay.isZero()) {
             return;
         }
 
         if (this.fightTridentService.hasDelay(playerId)) {
-            event.setCancelled(true);
+            if (cancellable != null) {
+                cancellable.setCancelled(true);
+            }
             Duration remainingDelay = this.fightTridentService.getRemainingDelay(playerId);
 
             this.noticeService.create()
