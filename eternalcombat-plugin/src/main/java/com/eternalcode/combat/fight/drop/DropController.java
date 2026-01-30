@@ -47,11 +47,15 @@ public class DropController implements DynamicListener<PlayerDeathEvent> {
         DropType dropType = this.dropSettings.dropType;
         boolean inCombat = this.fightManager.isInCombat(uuid);
 
+        if (dropType == DropType.UNCHANGED) {
+            return;
+        }
+
         if (shouldHeadDrop(inCombat)) {
             addHeadDrop(event, player);
         }
 
-        if (dropType == DropType.UNCHANGED || !inCombat) {
+        if (!inCombat) {
             return;
         }
 
