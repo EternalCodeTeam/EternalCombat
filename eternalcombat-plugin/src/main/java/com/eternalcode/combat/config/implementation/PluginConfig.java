@@ -21,6 +21,9 @@ public class PluginConfig extends OkaeriConfig {
     @Comment("# \\____/ \\__\\___|_|  |_| |_|\\__,_|_|\\____/\\___/|_| |_| |_|_.__/ \\__,_|\\__| ")
     @Comment(" ")
 
+    @Comment(" ")
+    public boolean isFoliaServer = false;
+
     @Comment({
         " ",
         "# Settings for the plugin.",
