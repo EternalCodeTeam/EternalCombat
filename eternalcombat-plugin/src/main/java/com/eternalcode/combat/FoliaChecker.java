@@ -1,6 +1,7 @@
 package com.eternalcode.combat;
 
 import org.bukkit.plugin.Plugin;
+import org.jetbrains.annotations.Nullable;
 
 public final class FoliaChecker {
 
@@ -12,31 +13,31 @@ public final class FoliaChecker {
     }
 
     public static boolean isFolia() {
-        if (cachedResult == null) {
-            try {
-                Class.forName(FOLIA_CLASS);
-                cachedResult = true;
-            }
-            catch (ClassNotFoundException exception) {
-                cachedResult = false;
-            }
-        }
-        return cachedResult;
+        return detectFoliaEnvironment(null);
     }
 
     public static boolean isFolia(Plugin plugin) {
-        if (cachedResult == null) {
-            try {
-                Class.forName(FOLIA_CLASS);
-                cachedResult = true;
+        return detectFoliaEnvironment(plugin);
+    }
+
+    private static synchronized boolean detectFoliaEnvironment(@Nullable Plugin plugin) {
+        if (cachedResult != null) {
+            return cachedResult;
+        }
+
+        try {
+            Class.forName(FOLIA_CLASS);
+            cachedResult = true;
+            if (plugin != null) {
                 plugin.getLogger().info("» Detected Folia environment.");
             }
-            catch (ClassNotFoundException exception) {
-                cachedResult = false;
+        }
+        catch (ClassNotFoundException exception) {
+            cachedResult = false;
+            if (plugin != null) {
                 plugin.getLogger().info("» Detected Bukkit/Paper environment.");
             }
         }
-
         return cachedResult;
     }
 
