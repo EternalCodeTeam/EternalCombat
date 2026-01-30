@@ -214,6 +214,7 @@ public final class CombatPlugin extends JavaPlugin implements EternalCombatApi {
     @Override
     public void onDisable() {
         EternalCombatProvider.deinitialize();
+        FoliaChecker.clearCache();
 
         if (this.liteCommands != null) {
             this.liteCommands.unregister();

@@ -168,6 +168,12 @@ tasks {
         downloadPlugins.modrinth("WorldGuard", Versions.WORLDGUARD)
         downloadPlugins.modrinth("LuckPerms", "v${Versions.LUCKPERMS}-bukkit")
     }
+
+    runPaper.folia.registerTask() {
+        minecraftVersion("1.21.11")
+
+        downloadPlugins.modrinth("PacketEvents", "${Versions.PACKETEVENTS}+spigot")
+    }
 }
 
 tasks.shadowJar {
