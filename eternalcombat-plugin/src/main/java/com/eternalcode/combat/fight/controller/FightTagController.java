@@ -59,7 +59,11 @@ public class FightTagController implements Listener {
         UUID attackedUniqueId = attackedPlayerByPerson.getUniqueId();
         UUID attackerUniqueId = attacker.getUniqueId();
 
-        if (attackedUniqueId.equals(attackerUniqueId) && FoliaChecker.isFolia()) {
+        if (
+            attackedUniqueId.equals(attackerUniqueId)
+            && FoliaChecker.isFolia()
+            && this.config.stopFoliaFromSelfTagging
+        ) {
             return;
         }
 
