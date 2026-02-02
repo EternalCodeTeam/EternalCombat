@@ -8,42 +8,58 @@ import com.eternalcode.combat.util.DurationUtil;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
-import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
-import org.bukkit.event.player.PlayerInteractEvent;
-import org.bukkit.inventory.ItemStack;
+import org.bukkit.event.player.PlayerMoveEvent;
+import org.bukkit.event.player.PlayerRiptideEvent;
 
 import java.time.Duration;
 import java.util.UUID;
 
 public class FightTridentController implements Listener {
 
-    private final FightTridentSettings settings;
+    private final PluginConfig pluginConfig;
     private final NoticeService noticeService;
     private final FightManager fightManager;
     private final FightTridentService fightTridentService;
-    private final PluginConfig config;
 
     public FightTridentController(
-        FightTridentSettings settings,
+        PluginConfig pluginConfig,
         NoticeService noticeService,
         FightManager fightManager,
-        FightTridentService fightTridentService,
-        PluginConfig config
+        FightTridentService fightTridentService
     ) {
-        this.settings = settings;
+        this.pluginConfig = pluginConfig;
         this.noticeService = noticeService;
         this.fightManager = fightManager;
         this.fightTridentService = fightTridentService;
-        this.config = config;
     }
 
+    @EventHandler
+    public void onRiptide(PlayerRiptideEvent event) {
+        Player player = event.getPlayer();
+        UUID playerId = player.getUniqueId();
 
-    @EventHandler(priority = EventPriority.HIGHEST)
-    public void onTridentInteract(PlayerInteractEvent event) {
-        ItemStack item = event.getItem();
+        if (!this.fightManager.isInCombat(playerId)) {
+            return;
+        }
 
-        if (item == null || item.getType() != Material.TRIDENT) {
+        if (this.pluginConfig.trident.tridentThrowDisabledDuringCombat) {
+            return;
+        }
+
+        if (this.pluginConfig.trident.tridentCooldownEnabled) {
+            this.handleTridentCooldown(player, playerId);
+        }
+
+        if (this.pluginConfig.trident.tridentResetsTimerEnabled) {
+            Duration combatTime = pluginConfig.settings.combatTimerDuration;
+            this.fightManager.tag(playerId, combatTime, CauseOfTag.CUSTOM);
+        }
+    }
+
+    @EventHandler(ignoreCancelled = true)
+    public void onPlayerMove(PlayerMoveEvent event) {
+        if (event.getFrom().distanceSquared(event.getTo()) == 0) {
             return;
         }
 
@@ -54,44 +70,38 @@ public class FightTridentController implements Listener {
             return;
         }
 
-        if (this.settings.tridentThrowDisabledDuringCombat) {
-            event.setCancelled(true);
-            this.noticeService.create()
-                .player(playerId)
-                .notice(this.settings.tridentThrowBlockedDuringCombat)
-                .send();
+        if (!player.isRiptiding()) {
             return;
         }
 
-        if (this.settings.tridentCooldownEnabled) {
-            this.handleTridentCooldown(event, player, playerId);
-        }
+        if (this.pluginConfig.trident.tridentThrowDisabledDuringCombat) {
+            event.setCancelled(true);
 
-        if (this.settings.tridentResetsTimerEnabled) {
-            Duration combatTime = this.config.settings.combatTimerDuration;
-            this.fightManager.tag(playerId, combatTime, CauseOfTag.CUSTOM);
+            this.noticeService.create()
+                .player(playerId)
+                .notice(this.pluginConfig.trident.tridentThrowBlockedDuringCombat)
+                .send();
         }
     }
 
-    private void handleTridentCooldown(PlayerInteractEvent event, Player player, UUID playerId) {
-        if (this.settings.tridentThrowDelay.isZero()) {
+    private void handleTridentCooldown(Player player, UUID playerId) {
+        if (this.pluginConfig.trident.tridentThrowDelay.isZero()) {
             return;
         }
 
         if (this.fightTridentService.hasDelay(playerId)) {
-            event.setCancelled(true);
             Duration remainingDelay = this.fightTridentService.getRemainingDelay(playerId);
 
             this.noticeService.create()
                 .player(playerId)
-                .notice(this.settings.tridentThrowBlockedDelayDuringCombat)
+                .notice(this.pluginConfig.trident.tridentThrowBlockedDelayDuringCombat)
                 .placeholder("{TIME}", DurationUtil.format(remainingDelay))
                 .send();
             return;
         }
 
         this.fightTridentService.markDelay(playerId);
-        int cooldownTicks = (int) (this.settings.tridentThrowDelay.toMillis() / 50);
+        int cooldownTicks = (int) (this.pluginConfig.trident.tridentThrowDelay.toMillis() / 50);
         player.setCooldown(Material.TRIDENT, cooldownTicks);
     }
 }
