@@ -19,24 +19,21 @@ import org.bukkit.event.entity.ProjectileLaunchEvent;
 
 public class FightPearlController implements Listener {
 
-    private final FightPearlSettings settings;
+    private final PluginConfig pluginConfig;
     private final NoticeService noticeService;
     private final FightManager fightManager;
     private final FightPearlService fightPearlService;
-    private final PluginConfig config;
 
     public FightPearlController(
-        FightPearlSettings settings,
+        PluginConfig pluginConfig,
         NoticeService noticeService,
         FightManager fightManager,
-        FightPearlService fightPearlService,
-        PluginConfig config
+        FightPearlService fightPearlService
     ) {
-        this.settings = settings;
+        this.pluginConfig = pluginConfig;
         this.noticeService = noticeService;
         this.fightManager = fightManager;
         this.fightPearlService = fightPearlService;
-        this.config = config;
     }
 
     @EventHandler(priority = EventPriority.HIGHEST)
@@ -55,28 +52,28 @@ public class FightPearlController implements Listener {
             return;
         }
 
-        if (this.settings.pearlThrowDisabledDuringCombat) {
+        if (this.pluginConfig.pearl.pearlThrowDisabledDuringCombat) {
             event.setCancelled(true);
             this.noticeService.create()
                 .player(playerId)
-                .notice(this.settings.pearlThrowBlockedDuringCombat)
+                .notice(this.pluginConfig.pearl.pearlThrowBlockedDuringCombat)
                 .send();
             return;
         }
 
-        if (this.settings.pearlCooldownEnabled) {
+        if (this.pluginConfig.pearl.pearlCooldownEnabled) {
             handlePearlCooldown(event, player, playerId);
         }
 
-        if (this.settings.pearlResetsTimerEnabled) {
-            Duration combatTime = this.config.settings.combatTimerDuration;
+        if (this.pluginConfig.pearl.pearlResetsTimerEnabled) {
+            Duration combatTime = this.pluginConfig.settings.combatTimerDuration;
             this.fightManager.tag(playerId, combatTime, CauseOfTag.CUSTOM);
         }
     }
 
     @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
     public void onPearlDamage(EntityDamageByEntityEvent event) {
-        if (this.settings.pearlThrowDamageEnabled) {
+        if (this.pluginConfig.pearl.pearlThrowDamageEnabled) {
             return;
         }
 
@@ -90,7 +87,7 @@ public class FightPearlController implements Listener {
     }
 
     private void handlePearlCooldown(ProjectileLaunchEvent event, Player player, UUID playerId) {
-        if (this.settings.pearlThrowDelay.isZero()) {
+        if (this.pluginConfig.pearl.pearlThrowDelay.isZero()) {
             return;
         }
 
@@ -100,14 +97,14 @@ public class FightPearlController implements Listener {
 
             this.noticeService.create()
                 .player(playerId)
-                .notice(this.settings.pearlThrowBlockedDelayDuringCombat)
+                .notice(this.pluginConfig.pearl.pearlThrowBlockedDelayDuringCombat)
                 .placeholder("{TIME}", DurationUtil.format(remainingDelay))
                 .send();
             return;
         }
 
         this.fightPearlService.markDelay(playerId);
-        int cooldownTicks = (int) (this.settings.pearlThrowDelay.toMillis() / 50);
+        int cooldownTicks = (int) (this.pluginConfig.pearl.pearlThrowDelay.toMillis() / 50);
         player.setCooldown(Material.ENDER_PEARL, cooldownTicks);
     }
 }
