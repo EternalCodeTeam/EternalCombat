@@ -1,5 +1,6 @@
 import net.minecrell.pluginyml.bukkit.BukkitPluginDescription
 import io.papermc.hangarpublishplugin.model.Platforms
+import org.gradle.kotlin.dsl.shadowJar
 
 plugins {
     `eternalcombat-java`
@@ -10,76 +11,6 @@ plugins {
     id("xyz.jpenilla.run-paper")
     id("com.modrinth.minotaur") version "2.8.10"
     id("io.papermc.hangar-publish-plugin") version "0.1.4"
-}
-
-val buildNumber = providers.environmentVariable("GITHUB_RUN_NUMBER").orNull
-val isRelease = providers.environmentVariable("GITHUB_EVENT_NAME").orNull == "release"
-
-if (buildNumber != null && !isRelease) {
-    val offset = try {
-        val description = providers.exec {
-            commandLine("git", "describe", "--tags", "--long")
-        }.standardOutput.asText.get().trim()
-        val parts = description.split("-")
-        if (parts.size >= 3) parts[parts.size - 2] else "0"
-    } catch (e: Exception) {
-        try {
-            providers.exec {
-                commandLine("git", "rev-list", "--count", "HEAD")
-            }.standardOutput.asText.get().trim()
-        } catch (e: Exception) {
-            "0"
-        }
-    }
-    
-    val baseVersion = project.version.toString().replace("-SNAPSHOT", "")
-    version = "$baseVersion-SNAPSHOT+$offset"
-}
-
-val changelogText = providers.environmentVariable("CHANGELOG").orElse(providers.exec {
-    commandLine("git", "log", "-1", "--format=%B")
-}.standardOutput.asText)
-
-logger.lifecycle("Building version: $version")
-
-val paperVersions = (property("paperVersion") as String)
-    .split(",")
-    .map { it.trim() }
-
-val hangarToken = providers.environmentVariable("HANGAR_API_TOKEN")
-    .orElse(providers.gradleProperty("hangarToken"))
-
-val projectVersion = project.version.toString()
-val releaseChannel = if (isRelease) "Release" else "Snapshot"
-val shadowJarTask = tasks.shadowJar
-
-modrinth {
-    token.set(providers.environmentVariable("MODRINTH_TOKEN"))
-    projectId.set("eternalcombat")
-    versionNumber.set(projectVersion)
-    versionType.set(if (isRelease) "release" else "beta")
-    uploadFile.set(shadowJarTask) 
-    gameVersions.addAll(paperVersions)
-    loaders.addAll(listOf("paper", "spigot", "folia", "purpur"))
-    changelog.set(changelogText)
-    syncBodyFrom.set(rootProject.file("README.md").readText())
-}
-
-
-hangarPublish {
-    publications.register("plugin") {
-        version.set(projectVersion)
-        channel.set(releaseChannel)
-        changelog.set(changelogText)
-        id.set("eternalcombat")
-        apiKey.set(hangarToken)
-        platforms {
-            register(Platforms.PAPER) {
-                jar.set(shadowJarTask.flatMap { it.archiveFile })
-                platformVersions.set(paperVersions)
-            }
-        }
-    }
 }
 
 configurations.all {
@@ -130,7 +61,7 @@ dependencies {
 
     // PlaceholderAPI
     compileOnly("me.clip:placeholderapi:${Versions.PLACEHOLDER_API}")
-    
+
     // Lands
     compileOnly("com.github.angeschossen:LandsAPI:${Versions.LANDS_API}")
 
@@ -198,5 +129,56 @@ tasks.shadowJar {
         "io.papermc.lib"
     ).forEach { pack ->
         relocate(pack, "$prefix.$pack")
+    }
+}
+
+val isGithubWorkflow = providers.environmentVariable("GITHUB_RUN_NUMBER").isPresent
+val isRelease = providers.environmentVariable("GITHUB_EVENT_NAME").orNull == "release"
+val isSnapshot = !isRelease
+
+if (isGithubWorkflow && isSnapshot) {
+    val parts = providers.exec { commandLine("git", "describe", "--tags", "--long") }
+        .standardOutput.asText.get().trim()
+        .split("-")
+
+    val offset = if (parts.size >= 3) parts[parts.size - 2] else "0"
+    val baseVersion = project.version.toString().replace("-SNAPSHOT", "")
+    version = "$baseVersion-SNAPSHOT+$offset"
+}
+
+val changelog = providers.environmentVariable("CHANGELOG")
+    .orElse(providers.exec { commandLine("git", "log", "-1", "--format=%B") }.standardOutput.asText)
+
+val paperVersions = property("paperVersion").toString()
+    .split(",")
+    .map { it.trim() }
+
+val releaseChannel = if (isRelease) "Release" else "Snapshot"
+
+modrinth {
+    token.set(providers.environmentVariable("MODRINTH_TOKEN"))
+    projectId.set("eternalcombat")
+    versionNumber.set(project.version.toString())
+    versionType.set(if (isRelease) "release" else "beta")
+    uploadFile.set(tasks.shadowJar)
+    gameVersions.addAll(paperVersions)
+    loaders.addAll(listOf("paper", "spigot", "folia", "purpur"))
+    this.changelog.set(changelog)
+    syncBodyFrom.set(rootProject.file("README.md").readText())
+}
+
+hangarPublish {
+    publications.register("plugin") {
+        version.set(project.version.toString())
+        channel.set(releaseChannel)
+        this.changelog.set(changelog)
+        id.set("eternalcombat")
+        apiKey.set(providers.environmentVariable("HANGAR_API_TOKEN"))
+        platforms {
+            register(Platforms.PAPER) {
+                jar.set(tasks.shadowJar.flatMap { it.archiveFile })
+                platformVersions.set(paperVersions)
+            }
+        }
     }
 }
