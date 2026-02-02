@@ -6,7 +6,7 @@ import org.jetbrains.annotations.Nullable;
 public final class FoliaChecker {
 
     private static final String FOLIA_CLASS = "io.papermc.paper.threadedregions.RegionizedServer";
-    private static Boolean cachedResult = null;
+    private static Boolean isFoliaPresent = null;
 
     private FoliaChecker() {
         throw new UnsupportedOperationException("This is a utility class and cannot be instantiated");
@@ -21,27 +21,27 @@ public final class FoliaChecker {
     }
 
     private static synchronized boolean detectFoliaEnvironment(@Nullable Plugin plugin) {
-        if (cachedResult != null) {
-            return cachedResult;
+        if (isFoliaPresent != null) {
+            return isFoliaPresent;
         }
 
         try {
             Class.forName(FOLIA_CLASS);
-            cachedResult = true;
+            isFoliaPresent = true;
             if (plugin != null) {
                 plugin.getLogger().info("» Detected Folia environment.");
             }
         }
         catch (ClassNotFoundException exception) {
-            cachedResult = false;
+            isFoliaPresent = false;
             if (plugin != null) {
                 plugin.getLogger().info("» Detected Bukkit/Paper environment.");
             }
         }
-        return cachedResult;
+        return isFoliaPresent;
     }
 
     public static void clearCache() {
-        cachedResult = null;
+        isFoliaPresent = null;
     }
 }

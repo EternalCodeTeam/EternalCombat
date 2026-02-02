@@ -169,7 +169,7 @@ tasks {
         downloadPlugins.modrinth("LuckPerms", "v${Versions.LUCKPERMS}-bukkit")
     }
 
-    runPaper.folia.registerTask() {
+    runPaper.folia.registerTask {
         minecraftVersion("1.21.11")
 
         downloadPlugins.modrinth("PacketEvents", "${Versions.PACKETEVENTS}+spigot")
