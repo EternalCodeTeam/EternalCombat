@@ -62,7 +62,6 @@ public class FightTagController implements Listener {
         if (
             attackedUniqueId.equals(attackerUniqueId)
             && FoliaChecker.isFolia()
-            && this.config.stopFoliaFromSelfTagging
         ) {
             return;
         }

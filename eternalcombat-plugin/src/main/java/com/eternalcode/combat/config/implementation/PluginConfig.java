@@ -23,14 +23,6 @@ public class PluginConfig extends OkaeriConfig {
 
     @Comment({
         " ",
-        "# This option does NOT affect other server versions.",
-        "# Options: true - users cannot tag them self when using ender pearls, arrows or other self inflicted damage",
-        "# false - players get tagged from all above damage sources used on themself"
-    })
-    public boolean stopFoliaFromSelfTagging = true;
-
-    @Comment({
-        " ",
         "# Settings for the plugin.",
         "# Modify these to customize the plugin's behavior."
     })
