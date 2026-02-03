@@ -43,7 +43,7 @@ public class FightTridentController implements Listener {
             return;
         }
 
-        if (this.pluginConfig.trident.tridentThrowDisabledDuringCombat) {
+        if (this.pluginConfig.trident.tridentRiptideDisabledDuringCombat) {
             return;
         }
 
@@ -74,18 +74,18 @@ public class FightTridentController implements Listener {
             return;
         }
 
-        if (this.pluginConfig.trident.tridentThrowDisabledDuringCombat) {
+        if (this.pluginConfig.trident.tridentRiptideDisabledDuringCombat) {
             event.setCancelled(true);
 
             this.noticeService.create()
                 .player(playerId)
-                .notice(this.pluginConfig.trident.tridentThrowBlockedDuringCombat)
+                .notice(this.pluginConfig.trident.tridentRiptideBlockedDuringCombat)
                 .send();
         }
     }
 
     private void handleTridentCooldown(Player player, UUID playerId) {
-        if (this.pluginConfig.trident.tridentThrowDelay.isZero()) {
+        if (this.pluginConfig.trident.tridentRiptideDelay.isZero()) {
             return;
         }
 
@@ -94,14 +94,14 @@ public class FightTridentController implements Listener {
 
             this.noticeService.create()
                 .player(playerId)
-                .notice(this.pluginConfig.trident.tridentThrowBlockedDelayDuringCombat)
+                .notice(this.pluginConfig.trident.tridentRiptideBlockedDelayDuringCombat)
                 .placeholder("{TIME}", DurationUtil.format(remainingDelay))
                 .send();
             return;
         }
 
         this.fightTridentService.markDelay(playerId);
-        int cooldownTicks = (int) (this.pluginConfig.trident.tridentThrowDelay.toMillis() / 50);
+        int cooldownTicks = (int) (this.pluginConfig.trident.tridentRiptideDelay.toMillis() / 50);
         player.setCooldown(Material.TRIDENT, cooldownTicks);
     }
 }

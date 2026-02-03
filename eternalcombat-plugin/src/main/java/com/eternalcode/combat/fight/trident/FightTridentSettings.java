@@ -10,30 +10,30 @@ import java.time.Duration;
 public class FightTridentSettings extends OkaeriConfig {
 
     @Comment({
-        "# Set true, If you want to disable throwing trident during combat",
-        "# This will work globally, but can be overridden by region settings"
+        "# Set to true to disable riptide usage during combat",
+        "# This setting works globally, but can be overridden by region settings"
     })
-    public boolean tridentThrowDisabledDuringCombat = true;
+    public boolean tridentRiptideDisabledDuringCombat = true;
 
-    @Comment("# Set true, If you want add cooldown to trident")
+    @Comment("# Set to true so throwing trident will result in cooldown - delay between uses")
     public boolean tridentCooldownEnabled = false;
 
-    @Comment("# Set true, If you want to reset timer when player uses trident")
-    public boolean tridentResetsTimerEnabled = true;
+    @Comment("# Set to true so the users will get combat log when they use riptide")
+    public boolean tridentResetsTimerEnabled = false;
 
     @Comment({
-        "# Block throwing trident with delay?",
-        "# If you set this to for example 3s, player will have to wait 3 seconds before throwing trident"
+        "# Should riptide enchantment be on cooldown?",
+        "# Setting this option to 3s will make players wait 3 seconds between trident throws"
     })
-    public Duration tridentThrowDelay = Duration.ofSeconds(3);
+    public Duration tridentRiptideDelay = Duration.ofSeconds(3);
 
-    @Comment("# Message sent when player tries to throw trident, but are disabled")
-    public Notice tridentThrowBlockedDuringCombat = BukkitNotice.builder()
-        .chat("<red>Throwing trident is prohibited during combat!")
+    @Comment("# Message shown when riptide is blocked during combat")
+    public Notice tridentRiptideBlockedDuringCombat = BukkitNotice.builder()
+        .chat("<red>Using riptide is prohibited during combat!")
         .build();
 
-    @Comment("# Message sent when player tries to throw trident, but has delay")
-    public Notice tridentThrowBlockedDelayDuringCombat = BukkitNotice.builder()
-        .chat("<red>You must wait {TIME} before next throw!")
+    @Comment("# Message sent to the player when riptide is on cooldown")
+    public Notice tridentRiptideBlockedDelayDuringCombat = BukkitNotice.builder()
+        .chat("<red>You must wait {TIME} before next usage!")
         .build();
 }

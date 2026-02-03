@@ -11,10 +11,10 @@ public class FightTridentServiceImpl implements FightTridentService {
     private final FightTridentSettings tridentSettings;
     private final Cache<UUID, Instant> tridentStartTimes;
 
-    public FightTridentServiceImpl(FightTridentSettings pearlSettings) {
-        this.tridentSettings = pearlSettings;
+    public FightTridentServiceImpl(FightTridentSettings tridentSettings) {
+        this.tridentSettings = tridentSettings;
         this.tridentStartTimes = Caffeine.newBuilder()
-            .expireAfterWrite(pearlSettings.tridentThrowDelay)
+            .expireAfterWrite(tridentSettings.tridentRiptideDelay)
             .build();
     }
 
@@ -36,7 +36,7 @@ public class FightTridentServiceImpl implements FightTridentService {
         }
 
         Duration elapsed = Duration.between(startTime, Instant.now());
-        Duration remaining = this.tridentSettings.tridentThrowDelay.minus(elapsed);
+        Duration remaining = this.tridentSettings.tridentRiptideDelay.minus(elapsed);
 
         return remaining.isNegative() ? Duration.ZERO : remaining;
     }
@@ -44,7 +44,7 @@ public class FightTridentServiceImpl implements FightTridentService {
     @Override
     public Instant getDelay(UUID uuid) {
         Instant startTime = this.tridentStartTimes.getIfPresent(uuid);
-        return startTime != null ? startTime.plus(this.tridentSettings.tridentThrowDelay) : Instant.MIN;
+        return startTime != null ? startTime.plus(this.tridentSettings.tridentRiptideDelay) : Instant.MIN;
     }
 }
 
