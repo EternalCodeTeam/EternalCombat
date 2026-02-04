@@ -59,24 +59,23 @@ public class FightTridentController implements Listener {
 
     @EventHandler(ignoreCancelled = true)
     public void onPlayerMove(PlayerMoveEvent event) {
-        if (event.getFrom().distanceSquared(event.getTo()) == 0) {
+        if (event.getFrom().distanceSquared( event.getTo()) == 0) {
             return;
         }
 
         Player player = event.getPlayer();
         UUID playerId = player.getUniqueId();
 
-        if (!this.fightManager.isInCombat(playerId)) {
-            return;
-        }
-
         if (!player.isRiptiding()) {
             return;
         }
 
         if (this.pluginConfig.trident.tridentRiptideDisabledDuringCombat) {
-            event.setCancelled(true);
+            if (!this.fightManager.isInCombat(playerId)) {
+                return;
+            }
 
+            event.setCancelled(true);
             this.noticeService.create()
                 .player(playerId)
                 .notice(this.pluginConfig.trident.tridentRiptideBlockedDuringCombat)
