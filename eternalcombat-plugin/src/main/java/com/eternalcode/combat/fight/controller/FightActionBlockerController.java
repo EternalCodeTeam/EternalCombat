@@ -187,10 +187,6 @@ public class FightActionBlockerController implements Listener {
 
     @EventHandler
     void onOpenInventory(InventoryOpenEvent event) {
-        if (!this.config.combat.disableInventoryAccess) {
-            return;
-        }
-
         Player player = (Player) event.getPlayer();
         UUID uniqueId = player.getUniqueId();
 
@@ -198,13 +194,25 @@ public class FightActionBlockerController implements Listener {
             return;
         }
 
-        event.setCancelled(true);
+        org.bukkit.event.inventory.InventoryType inventoryType = event.getInventory().getType();
 
-        this.noticeService.create()
-            .player(uniqueId)
-            .notice(this.config.messagesSettings.inventoryBlockedDuringCombat)
-            .send();
+        // Never block player's own inventory or creative inventory to prevent game-breaking issues
+        if (inventoryType == org.bukkit.event.inventory.InventoryType.PLAYER ||
+            inventoryType == org.bukkit.event.inventory.InventoryType.CREATIVE) {
+            return;
+        }
 
+        boolean isInRestrictedList = this.config.inventory.restrictedInventoryTypes.contains(inventoryType);
+        boolean shouldBlock = this.config.inventory.inventoryAccessMode.shouldBlock(isInRestrictedList);
+
+        if (shouldBlock) {
+            event.setCancelled(true);
+
+            this.noticeService.create()
+                .player(uniqueId)
+                .notice(this.config.messagesSettings.inventoryBlockedDuringCombat)
+                .send();
+        }
     }
 
     @EventHandler
