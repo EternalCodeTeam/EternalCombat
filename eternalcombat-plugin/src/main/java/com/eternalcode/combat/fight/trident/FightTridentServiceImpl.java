@@ -1,50 +1,33 @@
 package com.eternalcode.combat.fight.trident;
 
-import com.github.benmanes.caffeine.cache.Cache;
-import com.github.benmanes.caffeine.cache.Caffeine;
+import com.eternalcode.combat.util.delay.Delay;
 
 import java.time.Duration;
-import java.time.Instant;
 import java.util.UUID;
 
 public class FightTridentServiceImpl implements FightTridentService {
-    private final FightTridentSettings tridentSettings;
-    private final Cache<UUID, Instant> tridentStartTimes;
 
-    public FightTridentServiceImpl(FightTridentSettings tridentSettings) {
-        this.tridentSettings = tridentSettings;
-        this.tridentStartTimes = Caffeine.newBuilder()
-            .expireAfterWrite(tridentSettings.tridentRiptideDelay)
-            .build();
+    private final FightTridentSettings delaySettings;
+    private final Delay<UUID> delay;
+
+    public FightTridentServiceImpl(FightTridentSettings delaySettings) {
+        this.delaySettings = delaySettings;
+        this.delay = Delay.withDefault(() -> this.delaySettings.tridentRiptideDelay);
     }
 
     @Override
     public void markDelay(UUID uuid) {
-        this.tridentStartTimes.put(uuid, Instant.now());
+        this.delay.markDelay(uuid);
     }
 
     @Override
     public boolean hasDelay(UUID uuid) {
-        return this.tridentStartTimes.getIfPresent(uuid) != null;
+        return this.delay.hasDelay(uuid);
     }
 
     @Override
     public Duration getRemainingDelay(UUID uuid) {
-        Instant startTime = this.tridentStartTimes.getIfPresent(uuid);
-        if (startTime == null) {
-            return Duration.ZERO;
-        }
-
-        Duration elapsed = Duration.between(startTime, Instant.now());
-        Duration remaining = this.tridentSettings.tridentRiptideDelay.minus(elapsed);
-
-        return remaining.isNegative() ? Duration.ZERO : remaining;
-    }
-
-    @Override
-    public Instant getDelay(UUID uuid) {
-        Instant startTime = this.tridentStartTimes.getIfPresent(uuid);
-        return startTime != null ? startTime.plus(this.tridentSettings.tridentRiptideDelay) : Instant.MIN;
+        return this.delay.getRemaining(uuid);
     }
 }
 
