@@ -33,10 +33,6 @@ public class FightInventoryController implements Listener {
 
         InventoryType inventoryType = event.getInventory().getType();
 
-        // Never block player's own inventory or creative inventory to prevent game-breaking issues
-        if (inventoryType == InventoryType.PLAYER || inventoryType == InventoryType.CREATIVE) {
-            return;
-        }
 
         boolean isInRestrictedList = this.config.inventory.restrictedInventoryTypes.contains(inventoryType);
         boolean shouldBlock = this.config.inventory.inventoryAccessMode.shouldBlock(isInRestrictedList);
