@@ -56,11 +56,11 @@ public class FightTagController implements Listener {
             return;
         }
 
-        UUID attackedUniqueId = attackedPlayerByPerson.getUniqueId();
-        UUID attackerUniqueId = attacker.getUniqueId();
+        UUID targetId = attackedPlayerByPerson.getUniqueId();
+        UUID attackerId = attacker.getUniqueId();
 
         if (
-            attackedUniqueId.equals(attackerUniqueId)
+            targetId.equals(attackerId)
             && FoliaChecker.isFolia()
         ) {
             return;
@@ -80,8 +80,8 @@ public class FightTagController implements Listener {
 
         Duration combatTime = this.config.settings.combatTimerDuration;
 
-        this.fightManager.tag(attackedUniqueId, combatTime, CauseOfTag.PLAYER, attackerUniqueId);
-        this.fightManager.tag(attackerUniqueId, combatTime, CauseOfTag.PLAYER, attackedUniqueId);
+        this.fightManager.tag(targetId, combatTime, CauseOfTag.PLAYER, attackerId);
+        this.fightManager.tag(attackerId, combatTime, CauseOfTag.PLAYER, targetId);
     }
 
 
