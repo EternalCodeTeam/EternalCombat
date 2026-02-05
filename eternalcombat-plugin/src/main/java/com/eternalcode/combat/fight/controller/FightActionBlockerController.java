@@ -187,35 +187,6 @@ public class FightActionBlockerController implements Listener {
     }
 
     @EventHandler
-    void onOpenInventory(InventoryOpenEvent event) {
-        Player player = (Player) event.getPlayer();
-        UUID uniqueId = player.getUniqueId();
-
-        if (!this.fightManager.isInCombat(uniqueId)) {
-            return;
-        }
-
-        InventoryType inventoryType = event.getInventory().getType();
-
-        // Never block player's own inventory or creative inventory to prevent game-breaking issues
-        if (inventoryType == InventoryType.PLAYER || inventoryType == InventoryType.CREATIVE) {
-            return;
-        }
-
-        boolean isInRestrictedList = this.config.inventory.restrictedInventoryTypes.contains(inventoryType);
-        boolean shouldBlock = this.config.inventory.inventoryAccessMode.shouldBlock(isInRestrictedList);
-
-        if (shouldBlock) {
-            event.setCancelled(true);
-
-            this.noticeService.create()
-                .player(uniqueId)
-                .notice(this.config.messagesSettings.inventoryBlockedDuringCombat)
-                .send();
-        }
-    }
-
-    @EventHandler
     void onPlayerCommandPreprocess(PlayerCommandPreprocessEvent event) {
         Player player = event.getPlayer();
         UUID playerUniqueId = player.getUniqueId();
