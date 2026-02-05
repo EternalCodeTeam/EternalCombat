@@ -47,19 +47,21 @@ public class FightTridentController implements Listener {
             return;
         }
 
-        if (this.pluginConfig.trident.tridentCooldownEnabled) {
-            this.handleTridentCooldown(player, playerId);
-        }
+        this.handleTridentCooldown(player, playerId);
 
         if (this.pluginConfig.trident.tridentResetsTimerEnabled) {
             Duration combatTime = pluginConfig.settings.combatTimerDuration;
-            this.fightManager.tag(playerId, combatTime, CauseOfTag.CUSTOM);
+            this.fightManager.tag(playerId, combatTime, CauseOfTag.TRIDENT);
         }
     }
 
     @EventHandler(ignoreCancelled = true)
     public void onPlayerMove(PlayerMoveEvent event) {
-        if (event.getFrom().distanceSquared( event.getTo()) == 0) {
+        if (event.getTo() == null) {
+            return;
+        }
+
+        if (event.getFrom().distanceSquared(event.getTo()) == 0) {
             return;
         }
 
@@ -78,7 +80,7 @@ public class FightTridentController implements Listener {
             event.setCancelled(true);
             this.noticeService.create()
                 .player(playerId)
-                .notice(this.pluginConfig.trident.tridentRiptideBlockedDuringCombat)
+                .notice(this.pluginConfig.trident.tridentRiptideBlocked)
                 .send();
         }
     }
@@ -93,7 +95,7 @@ public class FightTridentController implements Listener {
 
             this.noticeService.create()
                 .player(playerId)
-                .notice(this.pluginConfig.trident.tridentRiptideBlockedDelayDuringCombat)
+                .notice(this.pluginConfig.trident.tridentRiptideOnCooldown)
                 .placeholder("{TIME}", DurationUtil.format(remainingDelay))
                 .send();
             return;

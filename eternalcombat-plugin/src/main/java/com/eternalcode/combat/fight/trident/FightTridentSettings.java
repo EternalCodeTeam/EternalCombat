@@ -13,10 +13,7 @@ public class FightTridentSettings extends OkaeriConfig {
         "# Set to true to disable riptide usage during combat",
         "# This setting works globally, but can be overridden by region settings"
     })
-    public boolean tridentRiptideDisabledDuringCombat = true;
-
-    @Comment("# Set to true so throwing trident will result in cooldown - delay between uses")
-    public boolean tridentCooldownEnabled = false;
+    public boolean tridentRiptideDisabledDuringCombat = false;
 
     @Comment("# Set to true so the users will get combat log when they use riptide")
     public boolean tridentResetsTimerEnabled = false;
@@ -24,17 +21,17 @@ public class FightTridentSettings extends OkaeriConfig {
     @Comment({
         "# Should riptide enchantment be on cooldown?",
         "# Setting this option to 3s will make players wait 3 seconds between trident throws",
-        "# but if you set it to 0s, it removes the cooldown"
+        "# Setting this to 0s will remove cooldown"
     })
-    public Duration tridentRiptideDelay = Duration.ofSeconds(3);
+    public Duration tridentRiptideDelay = Duration.ofSeconds(10);
 
     @Comment("# Message shown when riptide is blocked during combat")
-    public Notice tridentRiptideBlockedDuringCombat = BukkitNotice.builder()
+    public Notice tridentRiptideBlocked = BukkitNotice.builder()
         .chat("<red>Using riptide is prohibited during combat!")
         .build();
 
     @Comment("# Message sent to the player when riptide is on cooldown")
-    public Notice tridentRiptideBlockedDelayDuringCombat = BukkitNotice.builder()
-        .chat("<red>You must wait {TIME} before next usage!")
+    public Notice tridentRiptideOnCooldown = BukkitNotice.builder()
+        .chat("<red>You must wait {TIME} before next riptide!")
         .build();
 }
