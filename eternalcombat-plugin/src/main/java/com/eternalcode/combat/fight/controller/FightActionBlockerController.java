@@ -17,6 +17,7 @@ import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.EntityToggleGlideEvent;
 import org.bukkit.event.inventory.InventoryOpenEvent;
+import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.event.player.PlayerCommandPreprocessEvent;
 import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.event.player.PlayerToggleFlightEvent;
@@ -194,11 +195,10 @@ public class FightActionBlockerController implements Listener {
             return;
         }
 
-        org.bukkit.event.inventory.InventoryType inventoryType = event.getInventory().getType();
+        InventoryType inventoryType = event.getInventory().getType();
 
         // Never block player's own inventory or creative inventory to prevent game-breaking issues
-        if (inventoryType == org.bukkit.event.inventory.InventoryType.PLAYER ||
-            inventoryType == org.bukkit.event.inventory.InventoryType.CREATIVE) {
+        if (inventoryType == InventoryType.PLAYER || inventoryType == InventoryType.CREATIVE) {
             return;
         }
 
