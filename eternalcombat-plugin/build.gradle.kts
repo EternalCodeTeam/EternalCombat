@@ -1,4 +1,6 @@
 import net.minecrell.pluginyml.bukkit.BukkitPluginDescription
+import io.papermc.hangarpublishplugin.model.Platforms
+import org.gradle.kotlin.dsl.shadowJar
 
 plugins {
     `eternalcombat-java`
@@ -7,6 +9,8 @@ plugins {
     id("net.minecrell.plugin-yml.bukkit")
     id("com.gradleup.shadow")
     id("xyz.jpenilla.run-paper")
+    id("com.modrinth.minotaur") version "2.8.10"
+    id("io.papermc.hangar-publish-plugin") version "0.1.4"
 }
 
 configurations.all {
@@ -57,9 +61,9 @@ dependencies {
 
     // PlaceholderAPI
     compileOnly("me.clip:placeholderapi:${Versions.PLACEHOLDER_API}")
-    
+
     // Lands
-    compileOnly("com.github.angeschossen:LandsAPI:7.17.2")
+    compileOnly("com.github.angeschossen:LandsAPI:${Versions.LANDS_API}")
 
     // Multification
     implementation("com.eternalcode:multification-bukkit:${Versions.MULTIFICATION}")
@@ -76,7 +80,8 @@ bukkit {
     name = "EternalCombat"
     load = BukkitPluginDescription.PluginLoadOrder.POSTWORLD
     softDepend = listOf(
-        "Lands"
+        "Lands",
+        "WorldGuard"
     )
     depend = listOf(
         "packetevents",
@@ -89,9 +94,10 @@ bukkit {
 tasks {
     runServer {
         minecraftVersion("1.21.10")
-        downloadPlugins.url("https://cdn.modrinth.com/data/1u6JkXh5/versions/Jk1z2u7n/worldedit-bukkit-7.3.16.jar")
-        downloadPlugins.modrinth("packetevents", "${Versions.PACKETS_EVENTS}+spigot")
-        downloadPlugins.url("https://cdn.modrinth.com/data/DKY9btbd/versions/PO4MKx7e/worldguard-bukkit-7.0.14-dist.jar")
+        downloadPlugins.modrinth("WorldEdit", Versions.WORLDEDIT)
+        downloadPlugins.modrinth("PacketEvents", "${Versions.PACKETEVENTS}+spigot")
+        downloadPlugins.modrinth("WorldGuard", Versions.WORLDGUARD)
+        downloadPlugins.modrinth("LuckPerms", "v${Versions.LUCKPERMS}-bukkit")
     }
 }
 
@@ -123,5 +129,56 @@ tasks.shadowJar {
         "io.papermc.lib"
     ).forEach { pack ->
         relocate(pack, "$prefix.$pack")
+    }
+}
+
+val isGithubWorkflow = providers.environmentVariable("GITHUB_RUN_NUMBER").isPresent
+val isRelease = providers.environmentVariable("GITHUB_EVENT_NAME").orNull == "release"
+val isSnapshot = !isRelease
+
+if (isGithubWorkflow && isSnapshot) {
+    val parts = providers.exec { commandLine("git", "describe", "--tags", "--long") }
+        .standardOutput.asText.get().trim()
+        .split("-")
+
+    val offset = if (parts.size >= 3) parts[parts.size - 2] else "0"
+    val baseVersion = project.version.toString().replace("-SNAPSHOT", "")
+    version = "$baseVersion-SNAPSHOT+$offset"
+}
+
+val changelog = providers.environmentVariable("CHANGELOG")
+    .orElse(providers.exec { commandLine("git", "log", "-1", "--format=%B") }.standardOutput.asText)
+
+val paperVersions = property("paperVersion").toString()
+    .split(",")
+    .map { it.trim() }
+
+val releaseChannel = if (isRelease) "Release" else "Snapshot"
+
+modrinth {
+    token.set(providers.environmentVariable("MODRINTH_TOKEN"))
+    projectId.set("eternalcombat")
+    versionNumber.set(project.version.toString())
+    versionType.set(if (isRelease) "release" else "beta")
+    uploadFile.set(tasks.shadowJar)
+    gameVersions.addAll(paperVersions)
+    loaders.addAll(listOf("paper", "spigot", "folia", "purpur"))
+    this.changelog.set(changelog)
+    syncBodyFrom.set(rootProject.file("README.md").readText())
+}
+
+hangarPublish {
+    publications.register("plugin") {
+        version.set(project.version.toString())
+        channel.set(releaseChannel)
+        this.changelog.set(changelog)
+        id.set("eternalcombat")
+        apiKey.set(providers.environmentVariable("HANGAR_API_TOKEN"))
+        platforms {
+            register(Platforms.PAPER) {
+                jar.set(tasks.shadowJar.flatMap { it.archiveFile })
+                platformVersions.set(paperVersions)
+            }
+        }
     }
 }

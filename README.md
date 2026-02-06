@@ -9,6 +9,15 @@
 [![Chat on Discord](https://raw.githubusercontent.com/vLuckyyy/badges/main//chat-with-us-on-discord.svg)](https://discord.com/invite/FQ7jmGBd6c)
 [![Read the Docs](https://raw.githubusercontent.com/vLuckyyy/badges/main/read-the-documentation.svg)](https://docs.eternalcode.pl/eternalcombat/introduction)
 [![Available on BStats](https://raw.githubusercontent.com/vLuckyyy/badges/main/available-on-bstats.svg)](https://bstats.org/plugin/bukkit/EternalCombat/17803)
+
+[Report Bug](https://github.com/EternalCodeTeam/EternalCombat/issues) • [Request Feature](https://github.com/EternalCodeTeam/EternalCombat/issues) • [Join Discord](https://discord.com/invite/FQ7jmGBd6c)
+
+<br>
+
+<a href="https://ko-fi.com/eternalcodeteam">
+  <img src="https://github.com/intergrav/devins-badges/blob/v3/assets/cozy/donate/kofi-plural-alt_64h.png?raw=true" height="64" alt="Support us on Ko-fi">
+</a>
+
 </div>
 
 ### Information
@@ -16,7 +25,7 @@
 ## EternalCombat requires PacketEvents plugin to work.
 You can download it from [here](https://modrinth.com/plugin/packetevents)
 
-EternalCombat 2.0 has been tested on Minecraft versions **1.17.1 to 1.21.9**, but it should work seamlessly on most
+EternalCombat 2.0 has been tested on Minecraft versions **1.17.1 to 1.21.11**, but it should work seamlessly on most
 other versions too.
 If you run into any compatibility issues, please let us know in
 the [Issues tab](https://github.com/EternalCodeTeam/EternalCombat/issues).
@@ -68,14 +77,14 @@ EternalCombat in full swing and learn why it’s a game-changer for your server!
 
 Control who can use EternalCombat’s powerful features with these permissions:
 
-| Permission                     | Description                                                              |
-|--------------------------------|--------------------------------------------------------------------------|
-| `eternalcombat.status`         | Check a player’s combat status with `/combatlog status <player>`.        |
-| `eternalcombat.tag`            | Start a fight between players using `/combatlog tag <player> [player2]`. |
-| `eternalcombat.untag`          | Remove a player from combat with `/combatlog untag <player>`.            |
-| `eternalcombat.reload`         | Reload the plugin with `/combatlog reload`.                              |
-| `eternalcombat.receiveupdates` | Receive notifications about new plugin versions on join.                 |
-| `eternalcombat.bypass`         | Bypass combat tagging, need's `excludeAdminsFromCombat` to be enabled    |
+| Permission                     | Description                                                                                           |
+|--------------------------------|-------------------------------------------------------------------------------------------------------|
+| `eternalcombat.status`         | Check a player’s combat status with `/combatlog status <player>`.                                     |
+| `eternalcombat.tag`            | Start a fight between players using `/combatlog tag <player> [player2]`.                              |
+| `eternalcombat.untag`          | Remove a player from combat with `/combatlog untag <player>`.                                         |
+| `eternalcombat.reload`         | Reload the plugin with `/combatlog reload`.                                                           |
+| `eternalcombat.receiveupdates` | Receive notifications about new plugin versions on join.                                              |
+| `eternalcombat.bypass`         | When exclude `excludeAdminsFromCombat` is set to `true` users with this permission will not be tagged |
 
 ## PlaceholderAPI
 
@@ -123,7 +132,7 @@ With Maven:
 With Gradle:
 
 ```kts
-compileOnly("com.eternalcode:eternalcombat-api:2.3.0")
+compileOnly("com.eternalcode:eternalcombat-api:2.5.0-SNAPSHOT")
 ```
 
 With Maven:
@@ -133,7 +142,7 @@ With Maven:
 <dependency>
     <groupId>com.eternalcode</groupId>
     <artifactId>eternalcombat-api</artifactId>
-    <version>2.3.0</version>
+    <version>2.5.0-SNAPSHOT</version>
     <scope>provided</scope>
 </dependency>
 ```

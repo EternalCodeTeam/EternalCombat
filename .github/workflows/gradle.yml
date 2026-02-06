@@ -5,38 +5,43 @@ on:
     branches: [ "master" ]
   pull_request:
 
-permissions:
-  contents: read
-
 jobs:
   build:
 
     runs-on: ubuntu-latest
-
+    permissions:
+      contents: read
     steps:
-      - name: Checkout 
-        uses: actions/checkout@v5
+      - name: Checkout
+        uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+
       - name: Set up JDK 17
         uses: actions/setup-java@v5
         with:
           java-version: '17'
           distribution: 'temurin'
-      - name: Cache Gradle
-        uses: actions/cache@v4
+
+      - name: Setup Gradle
+        uses: gradle/actions/setup-gradle@v5
+
+      - name: Set Variables & Build
+        uses: actions/github-script@v8
         with:
-          path: ~/.gradle/caches
-          key: >-
-            ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*',
-            '**/gradle-wrapper.properties') }}
-          restore-keys: '${{ runner.os }}-gradle-'    
-      - name: Make gradlew executable
-        run: chmod +x gradlew
+          script: |
+            const isPR = context.eventName === 'pull_request';
+            const branch = isPR ? context.payload.pull_request.head.ref.replace(/\//g, '-') : 'master';
+            const sha = (isPR ? context.payload.pull_request.head.sha : context.sha).substring(0, 7);
+            
+            const artifactName = `EternalCombat ${branch}+${sha}`;
+            core.exportVariable('FULL_ARTIFACT_NAME', artifactName);
+
       - name: Build with Gradle
-        uses: gradle/gradle-build-action@093dfe9d598ec5a42246855d09b49dc76803c005
+        run: ./gradlew shadowJar
+
+      - name: Upload build artifact
+        uses: actions/upload-artifact@v6
         with:
-          arguments: shadowJar
-      - name: Upload a Build Artifact
-        uses: actions/upload-artifact@v4
-        with:
-          name: 'Successfully build EternalCombat'
+          name: ${{ env.FULL_ARTIFACT_NAME }}
           path: eternalcombat-plugin/build/libs/*.jar
