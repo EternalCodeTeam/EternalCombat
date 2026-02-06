@@ -65,7 +65,7 @@ public class FightPearlController implements Listener {
             handlePearlCooldown(event, player, playerId);
         }
 
-        if (this.pluginConfig.pearl.pearlResetsTimerEnabled) {
+        if (this.pluginConfig.pearl.pearlResetsTimer) {
             Duration combatTime = this.pluginConfig.settings.combatTimerDuration;
             this.fightManager.tag(playerId, combatTime, CauseOfTag.ENDER_PEARL);
         }
