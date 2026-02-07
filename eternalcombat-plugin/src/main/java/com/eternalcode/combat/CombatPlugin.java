@@ -112,8 +112,8 @@ public final class CombatPlugin extends JavaPlugin implements EternalCombatApi {
         MinecraftScheduler scheduler = CombatSchedulerAdapter.getAdaptiveScheduler(this);
 
         this.fightManager = new FightManagerImpl(eventManager);
-        this.fightPearlService = new FightPearlServiceImpl(pluginConfig.pearl);
-        this.fightTridentService = new FightTridentServiceImpl(pluginConfig.trident);
+        this.fightPearlService = new FightPearlServiceImpl(pluginConfig);
+        this.fightTridentService = new FightTridentServiceImpl(pluginConfig);
         this.fightTagOutService = new FightTagOutServiceImpl();
         this.fightEffectService = new FightEffectServiceImpl();
 

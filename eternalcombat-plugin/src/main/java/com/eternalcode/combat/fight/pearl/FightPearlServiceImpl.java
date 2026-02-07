@@ -1,50 +1,32 @@
 package com.eternalcode.combat.fight.pearl;
 
-import com.github.benmanes.caffeine.cache.Cache;
-import com.github.benmanes.caffeine.cache.Caffeine;
+import com.eternalcode.combat.config.implementation.PluginConfig;
+import com.eternalcode.combat.util.delay.Delay;
 
 import java.time.Duration;
-import java.time.Instant;
 import java.util.UUID;
 
 public class FightPearlServiceImpl implements FightPearlService {
 
-    private final FightPearlSettings pearlSettings;
-    private final Cache<UUID, Instant> pearlStartTimes;
+    private final Delay<UUID> pearlStartTimes;
 
-    public FightPearlServiceImpl(FightPearlSettings pearlSettings) {
-        this.pearlSettings = pearlSettings;
-        this.pearlStartTimes = Caffeine.newBuilder()
-            .expireAfterWrite(pearlSettings.pearlThrowDelay)
-            .build();
+    public FightPearlServiceImpl(PluginConfig config) {
+        this.pearlStartTimes = Delay.withDefault(() -> config.pearl.pearlThrowDelay);
     }
 
     @Override
     public void markDelay(UUID uuid) {
-        this.pearlStartTimes.put(uuid, Instant.now());
+        this.pearlStartTimes.markDelay(uuid);
     }
 
     @Override
     public boolean hasDelay(UUID uuid) {
-        return this.pearlStartTimes.getIfPresent(uuid) != null;
+        return this.pearlStartTimes.hasDelay(uuid);
     }
 
     @Override
     public Duration getRemainingDelay(UUID uuid) {
-        Instant startTime = this.pearlStartTimes.getIfPresent(uuid);
-        if (startTime == null) {
-            return Duration.ZERO;
-        }
-
-        Duration elapsed = Duration.between(startTime, Instant.now());
-        Duration remaining = this.pearlSettings.pearlThrowDelay.minus(elapsed);
-
-        return remaining.isNegative() ? Duration.ZERO : remaining;
+        return this.pearlStartTimes.getRemaining(uuid);
     }
 
-    @Override
-    public Instant getDelay(UUID uuid) {
-        Instant startTime = this.pearlStartTimes.getIfPresent(uuid);
-        return startTime != null ? startTime.plus(this.pearlSettings.pearlThrowDelay) : Instant.MIN;
-    }
 }

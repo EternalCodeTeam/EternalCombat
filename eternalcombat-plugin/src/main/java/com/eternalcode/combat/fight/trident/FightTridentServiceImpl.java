@@ -1,5 +1,6 @@
 package com.eternalcode.combat.fight.trident;
 
+import com.eternalcode.combat.config.implementation.PluginConfig;
 import com.eternalcode.combat.util.delay.Delay;
 
 import java.time.Duration;
@@ -7,12 +8,10 @@ import java.util.UUID;
 
 public class FightTridentServiceImpl implements FightTridentService {
 
-    private final FightTridentSettings delaySettings;
     private final Delay<UUID> delay;
 
-    public FightTridentServiceImpl(FightTridentSettings delaySettings) {
-        this.delaySettings = delaySettings;
-        this.delay = Delay.withDefault(() -> this.delaySettings.tridentRiptideDelay);
+    public FightTridentServiceImpl(PluginConfig config) {
+        this.delay = Delay.withDefault(() -> config.trident.tridentRiptideDelay);
     }
 
     @Override
