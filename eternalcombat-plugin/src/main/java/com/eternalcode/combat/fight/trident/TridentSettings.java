@@ -7,7 +7,7 @@ import eu.okaeri.configs.annotation.Comment;
 
 import java.time.Duration;
 
-public class FightTridentSettings extends OkaeriConfig {
+public class TridentSettings extends OkaeriConfig {
 
     @Comment({
         "# Set to true to disable riptide usage during combat",

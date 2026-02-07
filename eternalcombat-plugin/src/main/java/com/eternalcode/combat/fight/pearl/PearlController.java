@@ -44,8 +44,6 @@ public class PearlController implements Listener {
         if (this.pearlService.shouldCancelEvent(playerId)) {
             event.setCancelled(true);
 
-            Duration remainingDelay = this.pearlService.getRemainingDelay(playerId);
-
             if (this.pluginConfig.pearl.pearlThrowDisabledDuringCombat) {
                 this.noticeService.create()
                     .player(playerId)
@@ -54,6 +52,7 @@ public class PearlController implements Listener {
                 return;
             }
 
+            Duration remainingDelay = this.pearlService.getRemainingDelay(playerId);
             this.noticeService.create()
                 .player(playerId)
                 .notice(this.pluginConfig.pearl.pearlThrowBlockedDelayDuringCombat)
