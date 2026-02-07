@@ -24,7 +24,7 @@ public class TridentServiceImpl implements TridentService {
     }
 
     @Override
-    public void handleTridentCooldown(Player player) {
+    public void handleTridentDelay(Player player) {
         UUID uniqueId = player.getUniqueId();
 
         if (!this.fightManager.isInCombat(uniqueId)) {

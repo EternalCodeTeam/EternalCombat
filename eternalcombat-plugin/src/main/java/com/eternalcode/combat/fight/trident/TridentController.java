@@ -57,7 +57,7 @@ public class TridentController implements Listener {
             return;
         }
 
-        this.tridentService.handleTridentCooldown(player);
+        this.tridentService.handleTridentDelay(player);
     }
 
     @EventHandler(ignoreCancelled = true)

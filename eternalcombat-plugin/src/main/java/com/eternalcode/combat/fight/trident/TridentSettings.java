@@ -30,7 +30,10 @@ public class TridentSettings extends OkaeriConfig {
         .chat("<red>Using riptide is prohibited during combat!")
         .build();
 
-    @Comment("# Message sent to the player when riptide is on cooldown")
+    @Comment({
+        "# Message sent to the player when riptide is on cooldown",
+        "# Available placeholder: {TIME} - remaining time left to use riptide again"
+    })
     public Notice tridentRiptideOnCooldown = BukkitNotice.builder()
         .chat("<red>You must wait {TIME} before next riptide!")
         .build();
