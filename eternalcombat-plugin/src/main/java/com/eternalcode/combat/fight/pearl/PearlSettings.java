@@ -7,7 +7,7 @@ import eu.okaeri.configs.annotation.Comment;
 
 import java.time.Duration;
 
-public class FightPearlSettings extends OkaeriConfig {
+public class PearlSettings extends OkaeriConfig {
 
     @Comment({ "# Is pearl damage to be enabled?", "# This will work globally" })
     public boolean pearlThrowDamageEnabled = true;
