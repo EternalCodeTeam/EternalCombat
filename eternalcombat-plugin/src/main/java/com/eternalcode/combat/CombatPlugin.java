@@ -26,9 +26,9 @@ import com.eternalcode.combat.fight.firework.FireworkController;
 import com.eternalcode.combat.fight.knockback.KnockbackService;
 import com.eternalcode.combat.fight.tagout.FightTagOutService;
 import com.eternalcode.combat.fight.pearl.PearlService;
-import com.eternalcode.combat.fight.trident.FightTridentController;
-import com.eternalcode.combat.fight.trident.FightTridentService;
-import com.eternalcode.combat.fight.trident.FightTridentServiceImpl;
+import com.eternalcode.combat.fight.trident.TridentController;
+import com.eternalcode.combat.fight.trident.TridentService;
+import com.eternalcode.combat.fight.trident.TridentServiceImpl;
 import com.eternalcode.combat.handler.InvalidUsageHandlerImpl;
 import com.eternalcode.combat.handler.MissingPermissionHandlerImpl;
 import com.eternalcode.combat.config.ConfigService;
@@ -89,7 +89,7 @@ public final class CombatPlugin extends JavaPlugin implements EternalCombatApi {
 
     private FightManager fightManager;
     private PearlService pearlService;
-    private FightTridentService fightTridentService;
+    private TridentService tridentService;
     private FightTagOutService fightTagOutService;
     private FightEffectService fightEffectService;
 
@@ -118,7 +118,7 @@ public final class CombatPlugin extends JavaPlugin implements EternalCombatApi {
 
         this.fightManager = new FightManagerImpl(eventManager);
         this.pearlService = new PearlServiceImpl(this.fightManager, pluginConfig);
-        this.fightTridentService = new FightTridentServiceImpl(pluginConfig);
+        this.tridentService = new TridentServiceImpl(this.fightManager, pluginConfig);
         this.fightTagOutService = new FightTagOutServiceImpl();
         this.fightEffectService = new FightEffectServiceImpl();
 
@@ -189,7 +189,7 @@ public final class CombatPlugin extends JavaPlugin implements EternalCombatApi {
             new FightBypassCreativeController(server, pluginConfig),
             new PlaceBlockBlocker(this.fightManager, noticeService, pluginConfig),
             new PearlController(pluginConfig, this.pearlService, noticeService),
-            new FightTridentController(pluginConfig, noticeService, this.fightManager, this.fightTridentService),
+            new TridentController(pluginConfig, noticeService, this.fightManager, this.tridentService),
             new DeathFlareController(pluginConfig, server, scheduler, this),
             new DeathLightningController(pluginConfig, server),
             new UpdaterNotificationController(updaterService, pluginConfig, miniMessage),
