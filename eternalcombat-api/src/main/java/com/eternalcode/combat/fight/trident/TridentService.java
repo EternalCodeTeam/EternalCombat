@@ -30,6 +30,6 @@ public interface TridentService {
      * handles the trident cooldown for the player, should be called when player uses riptide in combat
      * @param player the player who used riptide in combat needed to apply cooldown to item
      */
-    void handleTridentCooldown(Player player);
+    void handleTridentDelay(Player player);
 
 }
