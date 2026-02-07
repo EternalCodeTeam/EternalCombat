@@ -46,7 +46,7 @@ public class PearlController implements Listener {
 
             Duration remainingDelay = this.pearlService.getRemainingDelay(playerId);
 
-            if (remainingDelay.isZero()) {
+            if (this.pluginConfig.pearl.pearlThrowDisabledDuringCombat) {
                 this.noticeService.create()
                     .player(playerId)
                     .notice(this.pluginConfig.pearl.pearlThrowBlockedDuringCombat)
