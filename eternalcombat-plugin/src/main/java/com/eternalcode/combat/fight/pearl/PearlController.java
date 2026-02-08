@@ -61,7 +61,7 @@ public class PearlController implements Listener {
 
         }
 
-        this.pearlService.handleDelay(playerId);
+        this.pearlService.handleDelay(player);
     }
 
     @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
@@ -72,7 +72,7 @@ public class PearlController implements Listener {
 
         if (!(event.getEntity() instanceof Player) ||
             !(event.getDamager() instanceof EnderPearl) ||
-            event.getCause() != EntityDamageEvent.DamageCause.FALL) {
+            event.getCause() != EntityDamageEvent.DamageCause.PROJECTILE) {
             return;
         }
 

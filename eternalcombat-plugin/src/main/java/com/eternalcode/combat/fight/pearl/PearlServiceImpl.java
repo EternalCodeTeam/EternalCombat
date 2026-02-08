@@ -9,6 +9,8 @@ import com.eternalcode.combat.util.delay.Delay;
 
 import java.time.Duration;
 import java.util.UUID;
+import org.bukkit.Material;
+import org.bukkit.entity.Player;
 
 public class PearlServiceImpl implements PearlService {
 
@@ -38,14 +40,25 @@ public class PearlServiceImpl implements PearlService {
     }
 
     @Override
-    public void handleDelay(UUID playerId) {
-        if (this.pluginConfig.pearl.pearlResetsTimer) {
-            Duration combatTime = this.pluginConfig.settings.combatTimerDuration;
-            this.fightManager.tag(playerId, combatTime, CauseOfTag.ENDER_PEARL);
+    public void handleDelay(Player player) {
+        UUID uniqueId = player.getUniqueId();
+
+        if (this.hasDelay(uniqueId)) {
+            return;
         }
 
-        if (!this.pluginConfig.pearl.pearlThrowDelay.isZero()) {
-            this.pearlStartTimes.markDelay(playerId);
+        if (this.fightManager.isInCombat(uniqueId)) {
+            if (this.pluginConfig.pearl.pearlResetsTimer) {
+                Duration combatTime = this.pluginConfig.settings.combatTimerDuration;
+                this.fightManager.tag(uniqueId, combatTime, CauseOfTag.ENDER_PEARL);
+            }
+
+            if (this.pluginConfig.pearl.pearlCooldownEnabled) {
+                if (!this.pluginConfig.pearl.pearlThrowDelay.isZero()) {
+                    this.pearlStartTimes.markDelay(uniqueId);
+                   // player.setCooldown(Material.ENDER_PEARL, (int) this.pluginConfig.pearl.pearlThrowDelay.toMillis() / 50);
+                }
+            }
         }
     }
 

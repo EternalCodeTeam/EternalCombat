@@ -2,6 +2,7 @@ package com.eternalcode.combat.fight.trident;
 
 import com.eternalcode.combat.config.implementation.PluginConfig;
 import com.eternalcode.combat.fight.FightManager;
+import com.eternalcode.combat.fight.event.CauseOfTag;
 import com.eternalcode.combat.notification.NoticeService;
 import com.eternalcode.combat.util.DurationUtil;
 import org.bukkit.entity.Player;
@@ -35,9 +36,9 @@ public class TridentController implements Listener {
     @EventHandler
     public void onRiptide(PlayerRiptideEvent event) {
         Player player = event.getPlayer();
-        UUID playerId = player.getUniqueId();
+        UUID uniqueId = player.getUniqueId();
 
-        if (!this.fightManager.isInCombat(playerId)) {
+        if (!this.fightManager.isInCombat(uniqueId)) {
             return;
         }
 
@@ -45,11 +46,12 @@ public class TridentController implements Listener {
             return;
         }
 
-        Duration remainingDelay = this.tridentService.getRemainingDelay(playerId);
-        if (!remainingDelay.isZero()) {
+
+        if (this.tridentService.hasDelay(uniqueId)) {
+            Duration remainingDelay = this.tridentService.getRemainingDelay(uniqueId);
 
             this.noticeService.create()
-                .player(playerId)
+                .player(uniqueId)
                 .notice(this.pluginConfig.trident.tridentRiptideOnCooldown)
                 .placeholder("{TIME}", DurationUtil.format(remainingDelay))
                 .send();
@@ -58,6 +60,10 @@ public class TridentController implements Listener {
         }
 
         this.tridentService.handleTridentDelay(player);
+
+        if (this.pluginConfig.trident.riptideResetsTimerEnabled) {
+            this.fightManager.tag(uniqueId, this.pluginConfig.settings.combatTimerDuration, CauseOfTag.TRIDENT);
+        }
     }
 
     @EventHandler(ignoreCancelled = true)

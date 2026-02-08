@@ -16,7 +16,7 @@ public class TridentSettings extends OkaeriConfig {
     public boolean tridentRiptideDisabledDuringCombat = false;
 
     @Comment("# Set to true so the users will get combat log when they use riptide")
-    public boolean tridentResetsTimerEnabled = false;
+    public boolean riptideResetsTimerEnabled = false;
 
     @Comment({
         "# Should riptide enchantment be on cooldown?",
