@@ -9,7 +9,7 @@ public interface TridentService {
     /**
      * returns remaining delay for the player to use trident again
      * @param uuid unique id of the player
-     * @return remaining duration left to use trident again by the player
+     * @return remaining duration left to use trident again by the player or zero
      */
     Duration getRemainingDelay(UUID uuid);
 
