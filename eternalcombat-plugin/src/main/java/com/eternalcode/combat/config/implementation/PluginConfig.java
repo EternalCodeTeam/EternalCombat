@@ -107,6 +107,13 @@ public class PluginConfig extends OkaeriConfig {
 
     @Comment({
         " ",
+        "# Settings related to inventory access during combat.",
+        "# Configure which inventories players can or cannot access while in combat."
+    })
+    public InventorySettings inventory = new InventorySettings();
+
+    @Comment({
+        " ",
         "# Settings related to placeholders used in the plugin.",
         "# Configure default values returned by placeholders"
     })
