@@ -3,10 +3,9 @@ package com.eternalcode.combat.fight.pearl;
 import com.eternalcode.combat.config.implementation.PluginConfig;
 import com.eternalcode.combat.fight.FightManager;
 import com.eternalcode.combat.fight.event.CauseOfTag;
-import com.eternalcode.combat.notification.NoticeService;
-import com.eternalcode.combat.util.DurationUtil;
 import com.eternalcode.combat.util.delay.Delay;
 
+import com.eternalcode.commons.scheduler.Scheduler;
 import java.time.Duration;
 import java.util.UUID;
 import org.bukkit.Material;
@@ -16,14 +15,16 @@ public class PearlServiceImpl implements PearlService {
 
     private final FightManager fightManager;
     private final PluginConfig pluginConfig;
+    private final Scheduler scheduler;
 
     private final Delay<UUID> pearlStartTimes;
 
-    public PearlServiceImpl(FightManager fightManager, PluginConfig pluginConfig) {
+    public PearlServiceImpl(FightManager fightManager, PluginConfig pluginConfig, Scheduler scheduler) {
         this.fightManager = fightManager;
         this.pluginConfig = pluginConfig;
 
         this.pearlStartTimes = Delay.withDefault(() -> pluginConfig.pearl.pearlThrowDelay);
+        this.scheduler = scheduler;
     }
 
     @Override
@@ -54,8 +55,15 @@ public class PearlServiceImpl implements PearlService {
             }
 
             if (this.pluginConfig.pearl.pearlCooldownEnabled && !this.pluginConfig.pearl.pearlThrowDelay.isZero()) {
-                    this.pearlStartTimes.markDelay(uniqueId);
-                }
+                this.pearlStartTimes.markDelay(uniqueId);
+                this.scheduler.runLater(
+                    () -> player.setCooldown(
+                        Material.ENDER_PEARL,
+                        (int) this.pluginConfig.pearl.pearlThrowDelay.toMillis() / 50
+                    ), Duration.ofMillis(50)
+                );
+
+            }
 
         }
     }
