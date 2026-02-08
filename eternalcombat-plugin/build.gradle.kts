@@ -1,6 +1,6 @@
-import net.minecrell.pluginyml.bukkit.BukkitPluginDescription
+
 import io.papermc.hangarpublishplugin.model.Platforms
-import org.gradle.kotlin.dsl.shadowJar
+import net.minecrell.pluginyml.bukkit.BukkitPluginDescription
 
 plugins {
     `eternalcombat-java`
@@ -93,7 +93,7 @@ bukkit {
 
 tasks {
     runServer {
-        minecraftVersion("1.21.10")
+        minecraftVersion("1.21.11")
         downloadPlugins.modrinth("WorldEdit", Versions.WORLDEDIT)
         downloadPlugins.modrinth("PacketEvents", "${Versions.PACKETEVENTS}+spigot")
         downloadPlugins.modrinth("WorldGuard", Versions.WORLDGUARD)
