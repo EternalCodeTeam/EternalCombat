@@ -4,7 +4,8 @@ import com.eternalcode.combat.border.BorderSettings;
 import com.eternalcode.combat.fight.drop.DropSettings;
 import com.eternalcode.combat.fight.effect.FightEffectSettings;
 import com.eternalcode.combat.fight.knockback.KnockbackSettings;
-import com.eternalcode.combat.fight.pearl.FightPearlSettings;
+import com.eternalcode.combat.fight.pearl.PearlSettings;
+import com.eternalcode.combat.fight.trident.TridentSettings;
 import eu.okaeri.configs.OkaeriConfig;
 import eu.okaeri.configs.annotation.Comment;
 import java.time.Duration;
@@ -33,7 +34,14 @@ public class PluginConfig extends OkaeriConfig {
         "# Settings related to Ender Pearls.",
         "# Configure cooldowns, restrictions, and other behaviors for Ender Pearls during combat."
     })
-    public FightPearlSettings pearl = new FightPearlSettings();
+    public PearlSettings pearl = new PearlSettings();
+
+    @Comment({
+        " ",
+        "# Settings related to Trident",
+        "# Configure cooldowns, restrictions, and other behaviors for Trident during combat."
+    })
+    public TridentSettings trident = new TridentSettings();
 
     @Comment({
         " ",

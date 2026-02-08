@@ -19,7 +19,10 @@ import com.eternalcode.combat.fight.effect.FightEffectService;
 import com.eternalcode.combat.fight.firework.FireworkController;
 import com.eternalcode.combat.fight.knockback.KnockbackService;
 import com.eternalcode.combat.fight.tagout.FightTagOutService;
-import com.eternalcode.combat.fight.pearl.FightPearlService;
+import com.eternalcode.combat.fight.pearl.PearlService;
+import com.eternalcode.combat.fight.trident.TridentController;
+import com.eternalcode.combat.fight.trident.TridentService;
+import com.eternalcode.combat.fight.trident.TridentServiceImpl;
 import com.eternalcode.combat.handler.InvalidUsageHandlerImpl;
 import com.eternalcode.combat.handler.MissingPermissionHandlerImpl;
 import com.eternalcode.combat.config.ConfigService;
@@ -41,8 +44,8 @@ import com.eternalcode.combat.fight.FightTask;
 import com.eternalcode.combat.fight.effect.FightEffectServiceImpl;
 import com.eternalcode.combat.fight.logout.LogoutController;
 import com.eternalcode.combat.fight.logout.LogoutService;
-import com.eternalcode.combat.fight.pearl.FightPearlController;
-import com.eternalcode.combat.fight.pearl.FightPearlServiceImpl;
+import com.eternalcode.combat.fight.pearl.PearlController;
+import com.eternalcode.combat.fight.pearl.PearlServiceImpl;
 import com.eternalcode.combat.fight.tagout.FightTagOutController;
 import com.eternalcode.combat.fight.tagout.FightTagOutServiceImpl;
 import com.eternalcode.combat.fight.tagout.FightTagOutCommand;
@@ -81,7 +84,8 @@ public final class CombatPlugin extends JavaPlugin implements EternalCombatApi {
     private static final int BSTATS_METRICS_ID = 17803;
 
     private FightManager fightManager;
-    private FightPearlService fightPearlService;
+    private PearlService pearlService;
+    private TridentService tridentService;
     private FightTagOutService fightTagOutService;
     private FightEffectService fightEffectService;
 
@@ -109,7 +113,8 @@ public final class CombatPlugin extends JavaPlugin implements EternalCombatApi {
         MinecraftScheduler scheduler = CombatSchedulerAdapter.getAdaptiveScheduler(this);
 
         this.fightManager = new FightManagerImpl(eventManager);
-        this.fightPearlService = new FightPearlServiceImpl(pluginConfig.pearl);
+        this.pearlService = new PearlServiceImpl(this.fightManager, pluginConfig, scheduler);
+        this.tridentService = new TridentServiceImpl(this.fightManager, pluginConfig);
         this.fightTagOutService = new FightTagOutServiceImpl();
         this.fightEffectService = new FightEffectServiceImpl();
 
@@ -180,7 +185,8 @@ public final class CombatPlugin extends JavaPlugin implements EternalCombatApi {
             new FightBypassPermissionController(server, pluginConfig),
             new FightBypassCreativeController(server, pluginConfig),
             new FightActionBlockerController(this.fightManager, noticeService, pluginConfig, server),
-            new FightPearlController(pluginConfig.pearl, noticeService, this.fightManager, this.fightPearlService),
+            new PearlController(pluginConfig, this.pearlService, noticeService),
+            new TridentController(pluginConfig, noticeService, this.fightManager, this.tridentService),
             new UpdaterNotificationController(updaterService, pluginConfig, this.audienceProvider, miniMessage),
             new KnockbackRegionController(noticeService, this.regionProvider, this.fightManager, knockbackService, server),
             new FightEffectController(pluginConfig.effect, this.fightEffectService, this.fightManager, server),
@@ -239,8 +245,8 @@ public final class CombatPlugin extends JavaPlugin implements EternalCombatApi {
     }
 
     @Override
-    public FightPearlService getFightPearlService() {
-        return this.fightPearlService;
+    public PearlService getFightPearlService() {
+        return this.pearlService;
     }
 
     @Override
