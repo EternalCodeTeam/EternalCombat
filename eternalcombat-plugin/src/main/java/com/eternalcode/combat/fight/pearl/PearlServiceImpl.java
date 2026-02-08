@@ -53,12 +53,10 @@ public class PearlServiceImpl implements PearlService {
                 this.fightManager.tag(uniqueId, combatTime, CauseOfTag.ENDER_PEARL);
             }
 
-            if (this.pluginConfig.pearl.pearlCooldownEnabled) {
-                if (!this.pluginConfig.pearl.pearlThrowDelay.isZero()) {
+            if (this.pluginConfig.pearl.pearlCooldownEnabled && !this.pluginConfig.pearl.pearlThrowDelay.isZero()) {
                     this.pearlStartTimes.markDelay(uniqueId);
-                   // player.setCooldown(Material.ENDER_PEARL, (int) this.pluginConfig.pearl.pearlThrowDelay.toMillis() / 50);
                 }
-            }
+
         }
     }
 
