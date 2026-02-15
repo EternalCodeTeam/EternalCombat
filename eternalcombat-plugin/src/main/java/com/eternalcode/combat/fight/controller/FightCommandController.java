@@ -6,6 +6,7 @@ import com.eternalcode.combat.fight.FightManager;
 import com.eternalcode.combat.notification.NoticeService;
 import java.util.List;
 import java.util.UUID;
+import java.util.regex.Pattern;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -18,8 +19,8 @@ public class FightCommandController implements Listener {
     private static final char NAMESPACE_SEPARATOR = ':';
     private static final char SPACE = ' ';
     private static final String EMPTY = "";
-    private static final String WHITESPACE_REGEX = "\\s+";
     private static final String SINGLE_SPACE = " ";
+    private static final Pattern WHITESPACE_PATTERN = Pattern.compile("\\s+");
 
     private final FightManager fightManager;
     private final NoticeService noticeService;
@@ -53,7 +54,7 @@ public class FightCommandController implements Listener {
             normalized = normalized.substring(colonIndex + 1);
         }
 
-        return normalized.replaceAll(WHITESPACE_REGEX, SINGLE_SPACE);
+        return WHITESPACE_PATTERN.matcher(normalized).replaceAll(SINGLE_SPACE);
     }
 
     static boolean matches(String command, List<String> restrictedCommands) {
