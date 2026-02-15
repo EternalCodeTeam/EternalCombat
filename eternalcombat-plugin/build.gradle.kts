@@ -4,6 +4,7 @@ import org.gradle.kotlin.dsl.shadowJar
 
 plugins {
     `eternalcombat-java`
+    `eternalcombat-java-unit-test`
     `eternalcombat-repositories`
 
     id("net.minecrell.plugin-yml.bukkit")
@@ -70,6 +71,9 @@ dependencies {
     implementation("com.eternalcode:multification-okaeri:${Versions.MULTIFICATION}")
     compileOnly("com.github.retrooper:packetevents-spigot:${Versions.PACKETS_EVENTS}")
     implementation("io.papermc:paperlib:${Versions.PAPERLIB}")
+
+    testImplementation("org.mockbukkit.mockbukkit:mockbukkit-v1.21:4.0.0")
+    testImplementation("org.mockito:mockito-core:5.20.0")
 }
 
 bukkit {
