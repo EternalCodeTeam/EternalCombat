@@ -1,6 +1,7 @@
 package com.eternalcode.combat.fight.knockback;
 
 import com.eternalcode.combat.config.implementation.PluginConfig;
+import com.eternalcode.combat.fight.FightManager;
 import com.eternalcode.combat.region.Point;
 import com.eternalcode.combat.region.Region;
 import com.eternalcode.combat.region.RegionProvider;
@@ -19,19 +20,27 @@ import org.bukkit.util.Vector;
 public final class KnockbackService {
 
     private final PluginConfig config;
+    private final FightManager fightManager;
     private final MinecraftScheduler scheduler;
     private final RegionProvider regionProvider;
 
     private final Map<UUID, Region> insideRegion = new HashMap<>();
 
-    public KnockbackService(PluginConfig config, MinecraftScheduler scheduler, RegionProvider regionProvider) {
+    public KnockbackService(PluginConfig config, FightManager fightManager, MinecraftScheduler scheduler, RegionProvider regionProvider) {
         this.config = config;
+        this.fightManager = fightManager;
         this.scheduler = scheduler;
         this.regionProvider = regionProvider;
     }
 
     public void knockbackLater(Region region, Player player, Duration duration) {
-        this.scheduler.runLater(() -> this.knockback(region, player), duration);
+        this.scheduler.runLater(() -> {
+            if (!this.fightManager.isInCombat(player.getUniqueId()) || player.isDead()) {
+                return;
+            }
+
+            this.knockback(region, player);
+        }, duration);
     }
 
     public void forceKnockbackLater(Player player, Region region) {
@@ -43,7 +52,13 @@ public final class KnockbackService {
 
         scheduler.runLater(
             player.getLocation(), () -> {
-                insideRegion.remove(player.getUniqueId());
+                UUID uniqueId = player.getUniqueId();
+                insideRegion.remove(uniqueId);
+
+                if (!this.fightManager.isInCombat(uniqueId) || player.isDead()) {
+                    return;
+                }
+
                 Location playerLocation = player.getLocation();
                 if (!region.contains(playerLocation) && !regionProvider.isInRegion(playerLocation)) {
                     return;
