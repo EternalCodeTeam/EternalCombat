@@ -44,6 +44,10 @@ public final class KnockbackService {
         scheduler.runLater(
             player.getLocation(), () -> {
                 insideRegion.remove(player.getUniqueId());
+                if (player.isInsideVehicle()) {
+                    player.leaveVehicle();
+                }
+
                 Location playerLocation = player.getLocation();
                 if (!region.contains(playerLocation) && !regionProvider.isInRegion(playerLocation)) {
                     return;
@@ -68,6 +72,10 @@ public final class KnockbackService {
     }
 
     public void knockback(Region region, Player player) {
+        if (player.isInsideVehicle()) {
+            player.leaveVehicle();
+        }
+
         Point point = region.getCenter();
         Location subtract = player.getLocation().subtract(point.x(), 0, point.z());
 
