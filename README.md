@@ -45,6 +45,10 @@ fair, heart-pounding battles that keep players on their toes. Here’s a rundown
   in action:  
   ![Combat log anti logout feature](https://github.com/EternalCodeTeam/EternalCombat/blob/master/assets/combatlog.gif?raw=true)
 
+- **Customize combat experience**  
+  Add custom effects to players in combat or death. Everything should be configurable and user friendly:
+  ![Lightning strikes when players die](https://github.com/EternalCodeTeam/EternalCombat/blob/master/assets/lightning.gif?raw=true)
+
 - **Spawn Protection (Configurable)**  
   Stop players from fleeing to safety! Block access to spawn or safe zones during combat – tweak it to fit your server’s
   rules. See how it works:  
