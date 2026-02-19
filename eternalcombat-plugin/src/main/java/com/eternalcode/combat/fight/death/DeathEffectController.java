@@ -16,7 +16,7 @@ public class DeathEffectController implements Listener {
     }
 
     @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
-    void onPlayerDeathEvent(PlayerDeathEvent event) {
+    public void onPlayerDeathEvent(PlayerDeathEvent event) {
         if (!this.pluginConfig.death.lightning) {
             return;
         }
