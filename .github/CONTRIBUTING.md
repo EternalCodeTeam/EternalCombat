@@ -24,7 +24,6 @@ cd EternalCombat
 We use Gradle for building the project:
 
 ```bash
-# Build the project
 ./gradlew build
 ```
 
