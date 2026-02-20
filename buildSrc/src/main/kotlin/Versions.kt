@@ -2,9 +2,9 @@ object Versions {
 
     const val SPIGOT_API = "1.17.1-R0.1-SNAPSHOT"
 
-    const val JUNIT_JUPITER_API = "6.0.2"
-    const val JUNIT_JUPITER_PARAMS = "6.0.2"
-    const val JUNIT_JUPITER_ENGINE = "6.0.2"
+    const val JUNIT_JUPITER_API = "6.0.3"
+    const val JUNIT_JUPITER_PARAMS = "6.0.3"
+    const val JUNIT_JUPITER_ENGINE = "6.0.3"
 
     const val JETBRAINS_ANNOTATIONS = "26.1.0"
 
