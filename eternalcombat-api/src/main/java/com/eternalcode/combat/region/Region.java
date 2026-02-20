@@ -1,6 +1,7 @@
 package com.eternalcode.combat.region;
 
 import org.bukkit.Location;
+import org.bukkit.World;
 
 public interface Region {
 
@@ -11,6 +12,18 @@ public interface Region {
     Location getMax();
 
     default boolean contains(Location location) {
+        if (location == null) {
+            return false;
+        }
+
+        Location min = this.getMin();
+        World regionWorld = min.getWorld();
+        World locationWorld = location.getWorld();
+
+        if (regionWorld == null || locationWorld == null || !regionWorld.equals(locationWorld)) {
+            return false;
+        }
+
         return this.contains(location.getX(), location.getY(), location.getZ());
     }
 

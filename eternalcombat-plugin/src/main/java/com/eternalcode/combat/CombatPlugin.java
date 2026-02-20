@@ -140,7 +140,7 @@ public final class CombatPlugin extends JavaPlugin implements EternalCombatApi {
 
         this.regionProvider = bridgeService.getRegionProvider();
         BorderService borderService = new BorderServiceImpl(scheduler, server, regionProvider, eventManager, () -> pluginConfig.border);
-        KnockbackService knockbackService = new KnockbackService(pluginConfig, scheduler, regionProvider);
+        KnockbackService knockbackService = new KnockbackService(pluginConfig, this.fightManager, scheduler, regionProvider, server);
 
         this.liteCommands = LiteBukkitFactory.builder(FALLBACK_PREFIX, this, server)
             .message(LiteBukkitMessages.PLAYER_NOT_FOUND, pluginConfig.messagesSettings.playerNotFound)
