@@ -1,54 +1,55 @@
 package com.eternalcode.combat;
 
-import com.eternalcode.combat.border.BorderTriggerController;
 import com.eternalcode.combat.border.BorderService;
 import com.eternalcode.combat.border.BorderServiceImpl;
+import com.eternalcode.combat.border.BorderTriggerController;
 import com.eternalcode.combat.border.animation.block.BorderBlockController;
 import com.eternalcode.combat.border.animation.particle.ParticleController;
 import com.eternalcode.combat.bridge.BridgeService;
-import com.eternalcode.combat.crystalpvp.RespawnAnchorListener;
+import com.eternalcode.combat.config.ConfigService;
+import com.eternalcode.combat.config.implementation.PluginConfig;
 import com.eternalcode.combat.crystalpvp.EndCrystalListener;
+import com.eternalcode.combat.crystalpvp.RespawnAnchorListener;
+import com.eternalcode.combat.event.EventManager;
+import com.eternalcode.combat.fight.FightManager;
+import com.eternalcode.combat.fight.FightManagerImpl;
+import com.eternalcode.combat.fight.FightTagCommand;
+import com.eternalcode.combat.fight.FightTask;
+import com.eternalcode.combat.fight.controller.FightActionBlockerController;
 import com.eternalcode.combat.fight.controller.FightBypassAdminController;
 import com.eternalcode.combat.fight.controller.FightBypassCreativeController;
 import com.eternalcode.combat.fight.controller.FightBypassPermissionController;
 import com.eternalcode.combat.fight.controller.FightInventoryController;
-import com.eternalcode.combat.fight.death.DeathEffectController;
-import com.eternalcode.combat.fight.drop.DropKeepInventoryService;
-import com.eternalcode.combat.fight.FightManager;
-import com.eternalcode.combat.fight.drop.DropService;
-import com.eternalcode.combat.fight.effect.FightEffectService;
-import com.eternalcode.combat.fight.firework.FireworkController;
-import com.eternalcode.combat.fight.knockback.KnockbackService;
-import com.eternalcode.combat.fight.tagout.FightTagOutService;
-import com.eternalcode.combat.fight.pearl.FightPearlService;
-import com.eternalcode.combat.handler.InvalidUsageHandlerImpl;
-import com.eternalcode.combat.handler.MissingPermissionHandlerImpl;
-import com.eternalcode.combat.config.ConfigService;
-import com.eternalcode.combat.config.implementation.PluginConfig;
-import com.eternalcode.combat.fight.drop.DropController;
-import com.eternalcode.combat.fight.drop.DropKeepInventoryServiceImpl;
-import com.eternalcode.combat.fight.drop.DropServiceImpl;
-import com.eternalcode.combat.fight.drop.impl.PercentDropModifier;
-import com.eternalcode.combat.fight.drop.impl.PlayersHealthDropModifier;
-import com.eternalcode.combat.fight.FightTagCommand;
-import com.eternalcode.combat.fight.controller.FightActionBlockerController;
 import com.eternalcode.combat.fight.controller.FightMessageController;
 import com.eternalcode.combat.fight.controller.FightTagController;
 import com.eternalcode.combat.fight.controller.FightUnTagController;
+import com.eternalcode.combat.fight.death.DeathCommandController;
+import com.eternalcode.combat.fight.death.DeathEffectController;
+import com.eternalcode.combat.fight.drop.DropController;
+import com.eternalcode.combat.fight.drop.DropKeepInventoryService;
+import com.eternalcode.combat.fight.drop.DropKeepInventoryServiceImpl;
+import com.eternalcode.combat.fight.drop.DropService;
+import com.eternalcode.combat.fight.drop.DropServiceImpl;
+import com.eternalcode.combat.fight.drop.impl.PercentDropModifier;
+import com.eternalcode.combat.fight.drop.impl.PlayersHealthDropModifier;
 import com.eternalcode.combat.fight.effect.FightEffectController;
-import com.eternalcode.combat.event.EventManager;
-import com.eternalcode.combat.fight.FightManagerImpl;
-import com.eternalcode.combat.fight.FightTask;
+import com.eternalcode.combat.fight.effect.FightEffectService;
 import com.eternalcode.combat.fight.effect.FightEffectServiceImpl;
+import com.eternalcode.combat.fight.firework.FireworkController;
+import com.eternalcode.combat.fight.knockback.KnockbackRegionController;
+import com.eternalcode.combat.fight.knockback.KnockbackService;
 import com.eternalcode.combat.fight.logout.LogoutController;
 import com.eternalcode.combat.fight.logout.LogoutService;
 import com.eternalcode.combat.fight.pearl.FightPearlController;
+import com.eternalcode.combat.fight.pearl.FightPearlService;
 import com.eternalcode.combat.fight.pearl.FightPearlServiceImpl;
-import com.eternalcode.combat.fight.tagout.FightTagOutController;
-import com.eternalcode.combat.fight.tagout.FightTagOutServiceImpl;
 import com.eternalcode.combat.fight.tagout.FightTagOutCommand;
+import com.eternalcode.combat.fight.tagout.FightTagOutController;
+import com.eternalcode.combat.fight.tagout.FightTagOutService;
+import com.eternalcode.combat.fight.tagout.FightTagOutServiceImpl;
+import com.eternalcode.combat.handler.InvalidUsageHandlerImpl;
+import com.eternalcode.combat.handler.MissingPermissionHandlerImpl;
 import com.eternalcode.combat.notification.NoticeService;
-import com.eternalcode.combat.fight.knockback.KnockbackRegionController;
 import com.eternalcode.combat.region.RegionProvider;
 import com.eternalcode.combat.updater.UpdaterNotificationController;
 import com.eternalcode.combat.updater.UpdaterService;
@@ -61,7 +62,6 @@ import dev.rollczi.litecommands.LiteCommands;
 import dev.rollczi.litecommands.bukkit.LiteBukkitFactory;
 import dev.rollczi.litecommands.bukkit.LiteBukkitMessages;
 import dev.rollczi.litecommands.folia.FoliaExtension;
-import java.time.Duration;
 import net.kyori.adventure.platform.AudienceProvider;
 import net.kyori.adventure.platform.bukkit.BukkitAudiences;
 import net.kyori.adventure.text.minimessage.MiniMessage;
@@ -73,6 +73,7 @@ import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.io.File;
+import java.time.Duration;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Stream;
 
@@ -183,6 +184,7 @@ public final class CombatPlugin extends JavaPlugin implements EternalCombatApi {
             new FightActionBlockerController(this.fightManager, noticeService, pluginConfig, server),
             new FightPearlController(pluginConfig.pearl, noticeService, this.fightManager, this.fightPearlService),
             new DeathEffectController(pluginConfig),
+            new DeathCommandController(pluginConfig, this.fightManager, server),
             new UpdaterNotificationController(updaterService, pluginConfig, this.audienceProvider, miniMessage),
             new KnockbackRegionController(noticeService, this.regionProvider, this.fightManager, knockbackService, server),
             new FightEffectController(pluginConfig.effect, this.fightEffectService, this.fightManager, server),

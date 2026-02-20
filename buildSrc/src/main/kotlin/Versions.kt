@@ -32,6 +32,7 @@ object Versions {
     const val PACKETEVENTS = "2.11.1"
     const val WORLDGUARD = "7.0.15-beta-01"
     const val LUCKPERMS = "5.5.17"
+    const val ETERNALCORE = "2.0.1-SNAPSHOT+12"
 
 }
 
