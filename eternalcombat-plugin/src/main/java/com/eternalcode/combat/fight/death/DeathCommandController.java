@@ -134,7 +134,7 @@ public class DeathCommandController implements Listener {
 
     private String resolveKillerName(UUID deadPlayerUUID, Player deadPlayer) {
         Player killer = this.resolveKiller(deadPlayerUUID, deadPlayer);
-        return killer != null ? killer.getName() : "Unknown";
+        return killer != null ? killer.getName() : this.config.commands.unknownKillerPlaceholder;
     }
 
     private Player resolveKiller(UUID deadPlayerUUID, Player deadPlayer) {

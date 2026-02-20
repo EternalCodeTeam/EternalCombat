@@ -56,4 +56,7 @@ public class CommandSettings extends OkaeriConfig {
 
     @Comment("# When this is set to true, the plugin will only execute the post-death commands if the players were tagged")
     public boolean onlyExecuteIfTagged = true;
+
+    @Comment("# The returned string when the killer is unknown")
+    public String unknownKillerPlaceholder = "Unknown";
 }
