@@ -22,7 +22,7 @@ cd EternalCombat
 
 ### 🔨 Building the Project
 
-We use Gradle for building the project:
+Run this command in your terminal:
 
 ```bash
 ./gradlew build
