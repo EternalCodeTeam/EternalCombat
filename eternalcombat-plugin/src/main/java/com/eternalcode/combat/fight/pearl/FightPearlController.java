@@ -14,6 +14,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.ProjectileLaunchEvent;
+import org.bukkit.event.player.PlayerTeleportEvent;
 import org.bukkit.inventory.ItemStack;
 
 public class FightPearlController implements Listener {
@@ -78,6 +79,31 @@ public class FightPearlController implements Listener {
         }
 
         event.setDamage(0.0);
+    }
+
+    @EventHandler(priority = EventPriority.HIGHEST)
+    public void onPearlStasisTeleport(PlayerTeleportEvent event) {
+        if (event.getCause() != PlayerTeleportEvent.TeleportCause.ENDER_PEARL) {
+            return;
+        }
+
+        if (!this.settings.preventPearlStasis) {
+            return;
+        }
+
+        Player player = event.getPlayer();
+        UUID playerId = player.getUniqueId();
+
+        if (!this.fightManager.isInCombat(playerId)) {
+            return;
+        }
+
+        event.setCancelled(true);
+
+        this.noticeService.create()
+            .player(playerId)
+            .notice(this.settings.pearlTeleportBlockedDuringCombat)
+            .send();
     }
 
     private void handlePearlCooldown(ProjectileLaunchEvent event, Player player, UUID playerId) {
