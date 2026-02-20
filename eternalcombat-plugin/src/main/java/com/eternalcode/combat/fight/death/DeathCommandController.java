@@ -41,7 +41,7 @@ public class DeathCommandController implements Listener {
         UUID playerUUID = event.getPlayer();
         CauseOfUnTag cause = event.getCause();
 
-        if (cause != CauseOfUnTag.DEATH && cause != CauseOfUnTag.DEATH_BY_PLAYER && cause != CauseOfUnTag.LOGOUT) {
+        if (cause != CauseOfUnTag.DEATH && cause != CauseOfUnTag.DEATH_BY_PLAYER) {
             return;
         }
 
