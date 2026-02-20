@@ -8,13 +8,14 @@ We love user contributions and want to make it as easy as possible for you to ge
 To start contributing, you'll need to set up your environment:
 
 1.  **Java 21**: We use Java 21 for development. Ensure you have a JDK 21 installed.
-2.  **IDE**: We recommend [IntelliJ IDEA](https://www.jetbrains.com/idea/) (Community or Ultimate).
+2.  **IDE**: We recommend [IntelliJ IDEA](https://www.jetbrains.com/idea/).
 3.  **Git**: Ensure you have Git installed.
 
 ### 📥 Getting the Code
 
 ```bash
-# Fork the repository first!
+# Fork the repository on GitHub first!
+# https://github.com/EternalCodeTeam/EternalCombat/fork
 git clone https://github.com/YOUR-USERNAME/EternalCombat.git
 cd EternalCombat
 ```

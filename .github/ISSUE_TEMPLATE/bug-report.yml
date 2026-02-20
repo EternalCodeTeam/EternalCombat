@@ -24,10 +24,9 @@ body:
       label: Steps to Reproduce
       description: Please provide a step-by-step guide to reproduce the issue.
       placeholder: |
-        1. Go to '...'
-        2. Click on '....'
-        3. Scroll down to '....'
-        4. See error
+        1. Launch the server
+        2. Tag yourself using the '/combat tag' command
+        3. See error
     validations:
       required: true
 
@@ -73,7 +72,7 @@ body:
     attributes:
       label: Plugin Version
       description: What version of EternalCombat are you running? (Check with /eternalcombat version)
-      placeholder: v1.0.0
+      placeholder: v2.4.1
     validations:
       required: true
 
