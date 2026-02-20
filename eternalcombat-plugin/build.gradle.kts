@@ -94,11 +94,13 @@ bukkit {
 tasks {
     runServer {
         minecraftVersion("1.21.11")
-        downloadPlugins.modrinth("WorldEdit", Versions.WORLDEDIT)
-        downloadPlugins.modrinth("PacketEvents", "${Versions.PACKETEVENTS}+spigot")
-        downloadPlugins.modrinth("WorldGuard", Versions.WORLDGUARD)
-        downloadPlugins.modrinth("LuckPerms", "v${Versions.LUCKPERMS}-bukkit")
-        downloadPlugins.modrinth("EternalCore", "2.0.1-SNAPSHOT+12")
+        downloadPlugins {
+            modrinth("WorldEdit", Versions.WORLDEDIT)
+            modrinth("PacketEvents", "${Versions.PACKETEVENTS}+spigot")
+            modrinth("WorldGuard", Versions.WORLDGUARD)
+            modrinth("LuckPerms", "v${Versions.LUCKPERMS}-bukkit")
+            modrinth("EternalCore", Versions.ETERNALCORE)
+        }
     }
 }
 

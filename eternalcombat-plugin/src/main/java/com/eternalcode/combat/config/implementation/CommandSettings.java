@@ -32,6 +32,8 @@ public class CommandSettings extends OkaeriConfig {
         "broadcast {player} has died in combat!"
     );
 
+    @Comment("# When this is set to true, the plugin will execute the console commands only after the dead player has respawned.")
+    public boolean deferConsoleAfterRespawn = false;
 
     @Comment({
         "# List of commands that will be executed from the dead player's perspective after death.",
@@ -42,8 +44,7 @@ public class CommandSettings extends OkaeriConfig {
     );
 
     @Comment("# When this is set to true, the plugin will execute the commands above only after the dead player has respawned.")
-    public boolean executeAfterRespawn = true;
-
+    public boolean deferDeadAfterRespawn = true;
 
     @Comment({
         "# List of commands that will be executed from the killer's perspective after killing a player.",
