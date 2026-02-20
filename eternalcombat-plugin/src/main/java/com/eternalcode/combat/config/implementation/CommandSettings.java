@@ -27,6 +27,7 @@ public class CommandSettings extends OkaeriConfig {
     @Comment({
         "# List of commands that will be executed from console after player death.",
         "# Use {player} to represent the name of the player who died and {killer} for the killer's name (if applicable)."
+    })
     public List<String> consolePostDeathCommands = List.of(
         "broadcast {player} has died in combat!"
     );
