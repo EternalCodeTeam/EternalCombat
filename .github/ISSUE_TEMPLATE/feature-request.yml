@@ -34,5 +34,5 @@ body:
   - type: textarea
     id: additional-context
     attributes:
-      label: Additional Context
+      label: Additional context
       description: Add any other context or screenshots about the feature request here.
