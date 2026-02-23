@@ -11,6 +11,7 @@ import com.eternalcode.combat.crystalpvp.EndCrystalListener;
 import com.eternalcode.combat.fight.controller.FightBypassAdminController;
 import com.eternalcode.combat.fight.controller.FightBypassCreativeController;
 import com.eternalcode.combat.fight.controller.FightBypassPermissionController;
+import com.eternalcode.combat.fight.controller.FightCommandController;
 import com.eternalcode.combat.fight.controller.FightInventoryController;
 import com.eternalcode.combat.fight.death.DeathEffectController;
 import com.eternalcode.combat.fight.drop.DropKeepInventoryService;
@@ -181,6 +182,7 @@ public final class CombatPlugin extends JavaPlugin implements EternalCombatApi {
             new FightBypassPermissionController(server, pluginConfig),
             new FightBypassCreativeController(server, pluginConfig),
             new FightActionBlockerController(this.fightManager, noticeService, pluginConfig, server),
+            new FightCommandController(this.fightManager, noticeService, pluginConfig),
             new FightPearlController(pluginConfig.pearl, noticeService, this.fightManager, this.fightPearlService),
             new DeathEffectController(pluginConfig),
             new UpdaterNotificationController(updaterService, pluginConfig, this.audienceProvider, miniMessage),

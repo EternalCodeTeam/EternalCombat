@@ -1,7 +1,6 @@
 package com.eternalcode.combat.fight.controller;
 
 import com.eternalcode.combat.config.implementation.PluginConfig;
-import com.eternalcode.combat.WhitelistBlacklistMode;
 import com.eternalcode.combat.config.implementation.BlockPlacementSettings;
 import com.eternalcode.combat.fight.FightManager;
 import com.eternalcode.combat.fight.event.FightUntagEvent;
@@ -16,15 +15,11 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.EntityToggleGlideEvent;
-import org.bukkit.event.inventory.InventoryOpenEvent;
-import org.bukkit.event.inventory.InventoryType;
-import org.bukkit.event.player.PlayerCommandPreprocessEvent;
 import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.event.player.PlayerToggleFlightEvent;
 
 import java.util.List;
 import java.util.UUID;
-import org.bukkit.util.StringUtil;
 
 public class FightActionBlockerController implements Listener {
 
@@ -186,31 +181,4 @@ public class FightActionBlockerController implements Listener {
         }
     }
 
-    @EventHandler
-    void onPlayerCommandPreprocess(PlayerCommandPreprocessEvent event) {
-        Player player = event.getPlayer();
-        UUID playerUniqueId = player.getUniqueId();
-
-        if (!this.fightManager.isInCombat(playerUniqueId)) {
-            return;
-        }
-
-        String command = event.getMessage().substring(1);
-
-        boolean isAnyMatch = this.config.commands.restrictedCommands.stream()
-            .anyMatch(restrictedCommand -> StringUtil.startsWithIgnoreCase(command, restrictedCommand));
-
-        WhitelistBlacklistMode mode = this.config.commands.commandRestrictionMode;
-
-        boolean shouldCancel = mode.shouldBlock(isAnyMatch);
-
-        if (shouldCancel) {
-            event.setCancelled(true);
-            this.noticeService.create()
-                .player(playerUniqueId)
-                .notice(this.config.messagesSettings.commandDisabledDuringCombat)
-                .send();
-
-        }
-    }
 }
