@@ -29,7 +29,7 @@ EternalCombat 2.0 has been tested on Minecraft versions **1.17.1 to 1.21.11**, b
 other versions too.
 If you run into any compatibility issues, please let us know in
 the [Issues tab](https://github.com/EternalCodeTeam/EternalCombat/issues).
-The plugin requires **Java 17 or later**, so
+The plugin requires **Java 21 or later**, so
 ensure your server is ready.
 Ready for action?
 Install EternalCombat and dive in now!
