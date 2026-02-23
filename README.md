@@ -43,21 +43,22 @@ fair, heart-pounding battles that keep players on their toes. Here’s a rundown
 - **Combat Logging**  
   No more dodging fights by logging out! Once players are in combat, they’re committed until the showdown ends. Watch it
   in action:  
-  ![Combat log anti logout feature](https://github.com/EternalCodeTeam/EternalCombat/blob/master/assets/combatlog.gif?raw=true)
+  <img alt="Combat log anti logout feature" src="https://github.com/EternalCodeTeam/EternalCombat/blob/master/assets/combatlog.gif?raw=true" width="420">
 
 - **Customize combat experience**  
   Add custom effects to players in combat or death. Everything should be configurable and user-friendly:
-  ![Lightning strikes when players die](https://github.com/EternalCodeTeam/EternalCombat/blob/master/assets/lightning.gif?raw=true)
+  <img alt="lightning strikes when players die" src="https://github.com/EternalCodeTeam/EternalCombat/blob/master/assets/lightning.gif?raw=true" width="420">
+  <img alt="Flare signalises players death location" src="https://github.com/EternalCodeTeam/EternalCombat/blob/master/assets/flare.gif?raw=true" width="420">
 
 - **Spawn Protection (Configurable)**  
   Stop players from fleeing to safety! Block access to spawn or safe zones during combat – tweak it to fit your server’s
   rules. See how it works:  
-  ![Border around protected region](https://github.com/EternalCodeTeam/EternalCombat/blob/master/assets/border.gif?raw=true)
+  <img alt="Border around protected region" src="https://github.com/EternalCodeTeam/EternalCombat/blob/master/assets/border.gif?raw=true" width="420">
 
 - **Crystal PvP support**  
   Engage in intense Crystal PvP battles without worrying about players logging out mid-fight! EternalCombat keeps
-  everyone in the game until the last anchor hit. Check it out:  
-  ![Crystal PvP showcase](https://github.com/EternalCodeTeam/EternalCombat/blob/master/assets/crystals.gif?raw=true)
+  everyone in the game until the last anchor hit. Check it out:
+  <img alt="Crystal PvP showcase" src="https://github.com/EternalCodeTeam/EternalCombat/blob/master/assets/crystals.gif?raw=true" width="420">
 
 - **Fully Customizable Combat**  
   Tailor the combat experience to your liking with a ton of options! From disabling elytra to setting drop rates for
