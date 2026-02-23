@@ -47,8 +47,8 @@ fair, heart-pounding battles that keep players on their toes. Here’s a rundown
 
 - **Customize combat experience**  
   Add custom effects to players in combat or death. Everything should be configurable and user-friendly:
-  <img alt="lightning strikes when players die" src="https://github.com/EternalCodeTeam/EternalCombat/blob/master/assets/lightning.gif?raw=true" width="420">
-  <img alt="Flare signalises players death location" src="https://github.com/EternalCodeTeam/EternalCombat/blob/master/assets/flare.gif?raw=true" width="420">
+  <img alt="Lightning strikes when players die" src="https://github.com/EternalCodeTeam/EternalCombat/blob/master/assets/lightning.gif?raw=true" width="420">
+  <img alt="Flare indicates players death location" src="https://github.com/EternalCodeTeam/EternalCombat/blob/master/assets/flare.gif?raw=true" width="420">
 
 - **Spawn Protection (Configurable)**  
   Stop players from fleeing to safety! Block access to spawn or safe zones during combat – tweak it to fit your server’s

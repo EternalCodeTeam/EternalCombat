@@ -9,7 +9,7 @@ public class DeathSettings extends OkaeriConfig {
 
     @Comment({
         "Settings related to lightning effect upon death",
-        "Setting afterEveryDeath and inCombat will disable this feature completely"
+        "Setting both afterEveryDeath and inCombat to false will disable this feature completely"
     })
     public LightningSettings lightning = new LightningSettings();
 
@@ -24,7 +24,7 @@ public class DeathSettings extends OkaeriConfig {
 
     @Comment({
         "Settings for the Arc Raiders style flare (firework)",
-        "Setting afterEveryDeath and inCombat will disable this feature completely"
+        "Setting both afterEveryDeath and inCombat to false will disable this feature completely"
     })
     public FlareSettings firework = new FlareSettings();
 
@@ -52,7 +52,7 @@ public class DeathSettings extends OkaeriConfig {
         public String fadeColor = "#0a0a0a";
 
         @Comment("Toggle on/off additional particles spawned in the firework (flare) path")
-        public boolean enabled = true;
+        public boolean particlesEnabled = true;
 
         @Comment({
             "The main trail particle (e.g., CAMPFIRE_COSY_SMOKE, SMOKE_LARGE)",

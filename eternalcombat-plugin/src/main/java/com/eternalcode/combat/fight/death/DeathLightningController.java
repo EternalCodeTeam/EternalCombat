@@ -31,7 +31,7 @@ public class DeathLightningController implements Listener {
         UUID uniqueId = event.getPlayer();
         Player player = this.server.getPlayer(uniqueId);
 
-        if (player == null ) {
+        if (player == null) {
             return;
         }
 
@@ -52,4 +52,5 @@ public class DeathLightningController implements Listener {
     private void lightningStrike(Player player) {
         player.getWorld().strikeLightningEffect(player.getLocation());
     }
+
 }

@@ -43,7 +43,7 @@ public class DeathFlareController implements Listener {
         UUID uniqueId = event.getPlayer();
         Player player = this.server.getPlayer(uniqueId);
 
-        if (player == null ) {
+        if (player == null) {
             return;
         }
 
@@ -69,32 +69,34 @@ public class DeathFlareController implements Listener {
         FireworkMeta meta = flare.getFireworkMeta();
 
         FireworkEffect effect = FireworkEffect.builder()
-            .with(this.pluginConfig.death.firework.fireworkType)
-            .withColor(Color.fromRGB(Integer.decode(this.pluginConfig.death.firework.primaryColor)))
-            .withFade(Color.fromRGB(Integer.decode(this.pluginConfig.death.firework.fadeColor)))
-            .trail(true)
-            .flicker(true)
-            .build();
+                .with(this.pluginConfig.death.firework.fireworkType)
+                .withColor(Color.fromRGB(Integer.decode(this.pluginConfig.death.firework.primaryColor)))
+                .withFade(Color.fromRGB(Integer.decode(this.pluginConfig.death.firework.fadeColor)))
+                .trail(true)
+                .flicker(true)
+                .build();
 
         meta.addEffect(effect);
         meta.setPower(this.pluginConfig.death.firework.power);
         flare.setFireworkMeta(meta);
 
-        if (this.pluginConfig.death.firework.enabled) {
+        if (this.pluginConfig.death.firework.particlesEnabled) {
             AtomicReference<Task> taskRef = new AtomicReference<>();
 
-            Task task = this.scheduler.timerAsync(() -> {
-                if (flare.isDead() || !flare.isValid()) {
-                    Task currentTask = taskRef.get();
-                    if (currentTask != null) {
-                        currentTask.cancel();
-                    }
-                    return;
-                }
+            Task task = this.scheduler.timerAsync(
+                    () -> {
+                        if (flare.isDead() || !flare.isValid()) {
+                            Task currentTask = taskRef.get();
+                            if (currentTask != null) {
+                                currentTask.cancel();
+                            }
+                            return;
+                        }
 
-                this.spawnParticles(world, flare);
+                        this.spawnParticles(world, flare);
 
-            }, Duration.ZERO, Duration.ofMillis(50));
+                    }, Duration.ZERO, Duration.ofMillis(50)
+            );
 
             taskRef.set(task);
         }
@@ -104,23 +106,24 @@ public class DeathFlareController implements Listener {
         Location location = flare.getLocation();
 
         world.spawnParticle(
-            this.pluginConfig.death.firework.mainParticle.get(),
-            location,
-            this.pluginConfig.death.firework.mainParticleCount,
-            0.05,
-            0.05,
-            0.05,
-            0.01
+                this.pluginConfig.death.firework.mainParticle.get(),
+                location,
+                this.pluginConfig.death.firework.mainParticleCount,
+                0.05,
+                0.05,
+                0.05,
+                0.01
         );
 
         world.spawnParticle(
-            this.pluginConfig.death.firework.secondaryParticle.get(),
-            location,
-            this.pluginConfig.death.firework.secondaryParticleCount,
-            0.1,
-            0.1,
-            0.1,
-            0.01
+                this.pluginConfig.death.firework.secondaryParticle.get(),
+                location,
+                this.pluginConfig.death.firework.secondaryParticleCount,
+                0.1,
+                0.1,
+                0.1,
+                0.01
         );
     }
+
 }
