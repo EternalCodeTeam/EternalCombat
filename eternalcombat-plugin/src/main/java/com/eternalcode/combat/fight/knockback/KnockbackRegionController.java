@@ -9,12 +9,15 @@ import java.time.Duration;
 import java.util.Optional;
 import org.bukkit.Location;
 import org.bukkit.Server;
+import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.event.player.PlayerTeleportEvent;
+import org.bukkit.event.vehicle.VehicleMoveEvent;
+import org.spigotmc.event.entity.EntityMountEvent;
 
 public class KnockbackRegionController implements Listener {
 
@@ -87,6 +90,67 @@ public class KnockbackRegionController implements Listener {
                 .notice(config -> config.messagesSettings.cantEnterOnRegion)
                 .send();
         }
+    }
+
+    @EventHandler(ignoreCancelled = true, priority = EventPriority.HIGHEST)
+    void onVehicleMove(VehicleMoveEvent event) {
+        Location locationTo = event.getTo();
+        Location locationFrom = event.getFrom();
+
+        if (locationTo.getBlockX() == locationFrom.getBlockX()
+            && locationTo.getBlockY() == locationFrom.getBlockY()
+            && locationTo.getBlockZ() == locationFrom.getBlockZ()) {
+            return;
+        }
+
+        for (Entity passenger : event.getVehicle().getPassengers()) {
+            if (!(passenger instanceof Player player)) {
+                continue;
+            }
+
+            if (!this.fightManager.isInCombat(player.getUniqueId())) {
+                continue;
+            }
+
+            Optional<Region> regionOptional = this.regionProvider.getRegion(locationTo);
+            if (regionOptional.isEmpty()) {
+                return;
+            }
+
+            Region region = regionOptional.get();
+            if (region.contains(locationFrom)) {
+                this.knockbackService.knockback(region, player);
+                this.knockbackService.forceKnockbackLater(player, region);
+            } else {
+                this.knockbackService.knockbackLater(region, player, Duration.ofMillis(50));
+            }
+
+            this.noticeService.create()
+                .player(player.getUniqueId())
+                .notice(config -> config.messagesSettings.cantEnterOnRegion)
+                .send();
+        }
+    }
+
+    @EventHandler(ignoreCancelled = true, priority = EventPriority.HIGHEST)
+    void onEntityMount(EntityMountEvent event) {
+        if (!(event.getEntity() instanceof Player player)) {
+            return;
+        }
+
+        if (!this.fightManager.isInCombat(player.getUniqueId())) {
+            return;
+        }
+
+        if (!this.regionProvider.isInRegion(event.getMount().getLocation())) {
+            return;
+        }
+
+        event.setCancelled(true);
+        this.noticeService.create()
+            .player(player.getUniqueId())
+            .notice(config -> config.messagesSettings.cantEnterOnRegion)
+            .send();
     }
 
     @EventHandler(ignoreCancelled = true, priority = EventPriority.HIGHEST)
