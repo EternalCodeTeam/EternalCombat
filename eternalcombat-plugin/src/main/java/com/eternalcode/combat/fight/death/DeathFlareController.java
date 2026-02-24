@@ -68,10 +68,24 @@ public class DeathFlareController implements Listener {
         Firework flare = world.spawn(deathLocation, Firework.class);
         FireworkMeta meta = flare.getFireworkMeta();
 
+        int primaryDecoded;
+        try {
+            primaryDecoded = Integer.decode(this.pluginConfig.death.firework.primaryColor);
+        } catch (NumberFormatException exception) {
+            throw new IllegalArgumentException("Invalid primary color format in plugin configuration: " + this.pluginConfig.death.firework.primaryColor, exception);
+        }
+
+        int fadeDecoded;
+        try {
+            fadeDecoded = Integer.decode(this.pluginConfig.death.firework.fadeColor);
+        } catch (NumberFormatException exception) {
+            throw new IllegalArgumentException("Invalid fade color format in plugin configuration: " + this.pluginConfig.death.firework.fadeColor, exception);
+        }
+
         FireworkEffect effect = FireworkEffect.builder()
                 .with(this.pluginConfig.death.firework.fireworkType)
-                .withColor(Color.fromRGB(Integer.decode(this.pluginConfig.death.firework.primaryColor)))
-                .withFade(Color.fromRGB(Integer.decode(this.pluginConfig.death.firework.fadeColor)))
+                .withColor(Color.fromRGB(primaryDecoded))
+                .withFade(Color.fromRGB(fadeDecoded))
                 .trail(true)
                 .flicker(true)
                 .build();
