@@ -68,24 +68,13 @@ public class DeathFlareController implements Listener {
         Firework flare = world.spawn(deathLocation, Firework.class);
         FireworkMeta meta = flare.getFireworkMeta();
 
-        int primaryDecoded;
-        try {
-            primaryDecoded = Integer.decode(this.pluginConfig.death.firework.primaryColor);
-        } catch (NumberFormatException exception) {
-            throw new IllegalArgumentException("Invalid primary color format in plugin configuration: " + this.pluginConfig.death.firework.primaryColor, exception);
-        }
-
-        int fadeDecoded;
-        try {
-            fadeDecoded = Integer.decode(this.pluginConfig.death.firework.fadeColor);
-        } catch (NumberFormatException exception) {
-            throw new IllegalArgumentException("Invalid fade color format in plugin configuration: " + this.pluginConfig.death.firework.fadeColor, exception);
-        }
+        Color primaryColor = decodeColor(this.pluginConfig.death.firework.primaryColor, "primary");
+        Color fadeColor = decodeColor(this.pluginConfig.death.firework.fadeColor, "fade");
 
         FireworkEffect effect = FireworkEffect.builder()
                 .with(this.pluginConfig.death.firework.fireworkType)
-                .withColor(Color.fromRGB(primaryDecoded))
-                .withFade(Color.fromRGB(fadeDecoded))
+                .withColor(primaryColor)
+                .withFade(fadeColor)
                 .trail(true)
                 .flicker(true)
                 .build();
@@ -95,24 +84,25 @@ public class DeathFlareController implements Listener {
         flare.setFireworkMeta(meta);
 
         if (this.pluginConfig.death.firework.particlesEnabled) {
-            AtomicReference<Task> taskRef = new AtomicReference<>();
+            scheduleParticles(flare, world);
+        }
+    }
 
-            Task task = this.scheduler.timerAsync(
-                    () -> {
-                        if (flare.isDead() || !flare.isValid()) {
-                            Task currentTask = taskRef.get();
-                            if (currentTask != null) {
-                                currentTask.cancel();
-                            }
-                            return;
-                        }
+    private void scheduleParticles(Firework flare, World world) {
+        this.scheduler.runLater(() -> {
+            if (flare.isDead() || !flare.isValid()) {
+                return;
+            }
+            this.spawnParticles(world, flare);
+            this.scheduleParticles(flare, world);
+        }, Duration.ofMillis(50));
+    }
 
-                        this.spawnParticles(world, flare);
-
-                    }, Duration.ZERO, Duration.ofMillis(50)
-            );
-
-            taskRef.set(task);
+    private Color decodeColor(String firework, String name) {
+        try {
+            return Color.fromRGB(Integer.decode(firework));
+        } catch (NumberFormatException exception) {
+            throw new IllegalArgumentException("Invalid " + name + " format in plugin configuration" + firework, exception);
         }
     }
 
