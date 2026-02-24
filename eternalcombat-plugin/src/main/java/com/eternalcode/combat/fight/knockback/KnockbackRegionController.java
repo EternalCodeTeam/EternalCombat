@@ -103,12 +103,6 @@ public class KnockbackRegionController implements Listener {
             return;
         }
 
-        Optional<Region> regionOptional = this.regionProvider.getRegion(locationTo);
-        if (regionOptional.isEmpty()) {
-            return;
-        }
-
-        Region region = regionOptional.get();
         for (Entity passenger : event.getVehicle().getPassengers()) {
             if (!(passenger instanceof Player player)) {
                 continue;
@@ -118,7 +112,12 @@ public class KnockbackRegionController implements Listener {
                 continue;
             }
 
-            player.leaveVehicle();
+            Optional<Region> regionOptional = this.regionProvider.getRegion(locationTo);
+            if (regionOptional.isEmpty()) {
+                return;
+            }
+
+            Region region = regionOptional.get();
             if (region.contains(locationFrom)) {
                 this.knockbackService.knockback(region, player);
                 this.knockbackService.forceKnockbackLater(player, region);
