@@ -75,7 +75,6 @@ public class DeathFlareController implements Listener {
         }
     }
 
-
     private void spawnFlare(Player player) {
         Location deathLocation = player.getLocation();
         World world = deathLocation.getWorld();
