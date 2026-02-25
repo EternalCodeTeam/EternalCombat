@@ -24,7 +24,7 @@ public class DeathLightningController implements Listener {
     @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
     public void onFightUntagEvent(FightUntagEvent event) {
         CauseOfUnTag cause = event.getCause();
-        if (!cause.equals(CauseOfUnTag.DEATH) && !cause.equals(CauseOfUnTag.DEATH_BY_PLAYER)) {
+        if (cause != CauseOfUnTag.DEATH && cause != CauseOfUnTag.DEATH_BY_PLAYER) {
             return;
         }
 
