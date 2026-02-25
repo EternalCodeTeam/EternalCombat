@@ -9,6 +9,7 @@ import java.util.UUID;
 import org.bukkit.Color;
 import org.bukkit.FireworkEffect;
 import org.bukkit.Location;
+import org.bukkit.NamespacedKey;
 import org.bukkit.Server;
 import org.bukkit.World;
 import org.bukkit.entity.Firework;
@@ -19,25 +20,21 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.inventory.meta.FireworkMeta;
-import org.bukkit.metadata.MetadataValueAdapter;
+import org.bukkit.persistence.PersistentDataType;
 import org.bukkit.plugin.Plugin;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 public class DeathFlareController implements Listener {
-
-    private static final String FIREWORK_METADATA = "eternalcombat_firework";
 
     private final PluginConfig pluginConfig;
     private final Server server;
     private final Scheduler scheduler;
-    private final Plugin plugin;
+    private final NamespacedKey key;
 
     public DeathFlareController(PluginConfig pluginConfig, Server server, Scheduler scheduler, Plugin plugin) {
         this.pluginConfig = pluginConfig;
         this.server = server;
         this.scheduler = scheduler;
-        this.plugin = plugin;
+        this.key = NamespacedKey.fromString("eternalcombat_firework", plugin);
     }
 
     @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
@@ -70,7 +67,7 @@ public class DeathFlareController implements Listener {
 
     @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
     public void onEntityDamageByEntity(EntityDamageByEntityEvent event) {
-        if (event.getDamager() instanceof Firework firework && firework.hasMetadata(FIREWORK_METADATA)) {
+        if (event.getDamager() instanceof Firework firework && firework.getPersistentDataContainer().has(key, PersistentDataType.STRING)) {
             event.setCancelled(true);
         }
     }
@@ -80,7 +77,7 @@ public class DeathFlareController implements Listener {
         World world = deathLocation.getWorld();
 
         Firework flare = world.spawn(deathLocation, Firework.class);
-        flare.setMetadata(FIREWORK_METADATA, new FireworkMetaData(this.plugin, true));
+        flare.getPersistentDataContainer().set(key, PersistentDataType.STRING, "true");
 
         FireworkMeta meta = flare.getFireworkMeta();
 
@@ -152,23 +149,4 @@ public class DeathFlareController implements Listener {
         );
     }
 
-    private static class FireworkMetaData extends MetadataValueAdapter {
-
-        private Boolean fromEternalCombat;
-
-        protected FireworkMetaData(@NotNull Plugin owningPlugin, Boolean fromEternalCombat) {
-            super(owningPlugin);
-            this.fromEternalCombat = fromEternalCombat;
-        }
-
-        @Override
-        public @Nullable Boolean value() {
-            return this.fromEternalCombat;
-        }
-
-        @Override
-        public void invalidate() {
-            this.fromEternalCombat = null;
-        }
-    }
 }
