@@ -153,7 +153,7 @@ public class DeathFlareController implements Listener {
         );
     }
 
-    static class FireworkMetaData extends MetadataValueAdapter {
+    private static class FireworkMetaData extends MetadataValueAdapter {
 
         private Boolean fromEternalCombat;
 
@@ -171,7 +171,5 @@ public class DeathFlareController implements Listener {
         public void invalidate() {
             this.fromEternalCombat = null;
         }
-
     }
-
 }
