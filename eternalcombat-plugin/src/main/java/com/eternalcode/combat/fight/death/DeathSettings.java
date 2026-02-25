@@ -36,7 +36,7 @@ public class DeathSettings extends OkaeriConfig {
         @Comment("Should firework (flare) spawn on ONLY deaths in combat?")
         public boolean inCombat = true;
 
-        @Comment("Power of firework - how long till explosion")
+        @Comment("Power of firework - how long till explosion (please enter positive number)")
         public int power = 2;
 
         @Comment({
