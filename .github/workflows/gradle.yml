@@ -41,7 +41,7 @@ jobs:
         run: ./gradlew shadowJar
 
       - name: Upload build artifact
-        uses: actions/upload-artifact@v6
+        uses: actions/upload-artifact@v7
         with:
           name: ${{ env.FULL_ARTIFACT_NAME }}
           path: eternalcombat-plugin/build/libs/*.jar
