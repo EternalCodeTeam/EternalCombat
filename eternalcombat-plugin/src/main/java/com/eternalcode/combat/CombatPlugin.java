@@ -185,7 +185,7 @@ public final class CombatPlugin extends JavaPlugin implements EternalCombatApi {
             new FightBypassCreativeController(server, pluginConfig),
             new FightActionBlockerController(this.fightManager, noticeService, pluginConfig, server),
             new PearlController(pluginConfig, this.pearlService, noticeService),
-            new TridentController(pluginConfig, noticeService, this.fightManager, this.tridentService),
+            new TridentController(pluginConfig, noticeService, this.fightManager, this.tridentService, server),
             new UpdaterNotificationController(updaterService, pluginConfig, this.audienceProvider, miniMessage),
             new KnockbackRegionController(noticeService, this.regionProvider, this.fightManager, knockbackService, server),
             new FightEffectController(pluginConfig.effect, this.fightEffectService, this.fightManager, server),
