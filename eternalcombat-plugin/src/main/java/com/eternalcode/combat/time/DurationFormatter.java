@@ -89,6 +89,7 @@ final class DurationFormatter {
                 throw new IllegalArgumentException("Incomplete placeholder in pattern");
             }
 
+
             char symbol = pattern.charAt(i);
             DurationUnit unit = DurationUnit.fromSymbol(symbol);
 
@@ -97,7 +98,7 @@ final class DurationFormatter {
                 throw new IllegalArgumentException("Missing plural definition after %" + symbol);
             }
 
-            boolean spaceBetween = braceIndex > i;
+            boolean spaceBetween = braceIndex > i + 1;
 
             int start = braceIndex + 1;
             int end = pattern.indexOf('}', start);
