@@ -3,7 +3,7 @@ package com.eternalcode.combat.fight;
 import com.eternalcode.combat.config.implementation.PluginConfig;
 import com.eternalcode.combat.fight.event.CauseOfUnTag;
 import com.eternalcode.combat.notification.NoticeService;
-import com.eternalcode.combat.util.DurationUtil;
+import com.eternalcode.combat.time.DurationService;
 import org.bukkit.Server;
 import org.bukkit.entity.Player;
 
@@ -14,12 +14,14 @@ public class FightTask implements Runnable {
 
     private final Server server;
     private final PluginConfig config;
+    private final DurationService durationService;
     private final FightManager fightManager;
     private final NoticeService noticeService;
 
-    public FightTask(Server server, PluginConfig config, FightManager fightManager,  NoticeService noticeService) {
+    public FightTask(Server server, PluginConfig config, DurationService durationService, FightManager fightManager, NoticeService noticeService) {
         this.server = server;
         this.config = config;
+        this.durationService = durationService;
         this.fightManager = fightManager;
         this.noticeService = noticeService;
     }
@@ -45,7 +47,7 @@ public class FightTask implements Runnable {
             this.noticeService.create()
                 .player(player.getUniqueId())
                 .notice(this.config.messagesSettings.combatNotification)
-                .placeholder("{TIME}", DurationUtil.format(remaining, this.config.messagesSettings.withoutMillis))
+                .placeholder("{TIME}", durationService.format(remaining))
                 .send();
 
         }
