@@ -4,6 +4,7 @@ import org.gradle.kotlin.dsl.shadowJar
 
 plugins {
     `eternalcombat-java`
+    `eternalcombat-java-unit-test`
     `eternalcombat-repositories`
 
     id("net.minecrell.plugin-yml.bukkit")
