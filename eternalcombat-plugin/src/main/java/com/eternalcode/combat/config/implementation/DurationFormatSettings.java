@@ -12,10 +12,11 @@ public class DurationFormatSettings extends OkaeriConfig {
         "#  %h{singular|plural} - hours",
         "#  %m{singular|plural} - minutes",
         "#  %s{singular|plural} - seconds",
+        "#  %ms{singular|plural} - milliseconds",
         "# Example:",
-        "#  %d{day|days} %h{hour|hours} %m{minute|minutes} %s{second|seconds}"
+        "#  %d{day|days} %h{hour|hours} %m{minute|minutes} %s{second|seconds} %ms{millisecond|milliseconds}"
     })
-    public String pattern = "%d{day|days} %h{hour|hours} %m{minute|minutes} %s{second|seconds}";
+    public String pattern = "%d {day|days} %h {hour|hours} %m {minute|minutes} %s {second|seconds} %ms {millisecond|milliseconds}";
 
     @Comment({
         "# Separator used between duration parts.",
