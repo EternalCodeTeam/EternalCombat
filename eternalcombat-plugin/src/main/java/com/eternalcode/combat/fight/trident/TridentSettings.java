@@ -19,7 +19,7 @@ public class TridentSettings extends OkaeriConfig {
     public boolean riptideResetsTimerEnabled = false;
 
     @Comment({
-        "# Should riptide enchantment be on cooldown?",
+        "# Should riptide enchantment be on cooldown during combat?",
         "# Setting this option to 3s will make players wait 3 seconds between trident throws",
         "# Setting this to 0s or below will remove cooldown"
     })
