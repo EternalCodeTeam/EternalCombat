@@ -34,7 +34,7 @@ public class FightTagOutCommand {
     }
 
     @Execute
-    void tagout(@Context Player sender, @Arg Duration time) {
+    void tagOut(@Context Player sender, @Arg Duration time) {
         this.fightTagOutService.tagOut(sender.getUniqueId(), time);
 
         this.noticeService.create()
