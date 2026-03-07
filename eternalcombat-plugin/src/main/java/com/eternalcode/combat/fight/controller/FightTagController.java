@@ -1,5 +1,6 @@
 package com.eternalcode.combat.fight.controller;
 
+import com.eternalcode.combat.FoliaChecker;
 import com.eternalcode.combat.WhitelistBlacklistMode;
 import com.eternalcode.combat.config.implementation.PluginConfig;
 import com.eternalcode.combat.fight.FightManager;
@@ -55,6 +56,16 @@ public class FightTagController implements Listener {
             return;
         }
 
+        UUID targetId = attackedPlayerByPerson.getUniqueId();
+        UUID attackerId = attacker.getUniqueId();
+
+        if (
+            targetId.equals(attackerId)
+            && FoliaChecker.isFolia()
+        ) {
+            return;
+        }
+
         if (this.config.combat.disableFlying) {
             if (attackedPlayerByPerson.isFlying()) {
                 attackedPlayerByPerson.setFlying(false);
@@ -68,11 +79,9 @@ public class FightTagController implements Listener {
         }
 
         Duration combatTime = this.config.settings.combatTimerDuration;
-        UUID attackedUniqueId = attackedPlayerByPerson.getUniqueId();
-        UUID attackerUniqueId = attacker.getUniqueId();
 
-        this.fightManager.tag(attackedUniqueId, combatTime, CauseOfTag.PLAYER, attackerUniqueId);
-        this.fightManager.tag(attackerUniqueId, combatTime, CauseOfTag.PLAYER, attackedUniqueId);
+        this.fightManager.tag(targetId, combatTime, CauseOfTag.PLAYER, attackerId);
+        this.fightManager.tag(attackerId, combatTime, CauseOfTag.PLAYER, targetId);
     }
 
 
