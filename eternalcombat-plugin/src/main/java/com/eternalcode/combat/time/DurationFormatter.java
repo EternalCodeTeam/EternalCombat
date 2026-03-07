@@ -27,7 +27,6 @@ final class DurationFormatter {
     }
 
     String format(Duration duration) {
-
         if (duration.isZero() || duration.isNegative()) {
             return zero;
         }
@@ -49,7 +48,6 @@ final class DurationFormatter {
         int index = 0;
 
         for (Token token : tokens) {
-
             long value = token.unit.extract(duration);
             if (value <= 0) {
                 continue;
@@ -75,7 +73,6 @@ final class DurationFormatter {
     }
 
     private static Token[] parsePattern(String pattern) {
-
         List<Token> tokens = new ArrayList<>(4);
 
         for (int i = 0; i < pattern.length(); i++) {
