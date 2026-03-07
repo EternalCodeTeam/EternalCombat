@@ -46,6 +46,7 @@ public class FightTask implements Runnable {
                 .player(player.getUniqueId())
                 .notice(this.config.messagesSettings.combatNotification)
                 .placeholder("{TIME}", DurationUtil.format(remaining, this.config.messagesSettings.withoutMillis))
+                .placeholder("{SECONDS}", String.valueOf(remaining.toSeconds()))
                 .send();
 
         }
