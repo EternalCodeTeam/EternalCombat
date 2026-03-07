@@ -65,7 +65,7 @@ public class FightTagOutCommand {
     }
 
     @Execute(name = "remove")
-    void unTagout(@Context Player sender, @Arg Player target) {
+    void unTagOut(@Context Player sender, @Arg Player target) {
         UUID targetUniqueId = target.getUniqueId();
 
         this.fightTagOutService.unTagOut(targetUniqueId);
