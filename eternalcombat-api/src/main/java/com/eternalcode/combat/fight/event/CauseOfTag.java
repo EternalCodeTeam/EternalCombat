@@ -24,6 +24,17 @@ public enum CauseOfTag {
     CRYSTAL,
 
     /**
+     * Trident usage extending combat tag.
+     */
+    TRIDENT,
+
+    /**
+     * Ender pearl usage extending combat tag.
+     */
+    ENDER_PEARL,
+
+
+    /**
      * A custom cause, typically defined by external plugins or systems, applied the combat tag.
      */
     CUSTOM
