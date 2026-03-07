@@ -57,7 +57,7 @@ public class DeathFlareController implements Listener {
     }
 
     @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
-    public void onPlayerDeathEventLightning(PlayerDeathEvent event) {
+    public void onPlayerDeathEventFlare(PlayerDeathEvent event) {
         Player player = event.getEntity();
 
         if (this.pluginConfig.death.firework.afterEveryDeath) {
