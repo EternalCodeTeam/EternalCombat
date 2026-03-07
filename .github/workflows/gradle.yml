@@ -45,3 +45,4 @@ jobs:
         with:
           name: ${{ env.FULL_ARTIFACT_NAME }}
           path: eternalcombat-plugin/build/libs/*.jar
+          archive: false
