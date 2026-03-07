@@ -4,9 +4,8 @@ import com.eternalcode.combat.config.implementation.PlaceholderSettings;
 import com.eternalcode.combat.config.implementation.PluginConfig;
 import com.eternalcode.combat.fight.FightManager;
 import com.eternalcode.combat.fight.FightTag;
-import com.eternalcode.combat.util.DurationUtil;
+import com.eternalcode.combat.time.DurationService;
 import com.eternalcode.commons.time.DurationParser;
-import java.util.Optional;
 import me.clip.placeholderapi.expansion.PlaceholderExpansion;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.Server;
@@ -14,17 +13,21 @@ import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.Optional;
+
 public class FightTagPlaceholder extends PlaceholderExpansion {
 
     private static final String IDENTIFIER = "eternalcombat";
 
     private final PlaceholderSettings placeholderSettings;
+    private final DurationService durationService;
     private final FightManager fightManager;
     private final Server server;
     private final Plugin plugin;
 
-    public FightTagPlaceholder(PluginConfig pluginConfig, FightManager fightManager, Server server, Plugin plugin) {
+    public FightTagPlaceholder(PluginConfig pluginConfig, DurationService durationService, FightManager fightManager, Server server, Plugin plugin) {
         this.placeholderSettings = pluginConfig.placeholders;
+        this.durationService = durationService;
         this.fightManager = fightManager;
         this.server = server;
         this.plugin = plugin;
@@ -51,7 +54,7 @@ public class FightTagPlaceholder extends PlaceholderExpansion {
 
     private String handleRemainingSeconds(OfflinePlayer player) {
         return this.getFightTag(player)
-            .map(tag -> DurationUtil.format(tag.getRemainingDuration()))
+            .map(tag -> durationService.format(tag.getRemainingDuration()))
             .orElse("");
     }
 
@@ -110,7 +113,7 @@ public class FightTagPlaceholder extends PlaceholderExpansion {
 
     @Override
     public @NotNull String getAuthor() {
-        return this.plugin.getDescription().getAuthors().get(0);
+        return this.plugin.getDescription().getAuthors().getFirst();
     }
 
     @Override
