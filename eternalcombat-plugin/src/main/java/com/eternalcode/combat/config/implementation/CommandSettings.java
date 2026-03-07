@@ -23,4 +23,40 @@ public class CommandSettings extends OkaeriConfig {
         "tpa",
         "tpaccept"
     );
+
+    @Comment({
+        "# List of commands that will be executed from console after player death.",
+        "# Use {player} to represent the name of the player who died and {killer} for the killer's name (if applicable)."
+    })
+    public List<String> consolePostDeathCommands = List.of(
+        "broadcast {player} has died in combat!"
+    );
+
+    @Comment("# When this is set to true, the plugin will execute the console commands only after the dead player has respawned.")
+    public boolean deferConsoleAfterRespawn = false;
+
+    @Comment({
+        "# List of commands that will be executed from the dead player's perspective after death.",
+        "# Use {player} to represent the name of the player who died and {killer} for the killer's name (if applicable)."
+    })
+    public List<String> deadPostDeathCommands = List.of(
+        "say You have died in combat!"
+    );
+
+    @Comment("# When this is set to true, the plugin will execute the commands above only after the dead player has respawned.")
+    public boolean deferDeadAfterRespawn = true;
+
+    @Comment({
+        "# List of commands that will be executed from the killer's perspective after killing a player.",
+        "# Use {player} to represent the name of the player who was killed and {killer} for the killer's name (if applicable)."
+    })
+    public List<String> killerPostDeathCommands = List.of(
+        "say You have killed {player} in combat!"
+    );
+
+    @Comment("# When this is set to true, the plugin will only execute the post-death commands if the players were tagged")
+    public boolean onlyExecuteIfTagged = true;
+
+    @Comment("# The returned string when the killer is unknown")
+    public String unknownKillerPlaceholder = "Unknown";
 }
