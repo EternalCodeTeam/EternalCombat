@@ -34,7 +34,7 @@ public class FightTagOutCommand {
     }
 
     @Execute
-    void tagout(@Context Player sender, @Arg Duration time) {
+    void tagOut(@Context Player sender, @Arg Duration time) {
         this.fightTagOutService.tagOut(sender.getUniqueId(), time);
 
         this.noticeService.create()
@@ -46,7 +46,7 @@ public class FightTagOutCommand {
     }
 
     @Execute
-    void tagout(@Context Player sender, @Arg Player target, @Arg Duration time) {
+    void tagOut(@Context Player sender, @Arg Player target, @Arg Duration time) {
         this.fightTagOutService.tagOut(target.getUniqueId(), time);
 
         this.noticeService.create()
@@ -65,7 +65,7 @@ public class FightTagOutCommand {
     }
 
     @Execute(name = "remove")
-    void unTagout(@Context Player sender, @Arg Player target) {
+    void unTagOut(@Context Player sender, @Arg Player target) {
         UUID targetUniqueId = target.getUniqueId();
 
         this.fightTagOutService.unTagOut(targetUniqueId);
