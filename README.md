@@ -29,7 +29,7 @@ EternalCombat 2.0 has been tested on Minecraft versions **1.17.1 to 1.21.11**, b
 other versions too.
 If you run into any compatibility issues, please let us know in
 the [Issues tab](https://github.com/EternalCodeTeam/EternalCombat/issues).
-The plugin requires **Java 17 or later**, so
+The plugin requires **Java 21 or later**, so
 ensure your server is ready.
 Ready for action?
 Install EternalCombat and dive in now!
@@ -44,6 +44,10 @@ fair, heart-pounding battles that keep players on their toes. Here’s a rundown
   No more dodging fights by logging out! Once players are in combat, they’re committed until the showdown ends. Watch it
   in action:  
   ![Combat log anti logout feature](https://github.com/EternalCodeTeam/EternalCombat/blob/master/assets/combatlog.gif?raw=true)
+
+- **Customize combat experience**  
+  Add custom effects to players in combat or death. Everything should be configurable and user-friendly:
+  ![Lightning strikes when players die](https://github.com/EternalCodeTeam/EternalCombat/blob/master/assets/lightning.gif?raw=true)
 
 - **Spawn Protection (Configurable)**  
   Stop players from fleeing to safety! Block access to spawn or safe zones during combat – tweak it to fit your server’s

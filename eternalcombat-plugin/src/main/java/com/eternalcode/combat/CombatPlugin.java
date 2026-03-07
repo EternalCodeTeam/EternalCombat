@@ -11,6 +11,8 @@ import com.eternalcode.combat.crystalpvp.EndCrystalListener;
 import com.eternalcode.combat.fight.controller.FightBypassAdminController;
 import com.eternalcode.combat.fight.controller.FightBypassCreativeController;
 import com.eternalcode.combat.fight.controller.FightBypassPermissionController;
+import com.eternalcode.combat.fight.controller.FightInventoryController;
+import com.eternalcode.combat.fight.death.DeathEffectController;
 import com.eternalcode.combat.fight.drop.DropKeepInventoryService;
 import com.eternalcode.combat.fight.FightManager;
 import com.eternalcode.combat.fight.drop.DropService;
@@ -186,6 +188,7 @@ public final class CombatPlugin extends JavaPlugin implements EternalCombatApi {
             new FightActionBlockerController(this.fightManager, noticeService, pluginConfig, server),
             new PearlController(pluginConfig, this.pearlService, noticeService),
             new TridentController(pluginConfig, noticeService, this.fightManager, this.tridentService, server),
+            new DeathEffectController(pluginConfig),
             new UpdaterNotificationController(updaterService, pluginConfig, this.audienceProvider, miniMessage),
             new KnockbackRegionController(noticeService, this.regionProvider, this.fightManager, knockbackService, server),
             new FightEffectController(pluginConfig.effect, this.fightEffectService, this.fightManager, server),
@@ -196,7 +199,8 @@ public final class CombatPlugin extends JavaPlugin implements EternalCombatApi {
             new BorderBlockController(borderService, () -> pluginConfig.border.block, scheduler, server),
             new EndCrystalListener(this, this.fightManager, pluginConfig),
             new RespawnAnchorListener(this, this.fightManager, pluginConfig),
-            new FireworkController(this.fightManager, pluginConfig, noticeService)
+            new FireworkController(this.fightManager, pluginConfig, noticeService),
+            new FightInventoryController(this.fightManager, pluginConfig, noticeService)
         );
 
         eventManager.subscribe(

@@ -146,7 +146,7 @@ if (isGithubWorkflow && isSnapshot) {
     version = "$baseVersion-SNAPSHOT+$offset"
 }
 
-val changelog = providers.environmentVariable("CHANGELOG")
+val changelogText = providers.environmentVariable("CHANGELOG")
     .orElse(providers.exec { commandLine("git", "log", "-1", "--format=%B") }.standardOutput.asText)
 
 val paperVersions = property("paperVersion").toString()
@@ -163,7 +163,7 @@ modrinth {
     uploadFile.set(tasks.shadowJar)
     gameVersions.addAll(paperVersions)
     loaders.addAll(listOf("paper", "spigot", "folia", "purpur"))
-    this.changelog.set(changelog)
+    changelog.set(changelogText)
     syncBodyFrom.set(rootProject.file("README.md").readText())
 }
 
@@ -171,7 +171,7 @@ hangarPublish {
     publications.register("plugin") {
         version.set(project.version.toString())
         channel.set(releaseChannel)
-        this.changelog.set(changelog)
+        changelog.set(changelogText)
         id.set("eternalcombat")
         apiKey.set(providers.environmentVariable("HANGAR_API_TOKEN"))
         platforms {
