@@ -2,12 +2,12 @@ package com.eternalcode.combat.fight.trident;
 
 import com.eternalcode.combat.config.implementation.PluginConfig;
 import com.eternalcode.combat.fight.FightManager;
-import com.eternalcode.combat.util.delay.Delay;
+import com.eternalcode.commons.delay.Delay;
+import org.bukkit.Material;
+import org.bukkit.entity.Player;
 
 import java.time.Duration;
 import java.util.UUID;
-import org.bukkit.Material;
-import org.bukkit.entity.Player;
 
 public class TridentServiceImpl implements TridentService {
 
@@ -27,6 +27,10 @@ public class TridentServiceImpl implements TridentService {
     public void handleTridentDelay(Player player) {
         UUID uniqueId = player.getUniqueId();
 
+        if (this.pluginConfig.trident.tridentRiptideDelay.isZero()) {
+            return;
+        }
+
         if (!this.fightManager.isInCombat(uniqueId)) {
             return;
         }
@@ -35,9 +39,6 @@ public class TridentServiceImpl implements TridentService {
             return;
         }
 
-        if (this.pluginConfig.trident.tridentRiptideDelay.isZero()) {
-            return;
-        }
 
         this.markDelay(uniqueId);
         player.setCooldown(Material.TRIDENT, (int) this.pluginConfig.trident.tridentRiptideDelay.toMillis() / 50);

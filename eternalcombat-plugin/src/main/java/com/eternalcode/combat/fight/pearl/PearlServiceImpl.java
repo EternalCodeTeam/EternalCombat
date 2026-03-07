@@ -3,13 +3,13 @@ package com.eternalcode.combat.fight.pearl;
 import com.eternalcode.combat.config.implementation.PluginConfig;
 import com.eternalcode.combat.fight.FightManager;
 import com.eternalcode.combat.fight.event.CauseOfTag;
-import com.eternalcode.combat.util.delay.Delay;
-
+import com.eternalcode.commons.delay.Delay;
 import com.eternalcode.commons.scheduler.Scheduler;
-import java.time.Duration;
-import java.util.UUID;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
+
+import java.time.Duration;
+import java.util.UUID;
 
 public class PearlServiceImpl implements PearlService {
 
