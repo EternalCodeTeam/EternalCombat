@@ -1,5 +1,6 @@
 package com.eternalcode.combat.fight.death;
 
+import com.eternalcode.combat.config.implementation.CommandSettings;
 import com.eternalcode.combat.config.implementation.PluginConfig;
 import com.eternalcode.combat.fight.FightManager;
 import com.eternalcode.combat.fight.FightTag;
@@ -13,9 +14,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.player.PlayerRespawnEvent;
 
-import java.util.ArrayList;
 import java.util.Collections;
-import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
@@ -27,7 +26,7 @@ public class DeathCommandController implements Listener {
     private final FightManager fightManager;
     private final Server server;
 
-    private final Map<UUID, List<PendingCommand>> pendingCommands = new ConcurrentHashMap<>();
+    private final Map<UUID, String> killerNames = new ConcurrentHashMap<>();
     private final Set<UUID> handledByUntag = Collections.newSetFromMap(new ConcurrentHashMap<>());
 
     public DeathCommandController(PluginConfig config, FightManager fightManager, Server server) {
@@ -40,35 +39,39 @@ public class DeathCommandController implements Listener {
     void onPlayerUntag(FightUntagEvent event) {
         UUID playerUUID = event.getPlayer();
         CauseOfUnTag cause = event.getCause();
+        Player player = this.server.getPlayer(playerUUID);
 
-        if (cause != CauseOfUnTag.DEATH && cause != CauseOfUnTag.DEATH_BY_PLAYER) {
+        if (player == null) {
             return;
         }
 
-        Player deadPlayer = this.server.getPlayer(playerUUID);
-
-        if (deadPlayer == null) {
+        if (cause == CauseOfUnTag.DEATH || cause == CauseOfUnTag.DEATH_BY_PLAYER) {
+            String killerName = this.resolveKillerName(playerUUID, player);
+            this.handleDeathInCombat(player, killerName);
+            this.handledByUntag.add(playerUUID);
+            this.killerNames.put(playerUUID, killerName);
             return;
         }
-
-        this.handledByUntag.add(playerUUID);
-        this.executeDeathCommands(deadPlayer);
+        this.handleUntag(player);
     }
 
     @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
     void onPlayerDeath(PlayerDeathEvent event) {
-        if (this.config.commands.onlyExecuteIfTagged) {
-            return;
-        }
+        Player player = event.getEntity();
+        UUID playerUUID = player.getUniqueId();
+        String killerName = this.resolveKillerName(playerUUID, player);
 
-        Player deadPlayer = event.getEntity();
-        UUID playerUUID = deadPlayer.getUniqueId();
+        this.killerNames.putIfAbsent(playerUUID, killerName);
+
+        this.handleAnyDeath(player, killerName);
 
         if (this.handledByUntag.remove(playerUUID)) {
             return;
         }
 
-        this.executeDeathCommands(deadPlayer);
+        if (this.fightManager.isInCombat(playerUUID)) {
+            this.handleDeathInCombat(player, killerName);
+        }
     }
 
     @EventHandler(priority = EventPriority.MONITOR)
@@ -78,59 +81,45 @@ public class DeathCommandController implements Listener {
 
         this.handledByUntag.remove(playerUUID);
 
-        List<PendingCommand> commands = this.pendingCommands.remove(playerUUID);
-
-        if (commands == null) {
-            return;
+        String killerName = this.killerNames.remove(playerUUID);
+        if (killerName == null) {
+            killerName = this.config.commands.unknownKillerPlaceholder;
         }
 
-        for (PendingCommand pending : commands) {
-            switch (pending.executor()) {
-                case CONSOLE -> this.server.dispatchCommand(this.server.getConsoleSender(), pending.command());
-                case DEAD_PLAYER -> this.server.dispatchCommand(player, pending.command());
-            }
-        }
+        this.dispatch(this.config.commands.afterRespawn, player, killerName);
     }
 
-    private void executeDeathCommands(Player deadPlayer) {
-        UUID playerUUID = deadPlayer.getUniqueId();
-        String deadPlayerName = deadPlayer.getName();
-        String killerName = this.resolveKillerName(playerUUID, deadPlayer);
+    private void handleDeathInCombat(Player player, String killerName) {
+        this.dispatch(this.config.commands.onDeathInCombat, player, killerName);
 
-        List<PendingCommand> deferred = new ArrayList<>();
-
-        for (String command : this.config.commands.consolePostDeathCommands) {
-            String resolved = this.replacePlaceholders(command, deadPlayerName, killerName);
-            if (this.config.commands.deferConsoleAfterRespawn) {
-                deferred.add(new PendingCommand(CommandSource.CONSOLE, resolved));
-            } else {
-                this.server.dispatchCommand(this.server.getConsoleSender(), resolved);
-            }
-        }
-
-        for (String command : this.config.commands.deadPostDeathCommands) {
-            String resolved = this.replacePlaceholders(command, deadPlayerName, killerName);
-            if (this.config.commands.deferDeadAfterRespawn) {
-                deferred.add(new PendingCommand(CommandSource.DEAD_PLAYER, resolved));
-            } else {
-                this.server.dispatchCommand(deadPlayer, resolved);
-            }
-        }
-
-        Player killer = this.resolveKiller(playerUUID, deadPlayer);
-
+        Player killer = this.resolveKiller(player.getUniqueId(), player);
         if (killer != null) {
             for (String command : this.config.commands.killerPostDeathCommands) {
-                String resolved = this.replacePlaceholders(command, deadPlayerName, killerName);
+                String resolved = this.replacePlaceholders(command, player.getName(), killerName);
                 this.server.dispatchCommand(killer, resolved);
             }
         }
-
-        if (!deferred.isEmpty()) {
-            this.pendingCommands.put(playerUUID, deferred);
-        }
     }
 
+    private void handleAnyDeath(Player player, String killerName) {
+        this.dispatch(this.config.commands.onAnyDeath, player, killerName);
+    }
+
+    private void handleUntag(Player player) {
+        this.dispatch(this.config.commands.onUntag, player, this.config.commands.unknownKillerPlaceholder);
+    }
+
+    private void dispatch(CommandSettings.PostDeathSettings settings, Player player, String killerName) {
+        String playerName = player.getName();
+        settings.console.forEach(command -> {
+            String resolved = this.replacePlaceholders(command, playerName, killerName);
+            this.server.dispatchCommand(this.server.getConsoleSender(), resolved);
+        });
+        settings.player.forEach(command -> {
+            String resolved = this.replacePlaceholders(command, playerName, killerName);
+            this.server.dispatchCommand(player, resolved);
+        });
+    }
 
     private String resolveKillerName(UUID deadPlayerUUID, Player deadPlayer) {
         Player killer = this.resolveKiller(deadPlayerUUID, deadPlayer);
@@ -157,13 +146,5 @@ public class DeathCommandController implements Listener {
         return command
             .replace("{player}", playerName)
             .replace("{killer}", killerName);
-    }
-
-    private enum CommandSource {
-        CONSOLE,
-        DEAD_PLAYER
-    }
-
-    private record PendingCommand(CommandSource executor, String command) {
     }
 }
