@@ -9,7 +9,7 @@ plugins {
     id("net.minecrell.plugin-yml.bukkit")
     id("com.gradleup.shadow")
     id("xyz.jpenilla.run-paper")
-    id("com.modrinth.minotaur") version "2.8.10"
+    id("com.modrinth.minotaur") version "2.9.0"
     id("io.papermc.hangar-publish-plugin") version "0.1.4"
 }
 
@@ -43,6 +43,9 @@ dependencies {
     // Okaeri configs
     implementation("eu.okaeri:okaeri-configs-serdes-commons:${Versions.OKAERI_CONFIGS_SERDES_COMMONS}")
     implementation("eu.okaeri:okaeri-configs-serdes-bukkit:${Versions.OKAERI_CONFIGS_SERDES_BUKKIT}")
+
+    // XSeries
+    implementation("com.github.cryptomorin:XSeries:${Versions.XSERIES}")
 
     // bstats
     implementation("org.bstats:bstats-bukkit:${Versions.B_STATS_BUKKIT}")
@@ -129,7 +132,8 @@ tasks.shadowJar {
         "com.github.benmanes.caffeine",
         "com.eternalcode.commons",
         "com.eternalcode.multification",
-        "io.papermc.lib"
+        "com.github.cryptomorin",
+        "io.papermc.lib",
     ).forEach { pack ->
         relocate(pack, "$prefix.$pack")
     }
