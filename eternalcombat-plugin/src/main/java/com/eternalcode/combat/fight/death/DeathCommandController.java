@@ -109,7 +109,7 @@ public class DeathCommandController implements Listener {
         }
 
         for (String command : this.config.commands.deadPostDeathCommands) {
-            String resolved = this.replacePlaceholders(command, deadPlayerName, killerName);
+            String commandReplaced = this.replacePlaceholders(command, deadPlayerName, killerName);
             if (this.config.commands.deferDeadAfterRespawn) {
                 deferred.add(new PendingCommand(CommandSource.DEAD_PLAYER, resolved));
             } else {
