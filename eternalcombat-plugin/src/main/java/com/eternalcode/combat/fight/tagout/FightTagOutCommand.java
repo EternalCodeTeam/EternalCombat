@@ -83,7 +83,7 @@ public class FightTagOutCommand {
     }
 
     @Execute(name = "remove")
-    void unTagout(@Context Player sender) {
+    void unTagOut(@Context Player sender) {
         this.fightTagOutService.unTagOut(sender.getUniqueId());
 
         this.noticeService.create()
