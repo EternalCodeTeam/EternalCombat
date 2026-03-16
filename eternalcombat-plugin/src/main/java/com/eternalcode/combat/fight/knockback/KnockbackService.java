@@ -41,19 +41,22 @@ public final class KnockbackService {
 
         insideRegion.put(player.getUniqueId(), region);
 
-        scheduler.runLater(
-            player.getLocation(), () -> {
-                insideRegion.remove(player.getUniqueId());
-                Location playerLocation = player.getLocation();
-                if (!region.contains(playerLocation) && !regionProvider.isInRegion(playerLocation)) {
-                    return;
-                }
+        scheduler.runLater(player.getLocation(), () -> {
+            insideRegion.remove(player.getUniqueId());
 
-                Location location =
-                    generate(playerLocation, Point2D.from(region.getMin()), Point2D.from(region.getMax()));
+            Location playerLocation = player.getLocation();
+            if (!region.contains(playerLocation) && !regionProvider.isInRegion(playerLocation)) {
+                return;
+            }
 
-                PaperLib.teleportAsync(player, location, TeleportCause.PLUGIN);
-            }, this.config.knockback.forceDelay);
+            if (player.isInsideVehicle()) {
+                player.leaveVehicle();
+            }
+
+            Location location = generate(playerLocation, Point2D.from(region.getMin()), Point2D.from(region.getMax()));
+
+            PaperLib.teleportAsync(player, location, TeleportCause.PLUGIN);
+        }, this.config.knockback.forceDelay);
     }
 
     private Location generate(Location playerLocation, Point2D minX, Point2D maxX) {
@@ -68,6 +71,10 @@ public final class KnockbackService {
     }
 
     public void knockback(Region region, Player player) {
+        if (player.isInsideVehicle()) {
+            player.leaveVehicle();
+        }
+
         Point point = region.getCenter();
         Location subtract = player.getLocation().subtract(point.x(), 0, point.z());
 

@@ -8,7 +8,7 @@ object Versions {
 
     const val JETBRAINS_ANNOTATIONS = "26.1.0"
 
-    const val ETERNALCODE_COMMONS = "1.3.3"
+    const val ETERNALCODE_COMMONS = "1.3.4"
     const val MULTIFICATION = "1.2.4"
     const val PACKETS_EVENTS = "2.11.2"
 
@@ -19,9 +19,11 @@ object Versions {
     const val OKAERI_CONFIGS_SERDES_COMMONS = "5.0.13"
     const val OKAERI_CONFIGS_SERDES_BUKKIT = "5.0.13"
 
+    const val XSERIES = "13.6.0"
+
     const val CAFFEINE = "3.2.3"
 
-    const val B_STATS_BUKKIT = "3.1.0"
+    const val B_STATS_BUKKIT = "3.2.1"
     const val WORLD_GUARD_BUKKIT = "7.0.15"
 
     const val PLACEHOLDER_API = "2.12.2"
