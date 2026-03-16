@@ -90,12 +90,18 @@ public final class DurationFormatter {
     private static Token[] parsePattern(String pattern) {
         List<Token> tokens = new ArrayList<>(DurationUnit.values().length);
 
-        for (int i = 0; i < pattern.length(); i++) {
+        int i = 0;
+
+        while (i < pattern.length()) {
             if (pattern.charAt(i) != '%') {
+                i++;
                 continue;
             }
 
-            int start = ++i;
+            i++; // skip %
+
+            int start = i;
+
             while (i < pattern.length() && Character.isLetter(pattern.charAt(i))) {
                 i++;
             }
@@ -115,17 +121,27 @@ public final class DurationFormatter {
                 i++;
             }
 
-            if (pattern.charAt(i) != '{') {
+            if (i >= pattern.length() || pattern.charAt(i) != '{') {
                 throw new IllegalArgumentException("Missing plural definition");
             }
 
-            int blockStart = ++i;
-            while (pattern.charAt(i) != '}') {
+            i++; // skip {
+
+            int blockStart = i;
+
+            while (i < pattern.length() && pattern.charAt(i) != '}') {
                 i++;
             }
 
+            if (i >= pattern.length()) {
+                throw new IllegalArgumentException("Unclosed plural definition");
+            }
+
             String block = pattern.substring(blockStart, i);
+            i++; // skip }
+
             int split = block.indexOf('|');
+
             if (split == -1) {
                 throw new IllegalArgumentException("Plural must be singular|plural");
             }
