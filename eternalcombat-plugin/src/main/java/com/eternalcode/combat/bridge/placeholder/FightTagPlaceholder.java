@@ -1,11 +1,9 @@
 package com.eternalcode.combat.bridge.placeholder;
 
-import com.eternalcode.combat.config.implementation.PlaceholderSettings;
 import com.eternalcode.combat.config.implementation.PluginConfig;
 import com.eternalcode.combat.fight.FightManager;
 import com.eternalcode.combat.fight.FightTag;
-import com.eternalcode.combat.time.DurationService;
-import com.eternalcode.commons.time.DurationParser;
+import com.eternalcode.combat.time.DurationFormatter;
 import me.clip.placeholderapi.expansion.PlaceholderExpansion;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.Server;
@@ -19,15 +17,13 @@ public class FightTagPlaceholder extends PlaceholderExpansion {
 
     private static final String IDENTIFIER = "eternalcombat";
 
-    private final PlaceholderSettings placeholderSettings;
-    private final DurationService durationService;
+    private final PluginConfig config;
     private final FightManager fightManager;
     private final Server server;
     private final Plugin plugin;
 
-    public FightTagPlaceholder(PluginConfig pluginConfig, DurationService durationService, FightManager fightManager, Server server, Plugin plugin) {
-        this.placeholderSettings = pluginConfig.placeholders;
-        this.durationService = durationService;
+    public FightTagPlaceholder(PluginConfig config, FightManager fightManager, Server server, Plugin plugin) {
+        this.config = config;
         this.fightManager = fightManager;
         this.server = server;
         this.plugin = plugin;
@@ -36,8 +32,7 @@ public class FightTagPlaceholder extends PlaceholderExpansion {
     @Override
     public String onRequest(OfflinePlayer player, String identifier) {
         return switch (identifier) {
-            case "remaining_millis" -> this.handleRemainingMillis(player);
-            case "remaining_seconds" -> this.handleRemainingSeconds(player);
+            case "remaining" -> this.handleRemaining(player);
             case "opponent" -> this.handleOpponent(player);
             case "opponent_health" -> this.handleOpponentHealth(player);
             case "isInCombat" -> this.handleIsInCombat(player);
@@ -46,15 +41,9 @@ public class FightTagPlaceholder extends PlaceholderExpansion {
         };
     }
 
-    private String handleRemainingMillis(OfflinePlayer player) {
+    private String handleRemaining(OfflinePlayer player) {
         return this.getFightTag(player)
-            .map(tag -> DurationParser.TIME_UNITS.format(tag.getRemainingDuration()))
-            .orElse("");
-    }
-
-    private String handleRemainingSeconds(OfflinePlayer player) {
-        return this.getFightTag(player)
-            .map(tag -> durationService.format(tag.getRemainingDuration()))
+            .map(tag -> DurationFormatter.of(config.durationFormat).format(tag.getRemainingDuration()))
             .orElse("");
     }
 
@@ -76,8 +65,8 @@ public class FightTagPlaceholder extends PlaceholderExpansion {
 
     private String handleIsInCombatFormatted(OfflinePlayer player) {
         return this.isPlayerInCombat(player)
-            ? this.placeholderSettings.isInCombatFormattedTrue
-            : this.placeholderSettings.isInCombatFormattedFalse;
+            ? this.config.placeholders.isInCombatFormattedTrue
+            : this.config.placeholders.isInCombatFormattedFalse;
     }
 
     private boolean isPlayerInCombat(OfflinePlayer player) {

@@ -1,8 +1,9 @@
 package com.eternalcode.combat.fight.pearl;
 
+import com.eternalcode.combat.config.implementation.PluginConfig;
 import com.eternalcode.combat.fight.FightManager;
 import com.eternalcode.combat.notification.NoticeService;
-import com.eternalcode.combat.time.DurationService;
+import com.eternalcode.combat.time.DurationFormatter;
 import org.bukkit.Material;
 import org.bukkit.entity.EnderPearl;
 import org.bukkit.entity.Player;
@@ -18,21 +19,19 @@ import java.util.UUID;
 
 public class FightPearlController implements Listener {
 
-    private final FightPearlSettings settings;
+    private final PluginConfig config;
     private final NoticeService noticeService;
-    private final DurationService durationService;
     private final FightManager fightManager;
     private final FightPearlService fightPearlService;
 
     public FightPearlController(
-        FightPearlSettings settings,
-        NoticeService noticeService, DurationService durationService,
+        PluginConfig config,
+        NoticeService noticeService,
         FightManager fightManager,
         FightPearlService fightPearlService
     ) {
-        this.settings = settings;
+        this.config = config;
         this.noticeService = noticeService;
-        this.durationService = durationService;
         this.fightManager = fightManager;
         this.fightPearlService = fightPearlService;
     }
@@ -53,23 +52,23 @@ public class FightPearlController implements Listener {
             return;
         }
 
-        if (this.settings.pearlThrowDisabledDuringCombat) {
+        if (this.config.pearl.pearlThrowDisabledDuringCombat) {
             event.setCancelled(true);
             this.noticeService.create()
                 .player(playerId)
-                .notice(this.settings.pearlThrowBlockedDuringCombat)
+                .notice(this.config.pearl.pearlThrowBlockedDuringCombat)
                 .send();
             return;
         }
 
-        if (this.settings.pearlCooldownEnabled) {
+        if (this.config.pearl.pearlCooldownEnabled) {
             handlePearlCooldown(event, player, playerId);
         }
     }
 
     @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
     public void onPearlDamage(EntityDamageByEntityEvent event) {
-        if (this.settings.pearlThrowDamageEnabled) {
+        if (this.config.pearl.pearlThrowDamageEnabled) {
             return;
         }
 
@@ -83,7 +82,7 @@ public class FightPearlController implements Listener {
     }
 
     private void handlePearlCooldown(ProjectileLaunchEvent event, Player player, UUID playerId) {
-        if (this.settings.pearlThrowDelay.isZero()) {
+        if (this.config.pearl.pearlThrowDelay.isZero()) {
             return;
         }
 
@@ -93,14 +92,14 @@ public class FightPearlController implements Listener {
 
             this.noticeService.create()
                 .player(playerId)
-                .notice(this.settings.pearlThrowBlockedDelayDuringCombat)
-                .placeholder("{TIME}", durationService.format(remainingDelay))
+                .notice(this.config.pearl.pearlThrowBlockedDelayDuringCombat)
+                .placeholder("{TIME}", DurationFormatter.of(config.durationFormat).format(remainingDelay))
                 .send();
             return;
         }
 
         this.fightPearlService.markDelay(playerId);
-        int cooldownTicks = (int) (this.settings.pearlThrowDelay.toMillis() / 50);
+        int cooldownTicks = (int) (this.config.pearl.pearlThrowDelay.toMillis() / 50);
         player.setCooldown(Material.ENDER_PEARL, cooldownTicks);
     }
 }

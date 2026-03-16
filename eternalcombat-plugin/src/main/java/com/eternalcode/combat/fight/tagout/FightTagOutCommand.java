@@ -2,7 +2,7 @@ package com.eternalcode.combat.fight.tagout;
 
 import com.eternalcode.combat.config.implementation.PluginConfig;
 import com.eternalcode.combat.notification.NoticeService;
-import com.eternalcode.combat.time.DurationService;
+import com.eternalcode.combat.time.DurationFormatter;
 import dev.rollczi.litecommands.annotations.argument.Arg;
 import dev.rollczi.litecommands.annotations.command.Command;
 import dev.rollczi.litecommands.annotations.context.Context;
@@ -19,17 +19,15 @@ public class FightTagOutCommand {
 
     private final FightTagOutService fightTagOutService;
     private final NoticeService noticeService;
-    private final DurationService durationService;
     private final PluginConfig config;
 
     public FightTagOutCommand(
         FightTagOutService fightTagOutService,
-        NoticeService noticeService, DurationService durationService,
+        NoticeService noticeService,
         PluginConfig config
     ) {
         this.fightTagOutService = fightTagOutService;
         this.noticeService = noticeService;
-        this.durationService = durationService;
         this.config = config;
     }
 
@@ -39,7 +37,7 @@ public class FightTagOutCommand {
 
         this.noticeService.create()
             .notice(this.config.messagesSettings.admin.adminTagOutSelf)
-            .placeholder("{TIME}", durationService.format(time))
+            .placeholder("{TIME}", DurationFormatter.of(config.durationFormat).format(time))
             .viewer(sender)
             .send();
 
@@ -52,13 +50,13 @@ public class FightTagOutCommand {
         this.noticeService.create()
             .notice(this.config.messagesSettings.admin.adminTagOut)
             .placeholder("{PLAYER}", target.getName())
-            .placeholder("{TIME}", durationService.format(time))
+            .placeholder("{TIME}", DurationFormatter.of(config.durationFormat).format(time))
             .viewer(sender)
             .send();
 
         this.noticeService.create()
             .notice(this.config.messagesSettings.admin.playerTagOut)
-            .placeholder("{TIME}", durationService.format(time))
+            .placeholder("{TIME}", DurationFormatter.of(config.durationFormat).format(time))
             .player(target.getUniqueId())
             .send();
 

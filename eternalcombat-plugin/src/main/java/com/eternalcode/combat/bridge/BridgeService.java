@@ -8,7 +8,6 @@ import com.eternalcode.combat.region.RegionProvider;
 import com.eternalcode.combat.region.bukkit.DefaultRegionProvider;
 import com.eternalcode.combat.region.lands.LandsRegionProvider;
 import com.eternalcode.combat.region.worldguard.WorldGuardRegionProvider;
-import com.eternalcode.combat.time.DurationService;
 import org.bukkit.Server;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.PluginManager;
@@ -24,7 +23,6 @@ public class BridgeService {
     private final PluginManager pluginManager;
     private final Logger logger;
     private final Plugin plugin;
-    private final DurationService durationService;
     private final FightManager fightManager;
 
     private RegionProvider regionProvider;
@@ -34,14 +32,12 @@ public class BridgeService {
         PluginManager pluginManager,
         Logger logger,
         Plugin plugin,
-        DurationService durationService,
         FightManager fightManager
     ) {
         this.config = config;
         this.pluginManager = pluginManager;
         this.logger = logger;
         this.plugin = plugin;
-        this.durationService = durationService;
         this.fightManager = fightManager;
     }
 
@@ -74,7 +70,7 @@ public class BridgeService {
 
         initialize(
             "PlaceholderAPI",
-            () -> new FightTagPlaceholder(this.config, durationService, this.fightManager, server, this.plugin).register(),
+            () -> new FightTagPlaceholder(this.config, this.fightManager, server, this.plugin).register(),
             () -> this.logger.warning("PlaceholderAPI not found; skipping placeholders.")
         );
     }

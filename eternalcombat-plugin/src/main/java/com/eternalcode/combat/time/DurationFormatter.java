@@ -1,12 +1,13 @@
 package com.eternalcode.combat.time;
 
+import com.eternalcode.combat.config.implementation.DurationFormatSettings;
 import org.jetbrains.annotations.NotNull;
 
 import java.time.Duration;
 import java.util.ArrayList;
 import java.util.List;
 
-final class DurationFormatter {
+public final class DurationFormatter {
 
     private final Token[] tokens;
     private final String separator;
@@ -14,10 +15,10 @@ final class DurationFormatter {
     private final String zero;
 
     DurationFormatter(
-        @NotNull String pattern,
-        @NotNull String separator,
-        @NotNull String lastSeparator,
-        @NotNull String zero
+        String pattern,
+        String separator,
+        String lastSeparator,
+        String zero
     ) {
         this.tokens = parsePattern(pattern);
         this.separator = separator;
@@ -25,7 +26,20 @@ final class DurationFormatter {
         this.zero = zero;
     }
 
-    String format(Duration duration) {
+    public static DurationFormatter of(
+        @NotNull String pattern,
+        @NotNull String separator,
+        @NotNull String lastSeparator,
+        @NotNull String zero
+    ) {
+        return new DurationFormatter(pattern, separator, lastSeparator, zero);
+    }
+
+    public static DurationFormatter of(@NotNull DurationFormatSettings settings) {
+        return of(settings.pattern, settings.separator, settings.lastSeparator, settings.zero);
+    }
+
+    public String format(Duration duration) {
         if (duration.isZero() || duration.isNegative()) {
             return zero;
         }
@@ -34,7 +48,7 @@ final class DurationFormatter {
         int count = 0;
 
         for (int i = 0; i < tokens.length; i++) {
-            long value = tokens[i].unit.extract(duration);
+            long value = tokens[i].unit.getPart(duration);
             values[i] = value;
 
             if (value > 0) {
