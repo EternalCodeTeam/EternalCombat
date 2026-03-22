@@ -16,7 +16,8 @@ public class MessagesSettings extends OkaeriConfig {
     @Comment({
         " ",
         "# Configure the combat log notification displayed to players.",
-        "# You can use the {TIME} variable to display the remaining combat time.",
+        "# Placeholders: {SECONDS} - displays numeric value of seconds left in combat e.g. \"10\"",
+        "# {TIME} - displays formatted value with metric e.g \"10s\" or \"150ms\"",
         " ",
     })
     public Notice combatNotification = BukkitNotice.builder()
