@@ -38,7 +38,7 @@ public class KillerResolver {
 
     public String resolveKillerName(UUID deadPlayerUUID, Player deadPlayer) {
         Player killer = this.resolveKiller(deadPlayerUUID, deadPlayer);
-        return killer != null ? killer.getName() : this.config.commands.unknownKillerPlaceholder;
+        return killer != null ? killer.getName() : this.config.death.postDeathCommands.unknownKillerPlaceholder;
     }
 }
 

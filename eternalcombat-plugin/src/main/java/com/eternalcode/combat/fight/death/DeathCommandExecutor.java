@@ -1,6 +1,5 @@
 package com.eternalcode.combat.fight.death;
 
-import com.eternalcode.combat.config.implementation.CommandSettings;
 import org.bukkit.Server;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
@@ -15,7 +14,7 @@ public class DeathCommandExecutor {
         this.server = server;
     }
 
-    public void dispatch(CommandSettings.PostDeathSettings settings, Player player, String killerName) {
+    public void dispatch(DeathSettings.PostDeathCommandSettings.PostDeathCommands settings, Player player, String killerName) {
         String playerName = player.getName();
         
         this.dispatch(settings.console, this.server.getConsoleSender(), playerName, killerName);
@@ -35,4 +34,3 @@ public class DeathCommandExecutor {
             .replace("{killer}", killerName);
     }
 }
-

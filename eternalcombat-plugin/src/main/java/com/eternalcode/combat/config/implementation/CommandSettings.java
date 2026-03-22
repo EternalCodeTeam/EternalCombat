@@ -23,28 +23,4 @@ public class CommandSettings extends OkaeriConfig {
         "tpa",
         "tpaccept"
     );
-
-    public PostDeathSettings onDeathInCombat = new PostDeathSettings();
-
-    public PostDeathSettings onAnyDeath = new PostDeathSettings();
-
-    public PostDeathSettings afterRespawn = new PostDeathSettings();
-
-    public PostDeathSettings onUntag = new PostDeathSettings();
-
-    public static class PostDeathSettings extends OkaeriConfig {
-        public List<String> console = List.of();
-        public List<String> player = List.of();
-    }
-
-    @Comment({
-        "# List of commands that will be executed from the killer's perspective after killing a player.",
-        "# Use {player} to represent the name of the player who was killed and {killer} for the killer's name (if applicable)."
-    })
-    public List<String> killerPostDeathCommands = List.of(
-        "say You have killed {player} in combat!"
-    );
-
-    @Comment("# The returned string when the killer is unknown")
-    public String unknownKillerPlaceholder = "Unknown";
 }

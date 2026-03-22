@@ -39,7 +39,7 @@ public class DeathCommandService {
             return;
         }
 
-        this.executor.dispatch(this.config.commands.onUntag, player, this.config.commands.unknownKillerPlaceholder);
+        this.executor.dispatch(this.config.death.postDeathCommands.onUntag, player, this.config.death.postDeathCommands.unknownKillerPlaceholder);
     }
 
     public void handleDeath(Player player) {
@@ -48,7 +48,7 @@ public class DeathCommandService {
 
         this.killerNames.putIfAbsent(playerUUID, killerName);
 
-        this.executor.dispatch(this.config.commands.onAnyDeath, player, killerName);
+        this.executor.dispatch(this.config.death.postDeathCommands.onAnyDeath, player, killerName);
 
         if (this.handledByUntag.remove(playerUUID)) {
             return;
@@ -66,18 +66,18 @@ public class DeathCommandService {
 
         String killerName = this.killerNames.remove(playerUUID);
         if (killerName == null) {
-            killerName = this.config.commands.unknownKillerPlaceholder;
+            killerName = this.config.death.postDeathCommands.unknownKillerPlaceholder;
         }
 
-        this.executor.dispatch(this.config.commands.afterRespawn, player, killerName);
+        this.executor.dispatch(this.config.death.postDeathCommands.afterRespawn, player, killerName);
     }
 
     private void handleDeathInCombat(Player player, String killerName) {
-        this.executor.dispatch(this.config.commands.onDeathInCombat, player, killerName);
+        this.executor.dispatch(this.config.death.postDeathCommands.onDeathInCombat, player, killerName);
 
         Player killer = this.killerResolver.resolveKiller(player.getUniqueId(), player);
         if (killer != null) {
-            this.executor.dispatch(this.config.commands.killerPostDeathCommands, killer, player.getName(), killerName);
+            this.executor.dispatch(this.config.death.postDeathCommands.killerPostDeathCommands, killer, player.getName(), killerName);
         }
     }
 }
