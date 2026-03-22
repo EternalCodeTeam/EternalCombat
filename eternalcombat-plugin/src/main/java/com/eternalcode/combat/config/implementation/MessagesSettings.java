@@ -24,11 +24,6 @@ public class MessagesSettings extends OkaeriConfig {
         .build();
 
     @Comment({
-        "# Would you like to display milliseconds instead of seconds in combat notification "
-    })
-    public boolean withoutMillis = true;
-
-    @Comment({
         "# Message displayed when a player lacks permission to execute a command.",
         "# The {PERMISSION} placeholder is replaced with the required permission."
     })
