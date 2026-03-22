@@ -8,7 +8,7 @@ repositories {
 }
 
 dependencies {
-    implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8:2.3.10")
+    implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8:2.3.20")
     implementation("com.gradleup.shadow:com.gradleup.shadow.gradle.plugin:9.3.2")
     implementation("net.minecrell:plugin-yml:0.6.0")
     implementation("xyz.jpenilla:run-task:3.0.2")
