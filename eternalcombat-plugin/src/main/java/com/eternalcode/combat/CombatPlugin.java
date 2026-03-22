@@ -24,7 +24,8 @@ import com.eternalcode.combat.fight.controller.FightMessageController;
 import com.eternalcode.combat.fight.controller.FightTagController;
 import com.eternalcode.combat.fight.controller.FightUnTagController;
 import com.eternalcode.combat.fight.death.DeathCommandController;
-import com.eternalcode.combat.fight.death.DeathEffectController;
+import com.eternalcode.combat.fight.death.DeathFlareController;
+import com.eternalcode.combat.fight.death.DeathLightningController;
 import com.eternalcode.combat.fight.drop.DropController;
 import com.eternalcode.combat.fight.drop.DropKeepInventoryService;
 import com.eternalcode.combat.fight.drop.DropKeepInventoryServiceImpl;
@@ -183,7 +184,6 @@ public final class CombatPlugin extends JavaPlugin implements EternalCombatApi {
             new FightBypassCreativeController(server, pluginConfig),
             new FightActionBlockerController(this.fightManager, noticeService, pluginConfig, server),
             new FightPearlController(pluginConfig.pearl, noticeService, this.fightManager, this.fightPearlService),
-            new DeathEffectController(pluginConfig),
             new DeathCommandController(pluginConfig, this.fightManager, server),
             new DeathFlareController(pluginConfig, server, scheduler, this),
             new DeathLightningController(pluginConfig, server),
