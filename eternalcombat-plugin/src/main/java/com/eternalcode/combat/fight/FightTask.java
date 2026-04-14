@@ -44,6 +44,7 @@ public class FightTask implements Runnable {
             Duration remaining = fightTag.getRemainingDuration();
 
             String opponent = Optional.ofNullable(fightTag.getTagger())
+                .filter(uuid -> !uuid.equals(playerUniqueId))
                 .map(this.server::getPlayer)
                 .map(Player::getName)
                 .orElse(this.config.messagesSettings.unknownPlayerPlaceholder);
