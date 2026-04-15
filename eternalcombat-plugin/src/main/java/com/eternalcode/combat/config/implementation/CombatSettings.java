@@ -34,6 +34,14 @@ public class CombatSettings extends OkaeriConfig {
     public boolean disableFlying = true;
 
     @Comment({
+        "# Forcefully unequip elytra when a player enters combat.",
+        "# This prevents players from abusing glide by jumping before being tagged.",
+        "# The elytra will be moved to the player's inventory.",
+        "# Recommended: true"
+    })
+    public boolean unequipElytraOnCombat = true;
+
+    @Comment({
         "# Prevent players from boosting themselves while flying with fireworks",
         "# This setting blocks usage of fireworks to boost elytra flight during combat"
     })

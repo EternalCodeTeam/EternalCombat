@@ -16,14 +16,18 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.EntityToggleGlideEvent;
+import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryOpenEvent;
 import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.event.player.PlayerCommandPreprocessEvent;
 import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.event.player.PlayerToggleFlightEvent;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.UUID;
+
+import org.bukkit.inventory.ItemStack;
 import org.bukkit.util.StringUtil;
 
 public class FightActionBlockerController implements Listener {
@@ -109,6 +113,7 @@ public class FightActionBlockerController implements Listener {
 
         if (event.isGliding()) {
             event.setCancelled(true);
+            player.setGliding(false);
         }
     }
 
@@ -127,10 +132,11 @@ public class FightActionBlockerController implements Listener {
 
         if (player.isGliding()) {
             player.setGliding(false);
+
+            player.setFallDistance(0f);
+            player.setVelocity(player.getVelocity().setY(-1));
         }
     }
-
-
 
     @EventHandler
     void onFly(PlayerToggleFlightEvent event) {
@@ -149,6 +155,38 @@ public class FightActionBlockerController implements Listener {
             player.setAllowFlight(false);
 
             event.setCancelled(true);
+        }
+    }
+
+    @EventHandler
+    void onTag(com.eternalcode.combat.fight.event.FightTagEvent event) {
+        UUID uniqueId = event.getPlayer();
+        Player player = this.server.getPlayer(uniqueId);
+
+        if (player == null) {
+            return;
+        }
+
+        if (this.config.combat.disableFlying) {
+            GameMode gameMode = player.getGameMode();
+
+            if (gameMode != GameMode.CREATIVE && gameMode != GameMode.SPECTATOR) {
+                player.setAllowFlight(false);
+                player.setFlying(false);
+            }
+        }
+
+        if (this.config.combat.unequipElytraOnCombat) {
+            ItemStack chest = player.getInventory().getChestplate();
+
+            if (chest != null && chest.getType() == Material.ELYTRA) {
+                removeChestplateIfElytra(player);
+
+                this.noticeService.create()
+                    .player(uniqueId)
+                    .notice(this.config.messagesSettings.elytraDisabledDuringCombat)
+                    .send();
+            }
         }
     }
 
@@ -211,6 +249,51 @@ public class FightActionBlockerController implements Listener {
                 .notice(this.config.messagesSettings.commandDisabledDuringCombat)
                 .send();
 
+        }
+    }
+
+    @EventHandler
+    void onInventoryClick(InventoryClickEvent event) {
+        if (!(event.getWhoClicked() instanceof Player player)) {
+            return;
+        }
+
+        if (!this.config.combat.unequipElytraOnCombat) {
+            return;
+        }
+
+        UUID uniqueId = player.getUniqueId();
+
+        if (!this.fightManager.isInCombat(uniqueId)) {
+            return;
+        }
+
+        if (event.getCurrentItem() == null) {
+            return;
+        }
+
+        if (event.getCurrentItem().getType() == Material.ELYTRA) {
+            event.setCancelled(true);
+
+            this.noticeService.create()
+                .player(uniqueId)
+                .notice(this.config.messagesSettings.elytraDisabledDuringCombat)
+                .send();
+        }
+    }
+
+    private void removeChestplateIfElytra(Player player) {
+        ItemStack chestplate = player.getInventory().getChestplate();
+
+        if (chestplate != null && chestplate.getType() == Material.ELYTRA) {
+            player.getInventory().setChestplate(null);
+
+            HashMap<Integer, ItemStack> leftover = player.getInventory().addItem(chestplate);
+            if (!leftover.isEmpty()) {
+                leftover.values().forEach(item ->
+                    player.getWorld().dropItemNaturally(player.getLocation(), item)
+                );
+            }
         }
     }
 }
