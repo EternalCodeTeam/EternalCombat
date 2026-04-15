@@ -10,7 +10,7 @@ object Versions {
 
     const val ETERNALCODE_COMMONS = "1.3.4"
     const val MULTIFICATION = "1.2.4"
-    const val PACKETS_EVENTS = "2.11.2"
+    const val PACKETS_EVENTS = "2.12.0"
 
     const val ADVENTURE_PLATFORM_BUKKIT = "4.4.1"
     const val ADVENTURE_API = "4.26.1"
@@ -24,10 +24,10 @@ object Versions {
     const val CAFFEINE = "3.2.3"
 
     const val B_STATS_BUKKIT = "3.2.1"
-    const val WORLD_GUARD_BUKKIT = "7.0.15"
+    const val WORLD_GUARD_BUKKIT = "7.0.16"
 
     const val PLACEHOLDER_API = "2.12.2"
-    const val LANDS_API = "7.24.1"
+    const val LANDS_API = "7.25.4"
     const val PAPERLIB = "1.0.8"
 
     const val WORLDEDIT = "3ISh7ADm" //cannot use numeric version bc of duplicated version on modrinth
