@@ -3,7 +3,6 @@ package com.eternalcode.combat;
 public final class FoliaChecker {
 
     private static final String FOLIA_CLASS = "io.papermc.paper.threadedregions.RegionizedServer";
-    private static Boolean isFoliaPresent = null;
 
     private FoliaChecker() {
         throw new UnsupportedOperationException("This is a utility class and cannot be instantiated");
@@ -13,24 +12,14 @@ public final class FoliaChecker {
         return detectFoliaEnvironment();
     }
 
-    private static synchronized boolean detectFoliaEnvironment() {
-        if (isFoliaPresent != null) {
-            return isFoliaPresent;
-        }
-
+    private static boolean detectFoliaEnvironment() {
         try {
             Class.forName(FOLIA_CLASS);
-            isFoliaPresent = true;
+            return true;
         }
         catch (ClassNotFoundException exception) {
-            isFoliaPresent = false;
+            return false;
         }
-
-        return isFoliaPresent;
-    }
-
-    public static void clearCache() {
-        isFoliaPresent = null;
     }
 
 }
