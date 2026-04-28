@@ -71,6 +71,15 @@ public class MessagesSettings extends OkaeriConfig {
         "<gradient:red:yellow>⚠ <white>Command blocked!</white> Cannot use this during combat!</gradient>");
 
     @Comment({
+        "# Message displayed when a player attempts to use an elytra during combat.",
+        "# This includes gliding, equipping, or having it forcefully removed.",
+        "# Informs the player that elytra usage is disabled in combat."
+    })
+    public Notice elytraDisabledDuringCombat = Notice.chat(
+        "<gradient:red:yellow>⚠ <white>Elytra disabled!</white> Cannot use elytra during combat!</gradient>"
+    );
+
+    @Comment({
         "# Message displayed when a player uses a command with incorrect arguments.",
         "# The {USAGE} placeholder is replaced with the correct command syntax."
     })
