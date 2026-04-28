@@ -1,20 +1,21 @@
 package com.eternalcode.combat.bridge;
 
-import com.eternalcode.combat.region.lands.LandsRegionProvider;
 import com.eternalcode.combat.bridge.placeholder.FightTagPlaceholder;
 import com.eternalcode.combat.config.implementation.PluginConfig;
 import com.eternalcode.combat.fight.FightManager;
 import com.eternalcode.combat.region.CompositeRegionProvider;
-import com.eternalcode.combat.region.bukkit.DefaultRegionProvider;
 import com.eternalcode.combat.region.RegionProvider;
+import com.eternalcode.combat.region.bukkit.DefaultRegionProvider;
+import com.eternalcode.combat.region.lands.LandsRegionProvider;
 import com.eternalcode.combat.region.worldguard.WorldGuardRegionProvider;
+import org.bukkit.Server;
+import org.bukkit.plugin.Plugin;
+import org.bukkit.plugin.PluginManager;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
-import org.bukkit.Server;
-import org.bukkit.plugin.Plugin;
-import org.bukkit.plugin.PluginManager;
 
 public class BridgeService {
 

@@ -8,6 +8,7 @@ import com.eternalcode.combat.fight.knockback.KnockbackSettings;
 import com.eternalcode.combat.fight.pearl.FightPearlSettings;
 import eu.okaeri.configs.OkaeriConfig;
 import eu.okaeri.configs.annotation.Comment;
+
 import java.time.Duration;
 import java.util.List;
 
@@ -28,6 +29,13 @@ public class PluginConfig extends OkaeriConfig {
         "# Modify these to customize the plugin's behavior."
     })
     public Settings settings = new Settings();
+
+    @Comment({
+        " ",
+        "# Duration formatting settings.",
+        "# Controls how time values (e.g. cooldowns, timers) are displayed."
+    })
+    public DurationFormatSettings durationFormat = new DurationFormatSettings();
 
     @Comment({
         " ",
