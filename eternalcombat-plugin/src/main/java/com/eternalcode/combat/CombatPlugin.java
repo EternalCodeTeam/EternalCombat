@@ -8,10 +8,13 @@ import com.eternalcode.combat.border.animation.particle.ParticleController;
 import com.eternalcode.combat.bridge.BridgeService;
 import com.eternalcode.combat.crystalpvp.RespawnAnchorListener;
 import com.eternalcode.combat.crystalpvp.EndCrystalListener;
+import com.eternalcode.combat.fight.blocker.CommandsBlocker;
+import com.eternalcode.combat.fight.blocker.ElytraBlocker;
+import com.eternalcode.combat.fight.blocker.FlyingBlocker;
 import com.eternalcode.combat.fight.controller.FightBypassAdminController;
 import com.eternalcode.combat.fight.controller.FightBypassCreativeController;
 import com.eternalcode.combat.fight.controller.FightBypassPermissionController;
-import com.eternalcode.combat.fight.controller.FightInventoryController;
+import com.eternalcode.combat.fight.blocker.InventoryContainersBlocker;
 import com.eternalcode.combat.fight.death.DeathFlareController;
 import com.eternalcode.combat.fight.death.DeathLightningController;
 import com.eternalcode.combat.fight.drop.DropKeepInventoryService;
@@ -32,7 +35,7 @@ import com.eternalcode.combat.fight.drop.DropServiceImpl;
 import com.eternalcode.combat.fight.drop.impl.PercentDropModifier;
 import com.eternalcode.combat.fight.drop.impl.PlayersHealthDropModifier;
 import com.eternalcode.combat.fight.FightTagCommand;
-import com.eternalcode.combat.fight.controller.FightActionBlockerController;
+import com.eternalcode.combat.fight.blocker.PlaceBlockBlocker;
 import com.eternalcode.combat.fight.controller.FightMessageController;
 import com.eternalcode.combat.fight.controller.FightTagController;
 import com.eternalcode.combat.fight.controller.FightUnTagController;
@@ -181,7 +184,7 @@ public final class CombatPlugin extends JavaPlugin implements EternalCombatApi {
             new FightBypassAdminController(server, pluginConfig),
             new FightBypassPermissionController(server, pluginConfig),
             new FightBypassCreativeController(server, pluginConfig),
-            new FightActionBlockerController(this.fightManager, noticeService, pluginConfig, server),
+            new PlaceBlockBlocker(this.fightManager, noticeService, pluginConfig),
             new FightPearlController(pluginConfig.pearl, noticeService, this.fightManager, this.fightPearlService),
             new DeathFlareController(pluginConfig, server, scheduler, this),
             new DeathLightningController(pluginConfig, server),
@@ -196,7 +199,11 @@ public final class CombatPlugin extends JavaPlugin implements EternalCombatApi {
             new EndCrystalListener(this, this.fightManager, pluginConfig),
             new RespawnAnchorListener(this, this.fightManager, pluginConfig),
             new FireworkController(this.fightManager, pluginConfig, noticeService),
-            new FightInventoryController(this.fightManager, pluginConfig, noticeService)
+            new InventoryContainersBlocker(this.fightManager, pluginConfig, noticeService),
+            new CommandsBlocker(this.fightManager, noticeService, pluginConfig),
+            new ElytraBlocker(this.fightManager, noticeService, pluginConfig, server),
+            new FlyingBlocker(this.fightManager, pluginConfig, server),
+            new PlaceBlockBlocker(this.fightManager, noticeService, pluginConfig)
         );
 
         eventManager.subscribe(
