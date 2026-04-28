@@ -17,16 +17,23 @@ public class MessagesSettings extends OkaeriConfig {
         " ",
         "# Configure the combat log notification displayed to players.",
         "# You can use the {TIME} variable to display the remaining combat time.",
+        "# Placeholder {OPPONENT} will be replaced with player name or 'unknownPlayerPlaceholder' variable",
         " ",
     })
     public Notice combatNotification = BukkitNotice.builder()
-        .actionBar("Combat ends in: <red>{TIME}</red>")
+        .actionBar("Combat ends in: <red>{TIME}</red> | Enemy: <red>{OPPONENT}</red> ⚔")
         .build();
 
     @Comment({
         "# Would you like to display milliseconds instead of seconds in combat notification "
     })
     public boolean withoutMillis = true;
+
+    @Comment({
+        " ",
+        "# When player is not known this text will be used as {OPPONENT} in 'combatNotification'"
+    })
+    public String unknownPlayerPlaceholder = "Unknown";
 
     @Comment({
         "# Message displayed when a player lacks permission to execute a command.",
