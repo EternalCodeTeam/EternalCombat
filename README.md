@@ -9,6 +9,15 @@
 [![Chat on Discord](https://raw.githubusercontent.com/vLuckyyy/badges/main//chat-with-us-on-discord.svg)](https://discord.com/invite/FQ7jmGBd6c)
 [![Read the Docs](https://raw.githubusercontent.com/vLuckyyy/badges/main/read-the-documentation.svg)](https://docs.eternalcode.pl/eternalcombat/introduction)
 [![Available on BStats](https://raw.githubusercontent.com/vLuckyyy/badges/main/available-on-bstats.svg)](https://bstats.org/plugin/bukkit/EternalCombat/17803)
+
+[Report Bug](https://github.com/EternalCodeTeam/EternalCombat/issues) • [Request Feature](https://github.com/EternalCodeTeam/EternalCombat/issues) • [Join Discord](https://discord.com/invite/FQ7jmGBd6c)
+
+<br>
+
+<a href="https://ko-fi.com/eternalcodeteam">
+  <img src="https://github.com/intergrav/devins-badges/blob/v3/assets/cozy/donate/kofi-plural-alt_64h.png?raw=true" height="64" alt="Support us on Ko-fi">
+</a>
+
 </div>
 
 ### Information
@@ -16,11 +25,11 @@
 ## EternalCombat requires PacketEvents plugin to work.
 You can download it from [here](https://modrinth.com/plugin/packetevents)
 
-EternalCombat 2.0 has been tested on Minecraft versions **1.17.1 to 1.21.9**, but it should work seamlessly on most
+EternalCombat 2.0 has been tested on Minecraft versions **1.17.1 to 1.21.11**, but it should work seamlessly on most
 other versions too.
 If you run into any compatibility issues, please let us know in
 the [Issues tab](https://github.com/EternalCodeTeam/EternalCombat/issues).
-The plugin requires **Java 17 or later**, so
+The plugin requires **Java 21 or later**, so
 ensure your server is ready.
 Ready for action?
 Install EternalCombat and dive in now!
@@ -34,17 +43,22 @@ fair, heart-pounding battles that keep players on their toes. Here’s a rundown
 - **Combat Logging**  
   No more dodging fights by logging out! Once players are in combat, they’re committed until the showdown ends. Watch it
   in action:  
-  ![Combat log anti logout feature](https://github.com/EternalCodeTeam/EternalCombat/blob/master/assets/combatlog.gif?raw=true)
+  <img alt="Combat log anti logout feature" src="https://github.com/EternalCodeTeam/EternalCombat/blob/master/assets/combatlog.gif?raw=true" width="420">
+
+- **Customize combat experience**
+  Add custom effects to players in combat or death. Everything should be configurable and user-friendly:
+  <img alt="Lightning strikes when players die" src="https://github.com/EternalCodeTeam/EternalCombat/blob/master/assets/lightning.gif?raw=true" width="420">
+  <img alt="Flare indicates players death location" src="https://github.com/EternalCodeTeam/EternalCombat/blob/master/assets/flare.gif?raw=true" width="420">
 
 - **Spawn Protection (Configurable)**  
   Stop players from fleeing to safety! Block access to spawn or safe zones during combat – tweak it to fit your server’s
   rules. See how it works:  
-  ![Border around protected region](https://github.com/EternalCodeTeam/EternalCombat/blob/master/assets/border.gif?raw=true)
+  <img alt="Border around protected region" src="https://github.com/EternalCodeTeam/EternalCombat/blob/master/assets/border.gif?raw=true" width="420">
 
 - **Crystal PvP support**  
   Engage in intense Crystal PvP battles without worrying about players logging out mid-fight! EternalCombat keeps
-  everyone in the game until the last anchor hit. Check it out:  
-  ![Crystal PvP showcase](https://github.com/EternalCodeTeam/EternalCombat/blob/master/assets/crystals.gif?raw=true)
+  everyone in the game until the last anchor hit. Check it out:
+  <img alt="Crystal PvP showcase" src="https://github.com/EternalCodeTeam/EternalCombat/blob/master/assets/crystals.gif?raw=true" width="420">
 
 - **Fully Customizable Combat**  
   Tailor the combat experience to your liking with a ton of options! From disabling elytra to setting drop rates for
@@ -68,16 +82,16 @@ EternalCombat in full swing and learn why it’s a game-changer for your server!
 
 Control who can use EternalCombat’s powerful features with these permissions:
 
-| Permission                     | Description                                                              |
-|--------------------------------|--------------------------------------------------------------------------|
-| `eternalcombat.status`         | Check a player’s combat status with `/combatlog status <player>`.        |
-| `eternalcombat.tag`            | Start a fight between players using `/combatlog tag <player> [player2]`. |
-| `eternalcombat.untag`          | Remove a player from combat with `/combatlog untag <player>`.            |
+| Permission                     | Description                                                                                           |
+|--------------------------------|-------------------------------------------------------------------------------------------------------|
+| `eternalcombat.status`         | Check a player’s combat status with `/combatlog status <player>`.                                     |
+| `eternalcombat.tag`            | Start a fight between players using `/combatlog tag <player> [player2]`.                              |
+| `eternalcombat.untag`          | Remove a player from combat with `/combatlog untag <player>`.                                         |
 | `eternalcombat.untagall`       | Remove all players from combat with `/combatlog untagall`.               |
 | `eternalcombat.stats`          | View combat statistics with `/combatlog stats`.                          |
-| `eternalcombat.reload`         | Reload the plugin with `/combatlog reload`.                              |
-| `eternalcombat.receiveupdates` | Receive notifications about new plugin versions on join.                 |
-| `eternalcombat.bypass`         | Bypass combat tagging, need's `excludeAdminsFromCombat` to be enabled    |
+| `eternalcombat.reload`         | Reload the plugin with `/combatlog reload`.                                                           |
+| `eternalcombat.receiveupdates` | Receive notifications about new plugin versions on join.                                              |
+| `eternalcombat.bypass`         | When exclude `excludeAdminsFromCombat` is set to `true` users with this permission will not be tagged |
 
 ## PlaceholderAPI
 
@@ -125,7 +139,7 @@ With Maven:
 With Gradle:
 
 ```kts
-compileOnly("com.eternalcode:eternalcombat-api:2.3.0")
+compileOnly("com.eternalcode:eternalcombat-api:2.5.0-SNAPSHOT")
 ```
 
 With Maven:
@@ -135,7 +149,7 @@ With Maven:
 <dependency>
     <groupId>com.eternalcode</groupId>
     <artifactId>eternalcombat-api</artifactId>
-    <version>2.3.0</version>
+    <version>2.5.0-SNAPSHOT</version>
     <scope>provided</scope>
 </dependency>
 ```

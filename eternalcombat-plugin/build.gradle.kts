@@ -1,4 +1,6 @@
 import net.minecrell.pluginyml.bukkit.BukkitPluginDescription
+import io.papermc.hangarpublishplugin.model.Platforms
+import org.gradle.kotlin.dsl.shadowJar
 
 plugins {
     `eternalcombat-java`
@@ -7,6 +9,8 @@ plugins {
     id("net.minecrell.plugin-yml.bukkit")
     id("com.gradleup.shadow")
     id("xyz.jpenilla.run-paper")
+    id("com.modrinth.minotaur") version "2.9.0"
+    id("io.papermc.hangar-publish-plugin") version "0.1.4"
 }
 
 configurations.all {
@@ -40,6 +44,9 @@ dependencies {
     implementation("eu.okaeri:okaeri-configs-serdes-commons:${Versions.OKAERI_CONFIGS_SERDES_COMMONS}")
     implementation("eu.okaeri:okaeri-configs-serdes-bukkit:${Versions.OKAERI_CONFIGS_SERDES_BUKKIT}")
 
+    // XSeries
+    implementation("com.github.cryptomorin:XSeries:${Versions.XSERIES}")
+
     // bstats
     implementation("org.bstats:bstats-bukkit:${Versions.B_STATS_BUKKIT}")
 
@@ -59,7 +66,7 @@ dependencies {
     compileOnly("me.clip:placeholderapi:${Versions.PLACEHOLDER_API}")
 
     // Lands
-    compileOnly("com.github.angeschossen:LandsAPI:7.17.2")
+    compileOnly("com.github.angeschossen:LandsAPI:${Versions.LANDS_API}")
 
     // Multification
     implementation("com.eternalcode:multification-bukkit:${Versions.MULTIFICATION}")
@@ -76,7 +83,8 @@ bukkit {
     name = "EternalCombat"
     load = BukkitPluginDescription.PluginLoadOrder.POSTWORLD
     softDepend = listOf(
-        "Lands"
+        "Lands",
+        "WorldGuard"
     )
     depend = listOf(
         "packetevents",
@@ -89,11 +97,10 @@ bukkit {
 tasks {
     runServer {
         minecraftVersion("1.21.11")
-        downloadPlugins {
-            modrinth("packetevents", "2.11.1+spigot")
-            url("https://cdn.modrinth.com/data/1u6JkXh5/versions/XlUIRmF8/worldedit-bukkit-7.3.18.jar")
-            url("https://cdn.modrinth.com/data/DKY9btbd/versions/WaElxvDz/worldguard-bukkit-7.0.15.jar")
-        }
+        downloadPlugins.modrinth("WorldEdit", Versions.WORLDEDIT)
+        downloadPlugins.modrinth("PacketEvents", "${Versions.PACKETEVENTS}+spigot")
+        downloadPlugins.modrinth("WorldGuard", Versions.WORLDGUARD)
+        downloadPlugins.modrinth("LuckPerms", "v${Versions.LUCKPERMS}-bukkit")
     }
 }
 
@@ -122,8 +129,60 @@ tasks.shadowJar {
         "com.github.benmanes.caffeine",
         "com.eternalcode.commons",
         "com.eternalcode.multification",
-        "io.papermc.lib"
+        "com.github.cryptomorin",
+        "io.papermc.lib",
     ).forEach { pack ->
         relocate(pack, "$prefix.$pack")
+    }
+}
+
+val isGithubWorkflow = providers.environmentVariable("GITHUB_RUN_NUMBER").isPresent
+val isRelease = providers.environmentVariable("GITHUB_EVENT_NAME").orNull == "release"
+val isSnapshot = !isRelease
+
+if (isGithubWorkflow && isSnapshot) {
+    val parts = providers.exec { commandLine("git", "describe", "--tags", "--long") }
+        .standardOutput.asText.get().trim()
+        .split("-")
+
+    val offset = if (parts.size >= 3) parts[parts.size - 2] else "0"
+    val baseVersion = project.version.toString().replace("-SNAPSHOT", "")
+    version = "$baseVersion-SNAPSHOT+$offset"
+}
+
+val changelogText = providers.environmentVariable("CHANGELOG")
+    .orElse(providers.exec { commandLine("git", "log", "-1", "--format=%B") }.standardOutput.asText)
+
+val paperVersions = property("paperVersion").toString()
+    .split(",")
+    .map { it.trim() }
+
+val releaseChannel = if (isRelease) "Release" else "Snapshot"
+
+modrinth {
+    token.set(providers.environmentVariable("MODRINTH_TOKEN"))
+    projectId.set("eternalcombat")
+    versionNumber.set(project.version.toString())
+    versionType.set(if (isRelease) "release" else "beta")
+    uploadFile.set(tasks.shadowJar)
+    gameVersions.addAll(paperVersions)
+    loaders.addAll(listOf("paper", "spigot", "folia", "purpur"))
+    changelog.set(changelogText)
+    syncBodyFrom.set(rootProject.file("README.md").readText())
+}
+
+hangarPublish {
+    publications.register("plugin") {
+        version.set(project.version.toString())
+        channel.set(releaseChannel)
+        changelog.set(changelogText)
+        id.set("eternalcombat")
+        apiKey.set(providers.environmentVariable("HANGAR_API_TOKEN"))
+        platforms {
+            register(Platforms.PAPER) {
+                jar.set(tasks.shadowJar.flatMap { it.archiveFile })
+                platformVersions.set(paperVersions)
+            }
+        }
     }
 }

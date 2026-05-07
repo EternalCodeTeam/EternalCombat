@@ -1,6 +1,7 @@
 package com.eternalcode.combat.config.implementation;
 
 import com.eternalcode.combat.border.BorderSettings;
+import com.eternalcode.combat.fight.death.DeathSettings;
 import com.eternalcode.combat.fight.drop.DropSettings;
 import com.eternalcode.combat.fight.effect.FightEffectSettings;
 import com.eternalcode.combat.fight.knockback.KnockbackSettings;
@@ -41,6 +42,12 @@ public class PluginConfig extends OkaeriConfig {
         "# Configure effects like blindness, slowness, or other debuffs that are applied to players in combat."
     })
     public FightEffectSettings effect = new FightEffectSettings();
+
+    @Comment({
+        " ",
+        "# This section contains effects displayed on death of the player"
+    })
+    public DeathSettings death = new DeathSettings();
 
     @Comment({
         " ",
@@ -104,6 +111,13 @@ public class PluginConfig extends OkaeriConfig {
         "# Configure combat rules, and behaviors for player tagging."
     })
     public CombatSettings combat = new CombatSettings();
+
+    @Comment({
+        " ",
+        "# Settings related to inventory access during combat.",
+        "# Configure which inventories players can or cannot access while in combat."
+    })
+    public InventorySettings inventory = new InventorySettings();
 
     @Comment({
         " ",

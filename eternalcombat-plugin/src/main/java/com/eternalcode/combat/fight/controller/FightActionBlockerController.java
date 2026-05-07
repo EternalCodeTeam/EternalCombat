@@ -17,6 +17,7 @@ import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.EntityToggleGlideEvent;
 import org.bukkit.event.inventory.InventoryOpenEvent;
+import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.event.player.PlayerCommandPreprocessEvent;
 import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.event.player.PlayerToggleFlightEvent;
@@ -183,28 +184,6 @@ public class FightActionBlockerController implements Listener {
         if (this.fightManager.isInCombat(uniqueId) && player.isGliding()) {
             player.setGliding(false);
         }
-    }
-
-    @EventHandler
-    void onOpenInventory(InventoryOpenEvent event) {
-        if (!this.config.combat.disableInventoryAccess) {
-            return;
-        }
-
-        Player player = (Player) event.getPlayer();
-        UUID uniqueId = player.getUniqueId();
-
-        if (!this.fightManager.isInCombat(uniqueId)) {
-            return;
-        }
-
-        event.setCancelled(true);
-
-        this.noticeService.create()
-            .player(uniqueId)
-            .notice(this.config.messagesSettings.inventoryBlockedDuringCombat)
-            .send();
-
     }
 
     @EventHandler

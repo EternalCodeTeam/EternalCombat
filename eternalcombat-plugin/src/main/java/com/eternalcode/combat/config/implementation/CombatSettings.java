@@ -40,12 +40,6 @@ public class CombatSettings extends OkaeriConfig {
     public boolean disableFireworks = true;
 
     @Comment({
-        "# Prevent players from opening their inventory during combat.",
-        "# Set to 'true' to block inventory access while in combat."
-    })
-    public boolean disableInventoryAccess = false;
-
-    @Comment({
         "# Enable or disable combat logging for damage caused by non-player entities.",
         "# Set to 'true' to log damage from non-player sources, or 'false' to disable this feature."
     })
