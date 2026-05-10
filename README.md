@@ -45,7 +45,7 @@ fair, heart-pounding battles that keep players on their toes. Here’s a rundown
   in action:  
   <img alt="Combat log anti logout feature" src="https://github.com/EternalCodeTeam/EternalCombat/blob/master/assets/combatlog.gif?raw=true" width="420">
 
-- **Customize combat experience**  
+- **Customize combat experience**
   Add custom effects to players in combat or death. Everything should be configurable and user-friendly:
   <img alt="Lightning strikes when players die" src="https://github.com/EternalCodeTeam/EternalCombat/blob/master/assets/lightning.gif?raw=true" width="420">
   <img alt="Flare indicates players death location" src="https://github.com/EternalCodeTeam/EternalCombat/blob/master/assets/flare.gif?raw=true" width="420">
@@ -87,6 +87,8 @@ Control who can use EternalCombat’s powerful features with these permissions:
 | `eternalcombat.status`         | Check a player’s combat status with `/combatlog status <player>`.                                     |
 | `eternalcombat.tag`            | Start a fight between players using `/combatlog tag <player> [player2]`.                              |
 | `eternalcombat.untag`          | Remove a player from combat with `/combatlog untag <player>`.                                         |
+| `eternalcombat.untagall`       | Remove all players from combat with `/combatlog untagall`.               |
+| `eternalcombat.stats`          | View combat statistics with `/combatlog stats`.                          |
 | `eternalcombat.reload`         | Reload the plugin with `/combatlog reload`.                                                           |
 | `eternalcombat.receiveupdates` | Receive notifications about new plugin versions on join.                                              |
 | `eternalcombat.bypass`         | When exclude `excludeAdminsFromCombat` is set to `true` users with this permission will not be tagged |

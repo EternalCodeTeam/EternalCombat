@@ -16,10 +16,8 @@ import dev.rollczi.litecommands.annotations.permission.Permission;
 import dev.rollczi.litecommands.annotations.priority.Priority;
 import dev.rollczi.litecommands.annotations.priority.PriorityValue;
 import java.time.Duration;
-import java.util.Set;
 import java.util.UUID;
 import java.util.stream.Collectors;
-
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
@@ -49,7 +47,6 @@ public class FightTagCommand {
             .placeholder("{PLAYER}", target.getName())
             .viewer(sender)
             .send();
-
     }
 
     @Execute(name = "tag")
@@ -74,7 +71,6 @@ public class FightTagCommand {
             .placeholder("{PLAYER}", target.getName())
             .viewer(sender)
             .send();
-
     }
 
     @Execute(name = "tag")
@@ -122,7 +118,6 @@ public class FightTagCommand {
             .placeholder("{SECOND_PLAYER}", secondTarget.getName())
             .viewer(sender)
             .send();
-
     }
 
     @Execute(name = "untag")
@@ -143,7 +138,6 @@ public class FightTagCommand {
         if (event.isCancelled()) {
             return;
         }
-
 
         this.noticeService.create()
             .notice(this.config.messagesSettings.admin.adminUntagPlayer)
@@ -169,13 +163,28 @@ public class FightTagCommand {
             .send();
     }
 
-    private void tagoutReasonHandler(CommandSender sender, CancelTagReason cancelReason, MessagesSettings messagesSettings) {
+    @Execute(name = "stats")
+    @Permission("eternalcombat.stats")
+    void stats(@Context CommandSender sender) {
+        long activeCombatPlayers = this.fightManager.getFights().stream()
+            .filter(fightTag -> !fightTag.isExpired())
+            .count();
+
+        this.noticeService.create()
+            .notice(this.config.messagesSettings.admin.combatStats)
+            .placeholder("{COUNT}", String.valueOf(activeCombatPlayers))
+            .viewer(sender)
+            .send();
+    }
+
+    private void tagoutReasonHandler(
+        CommandSender sender, CancelTagReason cancelReason,
+        MessagesSettings messagesSettings) {
         if (cancelReason == CancelTagReason.TAGOUT) {
             this.noticeService.create()
                 .notice(messagesSettings.admin.adminTagOutCanceled)
                 .viewer(sender)
                 .send();
-
         }
     }
 }
