@@ -87,7 +87,8 @@ public class PluginConfig extends OkaeriConfig {
     @Comment({
         " ",
         "# Settings related to commands during combat.",
-        "# Configure command restrictions and behaviors for players in combat."
+        "# Configure command restrictions and behaviors for players in combat.",
+        "# You can also execute which commands will be executed post-death and on logout of the player."
     })
     public CommandSettings commands = new CommandSettings();
 
