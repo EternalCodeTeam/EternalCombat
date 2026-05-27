@@ -100,6 +100,10 @@ paper {
 }
 
 tasks {
+    named("generatePaperPluginDescription") {
+        notCompatibleWithConfigurationCache("The plugin-yml paper generator reads Task.project during execution.")
+    }
+
     runServer {
         minecraftVersion("1.21.11")
         downloadPlugins.modrinth("WorldEdit", Versions.WORLDEDIT)
