@@ -1,6 +1,5 @@
 package com.eternalcode.combat.config.implementation;
 
-import com.eternalcode.multification.bukkit.notice.BukkitNotice;
 import com.eternalcode.multification.notice.Notice;
 import eu.okaeri.configs.OkaeriConfig;
 import eu.okaeri.configs.annotation.Comment;
@@ -19,7 +18,7 @@ public class MessagesSettings extends OkaeriConfig {
             "# You can use the {TIME} variable to display the remaining combat time.",
             " ",
     })
-    public Notice combatNotification = BukkitNotice.builder()
+    public Notice combatNotification = Notice.builder()
             .actionBar("Combat ends in: <red>{TIME}</red>")
             .build();
 
