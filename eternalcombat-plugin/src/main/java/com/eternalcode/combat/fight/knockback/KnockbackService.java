@@ -4,16 +4,17 @@ import com.eternalcode.combat.config.implementation.PluginConfig;
 import com.eternalcode.combat.region.Region;
 import com.eternalcode.combat.region.RegionProvider;
 import com.eternalcode.commons.bukkit.scheduler.MinecraftScheduler;
-import io.papermc.lib.PaperLib;
+import java.time.Duration;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Optional;
+import java.util.UUID;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.entity.Player;
 import org.bukkit.event.player.PlayerTeleportEvent.TeleportCause;
 import org.bukkit.util.Vector;
-
-import java.time.Duration;
-import java.util.*;
 
 public final class KnockbackService {
 
@@ -89,9 +90,9 @@ public final class KnockbackService {
         scheduler.runLater(player.getLocation(), () -> {
             insideRegion.remove(playerId);
 
-            Location loc = player.getLocation();
+            Location playerLocation = player.getLocation();
 
-            if (!region.contains(loc)) {
+            if (!region.contains(playerLocation) && !regionProvider.isInRegion(playerLocation)) {
                 return;
             }
 
@@ -99,8 +100,8 @@ public final class KnockbackService {
                 player.leaveVehicle();
             }
 
-            generate(player.getLocation(), Point2D.from(region.getMin()), Point2D.from(region.getMax()), 0)
-                .ifPresent(location -> PaperLib.teleportAsync(player, location, TeleportCause.PLUGIN));
+            generate(playerLocation, Point2D.from(region.getMin()), Point2D.from(region.getMax()), 0)
+                .ifPresent(location -> player.teleportAsync(location, TeleportCause.PLUGIN));
         }, config.knockback.forceTeleport.delay);
     }
 
@@ -126,7 +127,6 @@ public final class KnockbackService {
 
     private Optional<Location> makeSafe(Location random) {
         Location maybeSafe = random.clone();
-        random.getWorld();
         int minY = maybeSafe.getBlockY() - DEPTH_OF_SEARCHING;
 
         CachedPillarOfBlocks pillar = new CachedPillarOfBlocks(maybeSafe.getBlockX(), maybeSafe.getBlockZ(), maybeSafe.getWorld());
