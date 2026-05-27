@@ -6,7 +6,7 @@ plugins {
 }
 
 dependencies {
-    // Spigot api
-    compileOnlyApi("org.spigotmc:spigot-api:${Versions.SPIGOT_API}")
+    // Paper api
+    compileOnlyApi("io.papermc.paper:paper-api:${Versions.PAPER_API}")
     api("org.jetbrains:annotations:${Versions.JETBRAINS_ANNOTATIONS}")
 }

@@ -5,7 +5,6 @@ import com.eternalcode.combat.region.Point;
 import com.eternalcode.combat.region.Region;
 import com.eternalcode.combat.region.RegionProvider;
 import com.eternalcode.commons.bukkit.scheduler.MinecraftScheduler;
-import io.papermc.lib.PaperLib;
 import java.time.Duration;
 import java.util.HashMap;
 import java.util.Map;
@@ -55,7 +54,7 @@ public final class KnockbackService {
 
             Location location = generate(playerLocation, Point2D.from(region.getMin()), Point2D.from(region.getMax()));
 
-            PaperLib.teleportAsync(player, location, TeleportCause.PLUGIN);
+            player.teleportAsync(location, TeleportCause.PLUGIN);
         }, this.config.knockback.forceDelay);
     }
 

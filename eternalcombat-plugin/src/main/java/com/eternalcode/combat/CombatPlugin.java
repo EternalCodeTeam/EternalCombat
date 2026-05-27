@@ -63,8 +63,6 @@ import dev.rollczi.litecommands.bukkit.LiteBukkitFactory;
 import dev.rollczi.litecommands.bukkit.LiteBukkitMessages;
 import dev.rollczi.litecommands.folia.FoliaExtension;
 import java.time.Duration;
-import net.kyori.adventure.platform.AudienceProvider;
-import net.kyori.adventure.platform.bukkit.BukkitAudiences;
 import net.kyori.adventure.text.minimessage.MiniMessage;
 import org.bstats.bukkit.Metrics;
 import org.bukkit.Server;
@@ -92,7 +90,6 @@ public final class CombatPlugin extends JavaPlugin implements EternalCombatApi {
 
     private RegionProvider regionProvider;
 
-    private AudienceProvider audienceProvider;
     private LiteCommands<CommandSender> liteCommands;
 
 
@@ -122,13 +119,12 @@ public final class CombatPlugin extends JavaPlugin implements EternalCombatApi {
 
         UpdaterService updaterService = new UpdaterService(this.getDescription());
 
-        this.audienceProvider = BukkitAudiences.create(this);
         MiniMessage miniMessage = MiniMessage.builder()
             .postProcessor(new AdventureLegacyColorPostProcessor())
             .preProcessor(new AdventureLegacyColorPreProcessor())
             .build();
 
-        NoticeService noticeService = new NoticeService(this.audienceProvider, pluginConfig, miniMessage);
+        NoticeService noticeService = new NoticeService(pluginConfig, miniMessage);
 
         BridgeService bridgeService = new BridgeService(
             pluginConfig,
@@ -185,7 +181,7 @@ public final class CombatPlugin extends JavaPlugin implements EternalCombatApi {
             new FightPearlController(pluginConfig.pearl, noticeService, this.fightManager, this.fightPearlService),
             new DeathFlareController(pluginConfig, server, scheduler, this),
             new DeathLightningController(pluginConfig, server),
-            new UpdaterNotificationController(updaterService, pluginConfig, this.audienceProvider, miniMessage),
+            new UpdaterNotificationController(updaterService, pluginConfig, miniMessage),
             new KnockbackRegionController(noticeService, this.regionProvider, this.fightManager, knockbackService, server),
             new FightEffectController(pluginConfig.effect, this.fightEffectService, this.fightManager, server),
             new FightTagOutController(this.fightTagOutService),
@@ -223,10 +219,6 @@ public final class CombatPlugin extends JavaPlugin implements EternalCombatApi {
 
         if (this.liteCommands != null) {
             this.liteCommands.unregister();
-        }
-
-        if (this.audienceProvider != null) {
-            this.audienceProvider.close();
         }
 
         this.fightManager.untagAll();

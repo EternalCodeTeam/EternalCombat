@@ -4,7 +4,6 @@ import com.eternalcode.combat.fight.FightManager;
 import com.eternalcode.combat.fight.event.CauseOfUnTag;
 import com.eternalcode.combat.fight.event.FightTagEvent;
 import com.eternalcode.combat.fight.event.FightUntagEvent;
-import org.bukkit.Bukkit;
 import org.bukkit.Server;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -50,9 +49,11 @@ public class FightEffectController implements Listener {
         }
 
         if (event.getCause() == CauseOfUnTag.LOGOUT) {
-            Player player = Bukkit.getPlayer(event.getPlayer());
+            Player player = this.server.getPlayer(event.getPlayer());
+            if (player == null) {
+                return;
+            }
 
-            assert player != null;
             this.effectService.clearStoredEffects(player);
         }
     }
@@ -80,9 +81,11 @@ public class FightEffectController implements Listener {
             return;
         }
         if (event.getCause() == CauseOfUnTag.DEATH_BY_PLAYER || event.getCause() == CauseOfUnTag.DEATH) {
-            Player player = Bukkit.getPlayer(event.getPlayer());
+            Player player = this.server.getPlayer(event.getPlayer());
+            if (player == null) {
+                return;
+            }
 
-            assert player != null;
             this.effectService.clearStoredEffects(player);
         }
     }
