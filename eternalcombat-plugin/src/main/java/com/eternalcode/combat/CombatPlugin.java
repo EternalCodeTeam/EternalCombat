@@ -224,13 +224,14 @@ public final class CombatPlugin extends JavaPlugin implements EternalCombatApi {
 
     @Override
     public void onDisable() {
-        EternalCombatProvider.deinitialize();
-
         if (this.liteCommands != null) {
             this.liteCommands.unregister();
         }
 
-        this.fightManager.untagAll();
+        if (this.fightManager != null) {
+            this.fightManager.untagAll();
+            EternalCombatProvider.deinitialize();
+        }
     }
 
     @Override
