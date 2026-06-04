@@ -2,33 +2,28 @@ package com.eternalcode.combat.fight.blocker;
 
 import com.eternalcode.combat.config.implementation.PluginConfig;
 import com.eternalcode.combat.fight.FightManager;
-import com.eternalcode.combat.fight.event.FightTagEvent;
-import com.eternalcode.combat.notification.NoticeService;
-import java.util.HashMap;
+import com.github.benmanes.caffeine.cache.Cache;
+import com.github.benmanes.caffeine.cache.Caffeine;
+import java.time.Duration;
 import java.util.UUID;
-import org.bukkit.Material;
-import org.bukkit.Server;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.EntityToggleGlideEvent;
-import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.player.PlayerMoveEvent;
-import org.bukkit.inventory.ItemStack;
 
 public class ElytraBlocker implements Listener {
 
     private final FightManager fightManager;
-    private final NoticeService noticeService;
     private final PluginConfig config;
-    private final Server server;
+    private final Cache<UUID, Boolean> fallProtection = Caffeine.newBuilder()
+        .expireAfterWrite(Duration.ofSeconds(10))
+        .build();
 
-    public ElytraBlocker(FightManager fightManager, NoticeService noticeService, PluginConfig config, Server server) {
+    public ElytraBlocker(FightManager fightManager, PluginConfig config) {
         this.fightManager = fightManager;
-        this.noticeService = noticeService;
         this.config = config;
-        this.server = server;
     }
 
     @EventHandler
@@ -69,77 +64,25 @@ public class ElytraBlocker implements Listener {
         if (player.isGliding()) {
             player.setGliding(false);
 
+            player.setVelocity(player.getVelocity().setY(-10));
             player.setFallDistance(0f);
-            player.setVelocity(player.getVelocity().setY(-1));
+            fallProtection.put(uniqueId, true);
+
         }
     }
 
     @EventHandler
-    void onInventoryClick(InventoryClickEvent event) {
-        if (!(event.getWhoClicked() instanceof Player player)) {
+    public void onEntityDamage(EntityDamageEvent event) {
+        if (!(event.getEntity() instanceof Player player)) {
             return;
         }
 
-        if (!this.config.combat.unequipElytraOnCombat) {
+        if (event.getCause() != EntityDamageEvent.DamageCause.FALL) {
             return;
         }
 
-        UUID uniqueId = player.getUniqueId();
-
-        if (!this.fightManager.isInCombat(uniqueId)) {
-            return;
-        }
-
-        if (event.getCurrentItem() == null) {
-            return;
-        }
-
-        if (event.getCurrentItem().getType() == Material.ELYTRA) {
+        if (fallProtection.get(player.getUniqueId(), key -> false)) {
             event.setCancelled(true);
-
-            this.noticeService.create()
-                .player(uniqueId)
-                .notice(this.config.messagesSettings.elytraDisabledDuringCombat)
-                .send();
-        }
-    }
-
-
-    @EventHandler
-    void onTag(FightTagEvent event) {
-        UUID uniqueId = event.getPlayer();
-        Player player = this.server.getPlayer(uniqueId);
-
-        if (player == null) {
-            return;
-        }
-
-        if (this.config.combat.unequipElytraOnCombat) {
-            ItemStack chest = player.getInventory().getChestplate();
-
-            if (chest != null && chest.getType() == Material.ELYTRA) {
-                removeChestplateIfElytra(player);
-
-                this.noticeService.create()
-                    .player(uniqueId)
-                    .notice(this.config.messagesSettings.elytraDisabledDuringCombat)
-                    .send();
-            }
-        }
-    }
-
-    private void removeChestplateIfElytra(Player player) {
-        ItemStack chestplate = player.getInventory().getChestplate();
-
-        if (chestplate != null && chestplate.getType() == Material.ELYTRA) {
-            player.getInventory().setChestplate(null);
-
-            HashMap<Integer, ItemStack> leftover = player.getInventory().addItem(chestplate);
-            if (!leftover.isEmpty()) {
-                leftover.values().forEach(item ->
-                    player.getWorld().dropItemNaturally(player.getLocation(), item)
-                );
-            }
         }
     }
 

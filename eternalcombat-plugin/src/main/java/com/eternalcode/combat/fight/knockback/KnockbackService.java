@@ -4,10 +4,10 @@ import com.eternalcode.combat.config.implementation.PluginConfig;
 import com.eternalcode.combat.region.Region;
 import com.eternalcode.combat.region.RegionProvider;
 import com.eternalcode.commons.bukkit.scheduler.MinecraftScheduler;
-import com.eternalcode.commons.scheduler.Task;
 import io.papermc.lib.PaperLib;
 import org.bukkit.Location;
 import org.bukkit.Material;
+import org.bukkit.World;
 import org.bukkit.entity.Player;
 import org.bukkit.event.player.PlayerTeleportEvent.TeleportCause;
 import org.bukkit.util.Vector;
@@ -17,12 +17,15 @@ import java.util.*;
 
 public final class KnockbackService {
 
+    private static final int FORCE_TELEPORT_MAX_ATTEMPTS = 10;
+    private static final double KNOCKBACK_DAMPEN_FACTOR = 0.8;
+    public static final int DEPTH_OF_SEARCHING = 10;
+
     private final PluginConfig config;
     private final MinecraftScheduler scheduler;
     private final RegionProvider regionProvider;
 
     private final Map<UUID, Region> insideRegion = new HashMap<>();
-    private final Set<UUID> fallbackActive = new HashSet<>();
 
     public KnockbackService(PluginConfig config, MinecraftScheduler scheduler, RegionProvider regionProvider) {
         this.config = config;
@@ -35,253 +38,134 @@ public final class KnockbackService {
     }
 
     public void knockback(Region region, Player player) {
-
         if (player.isInsideVehicle()) {
             player.leaveVehicle();
         }
 
-        Location loc = player.getLocation();
-        Vector direction = getDirectionToEdge(region, loc);
+        Location currentLocation = player.getLocation();
+        Vector shortestDirection = getShortestDirectionToEdge(region, currentLocation);
 
-        if (config.knockback.dampenVelocity) {
-            player.setVelocity(player.getVelocity().multiply(config.knockback.dampenFactor));
-        }
+        // Reduces player's current velocity BEFORE applying knockback. Helps create a smoother and more consistent knockback.
+        player.setVelocity(player.getVelocity().multiply(KNOCKBACK_DAMPEN_FACTOR));
 
-        boolean onGround = Math.abs(player.getVelocity().getY()) < 0.08;
-
-        double y = onGround
-            ? config.knockback.vertical
-            : Math.min(player.getVelocity().getY(), config.knockback.maxAirVertical);
-
-        Vector velocity = direction.multiply(config.knockback.multiplier).setY(y);
+        double y = Math.min(player.getVelocity().getY(), config.knockback.vertical);
+        Vector velocity = shortestDirection.multiply(config.knockback.multiplier).setY(y);
 
         player.setFallDistance(0);
         player.setVelocity(velocity);
+    }
 
+    private Vector getShortestDirectionToEdge(Region region, Location current) {
+        double directionToBottomEdge = current.getX() - region.getMin().getX();
+        double directionToTopEdge = region.getMax().getX() - current.getX();
+        double directionToLeftEdge = current.getZ() - region.getMin().getZ();
+        double directionToRightEdge = region.getMax().getZ() - current.getZ();
 
-        if (config.knockback.useTeleport) {
-            scheduleSmartFallback(player, region);
-        }
+        double shortestDirection = Math.min(
+            Math.min(directionToBottomEdge, directionToTopEdge),
+            Math.min(directionToLeftEdge, directionToRightEdge)
+        );
+
+        if (shortestDirection == directionToBottomEdge)
+            return new Vector(-1, 0, 0);
+        if (shortestDirection == directionToTopEdge)
+            return new Vector(1, 0, 0);
+        if (shortestDirection == directionToLeftEdge)
+            return new Vector(0, 0, -1);
+        if (shortestDirection == directionToRightEdge)
+            return new Vector(0, 0, 1);
+        throw new IllegalStateException("Failed to determine direction to edge");
     }
 
     public void forceKnockbackLater(Player player, Region region) {
-        UUID uuid = player.getUniqueId();
+        UUID playerId = player.getUniqueId();
 
-        if (insideRegion.containsKey(uuid)) {
+        if (insideRegion.containsKey(playerId)) {
             return;
         }
 
-        insideRegion.put(uuid, region);
+        insideRegion.put(playerId, region);
 
         scheduler.runLater(player.getLocation(), () -> {
-
-            insideRegion.remove(uuid);
+            insideRegion.remove(playerId);
 
             Location loc = player.getLocation();
-            double velocity = player.getVelocity().lengthSquared();
-
-            if (velocity > 0.02) {
-                return;
-            }
 
             if (!region.contains(loc)) {
                 return;
             }
 
-            double distanceToEdge = getDistanceToEdge(region, loc);
-
-            if (distanceToEdge > 1.5) {
-                return;
+            if (player.isInsideVehicle()) {
+                player.leaveVehicle();
             }
 
-            if (fallbackActive.contains(uuid)) {
-                return;
-            }
-
-            Location generated = generate(
-                player.getLocation(),
-                Point2D.from(region.getMin()),
-                Point2D.from(region.getMax()),
-                0
-            );
-
-            Location safe = makeSafe(generated);
-            if (safe == null || safe.getWorld() == null) {
-                return;
-            }
-
-            PaperLib.teleportAsync(player, safe.clone(), TeleportCause.PLUGIN);
-
-        }, config.knockback.forceDelay);
+            generate(player.getLocation(), Point2D.from(region.getMin()), Point2D.from(region.getMax()), 0)
+                .ifPresent(location -> PaperLib.teleportAsync(player, location, TeleportCause.PLUGIN));
+        }, config.knockback.forceTeleport.delay);
     }
 
-    private void scheduleSmartFallback(Player player, Region region) {
-        UUID uuid = player.getUniqueId();
-
-        if (fallbackActive.contains(uuid)) {
-            return;
+    private Optional<Location> generate(Location playerLocation, Point2D min, Point2D max, int attempts) {
+        if (attempts >= FORCE_TELEPORT_MAX_ATTEMPTS) {
+            return Optional.of(playerLocation);
         }
 
-        fallbackActive.add(uuid);
-
-        final Task[] taskRef = new Task[1];
-
-        taskRef[0] = scheduler.timer(() -> {
-
-                Location check = player.getLocation();
-                double velocity = player.getVelocity().lengthSquared();
-
-                if (!region.contains(check)) {
-                    fallbackActive.remove(uuid);
-                    taskRef[0].cancel();
-                    return;
-                }
-
-                if (velocity > 0.02) {
-                    return;
-                }
-
-                Location generated = generate(
-                    player.getLocation(),
-                    Point2D.from(region.getMin()),
-                    Point2D.from(region.getMax()),
-                    0
-                );
-
-                Location safe = makeSafe(generated);
-                if (safe == null || safe.getWorld() == null) {
-                    fallbackActive.remove(uuid);
-                    taskRef[0].cancel();
-                    return;
-                }
-
-                PaperLib.teleportAsync(player, safe.clone(), TeleportCause.PLUGIN);
-
-                fallbackActive.remove(uuid);
-                taskRef[0].cancel();
-
-            },
-            Duration.ofMillis(100),
-            Duration.ofMillis(100));
-    }
-
-    private Location makeSafe(Location loc) {
-        if (loc == null || loc.getWorld() == null) return loc;
-
-        return config.knockback.safeGroundCheck
-            ? findSafeGround(loc)
-            : loc.getWorld().getHighestBlockAt(loc).getLocation().add(0, config.knockback.groundOffset, 0);
-    }
-
-    private Location findSafeGround(Location loc) {
-
-        if (loc.getWorld() == null) return loc;
-
-        Location check = loc.clone();
-        int minY = loc.getWorld().getMinHeight();
-
-        for (int y = check.getBlockY(); y > minY; y--) {
-            check.setY(y);
-
-            Material type = check.getBlock().getType();
-            Material above = check.clone().add(0, 1, 0).getBlock().getType();
-            Material above2 = check.clone().add(0, 2, 0).getBlock().getType();
-
-            if (type.isSolid()
-                && !config.knockback.unsafeGroundBlocks.contains(type)
-                && above.isAir()
-                && above2.isAir()) {
-
-                return check.clone().add(0, config.knockback.groundOffset, 0);
-            }
+        Optional<Location> location = KnockbackOutsideRegionGenerator.generate(min, max, playerLocation, candidate -> makeSafe(candidate));
+        if (location.isEmpty()) {
+            int expand = (attempts + 1) * (attempts + 1);
+            return generate(playerLocation, min.expandMin(expand, expand), max.expandMax(expand, expand), attempts + 1);
         }
 
-        return getSafeHighest(loc);
-    }
-
-    private Location getSafeHighest(Location loc) {
-        if (loc == null || loc.getWorld() == null) return loc;
-
-        if (!config.knockback.safeHighestFallback) {
-            return loc.getWorld()
-                .getHighestBlockAt(loc)
-                .getLocation()
-                .add(0, config.knockback.groundOffset, 0);
-        }
-
-        Location highest = loc.getWorld().getHighestBlockAt(loc).getLocation();
-        int minY = loc.getWorld().getMinHeight();
-
-        int startY = highest.getBlockY();
-        int maxScan = config.knockback.safeHighestMaxScan;
-
-        int endY = (maxScan < 0)
-            ? minY
-            : Math.max(minY, startY - maxScan);
-
-        for (int y = startY; y > endY; y--) {
-            highest.setY(y);
-
-            Material type = highest.getBlock().getType();
-            Material above = highest.clone().add(0, 1, 0).getBlock().getType();
-            Material above2 = highest.clone().add(0, 2, 0).getBlock().getType();
-
-            if (type.isSolid()
-                && !config.knockback.unsafeGroundBlocks.contains(type)
-                && above.isAir()
-                && above2.isAir()) {
-
-                return highest.clone().add(0, config.knockback.groundOffset, 0);
-            }
-        }
-
-        return config.knockback.cancelIfNoSafeGround ? null : loc;
-    }
-
-    private Location generate(Location playerLocation, Point2D minX, Point2D maxX, int attempts) {
-        if (attempts >= config.knockback.maxAttempts) {
-            return playerLocation;
-        }
-
-        Location location = KnockbackOutsideRegionGenerator.generate(minX, maxX, playerLocation);
-
-        Optional<Region> otherRegion = regionProvider.getRegion(location);
+        Optional<Region> otherRegion = regionProvider.getRegion(location.get());
         if (otherRegion.isPresent()) {
-
             Region region = otherRegion.get();
-
-            return generate(
-                playerLocation,
-                minX.min(region.getMin()),
-                maxX.max(region.getMax()),
-                attempts + 1
-            );
+            return generate(playerLocation, min.min(region.getMin()), max.max(region.getMax()), attempts + 1);
         }
 
-        return location;
+        return location.map(loc -> loc.add(0.5, 0, 0.5));
     }
 
-    private Vector getDirectionToEdge(Region region, Location loc) {
-        double dxMin = loc.getX() - region.getMin().getX();
-        double dxMax = region.getMax().getX() - loc.getX();
-        double dzMin = loc.getZ() - region.getMin().getZ();
-        double dzMax = region.getMax().getZ() - loc.getZ();
+    private Optional<Location> makeSafe(Location random) {
+        Location maybeSafe = random.clone();
+        random.getWorld();
+        int minY = maybeSafe.getBlockY() - DEPTH_OF_SEARCHING;
 
-        double min = Math.min(Math.min(dxMin, dxMax), Math.min(dzMin, dzMax));
+        CachedPillarOfBlocks pillar = new CachedPillarOfBlocks(maybeSafe.getBlockX(), maybeSafe.getBlockZ(), maybeSafe.getWorld());
 
-        if (Math.abs(min - dxMin) < 1e-6) return new Vector(-1, 0, 0);
-        if (Math.abs(min - dxMax) < 1e-6) return new Vector(1, 0, 0);
-        if (Math.abs(min - dzMin) < 1e-6) return new Vector(0, 0, -1);
+        for (int y = maybeSafe.getBlockY(); y > minY; y--) {
+            maybeSafe.setY(y);
 
-        return new Vector(0, 0, 1);
+            Material ground = pillar.get(maybeSafe.getBlockY() - 1);
+            Material legs = pillar.get(maybeSafe.getBlockY());
+            Material head = pillar.get(maybeSafe.getBlockY() + 1);
+
+            if (ground.isSolid()
+                && !config.knockback.forceTeleport.unsafeGroundBlocks.contains(ground)
+                && config.knockback.forceTeleport.airBlocks.contains(legs)
+                && config.knockback.forceTeleport.airBlocks.contains(head)
+            ) {
+                return Optional.of(maybeSafe);
+            }
+        }
+
+        return Optional.empty();
     }
 
-    private double getDistanceToEdge(Region region, Location loc) {
-        double dxMin = loc.getX() - region.getMin().getX();
-        double dxMax = region.getMax().getX() - loc.getX();
-        double dzMin = loc.getZ() - region.getMin().getZ();
-        double dzMax = region.getMax().getZ() - loc.getZ();
+    private static class CachedPillarOfBlocks {
 
-        return Math.min(Math.min(dxMin, dxMax), Math.min(dzMin, dzMax));
+        private final int x;
+        private final int z;
+        private final World world;
+        private final Map<Integer, Material> blocksTypes = new HashMap<>();
+
+        private CachedPillarOfBlocks(int x, int z, World world) {
+            this.x = x;
+            this.z = z;
+            this.world = world;
+        }
+
+        public Material get(int y) {
+            return this.blocksTypes.computeIfAbsent(y, __ -> world.getType(x, y, z));
+        }
     }
+
 }
