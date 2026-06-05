@@ -2,6 +2,8 @@ import io.papermc.hangarpublishplugin.model.Platforms
 import net.minecrell.pluginyml.bukkit.BukkitPluginDescription
 import net.minecrell.pluginyml.paper.PaperPluginDescription
 import org.gradle.kotlin.dsl.shadowJar
+import org.gradle.jvm.toolchain.JavaLanguageVersion
+import org.gradle.jvm.toolchain.JavaToolchainService
 
 plugins {
     `eternalcombat-java`
@@ -104,7 +106,13 @@ tasks {
         notCompatibleWithConfigurationCache("The plugin-yml paper generator reads Task.project during execution.")
     }
 
+    val javaToolchains = extensions.getByType<JavaToolchainService>()
+
     runServer {
+        javaLauncher.set(javaToolchains.launcherFor {
+            languageVersion.set(JavaLanguageVersion.of(25))
+        })
+
         minecraftVersion("26.1.2")
         downloadPlugins.modrinth("FastAsyncWorldEdit", "2.15.2")
         downloadPlugins.modrinth("PacketEvents", "2.12.2+spigot")
