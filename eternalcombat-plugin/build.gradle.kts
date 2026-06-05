@@ -105,11 +105,11 @@ tasks {
     }
 
     runServer {
-        minecraftVersion("1.21.11")
-        downloadPlugins.modrinth("WorldEdit", Versions.WORLDEDIT)
-        downloadPlugins.modrinth("PacketEvents", "${Versions.PACKETEVENTS}+spigot")
-        downloadPlugins.modrinth("WorldGuard", Versions.WORLDGUARD)
-        downloadPlugins.modrinth("LuckPerms", "v${Versions.LUCKPERMS}-bukkit")
+        minecraftVersion("26.1.2")
+        downloadPlugins.modrinth("FastAsyncWorldEdit", "2.15.2")
+        downloadPlugins.modrinth("PacketEvents", "2.12.2+spigot")
+        downloadPlugins.modrinth("WorldGuard", "7.0.17")
+        downloadPlugins.modrinth("LuckPerms", "v5.5.53-bukkit")
     }
 }
 
