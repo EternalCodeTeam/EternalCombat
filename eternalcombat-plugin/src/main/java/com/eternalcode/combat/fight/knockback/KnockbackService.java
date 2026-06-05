@@ -1,5 +1,6 @@
 package com.eternalcode.combat.fight.knockback;
 
+import com.cryptomorin.xseries.XMaterial;
 import com.eternalcode.combat.config.implementation.PluginConfig;
 import com.eternalcode.combat.region.Region;
 import com.eternalcode.combat.region.RegionProvider;
@@ -8,6 +9,7 @@ import java.time.Duration;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
+import java.util.Set;
 import java.util.UUID;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -139,15 +141,19 @@ public final class KnockbackService {
             Material head = pillar.get(maybeSafe.getBlockY() + 1);
 
             if (ground.isSolid()
-                && !config.knockback.forceTeleport.unsafeGroundBlocks.contains(ground)
-                && config.knockback.forceTeleport.airBlocks.contains(legs)
-                && config.knockback.forceTeleport.airBlocks.contains(head)
+                && !containsMaterial(config.knockback.forceTeleport.unsafeGroundBlocks, ground)
+                && containsMaterial(config.knockback.forceTeleport.airBlocks, legs)
+                && containsMaterial(config.knockback.forceTeleport.airBlocks, head)
             ) {
                 return Optional.of(maybeSafe);
             }
         }
 
         return Optional.empty();
+    }
+
+    private boolean containsMaterial(Set<XMaterial> materials, Material material) {
+        return materials.contains(XMaterial.matchXMaterial(material));
     }
 
     private static class CachedPillarOfBlocks {

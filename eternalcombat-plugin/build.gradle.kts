@@ -119,6 +119,7 @@ tasks.shadowJar {
     exclude(
         "org/intellij/lang/annotations/**",
         "org/jetbrains/annotations/**",
+        "net/kyori/**",
         "META-INF/**",
         "kotlin/**",
         "javax/**",
