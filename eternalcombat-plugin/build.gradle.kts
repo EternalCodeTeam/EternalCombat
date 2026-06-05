@@ -1,12 +1,15 @@
-import net.minecrell.pluginyml.bukkit.BukkitPluginDescription
 import io.papermc.hangarpublishplugin.model.Platforms
+import net.minecrell.pluginyml.bukkit.BukkitPluginDescription
+import net.minecrell.pluginyml.paper.PaperPluginDescription
 import org.gradle.kotlin.dsl.shadowJar
+import org.gradle.jvm.toolchain.JavaLanguageVersion
+import org.gradle.jvm.toolchain.JavaToolchainService
 
 plugins {
     `eternalcombat-java`
     `eternalcombat-repositories`
 
-    id("net.minecrell.plugin-yml.bukkit")
+    id("de.eldoria.plugin-yml.paper") version "0.9.0"
     id("com.gradleup.shadow")
     id("xyz.jpenilla.run-paper")
     id("com.modrinth.minotaur") version "2.9.0"
@@ -27,14 +30,8 @@ configurations.all {
 dependencies {
     implementation(project(":eternalcombat-api"))
 
-    // kyori
-    implementation("net.kyori:adventure-platform-bukkit:${Versions.ADVENTURE_PLATFORM_BUKKIT}")
-    implementation("net.kyori:adventure-text-minimessage:${Versions.ADVENTURE_API}")
-    implementation("net.kyori:adventure-api") {
-        version {
-            strictly(Versions.ADVENTURE_API)
-        }
-    }
+    // Paper
+    compileOnly("io.papermc.paper:paper-api:${Versions.PAPER_API}")
 
     // litecommands
     implementation("dev.rollczi:litecommands-bukkit:${Versions.LITE_COMMANDS}")
@@ -69,38 +66,58 @@ dependencies {
     compileOnly("com.github.angeschossen:LandsAPI:${Versions.LANDS_API}")
 
     // Multification
-    implementation("com.eternalcode:multification-bukkit:${Versions.MULTIFICATION}")
+    implementation("com.eternalcode:multification-paper:${Versions.MULTIFICATION}")
     implementation("com.eternalcode:multification-okaeri:${Versions.MULTIFICATION}")
     compileOnly("com.github.retrooper:packetevents-spigot:${Versions.PACKETS_EVENTS}")
-    implementation("io.papermc:paperlib:${Versions.PAPERLIB}")
 }
 
-bukkit {
+paper {
     main = "com.eternalcode.combat.CombatPlugin"
-    author = "EternalCodeTeam"
-    apiVersion = "1.13"
+    authors = listOf("EternalCodeTeam")
+    apiVersion = "1.19"
     prefix = "EternalCombat"
     name = "EternalCombat"
+    generateLibrariesJson = true
     load = BukkitPluginDescription.PluginLoadOrder.POSTWORLD
-    softDepend = listOf(
-        "Lands",
-        "WorldGuard"
-    )
-    depend = listOf(
-        "packetevents",
-    )
     version = "${project.version}"
 
     foliaSupported = true
+
+    serverDependencies {
+        register("packetevents") {
+            required = true
+            load = PaperPluginDescription.RelativeLoadOrder.BEFORE
+        }
+
+        register("Lands") {
+            required = false
+            load = PaperPluginDescription.RelativeLoadOrder.BEFORE
+        }
+
+        register("WorldGuard") {
+            required = false
+            load = PaperPluginDescription.RelativeLoadOrder.BEFORE
+        }
+    }
 }
 
 tasks {
+    named("generatePaperPluginDescription") {
+        notCompatibleWithConfigurationCache("The plugin-yml paper generator reads Task.project during execution.")
+    }
+
+    val javaToolchains = extensions.getByType<JavaToolchainService>()
+
     runServer {
-        minecraftVersion("1.21.11")
-        downloadPlugins.modrinth("WorldEdit", Versions.WORLDEDIT)
-        downloadPlugins.modrinth("PacketEvents", "${Versions.PACKETEVENTS}+spigot")
-        downloadPlugins.modrinth("WorldGuard", Versions.WORLDGUARD)
-        downloadPlugins.modrinth("LuckPerms", "v${Versions.LUCKPERMS}-bukkit")
+        javaLauncher.set(javaToolchains.launcherFor {
+            languageVersion.set(JavaLanguageVersion.of(25))
+        })
+
+        minecraftVersion("26.1.2")
+        downloadPlugins.modrinth("FastAsyncWorldEdit", "2.15.2")
+        downloadPlugins.modrinth("PacketEvents", "2.12.2+spigot")
+        downloadPlugins.modrinth("WorldGuard", "7.0.17")
+        downloadPlugins.modrinth("LuckPerms", "v5.5.53-bukkit")
     }
 }
 
@@ -110,17 +127,18 @@ tasks.shadowJar {
     exclude(
         "org/intellij/lang/annotations/**",
         "org/jetbrains/annotations/**",
+        "net/kyori/**",
         "META-INF/**",
         "kotlin/**",
         "javax/**",
         "org/checkerframework/**",
         "com/google/errorprone/**",
+        "com/google/gson/**"
     )
 
     val prefix = "com.eternalcode.combat.libs"
     listOf(
         "eu.okaeri",
-        "net.kyori",
         "org.bstats",
         "org.yaml",
         "dev.rollczi.litecommands",
@@ -130,7 +148,7 @@ tasks.shadowJar {
         "com.eternalcode.commons",
         "com.eternalcode.multification",
         "com.github.cryptomorin",
-        "io.papermc.lib",
+        "com.cryptomorin",
     ).forEach { pack ->
         relocate(pack, "$prefix.$pack")
     }
@@ -166,7 +184,7 @@ modrinth {
     versionType.set(if (isRelease) "release" else "beta")
     uploadFile.set(tasks.shadowJar)
     gameVersions.addAll(paperVersions)
-    loaders.addAll(listOf("paper", "spigot", "folia", "purpur"))
+    loaders.addAll(listOf("paper", "folia", "purpur"))
     changelog.set(changelogText)
     syncBodyFrom.set(rootProject.file("README.md").readText())
 }

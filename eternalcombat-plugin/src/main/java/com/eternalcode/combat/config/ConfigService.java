@@ -3,9 +3,9 @@ package com.eternalcode.combat.config;
 import com.eternalcode.combat.border.animation.block.BlockTypeTransformer;
 import com.eternalcode.combat.border.animation.particle.ParticleColorTransformer;
 import com.eternalcode.combat.border.animation.particle.ParticleTypeTransformer;
-import com.eternalcode.multification.bukkit.notice.resolver.sound.SoundBukkitResolver;
 import com.eternalcode.multification.notice.resolver.NoticeResolverDefaults;
 import com.eternalcode.multification.notice.resolver.NoticeResolverRegistry;
+import com.eternalcode.multification.notice.resolver.sound.SoundAdventureResolver;
 import com.eternalcode.multification.okaeri.MultificationSerdesPack;
 import eu.okaeri.configs.ConfigManager;
 import eu.okaeri.configs.OkaeriConfig;
@@ -28,7 +28,7 @@ public class ConfigService {
 
         YamlSnakeYamlConfigurer configurer = new YamlSnakeYamlConfigurer();
         NoticeResolverRegistry noticeRegistry = NoticeResolverDefaults.createRegistry()
-            .registerResolver(new SoundBukkitResolver());
+            .registerResolver(new SoundAdventureResolver());
 
         configFile.withConfigurer(configurer,
             new SerdesCommons(),

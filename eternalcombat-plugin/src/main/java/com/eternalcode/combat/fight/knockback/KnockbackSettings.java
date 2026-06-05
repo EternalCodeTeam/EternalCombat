@@ -1,11 +1,10 @@
 package com.eternalcode.combat.fight.knockback;
 
+import com.cryptomorin.xseries.XMaterial;
 import eu.okaeri.configs.OkaeriConfig;
 import eu.okaeri.configs.annotation.Comment;
-import java.util.EnumSet;
-import org.bukkit.Material;
-
 import java.time.Duration;
+import java.util.EnumSet;
 import java.util.Set;
 
 public class KnockbackSettings extends OkaeriConfig {
@@ -57,23 +56,23 @@ public class KnockbackSettings extends OkaeriConfig {
             "# - LAVA / WATER (damage / movement issues)",
             "# - CACTUS / MAGMA (damage blocks)",
         })
-        public Set<Material> unsafeGroundBlocks = EnumSet.of(
-            Material.BARRIER,
-            Material.LAVA,
-            Material.WATER,
-            Material.CACTUS,
-            Material.MAGMA_BLOCK,
-            Material.FIRE,
-            Material.SOUL_FIRE,
-            Material.COBWEB,
-            Material.SWEET_BERRY_BUSH,
-            Material.BEDROCK,
-            Material.TNT,
-            Material.SEAGRASS,
-            Material.TALL_SEAGRASS,
-            Material.BUBBLE_COLUMN,
-            Material.POWDER_SNOW,
-            Material.WITHER_ROSE
+        public Set<XMaterial> unsafeGroundBlocks = EnumSet.of(
+            XMaterial.BARRIER,
+            XMaterial.LAVA,
+            XMaterial.WATER,
+            XMaterial.CACTUS,
+            XMaterial.MAGMA_BLOCK,
+            XMaterial.FIRE,
+            XMaterial.SOUL_FIRE,
+            XMaterial.COBWEB,
+            XMaterial.SWEET_BERRY_BUSH,
+            XMaterial.BEDROCK,
+            XMaterial.TNT,
+            XMaterial.SEAGRASS,
+            XMaterial.TALL_SEAGRASS,
+            XMaterial.BUBBLE_COLUMN,
+            XMaterial.POWDER_SNOW,
+            XMaterial.WITHER_ROSE
         );
 
         @Comment({
@@ -82,55 +81,55 @@ public class KnockbackSettings extends OkaeriConfig {
             "# Players can safely spawn in these blocks or pass through them",
             "# Includes air, grass, flowers, and other non-solid blocks"
         })
-        public Set<Material> airBlocks = EnumSet.of(
-            Material.AIR,
-            Material.CAVE_AIR,
-            Material.VOID_AIR,
-            Material.TALL_SEAGRASS,
-            Material.SEAGRASS,
-            Material.GRASS,
-            Material.TALL_GRASS,
-            Material.VINE,
-            Material.STRUCTURE_VOID,
-            Material.DEAD_BUSH,
-            Material.DANDELION,
-            Material.POPPY,
-            Material.BLUE_ORCHID,
-            Material.ALLIUM,
-            Material.AZURE_BLUET,
-            Material.RED_TULIP,
-            Material.ORANGE_TULIP,
-            Material.WHITE_TULIP,
-            Material.PINK_TULIP,
-            Material.OXEYE_DAISY,
-            Material.CORNFLOWER,
-            Material.LILY_OF_THE_VALLEY,
-            Material.SUNFLOWER,
-            Material.LILAC,
-            Material.ROSE_BUSH,
-            Material.PEONY,
-            Material.WITHER_ROSE,
-            Material.LARGE_FERN,
-            Material.RAIL,
-            Material.POWERED_RAIL,
-            Material.DETECTOR_RAIL,
-            Material.ACTIVATOR_RAIL,
-            Material.REDSTONE_WIRE,
-            Material.COMPARATOR,
-            Material.REPEATER,
-            Material.LEVER,
-            Material.STRING,
-            Material.SNOW,
-            Material.CRIMSON_ROOTS,
-            Material.WARPED_ROOTS,
-            Material.CRIMSON_FUNGUS,
-            Material.WARPED_FUNGUS,
-            Material.TORCH,
-            Material.WALL_TORCH,
-            Material.REDSTONE_TORCH,
-            Material.REDSTONE_WALL_TORCH,
-            Material.SOUL_TORCH,
-            Material.SOUL_WALL_TORCH
+        public Set<XMaterial> airBlocks = EnumSet.of(
+            XMaterial.AIR,
+            XMaterial.CAVE_AIR,
+            XMaterial.VOID_AIR,
+            XMaterial.TALL_SEAGRASS,
+            XMaterial.SEAGRASS,
+            XMaterial.SHORT_GRASS,
+            XMaterial.TALL_GRASS,
+            XMaterial.VINE,
+            XMaterial.STRUCTURE_VOID,
+            XMaterial.DEAD_BUSH,
+            XMaterial.DANDELION,
+            XMaterial.POPPY,
+            XMaterial.BLUE_ORCHID,
+            XMaterial.ALLIUM,
+            XMaterial.AZURE_BLUET,
+            XMaterial.RED_TULIP,
+            XMaterial.ORANGE_TULIP,
+            XMaterial.WHITE_TULIP,
+            XMaterial.PINK_TULIP,
+            XMaterial.OXEYE_DAISY,
+            XMaterial.CORNFLOWER,
+            XMaterial.LILY_OF_THE_VALLEY,
+            XMaterial.SUNFLOWER,
+            XMaterial.LILAC,
+            XMaterial.ROSE_BUSH,
+            XMaterial.PEONY,
+            XMaterial.WITHER_ROSE,
+            XMaterial.LARGE_FERN,
+            XMaterial.RAIL,
+            XMaterial.POWERED_RAIL,
+            XMaterial.DETECTOR_RAIL,
+            XMaterial.ACTIVATOR_RAIL,
+            XMaterial.REDSTONE_WIRE,
+            XMaterial.COMPARATOR,
+            XMaterial.REPEATER,
+            XMaterial.LEVER,
+            XMaterial.STRING,
+            XMaterial.SNOW,
+            XMaterial.CRIMSON_ROOTS,
+            XMaterial.WARPED_ROOTS,
+            XMaterial.CRIMSON_FUNGUS,
+            XMaterial.WARPED_FUNGUS,
+            XMaterial.TORCH,
+            XMaterial.WALL_TORCH,
+            XMaterial.REDSTONE_TORCH,
+            XMaterial.REDSTONE_WALL_TORCH,
+            XMaterial.SOUL_TORCH,
+            XMaterial.SOUL_WALL_TORCH
         );
 
     }
