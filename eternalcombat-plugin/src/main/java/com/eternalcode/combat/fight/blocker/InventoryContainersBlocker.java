@@ -1,4 +1,4 @@
-package com.eternalcode.combat.fight.controller;
+package com.eternalcode.combat.fight.blocker;
 
 import com.eternalcode.combat.config.implementation.PluginConfig;
 import com.eternalcode.combat.fight.FightManager;
@@ -10,13 +10,13 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.InventoryOpenEvent;
 import org.bukkit.event.inventory.InventoryType;
 
-public class FightInventoryController implements Listener {
+public class InventoryContainersBlocker implements Listener {
 
     private final FightManager fightManager;
     private final PluginConfig config;
     private final NoticeService noticeService;
 
-    public FightInventoryController(FightManager fightManager, PluginConfig config, NoticeService noticeService) {
+    public InventoryContainersBlocker(FightManager fightManager, PluginConfig config, NoticeService noticeService) {
         this.fightManager = fightManager;
         this.config = config;
         this.noticeService = noticeService;

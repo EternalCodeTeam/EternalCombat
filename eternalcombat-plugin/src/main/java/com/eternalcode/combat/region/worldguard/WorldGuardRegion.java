@@ -8,13 +8,14 @@ import org.bukkit.Location;
 import org.bukkit.World;
 
 record WorldGuardRegion(World world, ProtectedRegion region) implements Region {
+
     @Override
     public Point getCenter() {
         BlockVector3 min = this.region.getMinimumPoint();
         BlockVector3 max = this.region.getMaximumPoint();
 
-        double x = (double) (min.getX() + max.getX()) / 2;
-        double z = (double) (min.getZ() + max.getZ()) / 2;
+        double x = (min.x() + max.x()) / 2.0;
+        double z = (min.z() + max.z()) / 2.0;
 
         return new Point(this.world, x, z);
     }
@@ -22,12 +23,13 @@ record WorldGuardRegion(World world, ProtectedRegion region) implements Region {
     @Override
     public Location getMin() {
         BlockVector3 min = this.region.getMinimumPoint();
-        return new Location(this.world, min.getX(), min.getY(), min.getZ());
+        return new Location(this.world, min.x(), min.y(), min.z());
     }
 
     @Override
     public Location getMax() {
         BlockVector3 max = this.region.getMaximumPoint();
-        return new Location(this.world, max.getX(), max.getY(), max.getZ());
+        return new Location(this.world, max.x(), max.y(), max.z());
     }
+
 }
