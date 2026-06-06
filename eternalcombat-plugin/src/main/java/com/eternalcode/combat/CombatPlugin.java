@@ -95,6 +95,7 @@ public final class CombatPlugin extends JavaPlugin implements EternalCombatApi {
     private RegionProvider regionProvider;
 
     private LiteCommands<CommandSender> liteCommands;
+    private boolean apiInitialized;
 
 
     @Override
@@ -217,6 +218,7 @@ public final class CombatPlugin extends JavaPlugin implements EternalCombatApi {
         );
 
         EternalCombatProvider.initialize(this);
+        this.apiInitialized = true;
 
         long millis = started.elapsed(TimeUnit.MILLISECONDS);
         this.getLogger().info("Successfully loaded EternalCombat in " + millis + "ms");
@@ -230,7 +232,11 @@ public final class CombatPlugin extends JavaPlugin implements EternalCombatApi {
 
         if (this.fightManager != null) {
             this.fightManager.untagAll();
+        }
+
+        if (this.apiInitialized) {
             EternalCombatProvider.deinitialize();
+            this.apiInitialized = false;
         }
     }
 
