@@ -3,7 +3,7 @@ plugins {
 }
 
 group = "com.eternalcode"
-version = "2.5.1-SNAPSHOT"
+version = "2.5.1"
 
 tasks.compileJava {
     options.compilerArgs = listOf("-Xlint:deprecation", "-parameters")
