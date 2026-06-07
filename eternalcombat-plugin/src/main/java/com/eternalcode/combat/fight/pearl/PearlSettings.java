@@ -21,7 +21,7 @@ public class PearlSettings extends OkaeriConfig {
     public boolean pearlCooldownEnabled = false;
 
     @Comment("# Set true, If you want to reset timer when player throws ender pearl")
-    public boolean pearlResetsTimer = true;
+    public boolean pearlExtendsCombatTag = false;
 
     @Comment({
         "# Block throwing pearls with delay?",

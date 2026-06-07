@@ -11,39 +11,12 @@ import java.util.UUID;
 
 public class TridentServiceImpl implements TridentService {
 
-    private final FightManager fightManager;
-    private final PluginConfig pluginConfig;
-
     private final Delay<UUID> delay;
 
-    public TridentServiceImpl(FightManager fightManager, PluginConfig pluginConfig) {
-        this.fightManager = fightManager;
-        this.pluginConfig = pluginConfig;
-
+    public TridentServiceImpl(PluginConfig pluginConfig) {
         this.delay = Delay.withDefault(() -> pluginConfig.trident.tridentRiptideDelay);
     }
 
-    @Override
-    public void handleTridentDelay(Player player) {
-        UUID uniqueId = player.getUniqueId();
-
-        if (this.pluginConfig.trident.tridentRiptideDelay.isZero()) {
-            return;
-        }
-
-        if (!this.fightManager.isInCombat(uniqueId)) {
-            return;
-        }
-
-        if (this.hasDelay(uniqueId)) {
-            return;
-        }
-
-
-        this.markDelay(uniqueId);
-        player.setCooldown(Material.TRIDENT, (int) this.pluginConfig.trident.tridentRiptideDelay.toMillis() / 50);
-
-    }
 
     @Override
     public void markDelay(UUID uuid) {
@@ -53,6 +26,11 @@ public class TridentServiceImpl implements TridentService {
     @Override
     public boolean hasDelay(UUID uuid) {
         return this.delay.hasDelay(uuid);
+    }
+
+    @Override
+    public void removeDelay(UUID playerId) {
+        this.delay.unmarkDelay(playerId);
     }
 
     @Override

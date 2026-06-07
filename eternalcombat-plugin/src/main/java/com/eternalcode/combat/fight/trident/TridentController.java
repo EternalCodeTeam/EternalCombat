@@ -3,7 +3,7 @@ package com.eternalcode.combat.fight.trident;
 import com.eternalcode.combat.config.implementation.PluginConfig;
 import com.eternalcode.combat.fight.FightManager;
 import com.eternalcode.combat.fight.event.CauseOfTag;
-import com.eternalcode.combat.fight.event.FightTagEvent;
+import com.eternalcode.combat.fight.event.FightUntagEvent;
 import com.eternalcode.combat.notification.NoticeService;
 import com.eternalcode.combat.util.DurationUtil;
 import java.time.Duration;
@@ -12,7 +12,6 @@ import org.bukkit.Material;
 import org.bukkit.Server;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
-import org.bukkit.event.Event;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
@@ -24,8 +23,6 @@ import org.bukkit.inventory.ItemStack;
 
 public class TridentController implements Listener {
 
-    private static final int TAG_INTERRUPT_COOLDOWN_TICKS = 4;
-
     private final PluginConfig pluginConfig;
     private final NoticeService noticeService;
     private final FightManager fightManager;
@@ -36,8 +33,7 @@ public class TridentController implements Listener {
         PluginConfig pluginConfig,
         NoticeService noticeService,
         FightManager fightManager,
-        TridentService tridentService,
-        Server server
+        TridentService tridentService, Server server
     ) {
         this.pluginConfig = pluginConfig;
         this.noticeService = noticeService;
@@ -46,48 +42,53 @@ public class TridentController implements Listener {
         this.server = server;
     }
 
-    @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
-    public void onRiptideInteractLow(PlayerInteractEvent event) {
-        this.blockRiptideInteract(event, true);
+    @EventHandler(priority = EventPriority.HIGHEST)
+    public void onRiptideInteract(PlayerInteractEvent event) {
+        if (!this.isRiptideInteract(event)) {
+            return;
+        }
+
+        Player player = event.getPlayer();
+        UUID playerId = player.getUniqueId();
+
+        if (!this.fightManager.isInCombat(playerId)) {
+            return;
+        }
+
+        if (this.pluginConfig.trident.tridentRiptideDisabledDuringCombat) {
+            event.setCancelled(true);
+
+            this.noticeService.create()
+                .player(playerId)
+                .notice(this.pluginConfig.trident.tridentRiptideBlocked)
+                .send();
+            return;
+        }
+
+        if (!this.tridentService.hasDelay(playerId)) {
+            return;
+        }
+
+        event.setCancelled(true);
     }
 
-    @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = false)
-    public void onRiptideInteractHigh(PlayerInteractEvent event) {
-        this.blockRiptideInteract(event, false);
-    }
-
-    @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
-    public void onFightTag(FightTagEvent event) {
-        if (!this.pluginConfig.trident.tridentRiptideDisabledDuringCombat) {
+    // we need to send message without ignoring canceled event because of riptide cooldown
+    @EventHandler(priority = EventPriority.LOWEST)
+    public void messageOnRiptideCooldown(PlayerInteractEvent event) {
+        if (!this.isRiptideInteract(event)) {
             return;
         }
 
-        Player player = this.server.getPlayer(event.getPlayer());
-        if (player == null || !player.isHandRaised()) {
+        UUID playerId = event.getPlayer().getUniqueId();
+        if (!this.tridentService.hasDelay(playerId)) {
             return;
         }
 
-        ItemStack mainHandItem = player.getInventory().getItemInMainHand();
-        ItemStack offHandItem = player.getInventory().getItemInOffHand();
-
-        if (!this.isRiptideTrident(mainHandItem) && !this.isRiptideTrident(offHandItem)) {
-            return;
-        }
-
-        if (this.isRiptideTrident(mainHandItem)) {
-            player.getInventory().setItemInMainHand(mainHandItem.clone());
-        }
-
-        if (this.isRiptideTrident(offHandItem)) {
-            player.getInventory().setItemInOffHand(offHandItem.clone());
-        }
-
-        player.updateInventory();
-        player.setCooldown(Material.TRIDENT, TAG_INTERRUPT_COOLDOWN_TICKS);
-
+        Duration remainingDelay = this.tridentService.getRemainingDelay(playerId);
         this.noticeService.create()
-            .player(player.getUniqueId())
-            .notice(this.pluginConfig.trident.tridentRiptideBlocked)
+            .player(playerId)
+            .notice(this.pluginConfig.trident.tridentRiptideOnCooldown)
+            .placeholder("{TIME}", DurationUtil.format(remainingDelay))
             .send();
     }
 
@@ -96,11 +97,11 @@ public class TridentController implements Listener {
         Player player = event.getPlayer();
         UUID uniqueId = player.getUniqueId();
 
-        if (!this.fightManager.isInCombat(uniqueId)) {
+        if (this.pluginConfig.trident.tridentRiptideDisabledDuringCombat) {
             return;
         }
 
-        if (this.pluginConfig.trident.tridentRiptideDisabledDuringCombat) {
+        if (!this.fightManager.isInCombat(uniqueId)) {
             return;
         }
 
@@ -108,59 +109,19 @@ public class TridentController implements Listener {
             return;
         }
 
-        this.tridentService.handleTridentDelay(player);
+        this.tridentService.markDelay(player.getUniqueId());
+        player.setCooldown(Material.TRIDENT, (int) this.pluginConfig.trident.tridentRiptideDelay.toMillis() / 50);
 
-        if (this.pluginConfig.trident.riptideResetsTimerEnabled) {
+        if (this.pluginConfig.trident.tridentRiptideExtendsCombatTag) {
             this.fightManager.tag(uniqueId, this.pluginConfig.settings.combatTimerDuration, CauseOfTag.TRIDENT);
         }
     }
 
-    private void blockRiptideInteract(PlayerInteractEvent event, boolean sendNotice) {
-        if (!this.isRiptideInteract(event)) {
-            return;
-        }
-
-        Player player = event.getPlayer();
-        UUID uniqueId = player.getUniqueId();
-
-        if (!this.fightManager.isInCombat(uniqueId)) {
-            return;
-        }
-
-        if (this.pluginConfig.trident.tridentRiptideDisabledDuringCombat) {
-            this.denyUse(event);
-
-            if (sendNotice) {
-                this.noticeService.create()
-                    .player(uniqueId)
-                    .notice(this.pluginConfig.trident.tridentRiptideBlocked)
-                    .send();
-            }
-            return;
-        }
-
-        if (!this.tridentService.hasDelay(uniqueId)) {
-            return;
-        }
-
-        this.denyUse(event);
-
-        if (!sendNotice) {
-            return;
-        }
-
-        Duration remainingDelay = this.tridentService.getRemainingDelay(uniqueId);
-        this.noticeService.create()
-            .player(uniqueId)
-            .notice(this.pluginConfig.trident.tridentRiptideOnCooldown)
-            .placeholder("{TIME}", DurationUtil.format(remainingDelay))
-            .send();
-    }
-
-    private void denyUse(PlayerInteractEvent event) {
-        event.setUseInteractedBlock(Event.Result.DENY);
-        event.setUseItemInHand(Event.Result.DENY);
-        event.setCancelled(true);
+    @EventHandler(ignoreCancelled = true)
+    public void onUntag(FightUntagEvent event) {
+        Player player = server.getPlayer(event.getPlayer());
+        player.setCooldown(Material.TRIDENT, 0);
+        this.tridentService.removeDelay(player.getUniqueId());
     }
 
     private boolean isRiptideInteract(PlayerInteractEvent event) {

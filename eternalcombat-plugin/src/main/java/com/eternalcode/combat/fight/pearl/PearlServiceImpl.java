@@ -49,7 +49,7 @@ public class PearlServiceImpl implements PearlService {
         }
 
         if (this.fightManager.isInCombat(uniqueId)) {
-            if (this.pluginConfig.pearl.pearlResetsTimer) {
+            if (this.pluginConfig.pearl.pearlExtendsCombatTag) {
                 Duration combatTime = this.pluginConfig.settings.combatTimerDuration;
                 this.fightManager.tag(uniqueId, combatTime, CauseOfTag.ENDER_PEARL);
             }

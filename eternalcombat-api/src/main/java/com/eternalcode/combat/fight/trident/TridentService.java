@@ -2,7 +2,6 @@ package com.eternalcode.combat.fight.trident;
 
 import java.time.Duration;
 import java.util.UUID;
-import org.bukkit.entity.Player;
 
 public interface TridentService {
 
@@ -26,10 +25,7 @@ public interface TridentService {
      */
     void markDelay(UUID uuid);
 
-    /**
-     * handles the trident cooldown for the player, should be called when player uses riptide in combat
-     * @param player the player who used riptide in combat needed to apply cooldown to item
-     */
-    void handleTridentDelay(Player player);
+
+    void removeDelay(UUID playerId);
 
 }

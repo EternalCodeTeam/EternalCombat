@@ -15,7 +15,6 @@ import com.eternalcode.combat.fight.FightManager;
 import com.eternalcode.combat.fight.FightManagerImpl;
 import com.eternalcode.combat.fight.FightTagCommand;
 import com.eternalcode.combat.fight.FightTask;
-import com.eternalcode.combat.fight.controller.FightActionBlockerController;
 import com.eternalcode.combat.fight.blocker.CommandsBlocker;
 import com.eternalcode.combat.fight.blocker.ElytraBlocker;
 import com.eternalcode.combat.fight.blocker.ElytraEquipBlocker;
@@ -36,11 +35,7 @@ import com.eternalcode.combat.fight.drop.DropService;
 import com.eternalcode.combat.fight.drop.DropServiceImpl;
 import com.eternalcode.combat.fight.drop.impl.PercentDropModifier;
 import com.eternalcode.combat.fight.drop.impl.PlayersHealthDropModifier;
-import com.eternalcode.combat.fight.FightTagCommand;
 import com.eternalcode.combat.fight.blocker.PlaceBlockBlocker;
-import com.eternalcode.combat.fight.controller.FightMessageController;
-import com.eternalcode.combat.fight.controller.FightTagController;
-import com.eternalcode.combat.fight.controller.FightUnTagController;
 import com.eternalcode.combat.fight.effect.FightEffectController;
 import com.eternalcode.combat.fight.effect.FightEffectService;
 import com.eternalcode.combat.fight.effect.FightEffectServiceImpl;
@@ -84,7 +79,6 @@ import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.io.File;
-import java.time.Duration;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Stream;
 
@@ -124,7 +118,7 @@ public final class CombatPlugin extends JavaPlugin implements EternalCombatApi {
 
         this.fightManager = new FightManagerImpl(eventManager);
         this.pearlService = new PearlServiceImpl(this.fightManager, pluginConfig, scheduler);
-        this.tridentService = new TridentServiceImpl(this.fightManager, pluginConfig);
+        this.tridentService = new TridentServiceImpl(pluginConfig);
         this.fightTagOutService = new FightTagOutServiceImpl();
         this.fightEffectService = new FightEffectServiceImpl();
 
