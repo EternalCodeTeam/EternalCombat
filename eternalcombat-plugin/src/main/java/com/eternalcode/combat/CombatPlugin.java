@@ -8,10 +8,14 @@ import com.eternalcode.combat.border.animation.particle.ParticleController;
 import com.eternalcode.combat.bridge.BridgeService;
 import com.eternalcode.combat.crystalpvp.RespawnAnchorListener;
 import com.eternalcode.combat.crystalpvp.EndCrystalListener;
+import com.eternalcode.combat.fight.blocker.CommandsBlocker;
+import com.eternalcode.combat.fight.blocker.ElytraBlocker;
+import com.eternalcode.combat.fight.blocker.ElytraEquipBlocker;
+import com.eternalcode.combat.fight.blocker.FlyingBlocker;
 import com.eternalcode.combat.fight.controller.FightBypassAdminController;
 import com.eternalcode.combat.fight.controller.FightBypassCreativeController;
 import com.eternalcode.combat.fight.controller.FightBypassPermissionController;
-import com.eternalcode.combat.fight.controller.FightInventoryController;
+import com.eternalcode.combat.fight.blocker.InventoryContainersBlocker;
 import com.eternalcode.combat.fight.death.DeathFlareController;
 import com.eternalcode.combat.fight.death.DeathLightningController;
 import com.eternalcode.combat.fight.drop.DropKeepInventoryService;
@@ -32,7 +36,7 @@ import com.eternalcode.combat.fight.drop.DropServiceImpl;
 import com.eternalcode.combat.fight.drop.impl.PercentDropModifier;
 import com.eternalcode.combat.fight.drop.impl.PlayersHealthDropModifier;
 import com.eternalcode.combat.fight.FightTagCommand;
-import com.eternalcode.combat.fight.controller.FightActionBlockerController;
+import com.eternalcode.combat.fight.blocker.PlaceBlockBlocker;
 import com.eternalcode.combat.fight.controller.FightMessageController;
 import com.eternalcode.combat.fight.controller.FightTagController;
 import com.eternalcode.combat.fight.controller.FightUnTagController;
@@ -63,8 +67,6 @@ import dev.rollczi.litecommands.bukkit.LiteBukkitFactory;
 import dev.rollczi.litecommands.bukkit.LiteBukkitMessages;
 import dev.rollczi.litecommands.folia.FoliaExtension;
 import java.time.Duration;
-import net.kyori.adventure.platform.AudienceProvider;
-import net.kyori.adventure.platform.bukkit.BukkitAudiences;
 import net.kyori.adventure.text.minimessage.MiniMessage;
 import org.bstats.bukkit.Metrics;
 import org.bukkit.Server;
@@ -92,8 +94,8 @@ public final class CombatPlugin extends JavaPlugin implements EternalCombatApi {
 
     private RegionProvider regionProvider;
 
-    private AudienceProvider audienceProvider;
     private LiteCommands<CommandSender> liteCommands;
+    private boolean apiInitialized;
 
 
     @Override
@@ -122,13 +124,12 @@ public final class CombatPlugin extends JavaPlugin implements EternalCombatApi {
 
         UpdaterService updaterService = new UpdaterService(this.getDescription());
 
-        this.audienceProvider = BukkitAudiences.create(this);
         MiniMessage miniMessage = MiniMessage.builder()
             .postProcessor(new AdventureLegacyColorPostProcessor())
             .preProcessor(new AdventureLegacyColorPreProcessor())
             .build();
 
-        NoticeService noticeService = new NoticeService(this.audienceProvider, pluginConfig, miniMessage);
+        NoticeService noticeService = new NoticeService(pluginConfig, miniMessage);
 
         BridgeService bridgeService = new BridgeService(
             pluginConfig,
@@ -181,11 +182,11 @@ public final class CombatPlugin extends JavaPlugin implements EternalCombatApi {
             new FightBypassAdminController(server, pluginConfig),
             new FightBypassPermissionController(server, pluginConfig),
             new FightBypassCreativeController(server, pluginConfig),
-            new FightActionBlockerController(this.fightManager, noticeService, pluginConfig, server),
+            new PlaceBlockBlocker(this.fightManager, noticeService, pluginConfig),
             new FightPearlController(pluginConfig.pearl, noticeService, this.fightManager, this.fightPearlService),
             new DeathFlareController(pluginConfig, server, scheduler, this),
             new DeathLightningController(pluginConfig, server),
-            new UpdaterNotificationController(updaterService, pluginConfig, this.audienceProvider, miniMessage),
+            new UpdaterNotificationController(updaterService, pluginConfig, miniMessage),
             new KnockbackRegionController(noticeService, this.regionProvider, this.fightManager, knockbackService, server),
             new FightEffectController(pluginConfig.effect, this.fightEffectService, this.fightManager, server),
             new FightTagOutController(this.fightTagOutService),
@@ -196,7 +197,12 @@ public final class CombatPlugin extends JavaPlugin implements EternalCombatApi {
             new EndCrystalListener(this, this.fightManager, pluginConfig),
             new RespawnAnchorListener(this, this.fightManager, pluginConfig),
             new FireworkController(this.fightManager, pluginConfig, noticeService),
-            new FightInventoryController(this.fightManager, pluginConfig, noticeService)
+            new InventoryContainersBlocker(this.fightManager, pluginConfig, noticeService),
+            new CommandsBlocker(this.fightManager, noticeService, pluginConfig),
+            new ElytraBlocker(this.fightManager, pluginConfig),
+            new ElytraEquipBlocker(this.fightManager, noticeService, pluginConfig, server),
+            new FlyingBlocker(this.fightManager, pluginConfig, server),
+            new PlaceBlockBlocker(this.fightManager, noticeService, pluginConfig)
         );
 
         eventManager.subscribe(
@@ -212,6 +218,7 @@ public final class CombatPlugin extends JavaPlugin implements EternalCombatApi {
         );
 
         EternalCombatProvider.initialize(this);
+        this.apiInitialized = true;
 
         long millis = started.elapsed(TimeUnit.MILLISECONDS);
         this.getLogger().info("Successfully loaded EternalCombat in " + millis + "ms");
@@ -219,17 +226,18 @@ public final class CombatPlugin extends JavaPlugin implements EternalCombatApi {
 
     @Override
     public void onDisable() {
-        EternalCombatProvider.deinitialize();
-
         if (this.liteCommands != null) {
             this.liteCommands.unregister();
         }
 
-        if (this.audienceProvider != null) {
-            this.audienceProvider.close();
+        if (this.fightManager != null) {
+            this.fightManager.untagAll();
         }
 
-        this.fightManager.untagAll();
+        if (this.apiInitialized) {
+            EternalCombatProvider.deinitialize();
+            this.apiInitialized = false;
+        }
     }
 
     @Override

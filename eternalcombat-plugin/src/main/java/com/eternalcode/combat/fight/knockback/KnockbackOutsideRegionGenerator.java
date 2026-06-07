@@ -3,53 +3,21 @@ package com.eternalcode.combat.fight.knockback;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Map;
 import java.util.NavigableMap;
+import java.util.Optional;
 import java.util.Set;
 import java.util.TreeMap;
+import java.util.function.Function;
 import org.bukkit.Location;
 
 class KnockbackOutsideRegionGenerator {
 
-    static Location generate(Point2D min, Point2D max, Location playerLocation) {
-        NavigableMap<Double, List<Point2D>> points = generatePoints(min, max, Point2D.from(playerLocation));
-        NavigableMap<Double, Double> distances = new TreeMap<>();
-        double totalWeight = 0;
-
-        Double maxDistance = points.lastKey();
-
-        for (double distance : points.keySet()) {
-            double weight = createWeight(distance, maxDistance);
-            distances.put(distance, weight);
-            totalWeight += weight;
-        }
-
-        double rand = Math.random() * totalWeight;
-        double cumulativeWeight = 0;
-
-        for (Map.Entry<Double, Double> entry : distances.entrySet()) {
-            double distance = entry.getKey();
-            double weight = entry.getValue();
-
-            cumulativeWeight += weight;
-            if (rand <= cumulativeWeight) {
-                return getRandom(points.get(distance))
-                    .toLocation(playerLocation);
-            }
-        }
-
-        return getRandom(points.firstEntry().getValue())
-            .toLocation(playerLocation);
-    }
-
-    private static Point2D getRandom(List<Point2D> points) {
-        return points.get((int) (Math.random() * points.size()));
-    }
-
-    private static double createWeight(double distance, double maxDistance) {
-        double last = Math.log(maxDistance);
-        double weight = last - Math.log(distance);
-        return Math.pow(weight, 10);
+    static Optional<Location> generate(Point2D min, Point2D max, Location playerLocation, Function<Location, Optional<Location>> safeMapper) {
+        return generatePoints(min, max, Point2D.from(playerLocation)).entrySet().stream()
+            .flatMap(entry -> entry.getValue().stream())
+            .map(point2D -> point2D.toLocation(playerLocation))
+            .flatMap(safeMapper.andThen(validPoint -> validPoint.stream()))
+            .findFirst();
     }
 
     private static NavigableMap<Double, List<Point2D>> generatePoints(Point2D min, Point2D max, Point2D location) {
@@ -77,6 +45,5 @@ class KnockbackOutsideRegionGenerator {
     private static double distance(Point2D p1, Point2D p2) {
         return Math.sqrt(Math.pow(p2.x() - p1.x(), 2) + Math.pow(p2.z() - p1.z(), 2));
     }
-
 
 }

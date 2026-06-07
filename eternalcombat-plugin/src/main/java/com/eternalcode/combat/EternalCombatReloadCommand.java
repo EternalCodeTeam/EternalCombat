@@ -2,7 +2,6 @@ package com.eternalcode.combat;
 
 import com.eternalcode.combat.config.ConfigService;
 import com.eternalcode.combat.notification.NoticeService;
-import com.eternalcode.multification.bukkit.notice.BukkitNotice;
 import com.eternalcode.multification.notice.Notice;
 import com.google.common.base.Stopwatch;
 import dev.rollczi.litecommands.annotations.async.Async;
@@ -16,7 +15,7 @@ import org.bukkit.command.CommandSender;
 @Command(name = "combatlog", aliases = "combat")
 public class EternalCombatReloadCommand {
 
-    private static final Notice RELOAD_MESSAGE = BukkitNotice.builder()
+    private static final Notice RELOAD_MESSAGE = Notice.builder()
         .chat("<b><gradient:#8a1212:#fc6b03>EternalCombat:</gradient></b> Reloaded EternalCombat in <color:#fce303>{TIME}ms!</color>")
         .build();
 
