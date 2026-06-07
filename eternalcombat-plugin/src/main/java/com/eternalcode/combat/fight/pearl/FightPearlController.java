@@ -82,12 +82,12 @@ public class FightPearlController implements Listener {
     }
 
     @EventHandler(priority = EventPriority.HIGHEST)
-    public void onPearlStasisTeleport(PlayerTeleportEvent event) {
+    public void onPearlTeleport(PlayerTeleportEvent event) {
         if (event.getCause() != PlayerTeleportEvent.TeleportCause.ENDER_PEARL) {
             return;
         }
 
-        if (!this.settings.preventPearlStasis) {
+        if (!this.settings.pearlThrowDisabledDuringCombat) {
             return;
         }
 
@@ -102,7 +102,7 @@ public class FightPearlController implements Listener {
 
         this.noticeService.create()
             .player(playerId)
-            .notice(this.settings.pearlTeleportBlockedDuringCombat)
+            .notice(this.settings.pearlThrowBlockedDuringCombat)
             .send();
     }
 
