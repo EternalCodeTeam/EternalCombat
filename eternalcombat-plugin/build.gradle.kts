@@ -1,6 +1,6 @@
-import net.minecrell.pluginyml.bukkit.BukkitPluginDescription
+
 import net.minecrell.pluginyml.paper.PaperPluginDescription
-import org.gradle.kotlin.dsl.shadowJar
+import net.minecrell.pluginyml.bukkit.BukkitPluginDescription
 
 plugins {
     `eternalcombat-java`

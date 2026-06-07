@@ -6,7 +6,7 @@ import eu.okaeri.configs.annotation.Comment;
 
 import java.time.Duration;
 
-public class FightPearlSettings extends OkaeriConfig {
+public class PearlSettings extends OkaeriConfig {
 
     @Comment({ "# Is pearl damage to be enabled?", "# This will work globally" })
     public boolean pearlThrowDamageEnabled = true;
@@ -19,6 +19,9 @@ public class FightPearlSettings extends OkaeriConfig {
 
     @Comment("# Set true, If you want add cooldown to pearls")
     public boolean pearlCooldownEnabled = false;
+
+    @Comment("# Set true, If you want to reset timer when player throws ender pearl")
+    public boolean pearlExtendsCombatTag = false;
 
     @Comment({
         "# Block throwing pearls with delay?",
