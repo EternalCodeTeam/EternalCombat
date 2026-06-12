@@ -11,6 +11,7 @@ import com.eternalcode.combat.util.InventoryUtil;
 import com.eternalcode.combat.util.MathUtil;
 import com.eternalcode.combat.util.RemoveItemResult;
 import org.bukkit.attribute.Attribute;
+import org.bukkit.attribute.AttributeInstance;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
@@ -46,7 +47,9 @@ public class PlayersHealthDropModifier implements DropModifier {
 
         List<ItemStack> droppedItems = drop.getDroppedItems();
 
-        double maxHealth = player.getAttribute(Attribute.GENERIC_MAX_HEALTH).getBaseValue();
+        double maxHealth = Optional.ofNullable(player.getAttribute(Attribute.GENERIC_MAX_HEALTH))
+            .map(AttributeInstance::getValue)
+            .orElse(20.0);
         double health = logout.health();
 
         int percentHealth = MathUtil.getRoundedCountPercentage(health, maxHealth);

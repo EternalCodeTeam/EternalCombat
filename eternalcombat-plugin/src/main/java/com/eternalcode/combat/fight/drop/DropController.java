@@ -141,7 +141,7 @@ public class DropController implements DynamicListener<PlayerDeathEvent> {
                 .toArray(new ItemStack[0]);
 
             HashMap<Integer, ItemStack> leftover = playerInventory.addItem(itemsToGive);
-            leftover.values().forEach(item -> player.getWorld().dropItemNaturally(player.getLocation(), item));
+            leftover.values().forEach(item -> event.getRespawnLocation().getWorld().dropItemNaturally(event.getRespawnLocation(), item));
         }
     }
 }

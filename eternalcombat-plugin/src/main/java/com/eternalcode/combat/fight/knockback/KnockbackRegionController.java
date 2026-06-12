@@ -37,6 +37,7 @@ public class KnockbackRegionController implements Listener {
     private final FightManager fightManager;
     private final KnockbackService knockbackService;
     private final Server server;
+    private Method getMountMethod;
 
     public KnockbackRegionController(NoticeService noticeService, RegionProvider regionProvider, FightManager fightManager, KnockbackService knockbackService, Server server, Plugin plugin) {
         this.noticeService = noticeService;
@@ -152,6 +153,13 @@ public class KnockbackRegionController implements Listener {
             return;
         }
 
+        try {
+            this.getMountMethod = eventClass.get().getMethod("getMount");
+        } catch (NoSuchMethodException exception) {
+            plugin.getLogger().warning("Failed to find getMount method on " + eventClass.get().getName());
+            return;
+        }
+
         EventExecutor executor = this::onEntityMount;
         plugin.getServer().getPluginManager().registerEvent(eventClass.get(), this, EventPriority.HIGHEST, executor, plugin, true);
     }
@@ -197,17 +205,20 @@ public class KnockbackRegionController implements Listener {
     }
 
     private Entity getMount(Event event) {
+        if (this.getMountMethod == null) {
+            return null;
+        }
+
         try {
-            Method getMount = event.getClass().getMethod("getMount");
-            Object mount = getMount.invoke(event);
+            Object mount = this.getMountMethod.invoke(event);
 
             if (mount instanceof Entity entity) {
                 return entity;
             }
 
             return null;
-        } catch (NoSuchMethodException | IllegalAccessException | InvocationTargetException exception) {
-            throw new IllegalStateException("Cannot read mount from " + event.getClass().getName(), exception);
+        } catch (IllegalAccessException | InvocationTargetException exception) {
+            return null;
         }
     }
 
