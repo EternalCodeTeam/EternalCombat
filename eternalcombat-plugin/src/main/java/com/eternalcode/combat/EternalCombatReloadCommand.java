@@ -4,7 +4,6 @@ import com.eternalcode.combat.config.ConfigService;
 import com.eternalcode.combat.notification.NoticeService;
 import com.eternalcode.multification.notice.Notice;
 import com.google.common.base.Stopwatch;
-import dev.rollczi.litecommands.annotations.async.Async;
 import dev.rollczi.litecommands.annotations.command.Command;
 import dev.rollczi.litecommands.annotations.context.Context;
 import dev.rollczi.litecommands.annotations.execute.Execute;
@@ -27,7 +26,6 @@ public class EternalCombatReloadCommand {
         this.noticeService = noticeService;
     }
 
-    @Async
     @Execute(name = "reload")
     @Permission("eternalcombat.reload")
     void execute(@Context CommandSender sender) {

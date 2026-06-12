@@ -2,6 +2,8 @@ package com.eternalcode.combat.updater;
 
 import com.eternalcode.combat.config.implementation.PluginConfig;
 import com.eternalcode.commons.concurrent.FutureHandler;
+import com.eternalcode.commons.scheduler.Scheduler;
+import java.time.Duration;
 import net.kyori.adventure.text.minimessage.MiniMessage;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -15,11 +17,13 @@ public class UpdaterNotificationController implements Listener {
     private final UpdaterService updaterService;
     private final PluginConfig pluginConfig;
     private final MiniMessage miniMessage;
+    private final Scheduler scheduler;
 
-    public UpdaterNotificationController(UpdaterService updaterService, PluginConfig pluginConfig, MiniMessage miniMessage) {
+    public UpdaterNotificationController(UpdaterService updaterService, PluginConfig pluginConfig, MiniMessage miniMessage, Scheduler scheduler) {
         this.updaterService = updaterService;
         this.pluginConfig = pluginConfig;
         this.miniMessage = miniMessage;
+        this.scheduler = scheduler;
     }
 
     @EventHandler
@@ -33,7 +37,11 @@ public class UpdaterNotificationController implements Listener {
         this.updaterService.checkForUpdate()
             .thenAccept(result -> {
                 if (result.isUpdateAvailable()) {
-                    player.sendMessage(this.miniMessage.deserialize(NEW_VERSION_AVAILABLE));
+                    this.scheduler.runLater(() -> {
+                        if (player.isOnline()) {
+                            player.sendMessage(this.miniMessage.deserialize(NEW_VERSION_AVAILABLE));
+                        }
+                    }, Duration.ZERO);
                 }
             })
             .exceptionally(FutureHandler::handleException);

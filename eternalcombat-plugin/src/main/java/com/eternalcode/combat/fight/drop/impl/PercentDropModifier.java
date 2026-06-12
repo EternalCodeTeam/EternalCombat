@@ -27,10 +27,11 @@ public class PercentDropModifier implements DropModifier {
 
     @Override
     public DropResult modifyDrop(Drop drop) {
-        int dropItemPercent = 100 - MathUtil.clamp(this.settings.dropItemPercent, 0, 100);
+        int dropItemPercent = MathUtil.clamp(this.settings.dropItemPercent, 0, 100);
+        int keepItemPercent = 100 - dropItemPercent;
         List<ItemStack> droppedItems = drop.getDroppedItems();
 
-        int itemsToDelete = InventoryUtil.calculateItemsToDelete(dropItemPercent, droppedItems, ItemStack::getAmount);
+        int itemsToDelete = InventoryUtil.calculateItemsToDelete(keepItemPercent, droppedItems, ItemStack::getAmount);
         int droppedExp = MathUtil.getRoundedCountFromPercentage(dropItemPercent, drop.getDroppedExp());
 
         RemoveItemResult result = InventoryUtil.removeRandomItems(droppedItems, itemsToDelete);

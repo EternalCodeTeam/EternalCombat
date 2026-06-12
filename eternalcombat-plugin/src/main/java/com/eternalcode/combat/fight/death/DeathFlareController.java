@@ -3,7 +3,7 @@ package com.eternalcode.combat.fight.death;
 import com.eternalcode.combat.config.implementation.PluginConfig;
 import com.eternalcode.combat.fight.event.CauseOfUnTag;
 import com.eternalcode.combat.fight.event.FightUntagEvent;
-import com.eternalcode.commons.scheduler.Scheduler;
+import com.eternalcode.commons.bukkit.scheduler.MinecraftScheduler;
 import java.time.Duration;
 import java.util.UUID;
 import org.bukkit.Color;
@@ -27,10 +27,10 @@ public class DeathFlareController implements Listener {
 
     private final PluginConfig pluginConfig;
     private final Server server;
-    private final Scheduler scheduler;
+    private final MinecraftScheduler scheduler;
     private final NamespacedKey key;
 
-    public DeathFlareController(PluginConfig pluginConfig, Server server, Scheduler scheduler, Plugin plugin) {
+    public DeathFlareController(PluginConfig pluginConfig, Server server, MinecraftScheduler scheduler, Plugin plugin) {
         this.pluginConfig = pluginConfig;
         this.server = server;
         this.scheduler = scheduler;
@@ -65,7 +65,7 @@ public class DeathFlareController implements Listener {
         }
     }
 
-    @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
+    @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
     public void onEntityDamageByEntity(EntityDamageByEntityEvent event) {
         if (event.getDamager() instanceof Firework firework && firework.getPersistentDataContainer().has(key, PersistentDataType.STRING)) {
             event.setCancelled(true);
@@ -102,7 +102,8 @@ public class DeathFlareController implements Listener {
     }
 
     private void scheduleParticles(Firework flare, World world) {
-        this.scheduler.runLaterAsync(
+        this.scheduler.runLater(
+            flare.getLocation(),
             () -> {
                 if (flare.isDead() || !flare.isValid()) {
                     return;

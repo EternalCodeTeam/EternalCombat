@@ -50,10 +50,11 @@ public class PlayersHealthDropModifier implements DropModifier {
         double health = logout.health();
 
         int percentHealth = MathUtil.getRoundedCountPercentage(health, maxHealth);
-        int reversedPercent = MathUtil.clamp(100 - percentHealth, this.settings.playersHealthPercentClamp, 100);
+        int dropPercent = MathUtil.clamp(100 - percentHealth, this.settings.playersHealthPercentClamp, 100);
+        int keepPercent = 100 - dropPercent;
 
-        int itemsToDelete = InventoryUtil.calculateItemsToDelete(reversedPercent, droppedItems, ItemStack::getAmount);
-        int droppedExp = MathUtil.getRoundedCountFromPercentage(reversedPercent, drop.getDroppedExp());
+        int itemsToDelete = InventoryUtil.calculateItemsToDelete(keepPercent, droppedItems, ItemStack::getAmount);
+        int droppedExp = MathUtil.getRoundedCountFromPercentage(dropPercent, drop.getDroppedExp());
 
         RemoveItemResult result = InventoryUtil.removeRandomItems(droppedItems, itemsToDelete);
 

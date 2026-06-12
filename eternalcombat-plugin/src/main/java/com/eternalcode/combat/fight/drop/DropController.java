@@ -15,6 +15,7 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
 import org.bukkit.inventory.meta.SkullMeta;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.UUID;
 import java.util.concurrent.ThreadLocalRandom;
@@ -85,8 +86,8 @@ public class DropController implements DynamicListener<PlayerDeathEvent> {
             return false;
         }
 
-        if (this.dropSettings.headDropOnlyInCombat && inCombat) {
-            return true;
+        if (this.dropSettings.headDropOnlyInCombat && !inCombat) {
+            return false;
         }
 
         if (this.dropSettings.headDropChance <= 0.0) {
@@ -139,7 +140,8 @@ public class DropController implements DynamicListener<PlayerDeathEvent> {
             ItemStack[] itemsToGive = this.keepInventoryManager.nextItems(playerUniqueId)
                 .toArray(new ItemStack[0]);
 
-            playerInventory.addItem(itemsToGive);
+            HashMap<Integer, ItemStack> leftover = playerInventory.addItem(itemsToGive);
+            leftover.values().forEach(item -> player.getWorld().dropItemNaturally(player.getLocation(), item));
         }
     }
 }

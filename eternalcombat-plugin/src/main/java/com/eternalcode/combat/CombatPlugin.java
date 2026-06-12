@@ -192,8 +192,8 @@ public final class CombatPlugin extends JavaPlugin implements EternalCombatApi {
             new TridentController(pluginConfig, noticeService, this.fightManager, this.tridentService, server),
             new DeathFlareController(pluginConfig, server, scheduler, this),
             new DeathLightningController(pluginConfig, server),
-            new UpdaterNotificationController(updaterService, pluginConfig, miniMessage),
-            new KnockbackRegionController(noticeService, this.regionProvider, this.fightManager, knockbackService, server),
+            new UpdaterNotificationController(updaterService, pluginConfig, miniMessage, scheduler),
+            new KnockbackRegionController(noticeService, this.regionProvider, this.fightManager, knockbackService, server, this),
             new FightEffectController(pluginConfig.effect, this.fightEffectService, this.fightManager, server),
             new FightTagOutController(this.fightTagOutService),
             new FightMessageController(this.fightManager, noticeService, pluginConfig, server),
@@ -207,8 +207,7 @@ public final class CombatPlugin extends JavaPlugin implements EternalCombatApi {
             new CommandsBlocker(this.fightManager, noticeService, pluginConfig),
             new ElytraBlocker(this.fightManager, pluginConfig),
             new ElytraEquipBlocker(this.fightManager, noticeService, pluginConfig, server),
-            new FlyingBlocker(this.fightManager, pluginConfig, server),
-            new PlaceBlockBlocker(this.fightManager, noticeService, pluginConfig)
+            new FlyingBlocker(this.fightManager, pluginConfig, server)
         );
 
         eventManager.subscribe(
