@@ -1,7 +1,7 @@
 object Versions {
 
     // Keep this version for best compatibility.
-    const val PAPER_API = "1.19.3-R0.1-SNAPSHOT"
+    const val PAPER_API = "1.20.4-R0.1-SNAPSHOT"
 
     const val JUNIT_JUPITER_API = "6.1.0"
     const val JUNIT_JUPITER_PARAMS = "6.1.0"
