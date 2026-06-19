@@ -71,7 +71,7 @@ dependencies {
 paper {
     main = "com.eternalcode.combat.CombatPlugin"
     authors = listOf("EternalCodeTeam")
-    apiVersion = "1.19"
+    apiVersion = "1.20.4"
     prefix = "EternalCombat"
     name = "EternalCombat"
     generateLibrariesJson = true
