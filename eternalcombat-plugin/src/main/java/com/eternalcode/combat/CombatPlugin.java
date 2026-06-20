@@ -40,6 +40,7 @@ import com.eternalcode.combat.fight.effect.FightEffectController;
 import com.eternalcode.combat.fight.effect.FightEffectService;
 import com.eternalcode.combat.fight.effect.FightEffectServiceImpl;
 import com.eternalcode.combat.fight.firework.FireworkController;
+import com.eternalcode.combat.fight.knockback.KnockbackMountController;
 import com.eternalcode.combat.fight.knockback.KnockbackRegionController;
 import com.eternalcode.combat.fight.knockback.KnockbackService;
 import com.eternalcode.combat.fight.logout.LogoutController;
@@ -210,6 +211,8 @@ public final class CombatPlugin extends JavaPlugin implements EternalCombatApi {
             new FlyingBlocker(this.fightManager, pluginConfig, server),
             new PlaceBlockBlocker(this.fightManager, noticeService, pluginConfig)
         );
+
+        new KnockbackMountController(noticeService, this.regionProvider, this.fightManager).register(this);
 
         eventManager.subscribe(
             PlayerDeathEvent.class,
