@@ -3,7 +3,11 @@ package com.eternalcode.combat.fight.knockback;
 import com.eternalcode.combat.fight.FightManager;
 import com.eternalcode.combat.notification.NoticeService;
 import com.eternalcode.combat.region.RegionProvider;
+import java.lang.invoke.MethodHandle;
+import java.lang.invoke.MethodHandles;
+import java.lang.invoke.MethodType;
 import java.lang.reflect.Method;
+import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.logging.Level;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
@@ -27,6 +31,7 @@ public final class KnockbackMountController implements Listener {
     private final NoticeService noticeService;
     private final RegionProvider regionProvider;
     private final FightManager fightManager;
+    private final AtomicBoolean mountFailureLogged = new AtomicBoolean();
 
     public KnockbackMountController(NoticeService noticeService, RegionProvider regionProvider, FightManager fightManager) {
         this.noticeService = noticeService;
@@ -34,14 +39,13 @@ public final class KnockbackMountController implements Listener {
         this.fightManager = fightManager;
     }
 
-    @SuppressWarnings("unchecked")
     public void register(Plugin plugin) {
         Class<? extends Event> eventClass = null;
         for (String candidate : EVENT_CLASS_CANDIDATES) {
             try {
-                eventClass = (Class<? extends Event>) Class.forName(candidate);
+                eventClass = Class.forName(candidate).asSubclass(Event.class);
                 break;
-            } catch (ClassNotFoundException ignored) {
+            } catch (ClassNotFoundException | ClassCastException ignored) {
             }
         }
 
@@ -50,11 +54,11 @@ public final class KnockbackMountController implements Listener {
             return;
         }
 
-        Method getMount;
+        MethodHandle getMountHandle;
         try {
-            getMount = eventClass.getMethod("getMount");
-        } catch (NoSuchMethodException exception) {
-            plugin.getLogger().log(Level.WARNING, "EntityMountEvent has no getMount() method; mount protection in regions is disabled.", exception);
+            getMountHandle = this.resolveGetMountHandle(eventClass);
+        } catch (NoSuchMethodException | IllegalAccessException exception) {
+            plugin.getLogger().log(Level.WARNING, "EntityMountEvent has incompatible getMount() method; mount protection in regions is disabled.", exception);
             return;
         }
 
@@ -62,13 +66,28 @@ public final class KnockbackMountController implements Listener {
             eventClass,
             this,
             EventPriority.HIGHEST,
-            (listener, event) -> this.handle(event, getMount),
+            (listener, event) -> this.handle(event, getMountHandle, plugin),
             plugin,
             true
         );
     }
 
-    private void handle(Event event, Method getMount) {
+    private MethodHandle resolveGetMountHandle(Class<? extends Event> eventClass) throws NoSuchMethodException, IllegalAccessException {
+        if (!EntityEvent.class.isAssignableFrom(eventClass) || !Cancellable.class.isAssignableFrom(eventClass)) {
+            throw new NoSuchMethodException(eventClass.getName() + " is not a cancellable entity event");
+        }
+
+        Method getMount = eventClass.getMethod("getMount");
+        if (!Entity.class.isAssignableFrom(getMount.getReturnType())) {
+            throw new NoSuchMethodException(eventClass.getName() + "#getMount() does not return Entity");
+        }
+
+        return MethodHandles.publicLookup()
+            .unreflect(getMount)
+            .asType(MethodType.methodType(Entity.class, Event.class));
+    }
+
+    private void handle(Event event, MethodHandle getMountHandle, Plugin plugin) {
         if (!(event instanceof EntityEvent entityEvent) || !(event instanceof Cancellable cancellable)) {
             return;
         }
@@ -83,8 +102,9 @@ public final class KnockbackMountController implements Listener {
 
         Entity mount;
         try {
-            mount = (Entity) getMount.invoke(event);
-        } catch (ReflectiveOperationException exception) {
+            mount = (Entity) getMountHandle.invokeExact(event);
+        } catch (Throwable exception) {
+            this.logMountFailure(plugin, exception);
             return;
         }
 
@@ -97,5 +117,13 @@ public final class KnockbackMountController implements Listener {
             .player(player.getUniqueId())
             .notice(config -> config.messagesSettings.cantEnterOnRegion)
             .send();
+    }
+
+    private void logMountFailure(Plugin plugin, Throwable exception) {
+        if (!this.mountFailureLogged.compareAndSet(false, true)) {
+            return;
+        }
+
+        plugin.getLogger().log(Level.WARNING, "Could not read EntityMountEvent mount; mount protection in regions is skipped.", exception);
     }
 }
