@@ -14,9 +14,9 @@ tasks {
         })
 
         minecraftVersion("26.1.2")
-        downloadPlugins.modrinth("FastAsyncWorldEdit", "2.15.2")
-        downloadPlugins.modrinth("PacketEvents", "2.12.2+spigot")
-        downloadPlugins.modrinth("WorldGuard", "7.0.17")
-        downloadPlugins.modrinth("LuckPerms", "v5.5.53-bukkit")
+        downloadPlugins.modrinth("FastAsyncWorldEdit", Versions.FAST_ASYNC_WORLD_EDIT)
+        downloadPlugins.modrinth("PacketEvents", Versions.PACKETEVENTS)
+        downloadPlugins.modrinth("WorldGuard", Versions.WORLDGUARD)
+        downloadPlugins.modrinth("LuckPerms", Versions.LUCKPERMS)
     }
 }

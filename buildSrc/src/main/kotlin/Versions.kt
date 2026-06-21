@@ -26,10 +26,12 @@ object Versions {
 
     const val PLACEHOLDER_API = "2.12.2"
     const val LANDS_API = "7.25.4"
-    const val WORLDEDIT = "3ISh7ADm" //cannot use numeric version bc of duplicated version on modrinth
-    const val PACKETEVENTS = "2.11.1"
-    const val WORLDGUARD = "7.0.15-beta-01"
-    const val LUCKPERMS = "5.5.17"
+
+    //runServer task
+    const val FAST_ASYNC_WORLD_EDIT = "2.15.2"
+    const val PACKETEVENTS = "2.12.2+spigot"
+    const val WORLDGUARD = "7.0.17"
+    const val LUCKPERMS = "v5.5.53-bukkit"
 
 }
 
