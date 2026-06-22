@@ -11,7 +11,7 @@ object Versions {
 
     const val ETERNALCODE_COMMONS = "1.4.1"
     const val MULTIFICATION = "1.2.5-SNAPSHOT"
-    const val PACKETS_EVENTS = "2.12.2"
+    const val PACKETS_EVENTS = "2.13.0"
 
     const val LITE_COMMANDS = "3.11.0"
     const val OKAERI_CONFIGS_SERDES_COMMONS = "5.0.13"
