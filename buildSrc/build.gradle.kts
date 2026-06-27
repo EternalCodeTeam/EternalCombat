@@ -8,7 +8,7 @@ repositories {
 }
 
 dependencies {
-    implementation("com.gradleup.shadow:com.gradleup.shadow.gradle.plugin:9.4.2")
+    implementation("com.gradleup.shadow:com.gradleup.shadow.gradle.plugin:9.4.3")
     implementation("com.modrinth.minotaur:com.modrinth.minotaur.gradle.plugin:2.9.0")
     implementation("io.papermc.hangar-publish-plugin:io.papermc.hangar-publish-plugin.gradle.plugin:0.1.4")
     implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8:2.4.0")
