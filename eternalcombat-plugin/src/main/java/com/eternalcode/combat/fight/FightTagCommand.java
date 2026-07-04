@@ -90,7 +90,6 @@ public class FightTagCommand {
         }
 
         FightTagEvent firstTagEvent = this.fightManager.tag(firstTarget.getUniqueId(), combatTime, CauseOfTag.COMMAND);
-        FightTagEvent secondTagEvent = this.fightManager.tag(secondTarget.getUniqueId(), combatTime, CauseOfTag.COMMAND);
 
         if (firstTagEvent.isCancelled()) {
             CancelTagReason cancelReason = firstTagEvent.getCancelReason();
@@ -100,15 +99,16 @@ public class FightTagCommand {
             return;
         }
 
+        FightTagEvent secondTagEvent = this.fightManager.tag(secondTarget.getUniqueId(), combatTime, CauseOfTag.COMMAND);
+
         if (secondTagEvent.isCancelled()) {
             CancelTagReason cancelReason = secondTagEvent.getCancelReason();
 
+            // Roll back the first tag so we do not leave only one player tagged.
+            this.fightManager.untag(firstTarget.getUniqueId(), CauseOfUnTag.COMMAND);
+
             this.tagoutReasonHandler(sender, cancelReason, messagesSettings);
 
-            return;
-        }
-
-        if (firstTagEvent.isCancelled() && secondTagEvent.isCancelled()) {
             return;
         }
 
