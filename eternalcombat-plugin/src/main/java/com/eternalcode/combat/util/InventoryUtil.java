@@ -24,23 +24,38 @@ public class InventoryUtil {
         List<ItemStack> currentItems = new ArrayList<>(list);
         List<ItemStack> removedItems = new ArrayList<>();
 
-        int currentItemsToDelete = itemsToDelete;
-        while (currentItemsToDelete > 0) {
-            int randomIndex = RANDOM.nextInt(list.size());
+        int totalAvailable = 0;
+        for (ItemStack item : currentItems) {
+            totalAvailable += Math.max(0, item.getAmount());
+        }
+
+        // Never try to remove more than is actually available, otherwise the loop
+        // could never reach zero and would spin forever.
+        int currentItemsToDelete = Math.min(itemsToDelete, totalAvailable);
+
+        while (currentItemsToDelete > 0 && !currentItems.isEmpty()) {
+            int randomIndex = RANDOM.nextInt(currentItems.size());
             ItemStack currentItem = currentItems.get(randomIndex);
 
             int amount = currentItem.getAmount();
-            int randomAmount = RANDOM.nextInt(0, Math.min(currentItemsToDelete, amount) + 1);
-
-            if (amount <= 0 || randomAmount <= 0) {
+            if (amount <= 0) {
+                currentItems.remove(randomIndex);
                 continue;
             }
+
+            int maxRemovable = Math.min(currentItemsToDelete, amount);
+            int randomAmount = RANDOM.nextInt(1, maxRemovable + 1);
 
             ItemStack removedItem = currentItem.clone();
             removedItem.setAmount(randomAmount);
             removedItems.add(removedItem);
 
-            currentItem.setAmount(amount - randomAmount);
+            int remaining = amount - randomAmount;
+            if (remaining <= 0) {
+                currentItems.remove(randomIndex);
+            } else {
+                currentItem.setAmount(remaining);
+            }
 
             currentItemsToDelete -= randomAmount;
         }
