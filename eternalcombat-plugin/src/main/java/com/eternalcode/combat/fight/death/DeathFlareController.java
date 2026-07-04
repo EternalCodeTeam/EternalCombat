@@ -102,7 +102,7 @@ public class DeathFlareController implements Listener {
     }
 
     private void scheduleParticles(Firework flare, World world) {
-        this.scheduler.runLaterAsync(
+        this.scheduler.runLater(
             () -> {
                 if (flare.isDead() || !flare.isValid()) {
                     return;
