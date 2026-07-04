@@ -4,6 +4,7 @@ import com.eternalcode.combat.event.DynamicListener;
 import com.eternalcode.combat.fight.FightManager;
 import com.eternalcode.commons.adventure.AdventureUtil;
 import net.kyori.adventure.text.minimessage.MiniMessage;
+import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
@@ -140,9 +141,13 @@ public class DropController implements DynamicListener<PlayerDeathEvent> {
             ItemStack[] itemsToGive = this.keepInventoryManager.nextItems(playerUniqueId)
                 .toArray(new ItemStack[0]);
 
+            // The player is not teleported yet during PlayerRespawnEvent, so
+            // player.getLocation() would still be the death location.
+            Location respawnLocation = event.getRespawnLocation();
+
             Map<Integer, ItemStack> leftover = playerInventory.addItem(itemsToGive);
             leftover.values().forEach(item ->
-                player.getWorld().dropItemNaturally(player.getLocation(), item));
+                respawnLocation.getWorld().dropItemNaturally(respawnLocation, item));
         }
     }
 }
