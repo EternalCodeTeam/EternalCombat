@@ -26,7 +26,9 @@ public class InventoryUtil {
 
         int totalAvailable = 0;
         for (ItemStack item : currentItems) {
-            totalAvailable += Math.max(0, item.getAmount());
+            if (item != null) {
+                totalAvailable += Math.max(0, item.getAmount());
+            }
         }
 
         // Never try to remove more than is actually available, otherwise the loop
@@ -36,6 +38,12 @@ public class InventoryUtil {
         while (currentItemsToDelete > 0 && !currentItems.isEmpty()) {
             int randomIndex = RANDOM.nextInt(currentItems.size());
             ItemStack currentItem = currentItems.get(randomIndex);
+
+            // Bukkit inventory lists can contain null entries for empty slots.
+            if (currentItem == null) {
+                currentItems.remove(randomIndex);
+                continue;
+            }
 
             int amount = currentItem.getAmount();
             if (amount <= 0) {
