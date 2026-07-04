@@ -89,6 +89,8 @@ public class FightTagCommand {
             return;
         }
 
+        boolean firstAlreadyInCombat = this.fightManager.isInCombat(firstTarget.getUniqueId());
+
         FightTagEvent firstTagEvent = this.fightManager.tag(firstTarget.getUniqueId(), combatTime, CauseOfTag.COMMAND);
 
         if (firstTagEvent.isCancelled()) {
@@ -104,8 +106,11 @@ public class FightTagCommand {
         if (secondTagEvent.isCancelled()) {
             CancelTagReason cancelReason = secondTagEvent.getCancelReason();
 
-            // Roll back the first tag so we do not leave only one player tagged.
-            this.fightManager.untag(firstTarget.getUniqueId(), CauseOfUnTag.COMMAND);
+            // Only roll back the first tag when this command actually created it;
+            // never untag a player who was already in combat beforehand.
+            if (!firstAlreadyInCombat) {
+                this.fightManager.untag(firstTarget.getUniqueId(), CauseOfUnTag.COMMAND);
+            }
 
             this.tagoutReasonHandler(sender, cancelReason, messagesSettings);
 
