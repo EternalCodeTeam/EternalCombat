@@ -32,7 +32,7 @@ public class CommandsBlocker implements Listener {
             return;
         }
 
-        String command = event.getMessage().substring(1);
+        String command = normalizeCommand(event.getMessage().substring(1));
 
         boolean isAnyMatch = this.config.commands.restrictedCommands.stream()
             .anyMatch(restrictedCommand -> StringUtil.startsWithIgnoreCase(command, restrictedCommand));
@@ -49,6 +49,23 @@ public class CommandsBlocker implements Listener {
                 .send();
 
         }
+    }
+
+    // Trim leading spaces and strip any namespace prefix (e.g. "minecraft:tp" -> "tp")
+    // from the command label so blacklisted commands cannot be bypassed with those forms.
+    private static String normalizeCommand(String rawCommand) {
+        String command = rawCommand.stripLeading();
+
+        int spaceIndex = command.indexOf(' ');
+        String label = spaceIndex == -1 ? command : command.substring(0, spaceIndex);
+
+        int colonIndex = label.indexOf(':');
+        if (colonIndex == -1) {
+            return command;
+        }
+
+        String rest = spaceIndex == -1 ? "" : command.substring(spaceIndex);
+        return label.substring(colonIndex + 1) + rest;
     }
 
 }
