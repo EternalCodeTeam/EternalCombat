@@ -119,9 +119,15 @@ public class TridentController implements Listener {
 
     @EventHandler(ignoreCancelled = true)
     public void onUntag(FightUntagEvent event) {
-        Player player = server.getPlayer(event.getPlayer());
+        UUID playerId = event.getPlayer();
+        this.tridentService.removeDelay(playerId);
+
+        Player player = server.getPlayer(playerId);
+        if (player == null) {
+            return;
+        }
+
         player.setCooldown(Material.TRIDENT, 0);
-        this.tridentService.removeDelay(player.getUniqueId());
     }
 
     private boolean isRiptideInteract(PlayerInteractEvent event) {
