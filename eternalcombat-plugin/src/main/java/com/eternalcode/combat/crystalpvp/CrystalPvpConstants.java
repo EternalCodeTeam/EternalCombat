@@ -3,12 +3,11 @@ package com.eternalcode.combat.crystalpvp;
 import com.eternalcode.combat.config.implementation.PluginConfig;
 import com.eternalcode.combat.fight.FightManager;
 import com.eternalcode.combat.fight.event.CauseOfTag;
-import com.eternalcode.combat.util.ReflectUtil;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 import org.bukkit.Material;
-import org.bukkit.block.BlockState;
+import org.bukkit.block.Block;
 import org.bukkit.entity.EnderCrystal;
 import org.bukkit.entity.Player;
 import org.bukkit.event.entity.EntityDamageByBlockEvent;
@@ -22,21 +21,6 @@ public class CrystalPvpConstants {
 
     public static final String CRYSTAL_METADATA = "eternalcombat:crystal";
     public static final String ANCHOR_METADATA = "eternalcombat:anchor";
-
-    private static final boolean HAS_DAMAGER_BLOCK_STATE = checkForDamagerBlockState();
-
-    private static boolean checkForDamagerBlockState() {
-        try {
-            return EntityDamageByBlockEvent.class.getDeclaredMethod("getDamagerBlockState") != null;
-        }
-        catch (NoSuchMethodException exception) {
-            return false;
-        }
-    }
-
-    static boolean hasDamagerBlockState() {
-        return HAS_DAMAGER_BLOCK_STATE;
-    }
 
     public static Optional<UUID> getDamagerUniqueIdFromEndCrystal(EntityDamageByEntityEvent event) {
         if (event.getDamager() instanceof EnderCrystal enderCrystal) {
@@ -52,20 +36,16 @@ public class CrystalPvpConstants {
     }
 
     public static Optional<UUID> getDamagerUniqueIdFromRespawnAnchor(EntityDamageByBlockEvent event) {
-        if (!CrystalPvpConstants.hasDamagerBlockState()) {
+        Block damager = event.getDamager();
+        if (damager == null) {
             return Optional.empty();
         }
 
-        Object maybeState = ReflectUtil.invokeMethod(event, "getDamagerBlockState");
-        if (!(maybeState instanceof BlockState state)) {
-            return Optional.empty();
-        }
-        Material type = state.getType();
-        if (!type.equals(Material.RESPAWN_ANCHOR)) {
+        if (damager.getType() != Material.RESPAWN_ANCHOR) {
             return Optional.empty();
         }
 
-        return state.getMetadata(ANCHOR_METADATA).stream()
+        return damager.getMetadata(ANCHOR_METADATA).stream()
             .filter(source -> source instanceof CrystalMetadata)
             .map(meta -> (CrystalMetadata) meta)
             .findFirst()

@@ -2,7 +2,6 @@ package com.eternalcode.combat.border.animation.block;
 
 import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
-import io.papermc.lib.PaperLib;
 import org.bukkit.ChunkSnapshot;
 import org.bukkit.entity.Player;
 
@@ -22,7 +21,7 @@ class ChunkCache {
             return snapshot;
         }
 
-        ChunkSnapshot chunkSnapshot = PaperLib.getChunkAtAsync(player.getWorld(), location.x(), location.z(), false)
+        ChunkSnapshot chunkSnapshot = player.getWorld().getChunkAtAsync(location.x(), location.z(), false)
             .thenApply(chunk -> chunk.getChunkSnapshot())
             .join();
 

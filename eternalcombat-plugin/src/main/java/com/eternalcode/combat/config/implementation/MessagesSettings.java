@@ -1,6 +1,5 @@
 package com.eternalcode.combat.config.implementation;
 
-import com.eternalcode.multification.bukkit.notice.BukkitNotice;
 import com.eternalcode.multification.notice.Notice;
 import eu.okaeri.configs.OkaeriConfig;
 import eu.okaeri.configs.annotation.Comment;
@@ -17,9 +16,10 @@ public class MessagesSettings extends OkaeriConfig {
             " ",
             "# Configure the combat log notification displayed to players.",
             "# You can use the {TIME} variable to display the remaining combat time.",
+            "# Placeholder {OPPONENT} will be replaced with player name or 'unknownPlayerPlaceholder' variable",
             " ",
     })
-    public Notice combatNotification = BukkitNotice.builder()
+    public Notice combatNotification = Notice.builder()
             .actionBar("Combat ends in: <red>{TIME}</red>")
             .build();
 
@@ -27,6 +27,12 @@ public class MessagesSettings extends OkaeriConfig {
             "# Would you like to display milliseconds instead of seconds in combat notification "
     })
     public boolean withoutMillis = true;
+
+    @Comment({
+        " ",
+        "# When player is not known this text will be used as {OPPONENT} in 'combatNotification'"
+    })
+    public String unknownPlayerPlaceholder = "Unknown";
 
     @Comment({
             "# Message displayed when a player lacks permission to execute a command.",
@@ -69,6 +75,15 @@ public class MessagesSettings extends OkaeriConfig {
     })
     public Notice commandDisabledDuringCombat = Notice.chat(
             "<gradient:red:yellow>⚠ <white>Command blocked!</white> Cannot use this during combat!</gradient>");
+
+    @Comment({
+        "# Message displayed when a player attempts to use an elytra during combat.",
+        "# This includes gliding, equipping, or having it forcefully removed.",
+        "# Informs the player that elytra usage is disabled in combat."
+    })
+    public Notice elytraDisabledDuringCombat = Notice.chat(
+        "<gradient:red:yellow>⚠ <white>Elytra disabled!</white> Cannot use elytra during combat!</gradient>"
+    );
 
     @Comment({
             "# Message displayed when a player uses a command with incorrect arguments.",

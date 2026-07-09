@@ -1,13 +1,12 @@
 package com.eternalcode.combat.fight.pearl;
 
-import com.eternalcode.multification.bukkit.notice.BukkitNotice;
 import com.eternalcode.multification.notice.Notice;
 import eu.okaeri.configs.OkaeriConfig;
 import eu.okaeri.configs.annotation.Comment;
 
 import java.time.Duration;
 
-public class FightPearlSettings extends OkaeriConfig {
+public class PearlSettings extends OkaeriConfig {
 
     @Comment({ "# Is pearl damage to be enabled?", "# This will work globally" })
     public boolean pearlThrowDamageEnabled = true;
@@ -21,6 +20,9 @@ public class FightPearlSettings extends OkaeriConfig {
     @Comment("# Set true, If you want add cooldown to pearls")
     public boolean pearlCooldownEnabled = false;
 
+    @Comment("# Set true, If you want to reset timer when player throws ender pearl")
+    public boolean pearlExtendsCombatTag = false;
+
     @Comment({
         "# Block throwing pearls with delay?",
         "# If you set this to for example 3s, player will have to wait 3 seconds before throwing another pearl"
@@ -28,12 +30,12 @@ public class FightPearlSettings extends OkaeriConfig {
     public Duration pearlThrowDelay = Duration.ofSeconds(3);
 
     @Comment("# Message sent when player tries to throw ender pearl, but are disabled")
-    public Notice pearlThrowBlockedDuringCombat = BukkitNotice.builder()
+    public Notice pearlThrowBlockedDuringCombat = Notice.builder()
         .chat("<red>Throwing ender pearls is prohibited during combat!")
         .build();
 
     @Comment("# Message sent when player tries to throw ender pearl, but has delay")
-    public Notice pearlThrowBlockedDelayDuringCombat = BukkitNotice.builder()
+    public Notice pearlThrowBlockedDelayDuringCombat = Notice.builder()
         .chat("<red>You must wait {TIME} before next throw!")
         .build();
 

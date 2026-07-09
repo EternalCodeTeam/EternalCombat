@@ -1,6 +1,7 @@
 .classpath
 .idea
 .gradle
+.kotlin
 .project
 .settings
 bin

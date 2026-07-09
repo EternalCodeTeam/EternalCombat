@@ -2,8 +2,6 @@ package com.eternalcode.combat.updater;
 
 import com.eternalcode.combat.config.implementation.PluginConfig;
 import com.eternalcode.commons.concurrent.FutureHandler;
-import net.kyori.adventure.audience.Audience;
-import net.kyori.adventure.platform.AudienceProvider;
 import net.kyori.adventure.text.minimessage.MiniMessage;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -16,20 +14,17 @@ public class UpdaterNotificationController implements Listener {
 
     private final UpdaterService updaterService;
     private final PluginConfig pluginConfig;
-    private final AudienceProvider audienceProvider;
     private final MiniMessage miniMessage;
 
-    public UpdaterNotificationController(UpdaterService updaterService, PluginConfig pluginConfig, AudienceProvider audienceProvider, MiniMessage miniMessage) {
+    public UpdaterNotificationController(UpdaterService updaterService, PluginConfig pluginConfig, MiniMessage miniMessage) {
         this.updaterService = updaterService;
         this.pluginConfig = pluginConfig;
-        this.audienceProvider = audienceProvider;
         this.miniMessage = miniMessage;
     }
 
     @EventHandler
     void onJoin(PlayerJoinEvent event) {
         Player player = event.getPlayer();
-        Audience audience = this.audienceProvider.player(player.getUniqueId());
 
         if (!shouldNotify(player)) {
             return;
@@ -38,7 +33,7 @@ public class UpdaterNotificationController implements Listener {
         this.updaterService.checkForUpdate()
             .thenAccept(result -> {
                 if (result.isUpdateAvailable()) {
-                    audience.sendMessage(this.miniMessage.deserialize(NEW_VERSION_AVAILABLE));
+                    player.sendMessage(this.miniMessage.deserialize(NEW_VERSION_AVAILABLE));
                 }
             })
             .exceptionally(FutureHandler::handleException);

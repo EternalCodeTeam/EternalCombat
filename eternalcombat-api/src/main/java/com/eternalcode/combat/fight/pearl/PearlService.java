@@ -1,16 +1,16 @@
 package com.eternalcode.combat.fight.pearl;
 
 import java.time.Duration;
-import java.time.Instant;
 import java.util.UUID;
+import org.bukkit.entity.Player;
 
-public interface FightPearlService {
+public interface PearlService {
 
-    Instant getDelay(UUID uuid);
+    boolean shouldCancelEvent(UUID playerId);
 
     Duration getRemainingDelay(UUID uuid);
 
     boolean hasDelay(UUID uuid);
 
-    void markDelay(UUID uuid);
+    void handleDelay(Player uuid);
 }
