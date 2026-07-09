@@ -78,19 +78,23 @@ public class DeathSettings extends OkaeriConfig {
     }
 
     @Comment({
-        "Commands that will be executed after a player's death.",
+        "Commands that will be executed after a player's death/respawn/untag.",
         "You can use {player} to represent the name of the player who died and {killer} for the killer's name (if applicable)."
     })
     public PostDeathCommandSettings postDeathCommands = new PostDeathCommandSettings();
 
     public static class PostDeathCommandSettings extends OkaeriConfig {
 
+        @Comment("Commands executed when a player dies in combat")
         public PostDeathCommands onDeathInCombat = new PostDeathCommands();
 
+        @Comment("Commands executed on any player death")
         public PostDeathCommands onAnyDeath = new PostDeathCommands();
 
+        @Comment("Commands executed after a player respawns")
         public PostDeathCommands afterRespawn = new PostDeathCommands();
 
+        @Comment("Commands executed when a player is untagged from combat")
         public PostDeathCommands onUntag = new PostDeathCommands();
 
         public static class PostDeathCommands extends OkaeriConfig {
