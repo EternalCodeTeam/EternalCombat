@@ -15,11 +15,15 @@ import com.eternalcode.combat.fight.FightManager;
 import com.eternalcode.combat.fight.FightManagerImpl;
 import com.eternalcode.combat.fight.FightTagCommand;
 import com.eternalcode.combat.fight.FightTask;
-import com.eternalcode.combat.fight.controller.FightActionBlockerController;
+import com.eternalcode.combat.fight.blocker.CommandsBlocker;
+import com.eternalcode.combat.fight.blocker.ElytraBlocker;
+import com.eternalcode.combat.fight.blocker.ElytraEquipBlocker;
+import com.eternalcode.combat.fight.blocker.FlyingBlocker;
+import com.eternalcode.combat.fight.blocker.InventoryContainersBlocker;
+import com.eternalcode.combat.fight.blocker.PlaceBlockBlocker;
 import com.eternalcode.combat.fight.controller.FightBypassAdminController;
 import com.eternalcode.combat.fight.controller.FightBypassCreativeController;
 import com.eternalcode.combat.fight.controller.FightBypassPermissionController;
-import com.eternalcode.combat.fight.controller.FightInventoryController;
 import com.eternalcode.combat.fight.controller.FightMessageController;
 import com.eternalcode.combat.fight.controller.FightTagController;
 import com.eternalcode.combat.fight.controller.FightUnTagController;
@@ -29,19 +33,6 @@ import com.eternalcode.combat.fight.death.DeathCommandService;
 import com.eternalcode.combat.fight.death.DeathFlareController;
 import com.eternalcode.combat.fight.death.DeathLightningController;
 import com.eternalcode.combat.fight.death.KillerResolver;
-import com.eternalcode.combat.fight.blocker.CommandsBlocker;
-import com.eternalcode.combat.fight.blocker.ElytraBlocker;
-import com.eternalcode.combat.fight.blocker.ElytraEquipBlocker;
-import com.eternalcode.combat.fight.blocker.FlyingBlocker;
-import com.eternalcode.combat.fight.controller.FightBypassAdminController;
-import com.eternalcode.combat.fight.controller.FightBypassCreativeController;
-import com.eternalcode.combat.fight.controller.FightBypassPermissionController;
-import com.eternalcode.combat.fight.blocker.InventoryContainersBlocker;
-import com.eternalcode.combat.fight.controller.FightMessageController;
-import com.eternalcode.combat.fight.controller.FightTagController;
-import com.eternalcode.combat.fight.controller.FightUnTagController;
-import com.eternalcode.combat.fight.death.DeathFlareController;
-import com.eternalcode.combat.fight.death.DeathLightningController;
 import com.eternalcode.combat.fight.drop.DropController;
 import com.eternalcode.combat.fight.drop.DropKeepInventoryService;
 import com.eternalcode.combat.fight.drop.DropKeepInventoryServiceImpl;
@@ -49,7 +40,6 @@ import com.eternalcode.combat.fight.drop.DropService;
 import com.eternalcode.combat.fight.drop.DropServiceImpl;
 import com.eternalcode.combat.fight.drop.impl.PercentDropModifier;
 import com.eternalcode.combat.fight.drop.impl.PlayersHealthDropModifier;
-import com.eternalcode.combat.fight.blocker.PlaceBlockBlocker;
 import com.eternalcode.combat.fight.effect.FightEffectController;
 import com.eternalcode.combat.fight.effect.FightEffectService;
 import com.eternalcode.combat.fight.effect.FightEffectServiceImpl;
@@ -59,9 +49,6 @@ import com.eternalcode.combat.fight.knockback.KnockbackRegionController;
 import com.eternalcode.combat.fight.knockback.KnockbackService;
 import com.eternalcode.combat.fight.logout.LogoutController;
 import com.eternalcode.combat.fight.logout.LogoutService;
-import com.eternalcode.combat.fight.pearl.FightPearlController;
-import com.eternalcode.combat.fight.pearl.FightPearlService;
-import com.eternalcode.combat.fight.pearl.FightPearlServiceImpl;
 import com.eternalcode.combat.fight.pearl.PearlController;
 import com.eternalcode.combat.fight.pearl.PearlService;
 import com.eternalcode.combat.fight.pearl.PearlServiceImpl;
@@ -87,9 +74,6 @@ import dev.rollczi.litecommands.LiteCommands;
 import dev.rollczi.litecommands.bukkit.LiteBukkitFactory;
 import dev.rollczi.litecommands.bukkit.LiteBukkitMessages;
 import dev.rollczi.litecommands.folia.FoliaExtension;
-import net.kyori.adventure.platform.AudienceProvider;
-import net.kyori.adventure.platform.bukkit.BukkitAudiences;
-import java.time.Duration;
 import net.kyori.adventure.text.minimessage.MiniMessage;
 import org.bstats.bukkit.Metrics;
 import org.bukkit.Server;
@@ -212,8 +196,6 @@ public final class CombatPlugin extends JavaPlugin implements EternalCombatApi {
             new FightBypassAdminController(server, pluginConfig),
             new FightBypassPermissionController(server, pluginConfig),
             new FightBypassCreativeController(server, pluginConfig),
-            new FightActionBlockerController(this.fightManager, noticeService, pluginConfig, server),
-            new FightPearlController(pluginConfig.pearl, noticeService, this.fightManager, this.fightPearlService),
             new DeathCommandController(deathCommandService, server),
             new PlaceBlockBlocker(this.fightManager, noticeService, pluginConfig),
             new PearlController(pluginConfig, this.pearlService, noticeService, fightManager),

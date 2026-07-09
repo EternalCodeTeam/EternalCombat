@@ -1,4 +1,5 @@
-import io.papermc.hangarpublishplugin.model.Platforms
+
+import net.minecrell.pluginyml.bukkit.BukkitPluginDescription
 import net.minecrell.pluginyml.paper.PaperPluginDescription
 
 plugins {
@@ -103,15 +104,6 @@ paper {
 }
 
 tasks {
-    runServer {
-        minecraftVersion("1.21.11")
-        downloadPlugins {
-            modrinth("WorldEdit", Versions.WORLDEDIT)
-            modrinth("PacketEvents", "${Versions.PACKETEVENTS}+spigot")
-            modrinth("WorldGuard", Versions.WORLDGUARD)
-            modrinth("LuckPerms", "v${Versions.LUCKPERMS}-bukkit")
-            modrinth("EternalCore", Versions.ETERNALCORE)
-        }
     named("generatePaperPluginDescription") {
         notCompatibleWithConfigurationCache("The plugin-yml paper generator reads Task.project during execution.")
     }
