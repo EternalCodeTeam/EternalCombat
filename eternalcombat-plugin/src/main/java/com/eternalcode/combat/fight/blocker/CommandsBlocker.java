@@ -32,10 +32,12 @@ public class CommandsBlocker implements Listener {
             return;
         }
 
-        String command = normalizeCommand(event.getMessage().substring(1));
+        String original = event.getMessage().substring(1).stripLeading();
+        String command = normalizeCommand(original);
 
         boolean isAnyMatch = this.config.commands.restrictedCommands.stream()
-            .anyMatch(restrictedCommand -> StringUtil.startsWithIgnoreCase(command, restrictedCommand));
+            .anyMatch(restrictedCommand -> StringUtil.startsWithIgnoreCase(original, restrictedCommand)
+                || StringUtil.startsWithIgnoreCase(command, restrictedCommand));
 
         WhitelistBlacklistMode mode = this.config.commands.commandRestrictionMode;
 
