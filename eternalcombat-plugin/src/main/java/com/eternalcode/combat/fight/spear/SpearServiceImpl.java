@@ -17,18 +17,7 @@ public class SpearServiceImpl implements SpearService {
 
     @Override
     public boolean isOnCooldown(UUID uuid) {
-        Instant expiration = this.cooldowns.get(uuid);
-
-        if (expiration == null) {
-            return false;
-        }
-
-        if (Instant.now().isAfter(expiration)) {
-            this.cooldowns.remove(uuid);
-            return false;
-        }
-
-        return true;
+        return !this.getRemainingCooldown(uuid).isZero();
     }
 
     @Override
@@ -44,7 +33,17 @@ public class SpearServiceImpl implements SpearService {
             return Duration.ZERO;
         }
 
-        Duration remaining = Duration.between(Instant.now(), expiration);
-        return remaining.isNegative() ? Duration.ZERO : remaining;
+        Instant now = Instant.now();
+        if (now.isAfter(expiration)) {
+            this.cooldowns.remove(uuid);
+            return Duration.ZERO;
+        }
+
+        return Duration.between(now, expiration);
+    }
+
+    @Override
+    public void removeCooldown(UUID uuid) {
+        this.cooldowns.remove(uuid);
     }
 }

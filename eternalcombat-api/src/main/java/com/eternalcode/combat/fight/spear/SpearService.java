@@ -7,4 +7,5 @@ public interface SpearService {
     boolean isOnCooldown(UUID uuid);
     void saveCooldown(UUID uuid);
     Duration getRemainingCooldown(UUID uuid);
+    void removeCooldown(UUID uuid);
 }
