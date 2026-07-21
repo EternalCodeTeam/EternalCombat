@@ -48,6 +48,9 @@ import com.eternalcode.combat.fight.logout.LogoutService;
 import com.eternalcode.combat.fight.pearl.PearlController;
 import com.eternalcode.combat.fight.pearl.PearlService;
 import com.eternalcode.combat.fight.pearl.PearlServiceImpl;
+import com.eternalcode.combat.fight.spear.SpearLungeController;
+import com.eternalcode.combat.fight.spear.SpearService;
+import com.eternalcode.combat.fight.spear.SpearServiceImpl;
 import com.eternalcode.combat.fight.tagout.FightTagOutCommand;
 import com.eternalcode.combat.fight.tagout.FightTagOutController;
 import com.eternalcode.combat.fight.tagout.FightTagOutService;
@@ -150,6 +153,8 @@ public final class CombatPlugin extends JavaPlugin implements EternalCombatApi {
         BorderService borderService = new BorderServiceImpl(scheduler, server, regionProvider, eventManager, () -> pluginConfig.border);
         KnockbackService knockbackService = new KnockbackService(pluginConfig, scheduler, regionProvider);
 
+        SpearService spearService = new SpearServiceImpl(pluginConfig.spear);
+
         this.liteCommands = LiteBukkitFactory.builder(FALLBACK_PREFIX, this, server)
             .message(LiteBukkitMessages.PLAYER_NOT_FOUND, pluginConfig.messagesSettings.playerNotFound)
             .message(LiteBukkitMessages.PLAYER_ONLY, pluginConfig.messagesSettings.admin.onlyForPlayers)
@@ -213,6 +218,8 @@ public final class CombatPlugin extends JavaPlugin implements EternalCombatApi {
         );
 
         new KnockbackMountController(noticeService, this.regionProvider, this.fightManager).register(this);
+
+        new SpearLungeController(this, fightManager, spearService, pluginConfig, noticeService);
 
         eventManager.subscribe(
             PlayerDeathEvent.class,
