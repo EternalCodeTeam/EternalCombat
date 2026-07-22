@@ -208,8 +208,7 @@ public final class CombatPlugin extends JavaPlugin implements EternalCombatApi {
             new CommandsBlocker(this.fightManager, noticeService, pluginConfig),
             new ElytraBlocker(this.fightManager, pluginConfig),
             new ElytraEquipBlocker(this.fightManager, noticeService, pluginConfig, server),
-            new FlyingBlocker(this.fightManager, pluginConfig, server),
-            new PlaceBlockBlocker(this.fightManager, noticeService, pluginConfig)
+            new FlyingBlocker(this.fightManager, pluginConfig, server)
         );
 
         new KnockbackMountController(noticeService, this.regionProvider, this.fightManager).register(this);

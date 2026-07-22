@@ -4,6 +4,7 @@ import com.eternalcode.combat.event.DynamicListener;
 import com.eternalcode.combat.fight.FightManager;
 import com.eternalcode.commons.adventure.AdventureUtil;
 import net.kyori.adventure.text.minimessage.MiniMessage;
+import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
@@ -16,6 +17,7 @@ import org.bukkit.inventory.PlayerInventory;
 import org.bukkit.inventory.meta.SkullMeta;
 
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.ThreadLocalRandom;
 
@@ -85,8 +87,8 @@ public class DropController implements DynamicListener<PlayerDeathEvent> {
             return false;
         }
 
-        if (this.dropSettings.headDropOnlyInCombat && inCombat) {
-            return true;
+        if (this.dropSettings.headDropOnlyInCombat && !inCombat) {
+            return false;
         }
 
         if (this.dropSettings.headDropChance <= 0.0) {
@@ -139,7 +141,13 @@ public class DropController implements DynamicListener<PlayerDeathEvent> {
             ItemStack[] itemsToGive = this.keepInventoryManager.nextItems(playerUniqueId)
                 .toArray(new ItemStack[0]);
 
-            playerInventory.addItem(itemsToGive);
+            // The player is not teleported yet during PlayerRespawnEvent, so
+            // player.getLocation() would still be the death location.
+            Location respawnLocation = event.getRespawnLocation();
+
+            Map<Integer, ItemStack> leftover = playerInventory.addItem(itemsToGive);
+            leftover.values().forEach(item ->
+                respawnLocation.getWorld().dropItemNaturally(respawnLocation, item));
         }
     }
 }

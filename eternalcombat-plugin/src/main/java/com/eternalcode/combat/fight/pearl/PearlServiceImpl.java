@@ -59,7 +59,7 @@ public class PearlServiceImpl implements PearlService {
                 this.scheduler.runLater(
                     () -> player.setCooldown(
                         Material.ENDER_PEARL,
-                        (int) this.pluginConfig.pearl.pearlThrowDelay.toMillis() / 50
+                        (int) (this.pluginConfig.pearl.pearlThrowDelay.toMillis() / 50)
                     ), Duration.ofMillis(50)
                 );
 

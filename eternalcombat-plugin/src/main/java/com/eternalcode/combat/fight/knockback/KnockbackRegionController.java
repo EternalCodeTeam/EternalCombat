@@ -135,7 +135,7 @@ public class KnockbackRegionController implements Listener {
     void onTag(FightTagEvent event) {
         Player player = this.server.getPlayer(event.getPlayer());
         if (player == null) {
-            throw new IllegalStateException("Player cannot be null!");
+            return;
         }
 
         Optional<Region> regionOptional = this.regionProvider.getRegion(player.getLocation());
