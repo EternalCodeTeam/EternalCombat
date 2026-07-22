@@ -6,6 +6,7 @@ import com.eternalcode.combat.fight.drop.DropSettings;
 import com.eternalcode.combat.fight.effect.FightEffectSettings;
 import com.eternalcode.combat.fight.knockback.KnockbackSettings;
 import com.eternalcode.combat.fight.pearl.PearlSettings;
+import com.eternalcode.combat.fight.spear.SpearSettings;
 import com.eternalcode.combat.fight.trident.TridentSettings;
 import eu.okaeri.configs.OkaeriConfig;
 import eu.okaeri.configs.annotation.Comment;
@@ -43,6 +44,13 @@ public class PluginConfig extends OkaeriConfig {
         "# Configure cooldowns, restrictions, and other behaviors for Trident during combat."
     })
     public TridentSettings trident = new TridentSettings();
+
+    @Comment({
+        " ",
+        "# Settings related to Spears with lunge",
+        "# Set cooldown for spear lunging"
+    })
+    public SpearSettings spear = new SpearSettings();
 
     @Comment({
         " ",
