@@ -85,7 +85,7 @@ Control who can use EternalCombat’s powerful features with these permissions:
 | Permission                     | Description                                                                                           |
 |--------------------------------|-------------------------------------------------------------------------------------------------------|
 | `eternalcombat.status`         | Check a player’s combat status with `/combatlog status <player>`.                                     |
-| `eternalcombat.tag`            | Start a fight between players using `/combatlog tag <player> [player2]`.                              |
+| `eternalcombat.tag`            | Start a fight between players using `/combatlog tag <player> [player2] [duration]`.                   |
 | `eternalcombat.untag`          | Remove a player from combat with `/combatlog untag <player>`.                                         |
 | `eternalcombat.untagall`       | Remove all players from combat with `/combatlog untagall`.               |
 | `eternalcombat.stats`          | View combat statistics with `/combatlog stats`.                          |
