@@ -79,7 +79,7 @@ public class DeathSettings extends OkaeriConfig {
 
     @Comment({
         "Commands that will be executed after a player's death/respawn/untag.",
-        "You can use {player} to represent the name of the player who died and {killer} for the killer's name (if applicable)."
+        "You can use {PLAYER} to represent the name of the player who died and {KILLER} for the killer's name (if applicable)."
     })
     public PostDeathCommandSettings postDeathCommands = new PostDeathCommandSettings();
 
@@ -104,10 +104,10 @@ public class DeathSettings extends OkaeriConfig {
 
         @Comment({
             "# List of commands that will be executed from the killer's perspective after killing a player.",
-            "# Use {player} to represent the name of the player who was killed and {killer} for the killer's name (if applicable)."
+            "# Use {PLAYER} to represent the name of the player who was killed and {KILLER} for the killer's name (if applicable)."
         })
         public List<String> killerPostDeathCommands = List.of(
-            "say You have killed {player} in combat!"
+            "say You have killed {PLAYER} in combat!"
         );
 
         @Comment("# The returned string when the killer is unknown")
