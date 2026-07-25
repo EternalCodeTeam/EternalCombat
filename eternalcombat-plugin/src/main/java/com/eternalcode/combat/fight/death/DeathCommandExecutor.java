@@ -30,7 +30,7 @@ public class DeathCommandExecutor {
 
     private String replacePlaceholders(String command, String playerName, String killerName) {
         return command
-            .replace("{player}", playerName)
+            .replace("{PLAYER}", playerName)
             .replace("{killer}", killerName);
     }
 }
