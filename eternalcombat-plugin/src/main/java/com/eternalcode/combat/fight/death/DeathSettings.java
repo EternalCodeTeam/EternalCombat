@@ -79,7 +79,8 @@ public class DeathSettings extends OkaeriConfig {
 
     @Comment({
         "Commands that will be executed after a player's death/respawn/untag.",
-        "You can use {PLAYER} to represent the name of the player who died and {KILLER} for the killer's name (if applicable)."
+        "You can use {PLAYER} to represent the name of the player who died and {KILLER} for the killer's name (if applicable).",
+        "Do not include the leading slash (/) in the commands.",
     })
     public PostDeathCommandSettings postDeathCommands = new PostDeathCommandSettings();
 
@@ -104,11 +105,10 @@ public class DeathSettings extends OkaeriConfig {
 
         @Comment({
             "# List of commands that will be executed from the killer's perspective after killing a player.",
-            "# Use {PLAYER} to represent the name of the player who was killed and {KILLER} for the killer's name (if applicable)."
+            "# Use {PLAYER} to represent the name of the player who was killed and {KILLER} for the killer's name (if applicable).",
+            "# Example: 'give {KILLER} diamond 1' will give the killer a diamond after killing a player."
         })
-        public List<String> killerPostDeathCommands = List.of(
-            "say You have killed {PLAYER} in combat!"
-        );
+        public List<String> killerPostDeathCommands = List.of();
 
         @Comment("# The returned string when the killer is unknown")
         public String unknownKillerPlaceholder = "Unknown";

@@ -53,7 +53,8 @@ public class PluginConfig extends OkaeriConfig {
 
     @Comment({
         " ",
-        "# This section contains effects displayed on death of the player"
+        "# This section contains effects displayed on death of the player",
+        "# You can also execute which commands will be executed post-death and on logout of the player."
     })
     public DeathSettings death = new DeathSettings();
 
@@ -95,8 +96,7 @@ public class PluginConfig extends OkaeriConfig {
     @Comment({
         " ",
         "# Settings related to commands during combat.",
-        "# Configure command restrictions and behaviors for players in combat.",
-        "# You can also execute which commands will be executed post-death and on logout of the player."
+        "# Configure command restrictions and behaviors for players in combat."
     })
     public CommandSettings commands = new CommandSettings();
 

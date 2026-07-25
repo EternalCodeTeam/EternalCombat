@@ -188,7 +188,7 @@ public final class CombatPlugin extends JavaPlugin implements EternalCombatApi {
 
         KillerResolver killerResolver = new KillerResolver(this.fightManager, server, pluginConfig);
         DeathCommandExecutor deathCommandExecutor = new DeathCommandExecutor(server);
-        DeathCommandService deathCommandService = new DeathCommandService(pluginConfig, this.fightManager, killerResolver, deathCommandExecutor);
+        DeathCommandService deathCommandService = new DeathCommandService(pluginConfig, this.fightManager, killerResolver, deathCommandExecutor, scheduler);
 
         eventManager.subscribe(
             new FightTagController(this.fightManager, pluginConfig),
