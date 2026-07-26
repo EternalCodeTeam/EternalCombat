@@ -5,6 +5,8 @@ import eu.okaeri.configs.OkaeriConfig;
 import eu.okaeri.configs.annotation.Comment;
 import org.bukkit.FireworkEffect;
 
+import java.util.List;
+
 public class DeathSettings extends OkaeriConfig {
 
     @Comment({
@@ -74,4 +76,37 @@ public class DeathSettings extends OkaeriConfig {
         public int secondaryParticleCount = 3;
 
     }
+
+    @Comment({
+        "Commands that will be executed after a player's death/respawn/untag.",
+        "You can use {PLAYER} to represent the name of the player who died and {KILLER} for the killer's name (if applicable).",
+        "Do not include the leading slash (/) in the commands.",
+        "",
+        "Commands executed when a player dies in combat"
+    })
+    public PostDeathCommands onDeathInCombat = new PostDeathCommands();
+
+    @Comment("Commands executed on any player death")
+    public PostDeathCommands onAnyDeath = new PostDeathCommands();
+
+    @Comment("Commands executed after a player respawns")
+    public PostDeathCommands afterRespawn = new PostDeathCommands();
+
+    @Comment("Commands executed when a player is untagged from combat")
+    public PostDeathCommands onUntag = new PostDeathCommands();
+
+    public static class PostDeathCommands extends OkaeriConfig {
+        public List<String> console = List.of();
+        public List<String> player = List.of();
+    }
+
+    @Comment({
+        "List of commands that will be executed from the killer's perspective after killing a player.",
+        "Use {PLAYER} to represent the name of the player who was killed and {KILLER} for the killer's name (if applicable).",
+        "Example: 'give {KILLER} diamond 1' will give the killer a diamond after killing a player."
+    })
+    public List<String> killerPostDeathCommands = List.of();
+
+    @Comment("The returned string when the killer is unknown")
+    public String unknownKillerPlaceholder = "Unknown";
 }

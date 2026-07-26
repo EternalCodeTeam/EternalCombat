@@ -53,7 +53,8 @@ public class PluginConfig extends OkaeriConfig {
 
     @Comment({
         " ",
-        "# This section contains effects displayed on death of the player"
+        "# This section contains effects displayed on death of the player",
+        "# You can also execute which commands will be executed post-death and on logout of the player."
     })
     public DeathSettings death = new DeathSettings();
 
