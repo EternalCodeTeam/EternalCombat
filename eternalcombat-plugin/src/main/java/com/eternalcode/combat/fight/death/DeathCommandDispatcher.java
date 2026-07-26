@@ -6,11 +6,11 @@ import org.bukkit.entity.Player;
 
 import java.util.Collection;
 
-public class DeathCommandExecutor {
+public class DeathCommandDispatcher {
 
     private final Server server;
 
-    public DeathCommandExecutor(Server server) {
+    public DeathCommandDispatcher(Server server) {
         this.server = server;
     }
 
@@ -23,7 +23,17 @@ public class DeathCommandExecutor {
 
     public void dispatch(Collection<String> commands, CommandSender sender, String playerName, String killerName) {
         for (String command : commands) {
-            String resolved = this.replacePlaceholders(command, playerName, killerName);
+            String trimmed = command.trim();
+
+            if (trimmed.isEmpty()) {
+                continue;
+            }
+
+            if (trimmed.startsWith("/")) {
+                trimmed = trimmed.substring(1);
+            }
+
+            String resolved = this.replacePlaceholders(trimmed, playerName, killerName);
             this.server.dispatchCommand(sender, resolved);
         }
     }
