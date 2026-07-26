@@ -62,11 +62,11 @@ public final class DeathCommandController implements Listener {
         String killerName = killer != null ? killer.getName() : this.unknownKiller();
 
         this.killerNames.put(player.getUniqueId(), killerName);
-        this.dispatcher.dispatch(this.config.death.postDeathCommands.onDeathInCombat, player, killerName);
+        this.dispatcher.dispatch(this.config.death.onDeathInCombat, player, killerName);
 
         if (killer != null) {
             this.dispatcher.dispatch(
-                this.config.death.postDeathCommands.killerPostDeathCommands,
+                this.config.death.killerPostDeathCommands,
                 killer,
                 player.getName(),
                 killerName
@@ -79,7 +79,7 @@ public final class DeathCommandController implements Listener {
         Player player = event.getEntity();
 
         this.dispatcher.dispatch(
-            this.config.death.postDeathCommands.onAnyDeath,
+            this.config.death.onAnyDeath,
             player,
             this.killerNames.get(player.getUniqueId(), ignored -> this.resolveKillerName(player))
         );
@@ -91,7 +91,7 @@ public final class DeathCommandController implements Listener {
         String killerName = this.killerNames.asMap().remove(player.getUniqueId());
 
         this.dispatcher.dispatch(
-            this.config.death.postDeathCommands.afterRespawn,
+            this.config.death.afterRespawn,
             player,
             killerName != null ? killerName : this.unknownKiller()
         );
@@ -121,7 +121,7 @@ public final class DeathCommandController implements Listener {
     private void dispatchUntag(Player player) {
         if (player.isOnline()) {
             this.dispatcher.dispatch(
-                this.config.death.postDeathCommands.onUntag,
+                this.config.death.onUntag,
                 player,
                 this.unknownKiller()
             );
@@ -133,6 +133,6 @@ public final class DeathCommandController implements Listener {
     }
 
     private String unknownKiller() {
-        return this.config.death.postDeathCommands.unknownKillerPlaceholder;
+        return this.config.death.unknownKillerPlaceholder;
     }
 }

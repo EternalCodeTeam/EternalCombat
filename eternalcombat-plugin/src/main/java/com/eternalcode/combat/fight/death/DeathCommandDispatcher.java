@@ -14,7 +14,7 @@ public class DeathCommandDispatcher {
         this.server = server;
     }
 
-    public void dispatch(DeathSettings.PostDeathCommandSettings.PostDeathCommands settings, Player player, String killerName) {
+    public void dispatch(DeathSettings.PostDeathCommands settings, Player player, String killerName) {
         String playerName = player.getName();
         
         this.dispatch(settings.console, this.server.getConsoleSender(), playerName, killerName);
