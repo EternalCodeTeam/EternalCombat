@@ -50,10 +50,12 @@ public class MessagesSettings extends OkaeriConfig {
 
     @Comment({
             "# Message displayed when a player enters combat.",
-            "# This message warns the player not to leave the server while in combat."
+            "# This message warns the player not to leave the server while in combat.",
+            "# The {OPPONENT} placeholder is replaced with the name of the player who caused the tag,",
+            "# or the 'unknownPlayerPlaceholder' variable if the tag was not caused by a player."
     })
     public Notice playerTagged = Notice.chat(
-            "<gradient:red:yellow>⚠ <white>You are in combat!</white> <u>Do not leave the server!</gradient>");
+            "<gradient:red:yellow>⚠ <white>You are in combat with</white> <yellow>{OPPONENT}</yellow>! <u>Do not leave the server!</gradient>");
 
     @Comment({
             "# Message displayed when a player leaves combat.",
