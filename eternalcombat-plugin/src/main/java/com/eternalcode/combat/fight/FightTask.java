@@ -1,7 +1,9 @@
 package com.eternalcode.combat.fight;
 
 import com.eternalcode.combat.config.implementation.PluginConfig;
+import com.eternalcode.combat.fight.event.CauseOfTag;
 import com.eternalcode.combat.fight.event.CauseOfUnTag;
+import com.eternalcode.combat.fight.event.FightTagEvent;
 import com.eternalcode.combat.notification.NoticeService;
 import com.eternalcode.combat.util.DurationUtil;
 import java.util.Optional;
@@ -39,6 +41,16 @@ public class FightTask implements Runnable {
             if (fightTag.isExpired()) {
                 this.fightManager.untag(playerUniqueId, CauseOfUnTag.TIME_EXPIRED);
                 return;
+            }
+
+            if (this.config.combat.keepCombatActiveInVoid
+                && player.getLocation().getY() < this.config.combat.voidCombatHeight
+                && !this.config.settings.ignoredWorlds.contains(player.getWorld().getName())) {
+                FightTagEvent tagEvent = this.fightManager.tag(playerUniqueId, this.config.settings.combatTimerDuration, CauseOfTag.VOID, fightTag.getTagger());
+
+                if (!tagEvent.isCancelled()) {
+                    fightTag = this.fightManager.getTag(playerUniqueId);
+                }
             }
 
             Duration remaining = fightTag.getRemainingDuration();

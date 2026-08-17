@@ -35,6 +35,11 @@ public enum CauseOfTag {
 
 
     /**
+     * The player's combat tag was kept active because they were below the void combat height.
+     */
+    VOID,
+
+    /**
      * A custom cause, typically defined by external plugins or systems, applied the combat tag.
      */
     CUSTOM
