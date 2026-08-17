@@ -5,6 +5,8 @@ import com.eternalcode.combat.fight.FightManager;
 import com.eternalcode.combat.fight.event.FightTagEvent;
 import com.eternalcode.combat.fight.event.FightUntagEvent;
 import com.eternalcode.combat.notification.NoticeService;
+import java.util.Optional;
+import java.util.UUID;
 import org.bukkit.Server;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -37,10 +39,21 @@ public class FightMessageController implements Listener {
             return;
         }
 
+        String opponent = this.resolveOpponentName(event.getTagger(), player.getUniqueId());
+
         this.noticeService.create()
             .player(player.getUniqueId())
             .notice(this.config.messagesSettings.playerTagged)
+            .placeholder("{OPPONENT}", opponent)
             .send();
+    }
+
+    private String resolveOpponentName(UUID tagger, UUID taggedPlayer) {
+        return Optional.ofNullable(tagger)
+            .filter(uuid -> !uuid.equals(taggedPlayer))
+            .map(this.server::getPlayer)
+            .map(Player::getName)
+            .orElse(this.config.messagesSettings.unknownPlayerPlaceholder);
     }
 
     @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)

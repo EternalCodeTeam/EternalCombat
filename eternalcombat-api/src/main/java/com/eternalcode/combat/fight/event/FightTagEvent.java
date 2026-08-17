@@ -5,7 +5,9 @@ import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
 
 import java.util.UUID;
+import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 /**
  * This event is triggered when a player is tagged in a fight.
@@ -15,14 +17,25 @@ public class FightTagEvent extends Event implements Cancellable {
     private static final HandlerList HANDLER_LIST = new HandlerList();
     private final UUID player;
     private final CauseOfTag cause;
+    private final UUID tagger;
     private boolean cancelled = false;
     private CancelTagReason cancelReason;
 
+    /**
+     * @deprecated use {@link #FightTagEvent(UUID, CauseOfTag, UUID)} instead, which also carries the tagger.
+     */
+    @Deprecated
+    @ApiStatus.ScheduledForRemoval
     public FightTagEvent(UUID player, CauseOfTag cause) {
+        this(player, cause, null);
+    }
+
+    public FightTagEvent(UUID player, CauseOfTag cause, @Nullable UUID tagger) {
         super(false);
 
         this.player = player;
         this.cause = cause;
+        this.tagger = tagger;
     }
 
     /**
@@ -41,6 +54,16 @@ public class FightTagEvent extends Event implements Cancellable {
      */
     public CauseOfTag getCause() {
         return this.cause;
+    }
+
+    /**
+     * Gets the UUID of the player who caused this tag, if any.
+     *
+     * @return The UUID of the tagger, or {@code null} if the tag was not caused by another player.
+     */
+    @Nullable
+    public UUID getTagger() {
+        return this.tagger;
     }
 
     @Override

@@ -55,7 +55,7 @@ public class FightManagerImpl implements FightManager {
     @ApiStatus.Experimental
     @Override
     public FightTagEvent tag(UUID target, Duration delay, CauseOfTag causeOfTag, @Nullable UUID tagger) {
-        FightTagEvent event = this.eventManager.publishEvent(new FightTagEvent(target, causeOfTag));
+        FightTagEvent event = this.eventManager.publishEvent(new FightTagEvent(target, causeOfTag, tagger));
 
         if (event.isCancelled()) {
             return event;

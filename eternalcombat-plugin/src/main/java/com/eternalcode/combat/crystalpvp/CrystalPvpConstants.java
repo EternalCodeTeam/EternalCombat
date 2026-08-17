@@ -66,12 +66,14 @@ public class CrystalPvpConstants {
                 fightManager.tag(
                     damagerUniqueId,
                     pluginConfig.settings.combatTimerDuration,
-                    CauseOfTag.CRYSTAL
+                    CauseOfTag.CRYSTAL,
+                    victimUniqueId
                 );
                 fightManager.tag(
                     victimUniqueId,
                     pluginConfig.settings.combatTimerDuration,
-                    CauseOfTag.CRYSTAL
+                    CauseOfTag.CRYSTAL,
+                    damagerUniqueId
                 );
             }
         }
