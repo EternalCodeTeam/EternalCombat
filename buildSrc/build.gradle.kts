@@ -13,7 +13,7 @@ dependencies {
     implementation("io.papermc.hangar-publish-plugin:io.papermc.hangar-publish-plugin.gradle.plugin:0.1.4")
     implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8:2.4.10")
     implementation("net.minecrell:plugin-yml:0.6.0")
-    implementation("xyz.jpenilla:run-task:3.0.2")
+    implementation("xyz.jpenilla:run-task:3.1.0")
 }
 
 sourceSets {
