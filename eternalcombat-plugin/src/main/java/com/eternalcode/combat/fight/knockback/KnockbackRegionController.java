@@ -17,7 +17,6 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.event.player.PlayerTeleportEvent;
 import org.bukkit.event.vehicle.VehicleMoveEvent;
-import org.spigotmc.event.entity.EntityMountEvent;
 
 public class KnockbackRegionController implements Listener {
 
@@ -130,27 +129,6 @@ public class KnockbackRegionController implements Listener {
                 .notice(config -> config.messagesSettings.cantEnterOnRegion)
                 .send();
         }
-    }
-
-    @EventHandler(ignoreCancelled = true, priority = EventPriority.HIGHEST)
-    void onEntityMount(EntityMountEvent event) {
-        if (!(event.getEntity() instanceof Player player)) {
-            return;
-        }
-
-        if (!this.fightManager.isInCombat(player.getUniqueId())) {
-            return;
-        }
-
-        if (!this.regionProvider.isInRegion(event.getMount().getLocation())) {
-            return;
-        }
-
-        event.setCancelled(true);
-        this.noticeService.create()
-            .player(player.getUniqueId())
-            .notice(config -> config.messagesSettings.cantEnterOnRegion)
-            .send();
     }
 
     @EventHandler(ignoreCancelled = true, priority = EventPriority.HIGHEST)
