@@ -38,17 +38,19 @@ public class FightTask implements Runnable {
 
             UUID playerUniqueId = player.getUniqueId();
 
-            if (this.config.combat.keepCombatActiveInVoid && player.getLocation().getY() < this.config.combat.voidCombatHeight) {
+            if (fightTag.isExpired()) {
+                this.fightManager.untag(playerUniqueId, CauseOfUnTag.TIME_EXPIRED);
+                return;
+            }
+
+            if (this.config.combat.keepCombatActiveInVoid
+                && player.getLocation().getY() < this.config.combat.voidCombatHeight
+                && !this.config.settings.ignoredWorlds.contains(player.getWorld().getName())) {
                 FightTagEvent tagEvent = this.fightManager.tag(playerUniqueId, this.config.settings.combatTimerDuration, CauseOfTag.VOID, fightTag.getTagger());
 
                 if (!tagEvent.isCancelled()) {
                     fightTag = this.fightManager.getTag(playerUniqueId);
                 }
-            }
-
-            if (fightTag.isExpired()) {
-                this.fightManager.untag(playerUniqueId, CauseOfUnTag.TIME_EXPIRED);
-                return;
             }
 
             Duration remaining = fightTag.getRemainingDuration();
