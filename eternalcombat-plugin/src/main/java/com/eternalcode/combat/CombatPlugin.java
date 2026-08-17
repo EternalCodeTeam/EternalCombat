@@ -36,6 +36,7 @@ import com.eternalcode.combat.fight.drop.DropServiceImpl;
 import com.eternalcode.combat.fight.drop.impl.PercentDropModifier;
 import com.eternalcode.combat.fight.drop.impl.PlayersHealthDropModifier;
 import com.eternalcode.combat.fight.blocker.PlaceBlockBlocker;
+import com.eternalcode.combat.fight.blocker.SignEditingBlocker;
 import com.eternalcode.combat.fight.effect.FightEffectController;
 import com.eternalcode.combat.fight.effect.FightEffectService;
 import com.eternalcode.combat.fight.effect.FightEffectServiceImpl;
@@ -205,6 +206,7 @@ public final class CombatPlugin extends JavaPlugin implements EternalCombatApi {
             new RespawnAnchorListener(this, this.fightManager, pluginConfig),
             new FireworkController(this.fightManager, pluginConfig, noticeService),
             new InventoryContainersBlocker(this.fightManager, pluginConfig, noticeService),
+            new SignEditingBlocker(this.fightManager, pluginConfig),
             new CommandsBlocker(this.fightManager, noticeService, pluginConfig),
             new ElytraBlocker(this.fightManager, pluginConfig),
             new ElytraEquipBlocker(this.fightManager, noticeService, pluginConfig, server),

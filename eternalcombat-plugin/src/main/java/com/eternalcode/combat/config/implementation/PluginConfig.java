@@ -129,6 +129,13 @@ public class PluginConfig extends OkaeriConfig {
 
     @Comment({
         " ",
+        "# Settings related to sign editing during combat.",
+        "# Created for sign traps where opening the sign editor can block ender pearl throws."
+    })
+    public SignEditingSettings signEditing = new SignEditingSettings();
+
+    @Comment({
+        " ",
         "# Settings related to placeholders used in the plugin.",
         "# Configure default values returned by placeholders"
     })
