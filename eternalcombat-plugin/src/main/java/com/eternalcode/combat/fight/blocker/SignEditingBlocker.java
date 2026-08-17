@@ -23,7 +23,7 @@ public class SignEditingBlocker implements Listener {
         this.config = config;
     }
 
-    @EventHandler
+    @EventHandler(ignoreCancelled = true)
     void onInteract(PlayerInteractEvent event) {
         if (!this.config.signEditing.disableSignEditingDuringCombat) {
             return;
@@ -48,7 +48,7 @@ public class SignEditingBlocker implements Listener {
         event.setUseInteractedBlock(Result.DENY);
 
         ItemStack item = event.getItem();
-        if (item != null && isEnderPearl(item.getType())) {
+        if (item != null && isEnderPearl(item.getType()) && event.useItemInHand() != Result.DENY) {
             event.setUseItemInHand(Result.ALLOW);
         }
     }
