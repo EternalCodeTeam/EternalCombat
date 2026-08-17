@@ -91,6 +91,19 @@ public class CombatSettings extends OkaeriConfig {
     public EventPriority quitPunishmentEventPriority = EventPriority.NORMAL;
 
     @Comment({
+        "# Keep a player's combat tag continuously active while they are below 'voidCombatHeight'.",
+        "# This prevents players from evading combat by falling into the void (e.g. in the End).",
+        "# Set to 'true' to keep resetting the combat timer to its full duration while below that height."
+    })
+    public boolean keepCombatActiveInVoid = false;
+
+    @Comment({
+        "# The Y height below which the combat timer is kept active (see 'keepCombatActiveInVoid').",
+        "# Default: 0, matching the void threshold in worlds such as the End."
+    })
+    public double voidCombatHeight = 0;
+
+    @Comment({
         "# List of kick reasons where players will NOT be punished for combat logging.",
         "# If this list is empty, players are ALWAYS punished when kicked during combat.",
         "# If one of the listed phrases is found in the kick reason (case-insensitive),",
