@@ -13,7 +13,8 @@ public class RegionSettings extends OkaeriConfig {
     public List<String> blockedRegions = Collections.singletonList("your_region");
 
     @Comment({
-        "# Prevent players from entering regions where PVP is disabled by WorldGuard.",
+        "# Prevent players from entering regions where PVP is disabled by the region plugin",
+        "# (WorldGuard PVP flag, GriefPrevention no-combat-in-claims settings).",
         "# Set to 'true' to enforce this restriction, or 'false' to allow PVP in all regions."
     })
     public boolean preventPvpInRegions = true;

@@ -62,6 +62,11 @@ dependencies {
     // Lands
     compileOnly("com.github.angeschossen:LandsAPI:${Versions.LANDS_API}")
 
+    // GriefPrevention
+    compileOnly("com.github.GriefPrevention:GriefPrevention:${Versions.GRIEF_PREVENTION}") {
+        isTransitive = false
+    }
+
     // Multification
     implementation("com.eternalcode:multification-paper:${Versions.MULTIFICATION}")
     implementation("com.eternalcode:multification-okaeri:${Versions.MULTIFICATION}")
@@ -92,6 +97,11 @@ paper {
         }
 
         register("WorldGuard") {
+            required = false
+            load = PaperPluginDescription.RelativeLoadOrder.BEFORE
+        }
+
+        register("GriefPrevention") {
             required = false
             load = PaperPluginDescription.RelativeLoadOrder.BEFORE
         }

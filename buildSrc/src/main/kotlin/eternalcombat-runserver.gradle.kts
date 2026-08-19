@@ -18,5 +18,6 @@ tasks {
         downloadPlugins.modrinth("PacketEvents", "2.12.2+spigot")
         downloadPlugins.modrinth("WorldGuard", "7.0.17")
         downloadPlugins.modrinth("LuckPerms", "v5.5.53-bukkit")
+        downloadPlugins.modrinth("GriefPrevention", Versions.GRIEF_PREVENTION)
     }
 }

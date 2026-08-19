@@ -7,6 +7,7 @@ import com.eternalcode.combat.fight.FightManager;
 import com.eternalcode.combat.region.CompositeRegionProvider;
 import com.eternalcode.combat.region.bukkit.DefaultRegionProvider;
 import com.eternalcode.combat.region.RegionProvider;
+import com.eternalcode.combat.region.griefprevention.GriefPreventionRegionProvider;
 import com.eternalcode.combat.region.worldguard.WorldGuardRegionProvider;
 import java.util.ArrayList;
 import java.util.List;
@@ -53,6 +54,12 @@ public class BridgeService {
             "WorldGuard",
             () -> providers.add( new WorldGuardRegionProvider(this.config)),
             () -> this.logger.warning("WorldGuard not found; skipping WorldGuardRegionProvider.")
+        );
+
+        this.initialize(
+            "GriefPrevention",
+            () -> providers.add(new GriefPreventionRegionProvider(this.config)),
+            () -> this.logger.warning("GriefPrevention not found; skipping GriefPreventionRegionProvider.")
         );
 
         if (providers.isEmpty()) {
