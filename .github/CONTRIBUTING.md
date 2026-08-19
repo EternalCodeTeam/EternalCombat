@@ -1,64 +1,54 @@
 # 👋 Contributing to EternalCombat
 
-First off, thanks for taking the time to contribute! 🎉
-We love user contributions and want to make it as easy as possible for you to get involved.
+Thanks for taking the time to contribute! This page covers everything you need to get started.
 
-## 🛠️ Development Setup
+## 🛠️ Requirements
 
-To start contributing, you'll need to set up your environment:
+- **JDK 21** (the project targets Java 21)
+- Git
 
-1.  **Java 21**: We use Java 21 for development. Ensure you have a JDK 21 installed.
-2.  **IDE**: We recommend [IntelliJ IDEA](https://www.jetbrains.com/idea/).
-3.  **Git**: Ensure you have Git installed.
+The Gradle wrapper is committed, so you don't need Gradle installed.
 
-### 📥 Getting the Code
+## 🔨 Building and testing
 
 ```bash
-# Fork the repository on GitHub first!
-# https://github.com/EternalCodeTeam/EternalCombat/fork
-git clone https://github.com/YOUR-USERNAME/EternalCombat.git
+git clone https://github.com/EternalCodeTeam/EternalCombat.git
 cd EternalCombat
-```
-
-### 🔨 Building the Project
-
-Run this command in your terminal:
-
-```bash
 ./gradlew build
 ```
 
-## 🤝 How to Contribute
+`./gradlew build` compiles both modules, runs the unit tests and produces the shaded plugin jar in
+`eternalcombat-plugin/build/libs/`.
 
-1.  **Fork & Clone**: Fork the repo to your own account and clone it.
-2.  **Branch**: Create a new branch for your feature or fix.
-    ```bash
-    git checkout -b feat/my-awesome-feature
-    ```
-3.  **Code**: Hack away! 💻
-4.  **Test**: Run manual test by `runServer` to ensure you haven't broken anything.
-    ```bash
-    ./gradlew runServer
-    ```
-5.  **Push**: Push your changes to your fork.
-6.  **Pull Request**: Open a PR against the `master` branch.
+To run only the tests:
 
-## 📏 Code Style
+```bash
+./gradlew test
+```
 
-Make sure that your code adheres to the plugin's existing coding style.
+To try your changes on a real server, start a Paper server with the plugin and its dependencies
+already installed:
 
-## 🐛 Reporting Bugs
+```bash
+./gradlew runServer
+```
 
-If you find a bug, please use the **Bug Report** issue template.
--   Check if the issue already exists.
--   Provide a minimal reproduction if possible.
--   Include logs and screenshots.
+## 📏 Code style
 
-## 💡 Feature Requests
+Formatting rules live in [`.editorconfig`](../.editorconfig) — 4 spaces, UTF-8, LF endings.
+Enable EditorConfig support in your IDE and match the style of the surrounding code.
 
-Have an idea? Use the **Feature Request** issue template.
--   Explain *why* this feature is useful.
--   Describe how it should look or behave.
+## 🚀 Pull requests
+
+1. Fork the repository and create a branch off `master`.
+2. Keep the change focused — one topic per pull request.
+3. Add or update tests when you change behaviour that can be tested without a server.
+4. Make sure `./gradlew build` passes before opening the PR.
+5. Prefix the PR title with the type of change, for example
+   `feat:`, `fix:`, `chore:`, `docs:`, or `GH-<issue>` when it closes an issue.
+6. Describe what you changed and why — the pull request template is intentionally short.
 
 ## 📄 License
-By contributing, you agree that your contributions will be licensed under the project's [License](../LICENSE).
+
+By contributing, you agree that your contributions will be licensed under the
+[Apache License 2.0](../LICENSE).
