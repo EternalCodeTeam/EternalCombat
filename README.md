@@ -6,8 +6,8 @@
 [![Available on Modrinth](https://raw.githubusercontent.com/vLuckyyy/badges/main/avaiable-on-modrinth.svg)](https://modrinth.com/plugin/eternalcombat)
 [![Available on Hangar](https://raw.githubusercontent.com/vLuckyyy/badges/main/avaiable-on-hangar.svg)](https://hangar.papermc.io/EternalCodeTeam/eternalcombat)
 
-[![Chat on Discord](https://raw.githubusercontent.com/vLuckyyy/badges/main//chat-with-us-on-discord.svg)](https://discord.com/invite/FQ7jmGBd6c)
-[![Read the Docs](https://raw.githubusercontent.com/vLuckyyy/badges/main/read-the-documentation.svg)](https://docs.eternalcode.pl/eternalcombat/introduction)
+[![Chat on Discord](https://raw.githubusercontent.com/vLuckyyy/badges/main/chat-with-us-on-discord.svg)](https://discord.com/invite/FQ7jmGBd6c)
+[![Read the Docs](https://raw.githubusercontent.com/vLuckyyy/badges/main/read-the-documentation.svg)](https://eternalcode.pl/docs/eternalcombat/introduction)
 [![Available on BStats](https://raw.githubusercontent.com/vLuckyyy/badges/main/available-on-bstats.svg)](https://bstats.org/plugin/bukkit/EternalCombat/17803)
 
 [Report Bug](https://github.com/EternalCodeTeam/EternalCombat/issues) • [Request Feature](https://github.com/EternalCodeTeam/EternalCombat/issues) • [Join Discord](https://discord.com/invite/FQ7jmGBd6c)
@@ -22,10 +22,10 @@
 
 ### Information
 
-## EternalCombat requires PacketEvents plugin to work.
+#### EternalCombat requires PacketEvents plugin to work.
 You can download it from [here](https://modrinth.com/plugin/packetevents)
 
-EternalCombat 2.0 has been tested on Minecraft versions **1.17.1 to 26.1.2**, but it should work seamlessly on most
+EternalCombat 2.0 has been tested on Minecraft versions **1.19.3 to 26.1.2**, but it should work seamlessly on most
 other versions too.
 If you run into any compatibility issues, please let us know in
 the [Issues tab](https://github.com/EternalCodeTeam/EternalCombat/issues).
@@ -91,9 +91,9 @@ Control who can use EternalCombat’s powerful features with these permissions:
 | `eternalcombat.stats`          | View combat statistics with `/combatlog stats`.                          |
 | `eternalcombat.reload`         | Reload the plugin with `/combatlog reload`.                                                           |
 | `eternalcombat.receiveupdates` | Receive notifications about new plugin versions on join.                                              |
-| `eternalcombat.bypass`         | When exclude `excludeAdminsFromCombat` is set to `true` users with this permission will not be tagged |
+| `eternalcombat.bypass`         | When `excludeAdminsFromCombat` is set to `true`, users with this permission will not be tagged |
 
-## PlaceholderAPI
+### PlaceholderAPI
 
 EternalCombat 2.0 fully supports **PlaceholderAPI**, letting you integrate placeholders into other compatible plugins.
 Follow the [PlaceholderAPI instructions](https://wiki.placeholderapi.com/users/) to get started.
@@ -163,8 +163,12 @@ details on how to get involved and our [code of conduct](https://github.com/Eter
 ### Reporting Issues
 
 Found a bug?
-Report it in the [Issues tab](https://github.com/eternalcodeteam/eternalcombat/issues).
+Report it in the [Issues tab](https://github.com/EternalCodeTeam/EternalCombat/issues).
 Please include as much detail as possible, like your Minecraft and plugin
 versions, along with any error messages or logs.
 Ready to transform your server’s combat experience?
 Download EternalCombat 2.0 now and let the battles begin!
+
+### License
+
+EternalCombat is licensed under the [Apache License 2.0](LICENSE).
