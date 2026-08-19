@@ -53,8 +53,14 @@ public class FightTagCommand {
     @Permission("eternalcombat.tag")
     @Priority(PriorityValue.HIGH)
     void tag(@Context CommandSender sender, @Arg Player target) {
+        this.tag(sender, target, this.config.settings.combatTimerDuration);
+    }
+
+    @Execute(name = "tag")
+    @Permission("eternalcombat.tag")
+    @Priority(PriorityValue.HIGH)
+    void tag(@Context CommandSender sender, @Arg Player target, @Arg Duration time) {
         UUID targetUniqueId = target.getUniqueId();
-        Duration time = this.config.settings.combatTimerDuration;
 
         FightTagEvent event = this.fightManager.tag(targetUniqueId, time, CauseOfTag.COMMAND);
 
@@ -76,7 +82,12 @@ public class FightTagCommand {
     @Execute(name = "tag")
     @Permission("eternalcombat.tag")
     void tagMultiple(@Context CommandSender sender, @Arg Player firstTarget, @Arg Player secondTarget) {
-        Duration combatTime = this.config.settings.combatTimerDuration;
+        this.tagMultiple(sender, firstTarget, secondTarget, this.config.settings.combatTimerDuration);
+    }
+
+    @Execute(name = "tag")
+    @Permission("eternalcombat.tag")
+    void tagMultiple(@Context CommandSender sender, @Arg Player firstTarget, @Arg Player secondTarget, @Arg Duration combatTime) {
         MessagesSettings messagesSettings = this.config.messagesSettings;
 
         if (sender.equals(firstTarget) || sender.equals(secondTarget)) {
