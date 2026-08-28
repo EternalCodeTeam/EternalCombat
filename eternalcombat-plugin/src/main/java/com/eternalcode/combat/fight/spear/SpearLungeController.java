@@ -62,9 +62,9 @@ public class SpearLungeController implements Listener {
                                 .notice(settings.lungeOnCooldown)
                                 .placeholder("{TIME}", DurationUtil.format(spearService.getRemainingCooldown(uuid), !settings.useMillis))
                                 .send();
-                        } else {
-                            spearService.saveCooldown(uuid);
+                                return;
                         }
+                        spearService.saveCooldown(uuid);
                     } catch (Throwable e) {
                         plugin.getLogger().warning("Failed to handle EntityLungeEvent: " + e.getMessage());
                     }
