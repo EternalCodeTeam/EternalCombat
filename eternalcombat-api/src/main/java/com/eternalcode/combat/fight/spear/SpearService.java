@@ -4,8 +4,8 @@ import java.time.Duration;
 import java.util.UUID;
 
 public interface SpearService {
-    boolean isOnCooldown(UUID uuid);
-    void saveCooldown(UUID uuid);
-    Duration getRemainingCooldown(UUID uuid);
-    void removeCooldown(UUID uuid);
+    boolean isOnCooldown(UUID player);
+    void saveCooldown(UUID player);
+    Duration getRemainingCooldown(UUID player);
+    void removeCooldown(UUID player);
 }
