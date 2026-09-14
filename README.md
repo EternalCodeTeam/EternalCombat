@@ -45,9 +45,14 @@ fair, heart-pounding battles that keep players on their toes. Here’s a rundown
   in action:  
   <img alt="Combat log anti logout feature" src="https://github.com/EternalCodeTeam/EternalCombat/blob/master/assets/combatlog.gif?raw=true" width="420">
 
+- **Support for newest features**
+  Our plugin features cooldown and delays for tridents, spears and much more. With **out of the box** configurable feats.
+  <img alt="Combat log anti logout feature" src="https://github.com/EternalCodeTeam/EternalCombat/blob/master/assets/spear.gif?raw=true" width="420">
+
 - **Customize combat experience**
   Add custom effects to players in combat or death. Everything should be configurable and user-friendly:
   <img alt="Lightning strikes when players die" src="https://github.com/EternalCodeTeam/EternalCombat/blob/master/assets/lightning.gif?raw=true" width="420">
+
   <img alt="Flare indicates players death location" src="https://github.com/EternalCodeTeam/EternalCombat/blob/master/assets/flare.gif?raw=true" width="420">
 
 - **Spawn Protection (Configurable)**  
