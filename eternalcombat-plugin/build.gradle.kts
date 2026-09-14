@@ -107,6 +107,12 @@ tasks {
     named("generatePaperPluginDescription") {
         notCompatibleWithConfigurationCache("The plugin-yml paper generator reads Task.project during execution.")
     }
+
+    runPaper.folia.registerTask {
+        minecraftVersion("1.21.11")
+
+        downloadPlugins.modrinth("PacketEvents", "${Versions.PACKETEVENTS}+spigot")
+    }
 }
 
 tasks.shadowJar {
