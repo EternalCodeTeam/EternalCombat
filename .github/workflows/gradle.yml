@@ -5,9 +5,12 @@ on:
     branches: [ "master" ]
   pull_request:
 
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
 jobs:
   build:
-
     runs-on: ubuntu-latest
     permissions:
       contents: read
@@ -15,34 +18,24 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v7
         with:
+          # The build derives the snapshot version from `git describe --tags`.
           fetch-depth: 0
 
-      - name: Set up JDK 17
+      - name: Set up JDK 21
         uses: actions/setup-java@v5
         with:
-          java-version: '17'
+          java-version: '21'
           distribution: 'temurin'
 
       - name: Setup Gradle
         uses: gradle/actions/setup-gradle@v6
 
-      - name: Set Variables & Build
-        uses: actions/github-script@v9
-        with:
-          script: |
-            const isPR = context.eventName === 'pull_request';
-            const branch = isPR ? context.payload.pull_request.head.ref.replace(/\//g, '-') : 'master';
-            const sha = (isPR ? context.payload.pull_request.head.sha : context.sha).substring(0, 7);
-            
-            const artifactName = `EternalCombat ${branch}+${sha}`;
-            core.exportVariable('FULL_ARTIFACT_NAME', artifactName);
-
       - name: Build with Gradle
-        run: ./gradlew shadowJar
+        run: ./gradlew build
 
       - name: Upload build artifact
         uses: actions/upload-artifact@v7
         with:
-          name: ${{ env.FULL_ARTIFACT_NAME }}
-          path: eternalcombat-plugin/build/libs/*.jar
+          path: eternalcombat-plugin/build/libs/EternalCombat*.jar
+          if-no-files-found: error
           archive: false
