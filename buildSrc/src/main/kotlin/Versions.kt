@@ -26,6 +26,7 @@ object Versions {
 
     const val PLACEHOLDER_API = "2.12.3"
     const val LANDS_API = "7.25.4"
+    const val PACKETEVENTS = "2.11.1"
 
 }
 
