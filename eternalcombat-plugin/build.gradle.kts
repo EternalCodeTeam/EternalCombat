@@ -8,6 +8,7 @@ plugins {
     `eternalcombat-publish-hangar`
     `eternalcombat-publish-modrinth`
     `eternalcombat-runserver`
+    `eternalcombat-java-unit-test`
 
     id("de.eldoria.plugin-yml.paper") version "0.9.0"
     id("com.gradleup.shadow")
