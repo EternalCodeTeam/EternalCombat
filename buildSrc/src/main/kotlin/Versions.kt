@@ -19,7 +19,7 @@ object Versions {
 
     const val XSERIES = "13.8.0"
 
-    const val CAFFEINE = "3.2.4"
+    const val CAFFEINE = "3.3.0"
 
     const val B_STATS_BUKKIT = "3.2.1"
     const val WORLD_GUARD_BUKKIT = "7.0.17"
