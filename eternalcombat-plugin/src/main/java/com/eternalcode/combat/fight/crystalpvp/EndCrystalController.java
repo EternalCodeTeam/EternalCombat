@@ -1,4 +1,4 @@
-package com.eternalcode.combat.crystalpvp;
+package com.eternalcode.combat.fight.crystalpvp;
 
 import com.eternalcode.combat.config.implementation.PluginConfig;
 import com.eternalcode.combat.fight.FightManager;
@@ -12,15 +12,15 @@ import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.plugin.Plugin;
-import static com.eternalcode.combat.crystalpvp.CrystalPvpConstants.CRYSTAL_METADATA;
+import static com.eternalcode.combat.fight.crystalpvp.CrystalPvpConstants.CRYSTAL_METADATA;
 
-public class EndCrystalListener implements Listener {
+public class EndCrystalController implements Listener {
 
     private final Plugin plugin;
     private final FightManager fightManager;
     private final PluginConfig pluginConfig;
 
-    public EndCrystalListener(Plugin plugin, FightManager fightManager, PluginConfig pluginConfig) {
+    public EndCrystalController(Plugin plugin, FightManager fightManager, PluginConfig pluginConfig) {
         this.plugin = plugin;
         this.fightManager = fightManager;
         this.pluginConfig = pluginConfig;

@@ -1,4 +1,4 @@
-package com.eternalcode.combat.crystalpvp;
+package com.eternalcode.combat.fight.crystalpvp;
 
 import com.eternalcode.combat.config.implementation.PluginConfig;
 import com.eternalcode.combat.fight.FightManager;

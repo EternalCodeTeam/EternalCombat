@@ -1,4 +1,4 @@
-package com.eternalcode.combat.crystalpvp;
+package com.eternalcode.combat.fight.crystalpvp;
 
 import com.eternalcode.combat.config.implementation.PluginConfig;
 import com.eternalcode.combat.fight.FightManager;
@@ -16,16 +16,16 @@ import org.bukkit.event.entity.EntityDamageByBlockEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.Plugin;
-import static com.eternalcode.combat.crystalpvp.CrystalPvpConstants.ANCHOR_METADATA;
+import static com.eternalcode.combat.fight.crystalpvp.CrystalPvpConstants.ANCHOR_METADATA;
 
-public class RespawnAnchorListener implements Listener {
+public class RespawnAnchorController implements Listener {
 
     private final Plugin plugin;
     private final FightManager fightManager;
     private final PluginConfig pluginConfig;
 
 
-    public RespawnAnchorListener(Plugin plugin, FightManager fightManager, PluginConfig pluginConfig) {
+    public RespawnAnchorController(Plugin plugin, FightManager fightManager, PluginConfig pluginConfig) {
         this.plugin = plugin;
         this.fightManager = fightManager;
         this.pluginConfig = pluginConfig;

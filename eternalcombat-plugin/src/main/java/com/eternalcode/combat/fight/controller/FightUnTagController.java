@@ -1,6 +1,6 @@
 package com.eternalcode.combat.fight.controller;
 
-import com.eternalcode.combat.crystalpvp.CrystalPvpConstants;
+import com.eternalcode.combat.fight.crystalpvp.CrystalPvpConstants;
 import com.eternalcode.combat.fight.FightManager;
 import com.eternalcode.combat.fight.event.CauseOfUnTag;
 import com.eternalcode.combat.config.implementation.PluginConfig;

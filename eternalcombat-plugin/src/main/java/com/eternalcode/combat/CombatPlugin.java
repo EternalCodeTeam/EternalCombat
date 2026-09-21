@@ -8,8 +8,8 @@ import com.eternalcode.combat.border.animation.particle.ParticleController;
 import com.eternalcode.combat.bridge.BridgeService;
 import com.eternalcode.combat.config.ConfigService;
 import com.eternalcode.combat.config.implementation.PluginConfig;
-import com.eternalcode.combat.crystalpvp.EndCrystalListener;
-import com.eternalcode.combat.crystalpvp.RespawnAnchorListener;
+import com.eternalcode.combat.fight.crystalpvp.EndCrystalController;
+import com.eternalcode.combat.fight.crystalpvp.RespawnAnchorController;
 import com.eternalcode.combat.event.EventManager;
 import com.eternalcode.combat.fight.FightManager;
 import com.eternalcode.combat.fight.FightManagerImpl;
@@ -207,8 +207,8 @@ public final class CombatPlugin extends JavaPlugin implements EternalCombatApi {
             new BorderTriggerController(borderService, () -> pluginConfig.border, fightManager, server, scheduler),
             new ParticleController(borderService, () -> pluginConfig.border.particle, scheduler, server),
             new BorderBlockController(borderService, () -> pluginConfig.border.block, scheduler, server),
-            new EndCrystalListener(this, this.fightManager, pluginConfig),
-            new RespawnAnchorListener(this, this.fightManager, pluginConfig),
+            new EndCrystalController(this, this.fightManager, pluginConfig),
+            new RespawnAnchorController(this, this.fightManager, pluginConfig),
             new FireworkController(this.fightManager, pluginConfig, noticeService),
             new InventoryContainersBlocker(this.fightManager, pluginConfig, noticeService),
             new SignEditingBlocker(this.fightManager, pluginConfig),
