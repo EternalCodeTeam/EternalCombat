@@ -19,7 +19,7 @@ object Versions {
 
     const val XSERIES = "13.8.0"
 
-    const val CAFFEINE = "3.2.4"
+    const val CAFFEINE = "3.3.0"
 
     const val B_STATS_BUKKIT = "3.2.1"
     const val WORLD_GUARD_BUKKIT = "7.0.17"
@@ -29,8 +29,6 @@ object Versions {
     const val GRIEF_PREVENTION = "16.18.7"
     const val WORLDEDIT = "3ISh7ADm" //cannot use numeric version bc of duplicated version on modrinth
     const val PACKETEVENTS = "2.11.1"
-    const val WORLDGUARD = "7.0.15-beta-01"
-    const val LUCKPERMS = "5.5.17"
 
 }
 
