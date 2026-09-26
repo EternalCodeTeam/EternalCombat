@@ -85,8 +85,8 @@ public class DropController implements DynamicListener<PlayerDeathEvent> {
             return false;
         }
 
-        if (this.dropSettings.headDropOnlyInCombat && inCombat) {
-            return true;
+        if (this.dropSettings.headDropOnlyInCombat) {
+            return inCombat;
         }
 
         if (this.dropSettings.headDropChance <= 0.0) {
