@@ -26,7 +26,7 @@ object Versions {
 
     const val PLACEHOLDER_API = "2.12.3"
     const val LANDS_API = "7.25.4"
-    const val GRIEF_PREVENTION = "16.18.7"
+    const val GRIEF_PREVENTION = "17.0.0"
     const val WORLDEDIT = "3ISh7ADm" //cannot use numeric version bc of duplicated version on modrinth
     const val PACKETEVENTS = "2.13.0"
 
