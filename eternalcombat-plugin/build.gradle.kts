@@ -119,7 +119,7 @@ tasks {
     }
 
     runPaper.folia.registerTask {
-        minecraftVersion("1.21.11")
+        minecraftVersion("26.3")
 
         downloadPlugins.modrinth("PacketEvents", "${Versions.PACKETEVENTS}+spigot")
     }
