@@ -23,7 +23,8 @@ public class SpearSettings extends OkaeriConfig {
             "# Notice sent to the players that try to use spears before cooldown ends.",
             "# Placeholder: {TIME} - time left of cooldown"
     })
-    public Notice lungeOnCooldown = Notice.builder().actionBar("<dark_red>Spear cannot be used for next <red>{TIME}</red></dark_red>")
+    public Notice lungeOnCooldown = Notice.builder()
+        .chat("<dark_red>Spear cannot be used for next <red>{TIME}</red></dark_red>")
         .build();
 
 }

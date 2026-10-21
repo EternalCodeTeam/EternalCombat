@@ -13,10 +13,10 @@ tasks {
             languageVersion.set(JavaLanguageVersion.of(25))
         })
 
-        minecraftVersion("26.2")
-        downloadPlugins.modrinth("WorldEdit", "7.4.6-beta-01")
-        downloadPlugins.modrinth("PacketEvents", "2.13.0+spigot")
-        downloadPlugins.modrinth("WorldGuard", "7.0.19")
+        minecraftVersion("26.3")
+        downloadPlugins.modrinth("WorldEdit", "7.4.6")
+        downloadPlugins.modrinth("PacketEvents", "2.14.0+spigot")
+        downloadPlugins.modrinth("WorldGuard", "7.0.20")
         downloadPlugins.modrinth("LuckPerms", "v5.5.53-bukkit")
         downloadPlugins.modrinth("GriefPrevention", Versions.GRIEF_PREVENTION)
     }

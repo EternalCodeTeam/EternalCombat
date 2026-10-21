@@ -221,7 +221,7 @@ public final class CombatPlugin extends JavaPlugin implements EternalCombatApi {
 
         new KnockbackMountController(noticeService, this.regionProvider, this.fightManager).register(this);
 
-        new SpearLungeController(this, fightManager, spearService, pluginConfig.spear, noticeService);
+        new SpearLungeController(this, fightManager, spearService, pluginConfig, noticeService);
 
         eventManager.subscribe(
             PlayerDeathEvent.class,

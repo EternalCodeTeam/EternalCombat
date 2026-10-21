@@ -1,5 +1,6 @@
 package com.eternalcode.combat.fight.spear;
 
+import com.eternalcode.combat.config.implementation.PluginConfig;
 import com.eternalcode.combat.fight.FightManager;
 import com.eternalcode.combat.notification.NoticeService;
 import com.eternalcode.combat.util.DurationUtil;
@@ -22,7 +23,13 @@ public class SpearLungeController implements Listener {
 
     private final SpearService spearService;
 
-    public SpearLungeController(Plugin plugin, FightManager fightManager, SpearService spearService, SpearSettings settings, NoticeService noticeService) {
+    public SpearLungeController(
+        Plugin plugin,
+        FightManager fightManager,
+        SpearService spearService,
+        PluginConfig config,
+        NoticeService noticeService
+    ) {
         this.spearService = spearService;
 
         try {
@@ -37,7 +44,7 @@ public class SpearLungeController implements Listener {
                 this,
                 EventPriority.NORMAL,
                 (listener, event) -> {
-                    if (!settings.lungeCooldown || !lungeEventClass.isInstance(event)) {
+                    if (!config.spear.lungeCooldown || !lungeEventClass.isInstance(event)) {
                         return;
                     }
 
@@ -48,23 +55,24 @@ public class SpearLungeController implements Listener {
                             return;
                         }
 
-                        UUID uuid = player.getUniqueId();
+                        UUID playerId = player.getUniqueId();
 
-                        if (settings.onlyForFight && !fightManager.isInCombat(uuid)) {
+                        if (config.spear.onlyForFight && !fightManager.isInCombat(playerId)) {
                             return;
                         }
 
-                        if (this.spearService.isOnCooldown(uuid)) {
+                        if (this.spearService.isOnCooldown(playerId)) {
                             setCancelledHandle.invoke(event, true);
 
                             noticeService.create()
-                                .player(uuid)
-                                .notice(settings.lungeOnCooldown)
-                                .placeholder("{TIME}", DurationUtil.format(spearService.getRemainingCooldown(uuid), !settings.useMillis))
+                                .player(playerId)
+                                .notice(config.spear.lungeOnCooldown)
+                                .placeholder("{TIME}", DurationUtil.format(spearService.getRemainingCooldown(playerId), !config.spear.useMillis))
                                 .send();
-                                return;
+
+                            return;
                         }
-                        spearService.saveCooldown(uuid);
+                        spearService.saveCooldown(playerId);
                     } catch (Throwable e) {
                         plugin.getLogger().warning("Failed to handle EntityLungeEvent: " + e.getMessage());
                     }
