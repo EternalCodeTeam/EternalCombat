@@ -17,7 +17,7 @@ object Versions {
     const val OKAERI_CONFIGS_SERDES_COMMONS = "5.0.13"
     const val OKAERI_CONFIGS_SERDES_BUKKIT = "5.0.13"
 
-    const val XSERIES = "13.8.0"
+    const val XSERIES = "14.0.0"
 
     const val CAFFEINE = "3.3.0"
 
